@@ -1,0 +1,24 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Priority -->
+	<Script file="Core/Utilities/CallbackRegistry.lua"/>
+	<Script file="Core/Main/EventListener.lua"/>
+	<Script file="Core/Main/Variables.lua"/>
+	<Script file="Core/Main/Database.lua"/>
+	<Script file="Core/Dev/Dev.lua"/>
+
+	<!-- Primary -->
+	<Script file="Core/Utilities/Theme.lua"/>
+	<Script file="Core/Utilities/SoundEffects.lua"/>"
+	<Script file="Core/Utilities/Get.lua"/>
+	<Script file="Core/Utilities/LoadedAddons.lua"/>
+
+	<!-- Secondary -->
+	<Script file="Core/Main/Initialize.lua"/>
+
+	<!-- Protected -->
+	<Script file="Core/Protected/InteractionFrame.lua"/>
+
+	<!-- Load -->
+	<Script file="Load.lua"/>
+</Ui>

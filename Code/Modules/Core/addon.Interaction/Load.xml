@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Load -->
+	<Script file="Load.lua"/>
+
+	<!-- Core -->
+	<Script file="Core/Interaction_Script.lua"/>
+	<Script file="Core/Interaction_Variables.lua"/>
+
+	<!-- Modules -->
+	<Include file="Modules/addon.Interaction.Dialog/Load.xml"/>
+	<Include file="Modules/addon.Interaction.Gossip/Load.xml"/>
+	<Include file="Modules/addon.Interaction.Quest/Load.xml"/>
+</Ui>

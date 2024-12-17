@@ -1,0 +1,52 @@
+local addonName, addon = ...
+local CallbackRegistry = addon.CallbackRegistry
+local L = addon.Locales
+
+--------------------------------
+-- VARIABLES
+--------------------------------
+
+addon._DEV = {}
+local NS = addon._DEV
+
+do -- MAIN
+
+end
+
+do -- CONSTANTS
+	NS.ENABLED = false
+end
+
+--------------------------------
+-- FUNCTIONS (MAIN)
+--------------------------------
+
+function NS:Load()
+	--------------------------------
+	-- FUNCTIONS (MAIN)
+	--------------------------------
+
+	do
+		function addon._DEV:Print(msg)
+			if addon._DEV.ENABLED then
+				print(msg)
+			end
+		end
+	end
+
+	--------------------------------
+	-- EVENTS
+	--------------------------------
+
+	do
+
+	end
+
+	--------------------------------
+	-- SETUP
+	--------------------------------
+
+	do
+
+	end
+end

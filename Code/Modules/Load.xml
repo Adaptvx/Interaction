@@ -1,0 +1,32 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <!-- Core Modules -->
+    <Include file="Core/addon.Locales/Load.xml"/>
+
+    <Include file="Core/addon.Interaction/Load.xml"/>
+    <Include file="Core/addon.Cinematic/Load.xml"/>
+    <Include file="Core/addon.PromptText/Load.xml"/>
+    <Include file="Core/addon.ConsoleVariables/Load.xml"/>
+    <Include file="Core/addon.HideUI/Load.xml"/>
+    <Include file="Core/addon.PlayerStatusBar/Load.xml"/>
+    <Include file="Core/addon.TextToSpeech/Load.xml"/>
+    <Include file="Core/addon.Prompt/Load.xml"/>
+    <Include file="Core/addon.AlertNotification/Load.xml"/>
+    <Include file="Core/addon.SettingsUI/Load.xml"/>
+    <Include file="Core/addon.Alert/Load.xml"/>
+    <Include file="Core/addon.Input/Load.xml"/>
+    <Include file="Core/addon.Waypoint/Load.xml"/>
+    <Include file="Core/addon.Readable/Load.xml"/>
+    <Include file="Core/addon.Audiobook/Load.xml"/>
+    <Include file="Core/addon.ContextIcon/Load.xml"/>
+
+    <!-- Blizzard Modules -->
+    <Include file="Core/Blizzard/addon.BlizzardFrames/Load.xml"/>
+    <Include file="Core/Blizzard/addon.BlizzardMinimapIcon/Load.xml"/>
+    <Include file="Core/Blizzard/addon.BlizzardGameTooltip/Load.xml"/>
+    <Include file="Core/Blizzard/addon.BlizzardSound/Load.xml"/>
+    <Include file="Core/Blizzard/addon.BlizzardSettings/Load.xml"/>
+
+	<!-- Load -->
+	<Script file="Load.lua"/>
+</Ui>

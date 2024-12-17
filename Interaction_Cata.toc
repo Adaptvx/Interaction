@@ -1,0 +1,34 @@
+## Interface: 40400, 40401
+## Title: Interaction
+## Notes: Immersive lore and quest add-on.
+## Author: Adaptivex
+## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
+## Version: 0.0.1
+## SavedVariables: InteractionDB
+## SavedVariablesPerCharacter: InteractionLibraryDB
+## AddonCompartmentFunc: Interaction_ShowSettingsUI
+
+# --------------------------------
+# Library
+# --------------------------------
+
+Library/Load.xml
+
+# --------------------------------
+# Foundation
+# --------------------------------
+
+Code/Foundation/Load.xml
+
+# --------------------------------
+# API
+# --------------------------------
+
+Code/API/API.lua
+Code/API/AdaptiveAPI/AdaptiveAPI/Load.xml
+
+# --------------------------------
+# Modules
+# --------------------------------
+
+Code/Modules/Load.xml
