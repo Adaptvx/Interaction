@@ -6,10 +6,325 @@ local L = addon.Locales
 
 local function Load()
     if (not GetLocale() == "ruRU") then return end
+	-- Localization and translation ZamestoTV
 
 	--------------------------------
+	-- SETTINGS
+	--------------------------------
 
-	-- Add localization here:
+	do
+		-- WARNINGS
+		L["Warning - Leave NPC Interaction"] = "Оставьте взаимодействие с НПС для настройки параметров."
+		L["Warning - Leave ReadableUI"] = "Оставьте удобочитаемый пользовательский интерфейс для настройки параметров."
+
+		-- PROMPTS
+		L["Prompt - Reload"] = "Для применения настроек требуется перезагрузка интерфейса"
+		L["Prompt - Reload Button 1"] = "Перезагрузить"
+		L["Prompt - Reload Button 2"] = "Закрыть"
+		L["Prompt - Reset Settings"] = "Вы уверены, что хотите сбросить настройки?"
+		L["Prompt - Reset Settings Button 1"] = "Сбросить"
+		L["Prompt - Reset Settings Button 2"] = "Отмена"
+
+		-- TABS
+		L["Tab - Appearance"] = "Внешний вид"
+		L["Tab - Effects"] = "Эффекты"
+		L["Tab - Playback"] = "Воспроизведение"
+		L["Tab - Controls"] = "Управление"
+		L["Tab - Gameplay"] = "Игровой процесс"
+		L["Tab - More"] = "Больше"
+
+		-- ELEMENTS
+		-- APPEARANCE
+		L["Title - Theme"] = "Тема"
+		L["Range - Main Theme"] = "Основная тема"
+		L["Range - Main Theme - Tooltip"] = "Устанавливает общую тему пользовательского интерфейса.\n\nПо умолчанию: День."
+		L["Range - Dialog Theme"] = "Тема диалога"
+		L["Range - Dialog Theme - Tooltip"] = "Устанавливает тему пользовательского интерфейса диалогового окна НПС.\n\nПо умолчанию: Автоматически."
+		L["Title - Appearance"] = "Внешний вид"
+		L["Range - Orientation"] = "Направление пользовательского интерфейса"
+		L["Range - Orientation - Tooltip"] = "Задает направление пользовательского интерфейса."
+		L["Title - Text"] = "Текст"
+		L["Range - Content Size"] = "Размер содержимого"
+		L["Range - Content Size - Tooltip"] = "Настройте размер текста диалога."
+		L["Title - Dialog"] = "Диалог"
+		L["Checkbox - Dialog / Title / Progress Bar"] = "Показать полосу прогресса"
+		L["Checkbox - Dialog / Title / Progress Bar - Tooltip"] = "Показывает или скрывает полосу прогресса диалога.\n\nЭта полоса показывает, насколько далеко вы продвинулись в текущем разговоре.\n\nПо умолчанию: Вкл."
+		L["Range - Dialog / Title / Text Alpha"] = "Непрозрачность заголовка"
+		L["Range - Dialog / Title / Text Alpha - Tooltip"] = "Устанавливает непрозрачность заголовка диалогового окна.\n\nПо умолчанию: 50%."
+		L["Range - Dialog / Content Preview Alpha"] = "Предварительный просмотр непрозрачности"
+		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Устанавливает непрозрачность предварительного просмотра текста диалогового окна.\n\nПо умолчанию: 50%."
+		L["Title - Quest"] = "Задание"
+		L["Checkbox - Always Show Quest Frame"] = "Всегда показывать окно задания"
+		L["Checkbox - Always Show Quest Frame - Tooltip"] = "Всегда показывать окно задания, когда оно доступно, а не только после диалога.\n\nПо умолчанию: Вкл."
+
+		-- VIEWPORT
+		L["Title - Effects"] = "Эффекты"
+		L["Checkbox - Hide UI"] = "Скрыть пользовательский интерфейс"
+		L["Checkbox - Hide UI - Tooltip"] = "Скрывает пользовательский интерфейс во время взаимодействия с НПС.\n\nПо умолчанию: Вкл."
+		L["Range - Cinematic"] = "Эффекты камеры"
+		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: Все."
+		L["Checkbox - Zoom"] = "Увеличение"
+		L["Range - Zoom Distance"] = "Макс. расстояние"
+		L["Range - Zoom Distance - Tooltip"] = "Порог увеличения."
+		L["Checkbox - Zoom Pitch"] = "Отрегулируйте вертикальный угол"
+		L["Checkbox - Zoom Pitch - Tooltip"] = "Включить регулировку угла наклона камеры по вертикали."
+		L["Range - Zoom Pitch / Level"] = "Макс. угол"
+		L["Range - Zoom Pitch / Level - Tooltip"] = "Порог вертикального угла."
+		L["Checkbox - Field Of View"] = "Отрегулируйте поле зрения"
+		L["Checkbox - Pan"] = "Pan"
+		L["Range - Pan / Speed"] = "Скорость"
+		L["Range - Pan / Speed - Tooltip"] = "Максимальная скорость панорамирования."
+		L["Checkbox - Dynamic Camera"] = "Динамическая камера"
+		L["Checkbox - Dynamic Camera - Tooltip"] = "Включить динамические настройки камеры."
+		L["Checkbox - Dynamic Camera / Side View"] = "Вид сбоку"
+		L["Checkbox - Dynamic Camera / Side View - Tooltip"] = "Отрегулируйте камеру для бокового обзора."
+		L["Range - Dynamic Camera / Side View / Strength"] = "Сила"
+		L["Range - Dynamic Camera / Side View / Strength - Tooltip"] = "Более высокое значение увеличивает боковое перемещение."
+		L["Checkbox - Dynamic Camera / Offset"] = "Смещение"
+		L["Checkbox - Dynamic Camera / Offset - Tooltip"] = "Смещение области просмотра от персонажа."
+		L["Range - Dynamic Camera / Offset / Strength"] = "Сила"
+		L["Range - Dynamic Camera / Offset / Strength - Tooltip"] = "Более высокое значение увеличивает смещение."
+		L["Checkbox - Dynamic Camera / Focus"] = "Фокус"
+		L["Checkbox - Dynamic Camera / Focus - Tooltip"] = "Фокусировка области просмотра на цели."
+		L["Range - Dynamic Camera / Focus / Strength"] = "Сила"
+		L["Range - Dynamic Camera / Focus / Strength - Tooltip"] = "Более высокое значение увеличивает силу фокусировки."
+		L["Checkbox - Dynamic Camera / Focus / X"] = "Игнорировать ось X"
+		L["Checkbox - Dynamic Camera / Focus / X - Tooltip"] = "Запретить фокусировку по оси X."
+		L["Checkbox - Dynamic Camera / Focus / Y"] = "Игнорировать ось Y"
+		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Запретить фокусировку по оси Y."
+		L["Checkbox - Vignette"] = "Vignette"
+		L["Checkbox - Vignette - Tooltip"] = "Уменьшает яркость краев."
+
+		-- PLAYBACK
+		L["Title - Pace"] = "Pace"
+		L["Range - Playback Speed"] = "Playback Speed"
+		L["Range - Playback Speed - Tooltip"] = "Speed of text playback.\n\nDefault: 100%."
+		L["Checkbox - Dynamic Playback"] = "Natural Playback"
+		L["Checkbox - Dynamic Playback - Tooltip"] = "Adds punctuation pauses in dialog.\n\nDefault: On."
+		L["Title - Auto Progress"] = "Auto Progress"
+		L["Checkbox - Auto Progress"] = "Enable"
+		L["Checkbox - Auto Progress - Tooltip"] = "Automatically progress to next dialog.\n\nDefault: On."
+		L["Checkbox - Auto Close Dialog"] = "Auto Close"
+		L["Checkbox - Auto Close Dialog - Tooltip"] = "Stop NPC interaction when no options available.\n\nDefault: On."
+		L["Range - Auto Progress / Delay"] = "Delay"
+		L["Range - Auto Progress / Delay - Tooltip"] = "Delay before to next dialog.\n\nDefault: 1."
+		L["Title - Text To Speech"] = "Text To Speech"
+		L["Checkbox - Text To Speech"] = "Enable"
+		L["Checkbox - Text To Speech - Tooltip"] = "Reads out dialog text.\n\nDefault: Off."
+		L["Title - Text To Speech / Playback"] = "Playback"
+		L["Range - Text To Speech / Rate"] = "Rate"
+		L["Range - Text To Speech / Rate - Tooltip"] = "Speech rate offset.\n\nDefault: 100%."
+		L["Range - Text To Speech / Volume"] = "Volume"
+		L["Range - Text To Speech / Volume - Tooltip"] = "Speech volume.\n\nDefault: 100%."
+		L["Title - Text To Speech / Voice"] = "Voice"
+		L["Dropdown - Text To Speech / Voice / Neutral"] = "Neutral"
+		L["Dropdown - Text To Speech / Voice / Neutral - Tooltip"] = "Used for gender-neutral NPCs."
+		L["Dropdown - Text To Speech / Voice / Male"] = "Male"
+		L["Dropdown - Text To Speech / Voice / Male - Tooltip"] = "Used for male NPCs."
+		L["Dropdown - Text To Speech / Voice / Female"] = "Female"
+		L["Dropdown - Text To Speech / Voice / Female - Tooltip"] = "Used for female NPCs."
+		L["Dropdown - Text To Speech / Voice / Emote"] = "Expression"
+		L["Dropdown - Text To Speech / Voice / Emote - Tooltip"] = "Used for dialogs in '<>'."
+		L["Checkbox - Text To Speech / Player / Voice"] = "Player Voice"
+		L["Checkbox - Text To Speech / Player / Voice - Tooltip"] = "Plays TTS when selecting a dialog option.\n\nDefault: On."
+		L["Dropdown - Text To Speech / Player / Voice / Voice"] = "Voice"
+		L["Dropdown - Text To Speech / Player / Voice / Voice - Tooltip"] = "Voice for dialog options."
+		L["Title - More"] = "More"
+		L["Checkbox - Mute Dialog"] = "Mute NPC Dialog"
+		L["Checkbox - Mute Dialog - Tooltip"] = "Mutes Blizzard's NPC dialog audio during NPC interaction.\n\nDefault: Off."
+
+		-- CONTROLS
+		L["Title - Platform"] = "Platform"
+		L["Range - Platform"] = "Platform"
+		L["Range - Platform - Tooltip"] = "Requires Interface Reload to take effect."
+		L["Range - Platform - PC"] = "PC"
+		L["Range - Platform - Playstation"] = "Playstation"
+		L["Range - Platform - Xbox"] = "Xbox"
+		L["Title - PC / Keyboard"] = "Keyboard"
+		L["Checkbox - PC / Use Interact Key"] = "Use Interact Key"
+		L["Checkbox - PC / Use Interact Key - Tooltip"] = "Use the interact key for Skip/Accept instead of Space. Multi-key combinations not supported.\n\nDefault: Off."
+		L["Title - PC / Mouse"] = "Mouse"
+		L["Checkbox - PC / Flip Mouse Controls"] = "Flip Mouse Controls"
+		L["Checkbox - PC / Flip Mouse Controls - Tooltip"] = "Flip Left and Right mouse controls.\n\nDefault: Off."
+		L["Title - Controller / Controller"] = "Controller"
+
+		-- GAMEPLAY
+		L["Title - Waypoint"] = "Waypoint"
+		L["Checkbox - Waypoint"] = "Enable"
+		L["Checkbox - Waypoint - Tooltip"] = "Waypoint replacement for Blizzard's in-game navigation.\n\n|cffBB0000This option will enable the Blizzard setting: 'In-game Navigation'.\n\nThis option will increase memory usage.|r\n\nDefault: Off."
+		L["Checkbox - Waypoint / Audio"] = "Audio"
+		L["Checkbox - Waypoint / Audio - Tooltip"] = "Sound effects when Waypoint state changes.\n\nDefault: On."
+		L["Title - Readable"] = "Readable Items"
+		L["Checkbox - Readable"] = "Enable"
+		L["Checkbox - Readable - Tooltip"] = "Enable custom interface for Readable Items - and Library for storing them.\n\nDefault: On."
+		L["Title - Readable / Display"] = "Display"
+		L["Checkbox - Readable / Display / Always Show Item"] = "Always Show Item"
+		L["Checkbox - Readable / Display / Always Show Item - Tooltip"] = "Prevent the readable interface from closing when leaving the distance of an in-world item.\n\nDefault: Off."
+		L["Title - Readable / Viewport"] = "Viewport"
+		L["Checkbox - Readable / Viewport"] = "Use Viewport Effects"
+		L["Checkbox - Readable / Viewport - Tooltip"] = "Viewport effects when initiating the Readable UI.\n\nDefault: On."
+		L["Title - Readable / Shortcuts"] = "Shortcuts"
+		L["Checkbox - Readable / Shortcuts / Minimap Icon"] = "Minimap Icon"
+		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Display an icon on the minimap for quick access to library.\n\nDefault: On."
+		L["Title - Gameplay"] = "Gameplay"
+		L["Checkbox - Gameplay / Auto Select Option"] = "Auto Select Options"
+		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Selects best option for certain NPCs.\n\nDefault: Off."
+
+		-- MORE
+		L["Title - Audio"] = "Audio"
+		L["Checkbox - Audio"] = "Enable Audio"
+		L["Checkbox - Audio - Tooltip"] = "Enable sound effects and audio.\n\nDefault: On."
+		L["Title - Settings"] = "Settings"
+		L["Checkbox - Settings / Reset Settings"] = "Reset All Settings"
+		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Resets settings to default values.\n\nDefault: Off."
+	end
+
+	--------------------------------
+	-- READABLE UI
+	--------------------------------
+
+	do
+		-- PROMPTS
+		L["Readable - Prompt - Delete"] = "This will permanently remove this entry from your library."
+		L["Readable - Prompt - Delete Button 1"] = "Remove"
+		L["Readable - Prompt - Delete Button 2"] = "Cancel"
+
+		L["Readable - Prompt - Import"] = "Importing a saved state will overwrite your current library."
+		L["Readable - Prompt - Import Button 1"] = "Import and Reload"
+		L["Readable - Prompt - Import Button 2"] = "Cancel"
+
+		L["Readable - TextPrompt - Import"] = "Paste Data Text"
+		L["Readable - TextPrompt - Import Input Placeholder"] = "Enter Data Text"
+		L["Readable - TextPrompt - Import Button 1"] = "Import"
+
+		L["Readable - TextPrompt - Export"] = "Copy Data to Clipboard "
+		L["Readable - TextPrompt - Export Input Placeholder"] = "Invalid Export Code"
+
+		-- NOTIFICATIONS
+		L["Readable - Notification - Saved To Library"] = "Saved to Library"
+
+		-- SIDEBAR
+		L["Readable - Show"] = "Show"
+		L["Readable - Letters"] = "Letters"
+		L["Readable - Books"] = "Books"
+		L["Readable - Slates"] = "Slates"
+		L["Readable - Show only World"] = "Only World"
+
+		-- TITLE
+		L["Readable - Showing Status Text - Subtext 1"] = "Showing "
+		L["Readable - Showing Status Text - Subtext 2"] = " Items"
+
+		-- CONTENT
+		L["Readable - No Results Text - Subtext 1"] = "No Results for "
+		L["Readable - No Results Text - Subtext 2"] = "."
+		L["Readable - Empty Library Text"] = "Empty Library."
+	end
+
+	--------------------------------
+	-- INTERACTION QUEST FRAME
+	--------------------------------
+
+	do
+		L["InteractionQuestFrame - Objectives"] = "Objectives"
+		L["InteractionQuestFrame - Rewards"] = "Rewards"
+		L["InteractionQuestFrame - Required Items"] = "Required Items"
+
+		L["InteractionQuestFrame - Quest Log Full"] = "Quest Log Full"
+		L["InteractionQuestFrame - Accept"] = "Accept"
+		L["InteractionQuestFrame - Decline"] = "Decline"
+		L["InteractionQuestFrame - Goodbye"] = "Goodbye"
+		L["InteractionQuestFrame - Continue"] = "Continue"
+		L["InteractionQuestFrame - In Progress"] = "In Progress"
+		L["InteractionQuestFrame - Complete"] = "Complete"
+	end
+
+	--------------------------------
+	-- INTERACTION DIALOG FRAME
+	--------------------------------
+
+	do
+		L["InteractionDialogFrame - Skip"] = "SKIP"
+	end
+
+	--------------------------------
+	-- INTERACTION GOSSIP FRAME
+	--------------------------------
+
+	do
+		L["InteractionGossipFrame - Close"] = "Goodbye"
+	end
+
+	--------------------------------
+	-- WAYPOINT
+	--------------------------------
+
+	do
+		L["Waypoint - Ready for Turn-in"] = "Ready for Turn-in"
+
+		L["Waypoint - Waypoint"] = "Waypoint"
+		L["Waypoint - Quest"] = "Quest"
+		L["Waypoint - Flight Point"] = "Flight Point"
+		L["Waypoint - Pin"] = "Pin"
+		L["Waypoint - Party Member"] = "Party Member"
+		L["Waypoint - Content"] = "Content"
+	end
+
+	--------------------------------
+	-- PLAYER STATUS BAR
+	--------------------------------
+
+	do
+		L["PlayerStatusBar - TooltipLine1"] = "Current XP: "
+		L["PlayerStatusBar - TooltipLine2"] = "Remaining XP: "
+		L["PlayerStatusBar - TooltipLine3"] = "Level "
+	end
+
+
+	--------------------------------
+	-- MINIMAP ICON
+	--------------------------------
+
+	do
+		L["MinimapIcon - Text"] = "Open Interaction Library."
+	end
+
+	--------------------------------
+	-- BLIZZARD SETTINGS
+	--------------------------------
+
+	do
+		L["BlizzardSettings - Title"] = "Open Settings"
+		L["BlizzardSettings - Shortcut - Controller"] = "in any Interaction UI."
+	end
+
+	--------------------------------
+	-- AUTO SELECT OPTIONS
+	--------------------------------
+
+	do
+		L["AutoSelectOptions - Check - Trading Post"] = ""
+	end
+
+	--------------------------------
+	-- ALERTS
+	--------------------------------
+
+	do
+		L["Alert - Under Attack"] = "Under Attack"
+		L["Alert - Open Settings"] = "To open settings."
+	end
+
+	--------------------------------
+	-- GOSSIP DATA
+	--------------------------------
+
+	do
+		L["GossipData - Trigger - Quest"] = "%(Quest%)"
+		L["GossipData - Trigger - Movie 1"] = "%(Play%)"
+		L["GossipData - Trigger - Movie 2"] = "%(Play Movie%)"
+		L["GossipData - Trigger - NPC Dialog"] = "%<Stay awhile and listen.%>"
+		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Stay awhile and listen."
+	end
 end
 
 Load()
