@@ -115,7 +115,7 @@ function NS.LibraryUI.Script:Load()
 						return
 					end
 					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = true
-					addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
 							LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Hide()
 						end
@@ -143,7 +143,7 @@ function NS.LibraryUI.Script:Load()
 						return
 					end
 					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = true
-					addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
 							LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Hide()
 						end
@@ -176,7 +176,7 @@ function NS.LibraryUI.Script:Load()
 		end
 
 		LibraryUI.HideWithAnimation = function()
-			addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
 				LibraryUI:Hide()
 			end, .5)
 
@@ -256,8 +256,30 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:GetAllFilteredEntries()
-				local AllEntries = LibraryCallback:GetAllEntries()
-				local Entries = AdaptiveAPI:SortListByAlphabeticalOrder(AllEntries, "Title", true)
+				local Group_Letters = LibraryCallback:GetAllTypeEntries("Letter")
+				local Alphabetical_Letters = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Letters, "Title")
+				local Group_Books = LibraryCallback:GetAllTypeEntries("Book")
+				local Alphabetical_Books = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Books, "Title")
+				local Group_Slates = LibraryCallback:GetAllTypeEntries("Stone")
+				local Alphabetical_Slates = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Slates, "Title")
+
+				local Group_Combined = {}
+
+				local CurrentIndex = 0
+				for i = 1, #Alphabetical_Letters do
+					CurrentIndex = CurrentIndex + 1
+					Group_Combined[CurrentIndex] = Alphabetical_Letters[i]
+				end
+				for i = 1, #Alphabetical_Books do
+					CurrentIndex = CurrentIndex + 1
+					Group_Combined[CurrentIndex] = Alphabetical_Books[i]
+				end
+				for i = 1, #Alphabetical_Slates do
+					CurrentIndex = CurrentIndex + 1
+					Group_Combined[CurrentIndex] = Alphabetical_Slates[i]
+				end
+
+				local Entries = Group_Combined
 
 				--------------------------------
 
@@ -541,6 +563,8 @@ function NS.LibraryUI.Script:Load()
 					local Content = CurrentEntry.Content
 
 					local IsItemInInventory = CurrentEntry.IsItemInInventory
+					local ItemID = CurrentEntry.ItemID
+					local ItemLink = CurrentEntry.ItemLink
 
 					local Zone = CurrentEntry.Zone
 					local MapID = CurrentEntry.MapID
@@ -550,11 +574,12 @@ function NS.LibraryUI.Script:Load()
 					--------------------------------
 
 					local ImageTexture
+					local ImageTexCoords = { 0, 1, 0, 1 }
 
 					local ItemParchmentTexture; if addon.Theme.IsDarkTheme then
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-dark-mode.png"
+						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-dark.png"
 					else
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light-mode.png"
+						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png"
 					end
 					local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Slate/Slate.png"
 					local ItemBookTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover.png"
@@ -574,6 +599,16 @@ function NS.LibraryUI.Script:Load()
 
 					if Type == "Stone" or Type == "Bronze" then
 						ImageTexture = ItemStoneTexture
+					end
+
+					if ItemID then
+						local ItemInfo = C_Item.GetItemInfo(ItemLink)
+                        local ItemIcon = ItemInfo and C_Item.GetItemIconByID(ItemInfo)
+
+						if ItemIcon then
+							ImageTexture = ItemIcon
+							ImageTexCoords = { 0, 1, 0, 1 }
+						end
 					end
 
 					--------------------------------
@@ -602,6 +637,7 @@ function NS.LibraryUI.Script:Load()
 					Buttons[i].Detail:SetText(DetailText)
 
 					Buttons[i].ImageTexture:SetTexture(ImageTexture)
+					Buttons[i].ImageTexture:SetTexCoord(unpack(ImageTexCoords))
 
 					--------------------------------
 
@@ -703,7 +739,7 @@ function NS.LibraryUI.Script:Load()
 				}
 
 				if not INTLIB.profile.READABLE[ID] then
-					addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+					addon.Libraries.AceTimer:ScheduleTimer(function()
 						InteractionAlertNotificationFrame.ShowWithText(L["Readable - Notification - Saved To Library"])
 					end, .1)
 				end
@@ -748,12 +784,12 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+				addon.Libraries.AceTimer:ScheduleTimer(function()
 					NS.ItemUI.Script:Update()
 
 					--------------------------------
 
-					addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+					addon.Libraries.AceTimer:ScheduleTimer(function()
 						NS.ItemUI.Script:Update()
 					end, .1)
 				end, .525)
@@ -832,7 +868,7 @@ function NS.LibraryUI.Script:Load()
 		end, 0)
 
 		-- SetButtons on ThemeUpdate
-		addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+		addon.Libraries.AceTimer:ScheduleTimer(function()
 			addon.API:RegisterThemeUpdate(function()
 				if Frame.LibraryUIFrame:IsVisible() then
 					LibraryCallback:SetPageButtons()

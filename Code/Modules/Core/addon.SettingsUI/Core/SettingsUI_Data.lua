@@ -34,8 +34,8 @@ function NS.Data:Load()
 						end
 					)
 					table.insert(Widgets, frame)
-					frame.button:SetText(name)
-					frame.button.SavedText = name
+					frame.Button:SetText(name)
+					frame.Button.SavedText = name
 
 					return frame
 				end
@@ -115,24 +115,24 @@ function NS.Data:Load()
 			-- }
 
 			-- Range = {
-			--     name = "Default",
-			--     tooltipImage = "",
-			--     tooltipText = "Placeholder",
-			--     tooltipImageType = "Small",
-			--     type = "Range",
-			--     min = 0,
-			--     max = 1,
-			--     step = .5,
-			--     order = 1,
-			--     hidden = function() return false end,
-			--     locked = function() return false end,
-			--     subcategory = 0,
-			--     category = Default,
-			--     valueText = nil,
-			--     grid = false,
-			--     get = function() return variable end,
-			--     setCriteria = function() return true end,
-			--     set = function(_, val) variable = val; end
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = "Placeholder",
+			-- 	tooltipImageType = "Small",
+			-- 	type = "Range",
+			-- 	min = 0,
+			-- 	max = 1,
+			-- 	step = .5,
+			-- 	order = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	subcategory = 0,
+			-- 	category = Default,
+			-- 	valueText = nil,
+			-- 	grid = false,
+			-- 	get = function() return variable end,
+			-- 	setCriteria = function() return true end,
+			-- 	set = function(_, val) variable = val; end
 			-- }
 
 			-- Dropdown = {
@@ -161,6 +161,21 @@ function NS.Data:Load()
 			--     close = function() print("List Closed") end,
 			--     autoCloseList = true
 			-- }
+
+			-- Keybind = {
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = "Placeholder",
+			-- 	tooltipImageType = "Small",
+			-- 	type = "Keybind",
+			-- 	order = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return variable end,
+			-- 	subcategory = 1,
+			-- 	category = Controls,
+			-- 	get = function() variable end,
+			-- 	set = function(_, val) variable = val end,
+			-- },
 		end
 
 		local Appearance = InteractionSettingsFrame.Tab_Appearance
@@ -218,9 +233,9 @@ function NS.Data:Load()
 					category = Appearance,
 					valueText = function(val)
 						if val == 1 then
-							return "DAY"
+							return L["Range - Main Theme - Day"]
 						elseif val == 2 then
-							return "NIGHT"
+							return L["Range - Main Theme - Night"]
 						end
 					end,
 					get = function() return INTDB.profile.INT_MAIN_THEME end,
@@ -262,13 +277,13 @@ function NS.Data:Load()
 					category = Appearance,
 					valueText = function(val)
 						if val == 1 then
-							return "AUTO"
+							return L["Range - Dialog Theme - Auto"]
 						elseif val == 2 then
-							return "DAY"
+							return L["Range - Dialog Theme - Day"]
 						elseif val == 3 then
-							return "NIGHT"
+							return L["Range - Dialog Theme - Night"]
 						elseif val == 4 then
-							return "RUSTIC"
+							return L["Range - Dialog Theme - Rustic"]
 						end
 					end,
 					grid = true,
@@ -303,10 +318,10 @@ function NS.Data:Load()
 					hidden = function() return false end,
 					category = Appearance,
 				},
-				Range_Orientation = {
-					name = L["Range - Orientation"],
+				Range_UIDirection = {
+					name = L["Range - UIDirection"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection.png",
-					tooltipText = L["Range - Orientation - Tooltip"],
+					tooltipText = L["Range - UIDirection - Tooltip"],
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
@@ -318,9 +333,9 @@ function NS.Data:Load()
 					category = Appearance,
 					valueText = function(val)
 						if val == 1 then
-							return "LEFT"
+							return L["Range - UIDirection - Left"]
 						elseif val == 2 then
-							return "RIGHT"
+							return L["Range - UIDirection - Right"]
 						end
 					end,
 					get = function() return INTDB.profile.INT_UIDIRECTION end,
@@ -330,23 +345,95 @@ function NS.Data:Load()
 						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
 					end
 				},
-				Title_Text = {
-					name = L["Title - Text"],
-					type = "Title",
+				Range_UIDirection_Dialog = {
+					name = L["Range - UIDirection / Dialog"],
+					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection-Dialog.png",
+					tooltipText = L["Range - UIDirection / Dialog - Tooltip"],
+					tooltipImageType = "Large",
+					type = "Range",
+					min = 1,
+					max = 3,
+					step = 1,
 					order = 7,
 					hidden = function() return false end,
+					subcategory = 1,
 					category = Appearance,
+					valueText = function(val)
+						if val == 1 then
+							return L["Range - UIDirection / Dialog - Top"]
+						elseif val == 2 then
+							return L["Range - UIDirection / Dialog - Center"]
+						elseif val == 3 then
+							return L["Range - UIDirection / Dialog - Bottom"]
+						end
+					end,
+					get = function() return INTDB.profile.INT_UIDIRECTION_DIALOG end,
+					set = function(_, val)
+						INTDB.profile.INT_UIDIRECTION_DIALOG = val
+
+						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
+					end
 				},
-				Range_ContentSize = {
-					name = L["Range - Content Size"],
+				Checkbox_UIDirection_Dialog_Mirror = {
+					name = L["Checkbox - UIDirection / Dialog / Mirror"],
+					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection-Dialog-Mirror.png",
+					tooltipText = L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"],
+					tooltipImageType = "Large",
+					type = "Checkbox",
+					order = 8,
+					hidden = function() return false end,
+					subcategory = 2,
+					category = Appearance,
+					get = function() return INTDB.profile.INT_UIDIRECTION_DIALOG_MIRROR end,
+					set = function(_, val)
+						INTDB.profile.INT_UIDIRECTION_DIALOG_MIRROR = val
+
+						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
+					end,
+				},
+				Range_QuestFrameSize = {
+					name = L["Range - Quest Frame Size"],
+					tooltipImage = NS.Variables.TOOLTIP_PATH .. "QuestFrameSize.png",
+					tooltipText = L["Range - Quest Frame Size - Tooltip"],
+					tooltipImageType = "Large",
+					type = "Range",
+					min = 1,
+					max = 4,
+					step = 1,
+					order = 9,
+					hidden = function() return false end,
+					subcategory = 0,
+					category = Appearance,
+					valueText = function(val)
+						if val == 1 then
+							return L["Range - Quest Frame Size - Small"]
+						elseif val == 2 then
+							return L["Range - Quest Frame Size - Medium"]
+						elseif val == 3 then
+							return L["Range - Quest Frame Size - Large"]
+						elseif val == 4 then
+							return L["Range - Quest Frame Size - Extra Large"]
+						end
+					end,
+					get = function() return INTDB.profile.INT_QUESTFRAME_SIZE end,
+					set = function(_, val)
+						INTDB.profile.INT_QUESTFRAME_SIZE = val
+
+						--------------------------------
+
+						CallbackRegistry:Trigger("SETTINGS_QUESTFRAME_SIZE_CHANGED")
+					end
+				},
+				Range_TextSize = {
+					name = L["Range - Text Size"],
 					tooltipImage = "",
-					tooltipText = L["Range - Content Size - Tooltip"],
+					tooltipText = L["Range - Text Size - Tooltip"],
 					tooltipImageType = "Small",
 					type = "Range",
 					min = 10,
 					max = 25,
 					step = .5,
-					order = 8,
+					order = 10,
 					hidden = function() return false end,
 					subcategory = 0,
 					category = Appearance,
@@ -363,7 +450,7 @@ function NS.Data:Load()
 				Title_Dialog = {
 					name = L["Title - Dialog"],
 					type = "Title",
-					order = 9,
+					order = 11,
 					hidden = function() return false end,
 					category = Appearance,
 				},
@@ -373,7 +460,7 @@ function NS.Data:Load()
 					tooltipText = L["Checkbox - Dialog / Title / Progress Bar - Tooltip"],
 					tooltipImageType = "Large",
 					type = "Checkbox",
-					order = 10,
+					order = 12,
 					hidden = function() return false end,
 					locked = function() return false end,
 					subcategory = 0,
@@ -394,7 +481,7 @@ function NS.Data:Load()
 					min = 0,
 					max = 1,
 					step = .1,
-					order = 11,
+					order = 13,
 					hidden = function() return false end,
 					locked = function() return false end,
 					subcategory = 0,
@@ -418,7 +505,7 @@ function NS.Data:Load()
 					min = 0,
 					max = 1,
 					step = .1,
-					order = 12,
+					order = 14,
 					hidden = function() return false end,
 					subcategory = 0,
 					category = Appearance,
@@ -433,7 +520,7 @@ function NS.Data:Load()
 				Title_Quest = {
 					name = L["Title - Quest"],
 					type = "Title",
-					order = 13,
+					order = 15,
 					hidden = function() return false end,
 					category = Appearance,
 				},
@@ -443,7 +530,7 @@ function NS.Data:Load()
 					tooltipText = L["Checkbox - Always Show Quest Frame - Tooltip"],
 					tooltipImageType = "Small",
 					type = "Checkbox",
-					order = 14,
+					order = 16,
 					hidden = function() return false end,
 					locked = function() return addon.Interaction.Variables.Active end,
 					subcategory = 0,
@@ -511,13 +598,13 @@ function NS.Data:Load()
 					category = Effects,
 					valueText = function(val)
 						if val == 1 then
-							return "NONE"
+							return L["Range - Cinematic - None"]
 						elseif val == 2 then
-							return "FULL"
+							return L["Range - Cinematic - Full"]
 						elseif val == 3 then
-							return "BALANCED"
+							return L["Range - Cinematic - Balanced"]
 						elseif val == 4 then
-							return "CUSTOM"
+							return L["Range - Cinematic - Custom"]
 						end
 					end,
 					grid = true,
@@ -547,49 +634,69 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
 							category = Effects,
-							get = function() return INTDB.profile.INT_CINEMATIC_ZOOMIN end,
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM end,
 							set = function(_, val)
-								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOMIN", val)
+								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM", val)
 							end,
 						},
-						Range_Zoom_Distance = {
-							name = L["Range - Zoom Distance"],
+						Range_Zoom_MinDistance = {
+							name = L["Range - Zoom / Min Distance"],
 							tooltipImage = "",
-							tooltipText = L["Range - Zoom Distance - Tooltip"],
+							tooltipText = L["Range - Zoom / Min Distance - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 1,
 							max = 39,
 							step = 1,
 							order = 8,
-							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOMIN end,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.1f", val)
 							end,
-							get = function() return INTDB.profile.INT_CINEMATIC_ZOOMIN_DISTANCE end,
-							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOMIN_DISTANCE", val); end
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN end,
+							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MIN", math.min(val, INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX)) end
+						},
+						Range_Zoom_MaxDistance = {
+							name = L["Range - Zoom / Max Distance"],
+							tooltipImage = "",
+							tooltipText = L["Range - Zoom / Max Distance - Tooltip"],
+							tooltipImageType = "Small",
+							type = "Range",
+							min = 1,
+							max = 39,
+							step = 1,
+							order = 9,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOM end,
+							locked = function() return addon.Interaction.Variables.Active end,
+							subcategory = 2,
+							category = Effects,
+							valueText = function(val)
+								return string.format("%.1f", val)
+							end,
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX end,
+							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MAX", math.max(val, INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN)) end
 						},
 						Checkbox_Zoom_Pitch = {
-							name = L["Checkbox - Zoom Pitch"],
+							name = L["Checkbox - Zoom / Pitch"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Zoom Pitch - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 9,
-							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOMIN end,
+							order = 10,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return INTDB.profile.INT_CINEMATIC_ZOOMIN_PITCH end,
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM_PITCH end,
 							set = function(_, val)
-								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOMIN_PITCH", val)
+								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_PITCH", val)
 							end,
 						},
 						Range_Zoom_Pitch_Level = {
-							name = L["Range - Zoom Pitch / Level"],
+							name = L["Range - Zoom / Pitch / Level"],
 							tooltipImage = "",
 							tooltipText = L["Range - Zoom Pitch / Level - Tooltip"],
 							tooltipImageType = "Small",
@@ -597,31 +704,31 @@ function NS.Data:Load()
 							min = 1,
 							max = 89,
 							step = 1,
-							order = 10,
-							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOMIN or not INTDB.profile.INT_CINEMATIC_ZOOMIN_PITCH end,
+							order = 11,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOM or not INTDB.profile.INT_CINEMATIC_ZOOM_PITCH end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.1f", val)
 							end,
-							get = function() return INTDB.profile.INT_CINEMATIC_ZOOMIN_PITCH_LEVEL end,
-							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOMIN_PITCH_LEVEL", val); end
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL end,
+							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_PITCH_LEVEL", val); end
 						},
 						Checkbox_FieldOfView = {
-							name = L["Checkbox - Field Of View"],
+							name = L["Checkbox - Zoom / Field Of View"],
 							tooltipImage = "",
 							tooltipText = "",
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 11,
-							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOMIN end,
+							order = 12,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return INTDB.profile.INT_CINEMATIC_ZOOMIN_FOV end,
+							get = function() return INTDB.profile.INT_CINEMATIC_ZOOM_FOV end,
 							set = function(_, val)
-								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOMIN_FOV", val)
+								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_FOV", val)
 							end,
 						},
 						Checkbox_Pan = {
@@ -630,7 +737,7 @@ function NS.Data:Load()
 							tooltipText = "",
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 12,
+							order = 13,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
@@ -649,7 +756,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 5,
 							step = .25,
-							order = 13,
+							order = 14,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_PAN end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
@@ -666,7 +773,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 14,
+							order = 15,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
@@ -682,7 +789,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera / Side View - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 15,
+							order = 16,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
@@ -701,7 +808,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 3,
 							step = .25,
-							order = 16,
+							order = 17,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM or not INTDB.profile.INT_CINEMATIC_ACTIONCAM_SIDE end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
@@ -718,7 +825,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera / Offset - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 17,
+							order = 18,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
@@ -737,7 +844,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 25,
 							step = .25,
-							order = 18,
+							order = 19,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM or not INTDB.profile.INT_CINEMATIC_ACTIONCAM_OFFSET end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
@@ -754,7 +861,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera / Focus - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 19,
+							order = 20,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
@@ -773,7 +880,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 1,
 							step = .1,
-							order = 20,
+							order = 21,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM or not INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
@@ -790,7 +897,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera / Focus / X - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 21,
+							order = 22,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM or not INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
@@ -806,7 +913,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 22,
+							order = 23,
 							hidden = function() return not INTDB.profile.INT_CINEMATIC_ACTIONCAM or not INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
@@ -822,7 +929,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Vignette - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 23,
+							order = 24,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
@@ -985,6 +1092,38 @@ function NS.Data:Load()
 							subcategory = 1,
 							category = Playback,
 						},
+						Checkbox_TextToSpeech_Quest = {
+							name = L["Checkbox - Text To Speech / Quest"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Text To Speech / Quest - Tooltip"],
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 14,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 1,
+							category = Playback,
+							get = function() return INTDB.profile.INT_TTS_QUEST end,
+							set = function(_, val)
+								INTDB.profile.INT_TTS_QUEST = val
+							end,
+						},
+						Checkbox_TextToSpeech_Gossip = {
+							name = L["Checkbox - Text To Speech / Gossip"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Text To Speech / Gossip - Tooltip"],
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 15,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 1,
+							category = Playback,
+							get = function() return INTDB.profile.INT_TTS_GOSSIP end,
+							set = function(_, val)
+								INTDB.profile.INT_TTS_GOSSIP = val
+							end,
+						},
 						Range_TextToSpeech_Rate = {
 							name = L["Range - Text To Speech / Rate"],
 							tooltipImage = "",
@@ -994,7 +1133,7 @@ function NS.Data:Load()
 							min = -10,
 							max = 10,
 							step = .25,
-							order = 14,
+							order = 16,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1014,7 +1153,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 100,
 							step = 10,
-							order = 15,
+							order = 17,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1028,7 +1167,7 @@ function NS.Data:Load()
 						Title_TextToSpeech_Voice = {
 							name = L["Title - Text To Speech / Voice"],
 							type = "Title",
-							order = 16,
+							order = 18,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1047,7 +1186,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 17,
+							order = 19,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1056,7 +1195,7 @@ function NS.Data:Load()
 							set = function(_, val)
 								INTDB.profile.INT_TTS_VOICE = val
 
-								addon.TextToSpeech.Script:Speak(val, "Interaction example text.")
+								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
 							open = function() NS.Utils.SetPreventMouse(true) end,
 							close = function() NS.Utils.SetPreventMouse(false) end,
@@ -1075,7 +1214,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 18,
+							order = 20,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1084,7 +1223,7 @@ function NS.Data:Load()
 							set = function(_, val)
 								INTDB.profile.INT_TTS_VOICE_01 = val
 
-								addon.TextToSpeech.Script:Speak(val, "Interaction example text.")
+								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
 							open = function() NS.Utils.SetPreventMouse(true) end,
 							close = function() NS.Utils.SetPreventMouse(false) end,
@@ -1103,7 +1242,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 19,
+							order = 21,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1112,7 +1251,7 @@ function NS.Data:Load()
 							set = function(_, val)
 								INTDB.profile.INT_TTS_VOICE_02 = val
 
-								addon.TextToSpeech.Script:Speak(val, "Interaction example text.")
+								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
 							open = function() NS.Utils.SetPreventMouse(true) end,
 							close = function() NS.Utils.SetPreventMouse(false) end,
@@ -1131,7 +1270,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 20,
+							order = 22,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1140,7 +1279,7 @@ function NS.Data:Load()
 							set = function(_, val)
 								INTDB.profile.INT_TTS_EMOTE_VOICE = val
 
-								addon.TextToSpeech.Script:Speak(val, "Interaction example text.")
+								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
 							open = function() NS.Utils.SetPreventMouse(true) end,
 							close = function() NS.Utils.SetPreventMouse(false) end,
@@ -1152,7 +1291,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Text To Speech / Player / Voice - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 21,
+							order = 23,
 							hidden = function() return false end,
 							subcategory = 1,
 							category = Playback,
@@ -1174,7 +1313,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 22,
+							order = 24,
 							hidden = function() return not INTDB.profile.INT_TTS_PLAYER end,
 							locked = function() return false end,
 							subcategory = 2,
@@ -1183,7 +1322,7 @@ function NS.Data:Load()
 							set = function(_, val)
 								INTDB.profile.INT_TTS_PLAYER_VOICE = val
 
-								addon.TextToSpeech.Script:Speak(val, "Interaction example text.")
+								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
 							open = function() NS.Utils.SetPreventMouse(true) end,
 							close = function() NS.Utils.SetPreventMouse(false) end,
@@ -1194,7 +1333,7 @@ function NS.Data:Load()
 				Title_More = {
 					name = L["Title - More"],
 					type = "Title",
-					order = 23,
+					order = 25,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = Playback,
@@ -1202,7 +1341,7 @@ function NS.Data:Load()
 				Group_More = {
 					name = L["Title - More"],
 					type = "Group",
-					order = 24,
+					order = 26,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = Playback,
@@ -1213,7 +1352,7 @@ function NS.Data:Load()
 							tooltipText = L["Checkbox - Mute Dialog - Tooltip"],
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 25,
+							order = 27,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 0,
@@ -1235,147 +1374,313 @@ function NS.Data:Load()
 			category = Controls,
 			args = {
 				Title_Warning = {
-					name = "Leave NPC Interaction to Adjust Settings.",
+					name = L["Warning - Leave NPC Interaction"],
 					type = "Title",
 					order = 2,
 					hidden = function() return not addon.Interaction.Variables.Active end,
 					category = Controls,
 				},
-				Title_Platform = {
-					name = "Platform",
-					type = "Title",
-					order = 3,
-					hidden = function() return addon.Interaction.Variables.Active end,
-					locked = function() return false end,
-					category = Controls,
-				},
-				Range_Platform = {
-					name = "Platform",
-					tooltipImage = "",
-					tooltipText = "Requires Interface Reload to take effect.",
-					tooltipImageType = "Small",
-					type = "Range",
-					min = 1,
-					max = 3,
-					step = 1,
+				Group_UI = {
+					name = L["Title - UI"],
+					type = "Group",
 					order = 4,
 					hidden = function() return false end,
 					locked = function() return addon.Interaction.Variables.Active end,
-					subcategory = 0,
-					category = Controls,
-					valueText = function(val)
-						if val == 1 then
-							return "PC"
-						elseif val == 2 then
-							return "Playstation"
-						elseif val == 3 then
-							return "Xbox"
-						end
-					end,
-					get = function() return INTDB.profile.INT_PLATFORM end,
-					set = function(_, val)
-						if not addon.Interaction.Variables.Active then
-							if val ~= INTDB.profile.INT_PLATFORM then
-								INTDB.profile.TutorialSettingsShown = false
-
-								--------------------------------
-
-								if val ~= addon.Variables.Platform then
-									NS.Utils.ReloadPrompt()
-								else
-									NS.Utils.ClearPrompt()
-								end
-							end
-
-							INTDB.profile.INT_PLATFORM = val
-						end
-					end
-				},
-				Group_PC = {
-					name = "PC",
-					type = "Group",
-					order = 5,
-					hidden = function() return INTDB.profile.INT_PLATFORM > 1 end,
 					category = Controls,
 					args = {
-						Title_Keyboard = {
-							name = "Keyboard",
+						Title_UI = {
+							name = L["Title - UI"],
 							type = "Title",
+							order = 5,
+							hidden = function() return false end,
+							locked = function() return addon.Interaction.Variables.Active end,
+							category = Controls,
+						},
+						Checkbox_ControlGuide = {
+							name = L["Checkbox - UI / Control Guide"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - UI / Control Guide - Tooltip"],
+							tooltipImageType = "Small",
+							type = "Checkbox",
 							order = 6,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
-							subcategory = 1,
+							subcategory = 0,
 							category = Controls,
-						},
-						Checkbox_UseInteractKey = {
-							name = "Use Interact Key",
-							tooltipImage = "",
-							tooltipText = "Use the interact key for Skip/Accept instead of Space. Multi-key combinations not supported.\n\nDefault: Off.",
-							tooltipImageType = "Small",
-							type = "Checkbox",
-							order = 7,
-							hidden = function() return false end,
-							locked = function() return addon.Interaction.Variables.Active end,
-							subcategory = 1,
-							category = Controls,
-							get = function() return INTDB.profile.INT_USEINTERACTKEY end,
+							get = function() return INTDB.profile.INT_CONTROLGUIDE end,
 							set = function(_, val)
 								if not addon.Interaction.Variables.Active then
-									if INTDB.profile.INT_USEINTERACTKEY ~= val then
-										CallbackRegistry:Trigger("SETTINGS_CONTROLS_CHANGED")
-									end
-
-									--------------------------------
-
-									INTDB.profile.INT_USEINTERACTKEY = val
+									INTDB.profile.INT_CONTROLGUIDE = val
 								end
 							end,
-						},
-						Title_Mouse = {
-							name = "Mouse",
+						}
+					},
+				},
+				Group_Platform = {
+					name = L["Title - Platform"],
+					type = "Group",
+					order = 7,
+					hidden = function() return false end,
+					locked = function() return addon.Interaction.Variables.Active end,
+					category = Controls,
+					args = {
+						Title_Platform = {
+							name = L["Title - Platform"],
 							type = "Title",
 							order = 8,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
-							subcategory = 1,
 							category = Controls,
 						},
-						Checkbox_FlipMouseControls = {
-							name = "Flip Mouse Controls",
-							tooltipImage = NS.Variables.TOOLTIP_PATH .. "FlipMouse.png",
-							tooltipText = "Flip Left and Right mouse controls.\n\nDefault: Off.",
-							tooltipImageType = "Large",
-							type = "Checkbox",
+						Range_Platform = {
+							name = L["Range - Platform"],
+							tooltipImage = "",
+							tooltipText = L["Range - Platform - Tooltip"],
+							tooltipImageType = "Small",
+							type = "Range",
+							min = 1,
+							max = 3,
+							step = 1,
 							order = 9,
 							hidden = function() return false end,
 							locked = function() return addon.Interaction.Variables.Active end,
-							subcategory = 1,
+							subcategory = 0,
 							category = Controls,
-							get = function() return INTDB.profile.INT_FLIPMOUSE end,
-							set = function(_, val)
-								if not addon.Interaction.Variables.Active then
-									INTDB.profile.INT_FLIPMOUSE = val
+							valueText = function(val)
+								if val == 1 then
+									return L["Range - Platform - PC"]
+								elseif val == 2 then
+									return L["Range - Platform - Playstation"]
+								elseif val == 3 then
+									return L["Range - Platform - Xbox"]
 								end
 							end,
+							get = function() return INTDB.profile.INT_PLATFORM end,
+							set = function(_, val)
+								if not addon.Interaction.Variables.Active then
+									if val ~= INTDB.profile.INT_PLATFORM then
+										INTDB.profile.TutorialSettingsShown = false
+
+										--------------------------------
+
+										if val ~= addon.Variables.Platform then
+											NS.Utils.ReloadPrompt()
+										else
+											NS.Utils.ClearPrompt()
+										end
+									end
+
+									INTDB.profile.INT_PLATFORM = val
+								end
+							end
+						},
+						Group_PC = {
+							name = L["Title - PC"],
+							type = "Group",
+							order = 10,
+							hidden = function() return INTDB.profile.INT_PLATFORM > 1 end,
+							category = Controls,
+							args = {
+								Group_PC_Keyboard = {
+									name = L["Title - PC / Keyboard"],
+									type = "Group",
+									order = 11,
+									hidden = function() return false end,
+									category = Controls,
+									args = {
+										Title_Keyboard = {
+											name = L["Title - PC / Keyboard"],
+											type = "Title",
+											order = 12,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+										},
+										Checkbox_UseInteractKey = {
+											name = L["Checkbox - PC / Keyboard / Use Interact Key"],
+											tooltipImage = "",
+											tooltipText = L["Checkbox - PC / Keyboard / Use Interact Key - Tooltip"],
+											tooltipImageType = "Small",
+											type = "Checkbox",
+											order = 13,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_USEINTERACTKEY end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													if INTDB.profile.INT_USEINTERACTKEY ~= val then
+														CallbackRegistry:Trigger("SETTINGS_CONTROLS_CHANGED")
+													end
+
+													--------------------------------
+
+													INTDB.profile.INT_USEINTERACTKEY = val
+												end
+											end,
+										},
+									}
+								},
+								Group_PC_Mouse = {
+									name = L["Title - PC / Mouse"],
+									type = "Group",
+									order = 14,
+									hidden = function() return false end,
+									category = Controls,
+									args = {
+										Title_Mouse = {
+											name = L["Title - PC / Mouse"],
+											type = "Title",
+											order = 15,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+										},
+										Checkbox_FlipMouseControls = {
+											name = L["Checkbox - PC / Mouse / Flip Mouse Controls"],
+											tooltipImage = "",
+											tooltipText = L["Checkbox - PC / Mouse / Flip Mouse Controls - Tooltip"],
+											tooltipImageType = "Small",
+											type = "Checkbox",
+											order = 16,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_FLIPMOUSE end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													INTDB.profile.INT_FLIPMOUSE = val
+												end
+											end,
+										},
+									}
+								},
+								Group_PC_Keybind = {
+									name = L["Title - PC / Keybind"],
+									type = "Group",
+									order = 17,
+									hidden = function() return false end,
+									category = Controls,
+									args = {
+										Title_Keybind = {
+											name = L["Title - PC / Keybind"],
+											type = "Title",
+											order = 18,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+										},
+										Keybind_Previous = {
+											name = L["Keybind - PC / Keybind / Previous"],
+											tooltipImage = "",
+											tooltipText = L["Keybind - PC / Keybind / Previous - Tooltip"],
+											tooltipImageType = "Small",
+											type = "Keybind",
+											order = 19,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_KEY_PREVIOUS end,
+											setCriteria = function()
+												if not addon.Interaction.Variables.Active then
+													return true
+												else
+													return false
+												end
+											end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													INTDB.profile.INT_KEY_PREVIOUS = val
+												end
+											end,
+										},
+										Keybind_Next = {
+											name = L["Keybind - PC / Keybind / Next"],
+											tooltipImage = "",
+											tooltipText = L["Keybind - PC / Keybind / Next - Tooltip"],
+											tooltipImageType = "Small",
+											type = "Keybind",
+											order = 20,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_KEY_NEXT end,
+											setCriteria = function()
+												if not addon.Interaction.Variables.Active then
+													return true
+												else
+													return false
+												end
+											end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													INTDB.profile.INT_KEY_NEXT = val
+												end
+											end,
+										},
+										Keybind_Progress = {
+											name = L["Keybind - PC / Keybind / Progress"],
+											tooltipImage = "",
+											tooltipText = L["Keybind - PC / Keybind / Progress - Tooltip"],
+											tooltipImageType = "Small",
+											type = "Keybind",
+											order = 21,
+											hidden = function() return INTDB.profile.INT_USEINTERACTKEY end,
+											locked = function() return INTDB.profile.INT_USEINTERACTKEY or addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_KEY_PROGRESS end,
+											setCriteria = function()
+												if not addon.Interaction.Variables.Active then
+													return true
+												else
+													return false
+												end
+											end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													INTDB.profile.INT_KEY_PROGRESS = val
+												end
+											end
+										}
+									}
+								},
+							}
+						},
+						Group_Controller = {
+							name = L["Title - Controller"],
+							type = "Group",
+							order = 22,
+							hidden = function() return INTDB.profile.INT_PLATFORM == 1 end,
+							category = Controls,
+							args = {
+								-- Group_Controller_Controller = {
+								-- 	name = L["Title - Controller / Controller"],
+								-- 	type = "Group",
+								-- 	order = 23,
+								-- 	hidden = function() return false end,
+								-- 	category = Controls,
+								-- 	args = {
+								-- 		Title_Controller = {
+								-- 			name = L["Title - Controller / Controller"],
+								-- 			type = "Title",
+								-- 			order = 18,
+								-- 			hidden = function() return false end,
+								-- 			locked = function() return addon.Interaction.Variables.Active end,
+								-- 			subcategory = 1,
+								-- 			category = Controls,
+								-- 		},
+								-- 	}
+								-- }
+							}
 						}
-					}
-				},
-				Group_Controller = {
-					name = "Controller",
-					type = "Group",
-					order = 10,
-					hidden = function() return INTDB.profile.INT_PLATFORM == 1 end,
-					category = Controls,
-					args = {
-						-- Title_Controller = {
-						-- 	name = "Controller",
-						-- 	type = "Title",
-						-- 	order = 11,
-						-- 	hidden = function() return false end,
-						-- 	locked = function() return addon.Interaction.Variables.Active end,
-						-- 	subcategory = 1,
-						-- 	category = Controls,
-						-- },
 					}
 				}
 			}
@@ -1484,7 +1789,7 @@ function NS.Data:Load()
 							end,
 						},
 						Group_Readable = {
-							name = "Readable",
+							name = L["Title - Readable"],
 							type = "Group",
 							order = 10,
 							hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1492,7 +1797,7 @@ function NS.Data:Load()
 							category = Gameplay,
 							args = {
 								Group_Display = {
-									name = "Display",
+									name = L["Title - Readable / Display"],
 									type = "Group",
 									order = 11,
 									hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1528,15 +1833,15 @@ function NS.Data:Load()
 										},
 									}
 								},
-								Group_Cinematic = {
-									name = "Cinematic",
+								Group_Viewport = {
+									name = L["Title - Readable / Viewport"],
 									type = "Group",
 									order = 14,
 									hidden = function() return not INTDB.profile.INT_READABLE end,
 									locked = function() return InteractionReadableUIFrame:IsVisible() end,
 									category = Gameplay,
 									args = {
-										Title_Cinematic = {
+										Title_Viewport = {
 											name = L["Title - Readable / Viewport"],
 											type = "Title",
 											order = 15,
@@ -1545,7 +1850,7 @@ function NS.Data:Load()
 											subcategory = 1,
 											category = Gameplay,
 										},
-										Checkbox_Cinematic = {
+										Checkbox_Viewport = {
 											name = L["Checkbox - Readable / Viewport"],
 											tooltipImage = "",
 											tooltipText = L["Checkbox - Readable / Viewport - Tooltip"],
@@ -1566,7 +1871,7 @@ function NS.Data:Load()
 									}
 								},
 								Group_Shortcuts = {
-									name = "Shortcuts",
+									name = L["Title - Readable / Shortcuts"],
 									type = "Group",
 									order = 17,
 									hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1574,7 +1879,7 @@ function NS.Data:Load()
 									category = Gameplay,
 									args = {
 										Title_Shortcuts = {
-											name = "Shortcuts",
+											name = L["Title - Readable / Shortcuts"],
 											type = "Title",
 											order = 18,
 											hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1583,9 +1888,9 @@ function NS.Data:Load()
 											category = Gameplay,
 										},
 										Checkbox_Shortcuts_MinimapIcon = {
-											name = "Minimap Icon",
+											name = L["Checkbox - Readable / Shortcuts / Minimap Icon"],
 											tooltipImage = NS.Variables.TOOLTIP_PATH .. "Minimap.png",
-											tooltipText = "Display an icon on the minimap for quick access to library.\n\nDefault: Off.",
+											tooltipText = L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"],
 											tooltipImageType = "Large",
 											type = "Checkbox",
 											order = 19,
@@ -1609,7 +1914,7 @@ function NS.Data:Load()
 									}
 								},
 								-- Group_Audiobook = {
-								-- 	name = "Audiobook",
+								-- 	name = L["Title - Readable / Audiobook"],
 								-- 	type = "Group",
 								-- 	order = 20,
 								-- 	hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1617,7 +1922,7 @@ function NS.Data:Load()
 								-- 	category = Gameplay,
 								-- 	args = {
 								-- 		Title_Audiobook = {
-								-- 			name = "Audiobook",
+								-- 			name = L["Title - Readable / Audiobook"],
 								-- 			type = "Title",
 								-- 			order = 21,
 								-- 			hidden = function() return not INTDB.profile.INT_READABLE end,
@@ -1626,9 +1931,9 @@ function NS.Data:Load()
 								-- 			category = Gameplay,
 								-- 		},
 								-- 		Range_Audiobook_Rate = {
-								-- 			name = "Rate",
+								-- 			name = L["Range - Readable / Audiobook - Rate"],
 								-- 			tooltipImage = "",
-								-- 			tooltipText = "Playback rate.\n\nDefault: 100%",
+								-- 			tooltipText = L["Range - Readable / Audiobook - Rate - Tooltip"],
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Range",
 								-- 			min = -10,
@@ -1650,9 +1955,9 @@ function NS.Data:Load()
 								-- 			end
 								-- 		},
 								-- 		Range_Audiobook_Volume = {
-								-- 			name = "Volume",
+								-- 			name = L["Range - Readable / Audiobook - Volume"],
 								-- 			tooltipImage = "",
-								-- 			tooltipText = "Playback volume.\n\nDefault: 100%.",
+								-- 			tooltipText = L["Range - Readable / Audiobook - Volume - Tooltip"],
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Range",
 								-- 			min = 0,
@@ -1674,9 +1979,9 @@ function NS.Data:Load()
 								-- 			end
 								-- 		},
 								-- 		Dropdown_Audiobook_Voice = {
-								-- 			name = "Narrator",
+								-- 			name = L["Dropdown - Readable / Audiobook - Voice"],
 								-- 			tooltipImage = "",
-								-- 			tooltipText = "Playback voice.",
+								-- 			tooltipText = L["Dropdown - Readable / Audiobook - Voice - Tooltip"],
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Dropdown",
 								-- 			values = function()
@@ -1700,9 +2005,9 @@ function NS.Data:Load()
 								-- 					local Rate = (INTDB.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .25
 								-- 					local Volume = (INTDB.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
-								-- 					C_VoiceChat.StopSpeakingText()
+								-- 					addon.TextToSpeech.Script:StopSpeakingText()
 								-- 					addon.Libraries.AceTimer:ScheduleTimer(function()
-								-- 						C_VoiceChat.SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+								-- 						addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
 								-- 					end, 0)
 								-- 				end
 								-- 			end,
@@ -1949,7 +2254,7 @@ function NS.Data:Load()
 									Hidden,
 									Locked
 								)
-								frame.label:SetText(Name)
+								frame.Label:SetText(Name)
 
 								SetToParent(frame)
 								SetType(frame)
@@ -1980,7 +2285,7 @@ function NS.Data:Load()
 									Hidden,
 									Locked
 								)
-								frame.button:SetText(Name)
+								frame.Button:SetText(Name)
 
 								SetToParent(frame)
 								SetType(frame)
@@ -1998,11 +2303,14 @@ function NS.Data:Load()
 
 										--------------------------------
 
-										Set(...)
+										local _, val = ...
+										if tostring(val) ~= tostring(Get()) then
+											Set(...)
 
-										--------------------------------
+											--------------------------------
 
-										CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+											CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+										end
 									end,
 									Get,
 									Subcategory,
@@ -2012,7 +2320,7 @@ function NS.Data:Load()
 									Hidden,
 									Locked
 								)
-								frame.label:SetText(Name)
+								frame.Text:SetText(Name)
 
 								SetToParent(frame)
 								SetType(frame)
@@ -2028,6 +2336,9 @@ function NS.Data:Load()
 									Max,
 									Grid,
 									ValueText,
+									function()
+										CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+									end,
 									function(...)
 										if SetCriteria and not SetCriteria(...) then
 											return
@@ -2035,11 +2346,10 @@ function NS.Data:Load()
 
 										--------------------------------
 
-										Set(...)
-
-										--------------------------------
-
-										CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+										local _, val = ...
+										if tostring(val) ~= tostring(Get()) then
+											Set(...)
+										end
 									end,
 									Get,
 									Subcategory,
@@ -2049,7 +2359,7 @@ function NS.Data:Load()
 									Hidden,
 									Locked
 								)
-								frame.label:SetText(Name)
+								frame.Text:SetText(Name)
 
 								SetToParent(frame)
 								SetType(frame)
@@ -2071,11 +2381,14 @@ function NS.Data:Load()
 
 										--------------------------------
 
-										Set(...)
+										local _, val = ...
+										if tostring(val) ~= tostring(Get()) then
+											Set(...)
 
-										--------------------------------
+											--------------------------------
 
-										CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+											CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+										end
 									end,
 									Get,
 									Subcategory,
@@ -2085,7 +2398,49 @@ function NS.Data:Load()
 									Hidden,
 									Locked
 								)
-								frame.label:SetText(Name)
+								frame.Text:SetText(Name)
+
+								SetToParent(frame)
+								SetType(frame)
+								SetWidget(frame)
+							end
+
+							if Type == "Keybind" then
+								local frame
+								frame = NS.Widgets:CreateKeybindButton(
+									Category,
+									function(...)
+										if SetCriteria and not SetCriteria(...) then
+											return
+										end
+
+										--------------------------------
+
+										local _, val = ...
+										if tostring(val) ~= tostring(Get()) then
+											Set(...)
+
+											--------------------------------
+
+											CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+										end
+									end,
+									Get,
+									function(...)
+										if SetCriteria and not SetCriteria(...) then
+											return false
+										else
+											return true
+										end
+									end,
+									Subcategory,
+									TooltipText,
+									TooltipImage,
+									TooltipImageType,
+									Hidden,
+									Locked
+								)
+								frame.Text:SetText(Name)
 
 								SetToParent(frame)
 								SetType(frame)

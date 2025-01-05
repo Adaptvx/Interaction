@@ -14,11 +14,11 @@ function NS.Widgets:CreateTabButton(parent, click)
 
 	--------------------------------
 
-	local function Button()
-		Frame.button = CreateFrame("Button", nil, Frame, "UIPanelButtonTemplate")
-		Frame.button:SetSize(Frame:GetWidth(), Frame:GetHeight())
-		Frame.button:SetPoint("CENTER", Frame)
-		Frame.button:SetText("Placeholder")
+	do -- BUTTON
+		Frame.Button = CreateFrame("Button", nil, Frame, "UIPanelButtonTemplate")
+		Frame.Button:SetSize(Frame:GetWidth(), Frame:GetHeight())
+		Frame.Button:SetPoint("CENTER", Frame)
+		Frame.Button:SetText("Placeholder")
 
 		--------------------------------
 
@@ -43,7 +43,7 @@ function NS.Widgets:CreateTabButton(parent, click)
 				TextHighlightColor = addon.Theme.Settings.Text_Highlight_LightMode
 			end
 
-			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.button, {
+			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.Button, {
 				customColor = DefaultColor,
 				customHighlightColor = HighlightColor,
 				customActiveColor = ActiveColor,
@@ -53,15 +53,15 @@ function NS.Widgets:CreateTabButton(parent, click)
 
 			--------------------------------
 
-			if Frame.button and Frame.button.Leave then
-				Frame.button.Leave()
+			if Frame.Button and Frame.Button.Leave then
+				Frame.Button.Leave()
 			end
 		end
 
 		UpdateTheme()
 		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
 
-		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.button, {
+		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.Button, {
 			defaultTexture = AdaptiveAPI.PATH .. "empty",
 			playAnimation = false,
 			color = DefaultColor,
@@ -73,25 +73,25 @@ function NS.Widgets:CreateTabButton(parent, click)
 
 		--------------------------------
 
-		addon.SoundEffects:SetButton(Frame.button, addon.SoundEffects.Settings_TabButton_Enter, addon.SoundEffects.Settings_TabButton_Leave, addon.SoundEffects.Settings_TabButton_MouseDown, addon.SoundEffects.Settings_TabButton_MouseUp)
+		addon.SoundEffects:SetButton(Frame.Button, addon.SoundEffects.Settings_TabButton_Enter, addon.SoundEffects.Settings_TabButton_Leave, addon.SoundEffects.Settings_TabButton_MouseDown, addon.SoundEffects.Settings_TabButton_MouseUp)
 
 		--------------------------------
 
-		local function Text()
-			Frame.button.text = Frame.button:GetFontString()
-			Frame.button.text:SetSize(Frame.button:GetWidth() - NS.Variables:RATIO(6), Frame.button:GetWidth() - NS.Variables:RATIO(6))
-			Frame.button.text:SetFont(AdaptiveAPI.Fonts.Content_Light, 17.5, "")
-			Frame.button.text:SetJustifyH("LEFT")
-			Frame.button.text:SetJustifyV("MIDDLE")
+		do -- TEXT
+			Frame.Button.Text = Frame.Button:GetFontString()
+			Frame.Button.Text:SetSize(Frame.Button:GetWidth() - NS.Variables:RATIO(6), Frame.Button:GetWidth() - NS.Variables:RATIO(6))
+			Frame.Button.Text:SetFont(AdaptiveAPI.Fonts.Content_Light, 17.5, "")
+			Frame.Button.Text:SetJustifyH("LEFT")
+			Frame.Button.Text:SetJustifyV("MIDDLE")
 		end
 
-		local function Icon()
-			Frame.button.leftIcon, Frame.button.leftIconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.button, Frame.button:GetFrameStrata(), nil, "$parent.leftIcon")
-			Frame.button.leftIcon:SetSize(35, 35)
-			Frame.button.leftIcon:SetPoint("LEFT", Frame.button, 12.5, 0)
-			Frame.button.rightIcon, Frame.button.rightIconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.button, Frame.button:GetFrameStrata(), nil, "$parent.rightIcon")
-			Frame.button.rightIcon:SetSize(35, 35)
-			Frame.button.rightIcon:SetPoint("RIGHT", Frame.button, -12.5, 0)
+		do -- ICON
+			Frame.Button.Left_Icon, Frame.Button.Left_IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.leftIcon")
+			Frame.Button.Left_Icon:SetSize(35, 35)
+			Frame.Button.Left_Icon:SetPoint("LEFT", Frame.Button, 12.5, 0)
+			Frame.Button.Right_Icon, Frame.Button.Right_IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.rightIcon")
+			Frame.Button.Right_Icon:SetSize(35, 35)
+			Frame.Button.Right_Icon:SetPoint("RIGHT", Frame.Button, -12.5, 0)
 
 			--------------------------------
 
@@ -107,46 +107,37 @@ function NS.Widgets:CreateTabButton(parent, click)
 					TEXTURE_RIGHT = addon.Variables.PATH .. "Art/Platform/Platform-RB-Tab.png"
 				end
 
-				Frame.button.leftIconTexture:SetTexture(TEXTURE_LEFT)
-				Frame.button.rightIconTexture:SetTexture(TEXTURE_RIGHT)
+				Frame.Button.Left_IconTexture:SetTexture(TEXTURE_LEFT)
+				Frame.Button.Right_IconTexture:SetTexture(TEXTURE_RIGHT)
 			end, 5)
 		end
 
 		--------------------------------
 
-		Text()
-		Icon()
+		Frame.Button.SetGuide = function()
+			Frame.Button.Text:SetWidth(Frame.Button:GetWidth() - 95)
+			Frame.Button.Text:SetJustifyH("CENTER")
 
-		--------------------------------
-
-		Frame.button.SetGuide = function()
-			Frame.button.text:SetWidth(Frame.button:GetWidth() - 95)
-			Frame.button.text:SetJustifyH("CENTER")
-
-			Frame.button.leftIcon:Show()
-			Frame.button.rightIcon:Show()
+			Frame.Button.Left_Icon:Show()
+			Frame.Button.Right_Icon:Show()
 		end
 
-		Frame.button.ClearGuide = function()
-			Frame.button.text:SetWidth(Frame.button:GetWidth() - NS.Variables:RATIO(6))
-			Frame.button.text:SetJustifyH("LEFT")
+		Frame.Button.ClearGuide = function()
+			Frame.Button.Text:SetWidth(Frame.Button:GetWidth() - NS.Variables:RATIO(6))
+			Frame.Button.Text:SetJustifyH("LEFT")
 
-			Frame.button.leftIcon:Hide()
-			Frame.button.rightIcon:Hide()
+			Frame.Button.Left_Icon:Hide()
+			Frame.Button.Right_Icon:Hide()
 		end
 
-		Frame.button:SetScript("OnClick", function()
-			click(Frame.button)
+		Frame.Button:SetScript("OnClick", function()
+			click(Frame.Button)
 		end)
 
 		--------------------------------
 
-		Frame.button.ClearGuide()
+		Frame.Button.ClearGuide()
 	end
-
-	--------------------------------
-
-	Button()
 
 	--------------------------------
 

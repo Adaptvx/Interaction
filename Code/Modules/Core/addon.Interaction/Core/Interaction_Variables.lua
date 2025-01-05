@@ -24,13 +24,9 @@ do -- MAIN
 
 	-- QUEST
 	NS.Variables.LastQuestNPC = nil
-	NS.Variables.SelectedOptionIcon = nil
-	NS.Variables.SelectedOptionText = nil
 
-	-- SAVE
-	NS.Variables.SavedSelectedOptionText = nil
+	-- INFO
 	NS.Variables.Type = nil
-	NS.Variables.SavedNPC = nil
 end
 
 do -- CONSTANTS

@@ -206,6 +206,23 @@ function NS:Load()
 	--------------------------------
 
 	do
+		local Events = CreateFrame("Frame")
+		Events:RegisterEvent("CINEMATIC_START")
+		Events:RegisterEvent("PLAY_MOVIE")
+		Events:RegisterEvent("CINEMATIC_STOP")
+		Events:RegisterEvent("STOP_MOVIE")
+		Events:SetScript("OnEvent", function(self, event, ...)
+			if event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
+				InteractionFrame:Hide()
+				InteractionPriorityFrame:Hide()
+			end
+
+			if event == "CINEMATIC_STOP" or event == "STOP_MOVIE" then
+				InteractionFrame:Show()
+				InteractionPriorityFrame:Show()
+			end
+		end)
+
 		CallbackRegistry:Add("THEME_UPDATE_ANIMATION", function()
 			Frame.ChangeThemeAnimation()
 		end, 0)

@@ -5,11 +5,9 @@ local L = addon.Locales
 --------------------------------
 
 local function Load()
-    if (not GetLocale() == "zhCN") then return end
-
-	--------------------------------
-
-	-- Add localization here:
+	if GetLocale() ~= "zhCN" then
+		return
+	end
 end
 
 Load()

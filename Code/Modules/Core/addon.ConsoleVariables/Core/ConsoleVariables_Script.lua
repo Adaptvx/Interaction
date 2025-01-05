@@ -215,16 +215,8 @@ function NS.Script:Load()
 	end
 
 	function NS.Script:StopInteraction()
-		local InteractionActive = (addon.Interaction.Variables.Active)
-
-		--------------------------------
-
-		addon.Libraries.AceTimer:ScheduleTimer(function()
-			if not InteractionActive then
-				NS.Script:ResetCVars_General(true)
-				NS.Script:ResetCVars_CinematicMode(true)
-			end
-		end, .1)
+		NS.Script:ResetCVars_General(true)
+		NS.Script:ResetCVars_CinematicMode(true)
 	end
 
 	CallbackRegistry:Add("START_INTERACTION", function() NS.Script:StartInteraction() end, 0)

@@ -89,7 +89,7 @@ function NS.Script:Load()
                 --------------------------------
 
                 AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
-                AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 125, 100, "y")
+                AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 100, 75, "y")
 
                 --------------------------------
 
@@ -103,18 +103,19 @@ function NS.Script:Load()
                     HideTimer:Cancel()
                 end
 
-                if skipAnimation then
-                    Frame.hidden = true
-                    Frame:Hide()
-                else
-                    HideTimer = C_Timer.NewTimer(.5, function()
-                        if Frame.hidden then
-                            Frame.hidden = true
-                            Frame:Hide()
-                        end
-                        HideTimer = nil
-                    end)
-                end
+				if skipAnimation then
+					Frame.hidden = true
+					Frame:Hide()
+				else
+					HideTimer = C_Timer.NewTimer(.5, function()
+						if Frame.hidden then
+							Frame.hidden = true
+							Frame:Hide()
+						end
+						HideTimer = nil
+					end)
+				end
+
                 --------------------------------
 
                 Frame.hidden = true
@@ -131,8 +132,8 @@ function NS.Script:Load()
                     Frame:SetAlpha(0)
                     Frame:SetPoint("LEFT", relativeTo, 125, offsetY)
                 else
-                    AdaptiveAPI.Animation:Fade(Frame, .25, 1, 0)
-                    AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 100, 125, "y")
+                    AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
+                    AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 75, 100, "y")
                 end
 
                 --------------------------------

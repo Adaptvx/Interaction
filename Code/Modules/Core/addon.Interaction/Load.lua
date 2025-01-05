@@ -18,6 +18,7 @@ function NS:Load()
 		NS.Dialog:Load()
 		NS.Gossip:Load()
 		NS.Quest:Load()
+		NS.Effects:Load()
 	end
 
 	--------------------------------

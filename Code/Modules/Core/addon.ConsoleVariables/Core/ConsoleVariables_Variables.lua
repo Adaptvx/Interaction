@@ -33,18 +33,12 @@ do -- CONSTANTS
 		ClampTargetNameplateToScreen = 0,
 		NameplateOtherTopInset = -1,
 		NameplateOtherBottomInset = -1,
-		NameplateOtherAtBase = 0,
 		NameplateMotion = 0,
-		NameplateMinAlpha = 0, -- Retail?
-		NameplateMaxAlpha = 0, -- Retail?
-		NameplateNotSelectedAlpha = 0, -- Classic?
 	}
 
 	NS.Variables.CVARS_CINEMATIC = {
 		CameraKeepCharacterCentered = 0,
 		CameraReduceUnexpectedMovement = 0,
-		ChatBubbles = 0,
-		ChatBubblesParty = 0,
 	}
 end
 

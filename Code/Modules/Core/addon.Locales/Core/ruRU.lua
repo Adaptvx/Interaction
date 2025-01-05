@@ -1,3 +1,5 @@
+-- Localization and translation ZamestoTV
+
 local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
@@ -5,8 +7,9 @@ local L = addon.Locales
 --------------------------------
 
 local function Load()
-    if (not GetLocale() == "ruRU") then return end
-	-- Localization and translation ZamestoTV
+	if GetLocale() ~= "ruRU" then
+		return
+	end
 
 	--------------------------------
 	-- SETTINGS
@@ -38,14 +41,36 @@ local function Load()
 		L["Title - Theme"] = "Тема"
 		L["Range - Main Theme"] = "Основная тема"
 		L["Range - Main Theme - Tooltip"] = "Устанавливает общую тему пользовательского интерфейса.\n\nПо умолчанию: День."
+		L["Range - Main Theme - Day"] = "DAY"
+		L["Range - Main Theme - Night"] = "NIGHT"
 		L["Range - Dialog Theme"] = "Тема диалога"
 		L["Range - Dialog Theme - Tooltip"] = "Устанавливает тему пользовательского интерфейса диалогового окна НПС.\n\nПо умолчанию: Автоматически."
+		L["Range - Dialog Theme - Auto"] = "AUTO"
+		L["Range - Dialog Theme - Day"] = "DAY"
+		L["Range - Dialog Theme - Night"] = "NIGHT"
+		L["Range - Dialog Theme - Rustic"] = "RUSTIC"
 		L["Title - Appearance"] = "Внешний вид"
-		L["Range - Orientation"] = "Направление пользовательского интерфейса"
-		L["Range - Orientation - Tooltip"] = "Задает направление пользовательского интерфейса."
-		L["Title - Text"] = "Текст"
-		L["Range - Content Size"] = "Размер содержимого"
-		L["Range - Content Size - Tooltip"] = "Настройте размер текста диалога."
+		L["Range - UIDirection"] = "Направление пользовательского интерфейса"
+		L["Range - UIDirection - Tooltip"] = "Задает направление пользовательского интерфейса."
+		L["Range - UIDirection - Left"] = "LEFT"
+		L["Range - UIDirection - Right"] = "RIGHT"
+		L["Range - UIDirection / Dialog"] = "Fixed Dialog Position"
+		L["Range - UIDirection / Dialog - Tooltip"] = "Sets the fixed dialog position.\n\nFixed dialog is used when the NPC's nameplate is unavailable."
+		L["Range - UIDirection / Dialog - Top"] = "TOP"
+		L["Range - UIDirection / Dialog - Center"] = "CENTER"
+		L["Range - UIDirection / Dialog - Bottom"] = "BOTTOM"
+		L["Checkbox - UIDirection / Dialog / Mirror"] = "Mirror"
+		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Mirrors the UI direction."
+		L["Range - Quest Frame Size"] = "Quest Frame Size"
+		L["Range - Quest Frame Size - Tooltip"] = "Adjust quest frame size.\n\nDefault: LARGE."
+		L["Range - Quest Frame Size - Small"] = "SMALL"
+		L["Range - Quest Frame Size - Medium"] = "MEDIUM"
+		L["Range - Quest Frame Size - Large"] = "LARGE"
+		L["Range - Quest Frame Size - Extra Large"] = "EXTRA LARGE"
+		L["Range - Text Size"] = "Text Size"
+		L["Range - Text Size - Tooltip"] = "Adjust text size."
+		L["Range - Text Size"] = "Размер содержимого"
+		L["Range - Text Size - Tooltip"] = "Настройте размер текста диалога."
 		L["Title - Dialog"] = "Диалог"
 		L["Checkbox - Dialog / Title / Progress Bar"] = "Показать полосу прогресса"
 		L["Checkbox - Dialog / Title / Progress Bar - Tooltip"] = "Показывает или скрывает полосу прогресса диалога.\n\nЭта полоса показывает, насколько далеко вы продвинулись в текущем разговоре.\n\nПо умолчанию: Вкл."
@@ -63,6 +88,10 @@ local function Load()
 		L["Checkbox - Hide UI - Tooltip"] = "Скрывает пользовательский интерфейс во время взаимодействия с НПС.\n\nПо умолчанию: Вкл."
 		L["Range - Cinematic"] = "Эффекты камеры"
 		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: Все."
+		L["Range - Cinematic - None"] = "NONE"
+		L["Range - Cinematic - Full"] = "FULL"
+		L["Range - Cinematic - Balanced"] = "BALANCED"
+		L["Range - Cinematic - Custom"] = "CUSTOM"
 		L["Checkbox - Zoom"] = "Увеличение"
 		L["Range - Zoom Distance"] = "Макс. расстояние"
 		L["Range - Zoom Distance - Tooltip"] = "Порог увеличения."
@@ -95,6 +124,7 @@ local function Load()
 		L["Checkbox - Vignette"] = "Vignette"
 		L["Checkbox - Vignette - Tooltip"] = "Уменьшает яркость краев."
 
+
 		-- PLAYBACK
 		L["Title - Pace"] = "Pace"
 		L["Range - Playback Speed"] = "Playback Speed"
@@ -112,6 +142,10 @@ local function Load()
 		L["Checkbox - Text To Speech"] = "Enable"
 		L["Checkbox - Text To Speech - Tooltip"] = "Reads out dialog text.\n\nDefault: Off."
 		L["Title - Text To Speech / Playback"] = "Playback"
+		L["Checkbox - Text To Speech / Quest"] = "Play Quest"
+		L["Checkbox - Text To Speech / Quest - Tooltip"] = "Enable Text to Speech on quest dialog.\n\nDefault: On."
+		L["Checkbox - Text To Speech / Gossip"] = "Play Gossip"
+		L["Checkbox - Text To Speech / Gossip - Tooltip"] = "Enable Text to Speech on gossip dialog.\n\nDefault: On."
 		L["Range - Text To Speech / Rate"] = "Rate"
 		L["Range - Text To Speech / Rate - Tooltip"] = "Speech rate offset.\n\nDefault: 100%."
 		L["Range - Text To Speech / Volume"] = "Volume"
@@ -134,18 +168,30 @@ local function Load()
 		L["Checkbox - Mute Dialog - Tooltip"] = "Mutes Blizzard's NPC dialog audio during NPC interaction.\n\nDefault: Off."
 
 		-- CONTROLS
+		L["Title - UI"] = "UI"
+		L["Checkbox - UI / Control Guide"] = "Show Control Guide"
+		L["Checkbox - UI / Control Guide - Tooltip"] = "Shows the control guide frame.\n\nDefault: On."
 		L["Title - Platform"] = "Platform"
 		L["Range - Platform"] = "Platform"
 		L["Range - Platform - Tooltip"] = "Requires Interface Reload to take effect."
 		L["Range - Platform - PC"] = "PC"
 		L["Range - Platform - Playstation"] = "Playstation"
 		L["Range - Platform - Xbox"] = "Xbox"
+		L["Title - PC"] = "PC"
 		L["Title - PC / Keyboard"] = "Keyboard"
-		L["Checkbox - PC / Use Interact Key"] = "Use Interact Key"
-		L["Checkbox - PC / Use Interact Key - Tooltip"] = "Use the interact key for Skip/Accept instead of Space. Multi-key combinations not supported.\n\nDefault: Off."
+		L["Checkbox - PC / Keyboard / Use Interact Key"] = "Use Interact Key"
+		L["Checkbox - PC / Keyboard / Use Interact Key - Tooltip"] = "Use the interact key for progressing. Multi-key combinations not supported.\n\nDefault: Off."
 		L["Title - PC / Mouse"] = "Mouse"
-		L["Checkbox - PC / Flip Mouse Controls"] = "Flip Mouse Controls"
-		L["Checkbox - PC / Flip Mouse Controls - Tooltip"] = "Flip Left and Right mouse controls.\n\nDefault: Off."
+		L["Checkbox - PC / Mouse / Flip Mouse Controls"] = "Flip Mouse Controls"
+		L["Checkbox - PC / Mouse / Flip Mouse Controls - Tooltip"] = "Flip Left and Right mouse controls.\n\nDefault: Off."
+		L["Title - PC / Keybind"] = "Keybinds"
+		L["Keybind - PC / Keybind / Previous"] = "Previous"
+		L["Keybind - PC / Keybind / Previous - Tooltip"] = "Previous dialog keybind.\n\nDefault: Q."
+		L["Keybind - PC / Keybind / Next"] = "Next"
+		L["Keybind - PC / Keybind / Next - Tooltip"] = "Next dialog keybind.\n\nDefault: E."
+		L["Keybind - PC / Keybind / Progress"] = "Progress"
+		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Keybind to progress the current session.\n\nDefault: SPACE."
+		L["Title - Controller"] = "Controller"
 		L["Title - Controller / Controller"] = "Controller"
 
 		-- GAMEPLAY
@@ -166,9 +212,16 @@ local function Load()
 		L["Title - Readable / Shortcuts"] = "Shortcuts"
 		L["Checkbox - Readable / Shortcuts / Minimap Icon"] = "Minimap Icon"
 		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Display an icon on the minimap for quick access to library.\n\nDefault: On."
+		L["Title - Readable / Audiobook"] = "Audiobook"
+		L["Range - Readable / Audiobook - Rate"] = "Rate"
+		L["Range - Readable / Audiobook - Rate - Tooltip"] = "Playback rate.\n\nDefault: 100%."
+		L["Range - Readable / Audiobook - Volume"] = "Volume"
+		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Playback volume.\n\nDefault: 100%."
+		L["Dropdown - Readable / Audiobook - Voice"] = "Narrator"
+		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Playback voice."
 		L["Title - Gameplay"] = "Gameplay"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Auto Select Options"
-		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Selects best option for certain NPCs.\n\nDefault: Off."
+		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Selects the best option for certain NPCs.\n\nDefault: Off."
 
 		-- MORE
 		L["Title - Audio"] = "Audio"
@@ -225,14 +278,16 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionQuestFrame - Objectives"] = "Objectives"
+		L["InteractionQuestFrame - Objectives"] = "Quest Objectives"
 		L["InteractionQuestFrame - Rewards"] = "Rewards"
 		L["InteractionQuestFrame - Required Items"] = "Required Items"
 
-		L["InteractionQuestFrame - Quest Log Full"] = "Quest Log Full"
+		L["InteractionQuestFrame - Accept - Quest Log Full"] = "Quest Log Full"
+		L["InteractionQuestFrame - Accept - Auto Accept"] = "Auto Accepted"
 		L["InteractionQuestFrame - Accept"] = "Accept"
 		L["InteractionQuestFrame - Decline"] = "Decline"
 		L["InteractionQuestFrame - Goodbye"] = "Goodbye"
+		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Got it"
 		L["InteractionQuestFrame - Continue"] = "Continue"
 		L["InteractionQuestFrame - In Progress"] = "In Progress"
 		L["InteractionQuestFrame - Complete"] = "Complete"
@@ -252,6 +307,31 @@ local function Load()
 
 	do
 		L["InteractionGossipFrame - Close"] = "Goodbye"
+	end
+
+	--------------------------------
+	-- INTERACTION CONTROL GUIDE
+	--------------------------------
+
+	do
+		L["ControlGuide - Back"] = "Back"
+		L["ControlGuide - Next"] = "Next"
+		L["ControlGuide - Skip"] = "Skip"
+		L["ControlGuide - Accept"] = "Accept"
+		L["ControlGuide - Continue"] = "Continue"
+		L["ControlGuide - Complete"] = "Complete"
+		L["ControlGuide - Decline"] = "Decline"
+		L["ControlGuide - Goodbye"] = "Goodbye"
+		L["ControlGuide - Got it"] = "Got it"
+	end
+
+	--------------------------------
+	-- ALERT NOTIFiCATION
+	--------------------------------
+
+	do
+		L["Alert Notification - Accept"] = "Quest Accepted"
+		L["Alert Notification - Complete"] = "Quest Completed"
 	end
 
 	--------------------------------

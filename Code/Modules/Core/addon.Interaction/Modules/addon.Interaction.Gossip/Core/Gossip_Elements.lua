@@ -52,10 +52,11 @@ function NS.Elements:Load()
 						customHighlightColor = nil,
 						customActiveColor = nil,
 					}, "$parent.GoodbyeButton")
-					Frame.GoodbyeButton:SetPoint("BOTTOM", Frame, 0, 12.5)
+					Frame.GoodbyeButton:SetPoint("CENTER", Frame) -- Modified later in Gossip_Script.lua
 					Frame.GoodbyeButton:SetText(L["InteractionGossipFrame - Close"])
-					addon.API:SetButtonToPlatform(Frame.GoodbyeButton, "Decline", true, Frame.GoodbyeButton.Text)
+					addon.API:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 
+					Frame.GoodbyeButton:SetAlpha(.5)
 
 					--------------------------------
 
@@ -72,13 +73,13 @@ function NS.Elements:Load()
 					do -- PARALLAX
 						AdaptiveAPI:AnchorToCenter(Frame.GoodbyeButton)
 
-						Frame.GoodbyeButton:GetFontString().AdaptiveAPI_Animation_Parallax_Weight = 2.5
-						AdaptiveAPI.Animation:AddParallax(Frame.GoodbyeButton:GetFontString(), Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
+						Frame.GoodbyeButton.API_ButtonTextFrame.AdaptiveAPI_Animation_Parallax_Weight = 2.5
+						AdaptiveAPI.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
 					end
 
 					do -- EVENTS
 						local function UpdateSize()
-							Frame.GoodbyeButton:SetSize(Frame:GetWidth() - 20, 27.5)
+							Frame.GoodbyeButton:SetSize(Frame:GetWidth() - 125, 27.5)
 							Frame.GoodbyeButton.Background:SetSize(Frame.GoodbyeButton:GetWidth() + 125, Frame.GoodbyeButton:GetHeight() + 50)
 						end
 
@@ -127,31 +128,43 @@ function NS.Elements:Load()
 
 					--------------------------------
 
+					button.OptionFrame = nil
+					button.OptionType = nil
+					button.OptionID = nil
+					button.OptionIndex = nil
+
+					--------------------------------
+
 					button.UpdatePosition = function()
 						button:SetPoint("TOP", relativeTo, 0, offsetCalculation())
 					end
 
 					--------------------------------
 
-					button.Callback = nil
-
 					button.Click = function()
-						local function SetOptionInfo()
-							addon.Interaction.Variables.SelectedOptionIcon = button.IconTexture:GetTexture()
-							addon.Interaction.Variables.SelectedOptionText = button.Label:GetText()
-						end
-
-						--------------------------------
-
-						SetOptionInfo()
-
-						--------------------------------
-
 						CallbackRegistry:Trigger("GOSSIP_BUTTON_CLICKED", button)
 
 						--------------------------------
 
 						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Gossip_Button_MouseUp)
+					end
+
+					button.SelectOption = function()
+						if button.OptionFrame == "gossip" then
+							if button.OptionType == "available" then
+								C_GossipInfo.SelectAvailableQuest(button.OptionID)
+							elseif button.OptionType == "active" then
+								C_GossipInfo.SelectActiveQuest(button.OptionID)
+							elseif button.OptionType == "option" then
+								C_GossipInfo.SelectOption(button.OptionID)
+							end
+						elseif button.OptionFrame == "quest-greeting" then
+							if button.OptionType == "available" then
+								SelectAvailableQuest(button.OptionIndex)
+							elseif button.OptionType == "active" then
+								SelectActiveQuest(button.OptionIndex)
+							end
+						end
 					end
 
 					button.MouseDownCallback = function()
@@ -198,14 +211,14 @@ function NS.Elements:Load()
 
 					--------------------------------
 
-					local function Icon()
+					do -- ICON
 						button.Icon, button.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH .. "Art/Icons/logo.png", "$parent.Icon")
 						button.Icon:SetSize(17.5, 17.5)
 						button.Icon:SetFrameStrata("FULLSCREEN")
 						button.Icon:SetFrameLevel(2)
 					end
 
-					local function Label()
+					do -- LABEL
 						button.Label = AdaptiveAPI.FrameTemplates:CreateText(button, { r = 1, g = 1, b = 1 }, 14, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 						button.Label:SetHeight(button:GetHeight())
 
@@ -214,7 +227,7 @@ function NS.Elements:Load()
 						button.Label.Offset = 0
 					end
 
-					local function Standalone()
+					do -- STANDALONE
 						button.Standalone = CreateFrame("Frame", "$parent.Standalone", button)
 						button.Standalone:SetWidth(button:GetWidth() + 35)
 						button.Standalone:SetPoint("CENTER", button)
@@ -225,12 +238,12 @@ function NS.Elements:Load()
 
 						hooksecurefunc(button, "SetHeight", function()
 							button.Standalone:SetHeight(button:GetHeight())
-							button.Standalone.Background:SetHeight(button.Standalone:GetHeight() - NS.Variables:RATIO(10))
+							button.Standalone.Background:SetHeight(button.Standalone:GetHeight() + 2.5)
 						end)
 
 						--------------------------------
 
-						local function Background()
+						do -- BACKGROUND
 							button.Standalone.Background, button.Standalone.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(button.Standalone, "FULLSCREEN", nil, { left = 128, top = 128, right = 128, bottom = 128 }, .0875, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 							button.Standalone.Background:SetWidth(button.Standalone:GetWidth())
 							button.Standalone.Background:SetPoint("CENTER", button.Standalone)
@@ -248,17 +261,17 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsStylisedTheme_Dialog then
-									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-dark-mode.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-dark-mode.png"
+								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
+									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-dark.png"
+									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-dark.png"
 
-									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-dark-mode.png"
+									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-dark.png"
 									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
 								else
-									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-light-mode.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-light-mode.png"
+									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-light.png"
+									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-light.png"
 
-									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-light-mode.png"
+									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-light.png"
 									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
 								end
 
@@ -274,21 +287,17 @@ function NS.Elements:Load()
 							end
 						end
 
-						local function Gradient()
-							button.Standalone.Gradient, button.Standalone.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(button.Standalone, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/gradient-horizontal.png")
-							button.Standalone.Gradient:SetWidth(button.Standalone:GetWidth() + 100)
-							button.Standalone.Gradient:SetPoint("CENTER", button.Standalone)
-							button.Standalone.Gradient:SetFrameStrata("FULLSCREEN")
-							button.Standalone.Gradient:SetFrameLevel(0)
-							button.Standalone.Gradient:SetAlpha(1)
-						end
-
-						--------------------------------
-
-						Background()
+						-- do -- GRADIENT
+						-- 	button.Standalone.Gradient, button.Standalone.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(button.Standalone, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/gradient-horizontal.png")
+						-- 	button.Standalone.Gradient:SetWidth(button.Standalone:GetWidth() + 100)
+						-- 	button.Standalone.Gradient:SetPoint("CENTER", button.Standalone)
+						-- 	button.Standalone.Gradient:SetFrameStrata("FULLSCREEN")
+						-- 	button.Standalone.Gradient:SetFrameLevel(0)
+						-- 	button.Standalone.Gradient:SetAlpha(1)
+						-- end
 					end
 
-					local function Keybind()
+					do -- KEYBIND
 						button.Keybind = CreateFrame("Frame")
 						button.Keybind:SetParent(button)
 						button.Keybind:SetSize(30, 30)
@@ -298,7 +307,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						local function Background()
+						do -- BACKGROUND
 							button.Keybind.Background, button.Keybind.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(button.Keybind, "MEDIUM", NS.Variables.PATH .. "key-background.png", 50, 1, "$parent.Background")
 							button.Keybind.Background:SetAllPoints(button.Keybind)
 							button.Keybind.Background:SetFrameStrata("FULLSCREEN")
@@ -309,29 +318,24 @@ function NS.Elements:Load()
 							addon.API:RegisterThemeUpdate(function()
 								local TEXTURE_Background
 
-								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsStylisedTheme_Dialog then
-									TEXTURE_Background = NS.Variables.PATH .. "key-background-dark-mode.png"
+								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
+									TEXTURE_Background = NS.Variables.PATH .. "key-background-dark.png"
 								else
-									TEXTURE_Background = NS.Variables.PATH .. "key-background-light-mode.png"
+									TEXTURE_Background = NS.Variables.PATH .. "key-background-light.png"
 								end
 
 								button.Keybind.BackgroundTexture:SetTexture(TEXTURE_Background)
 							end, 5)
 						end
 
-						local function Label()
-							button.Keybind.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Bold)
+						do -- LABEL
+							button.Keybind.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 							button.Keybind.Label:SetSize(30, 30)
 							button.Keybind.Label:SetPoint("CENTER", button.Keybind)
 						end
-
-						--------------------------------
-
-						Background()
-						Label()
 					end
 
-					local function Keybind_Controller()
+					do -- KEYBIND (CONTROLLER)
 						button.Keybind_Controller = CreateFrame("Frame")
 						button.Keybind_Controller:SetSize(30, 30)
 						button.Keybind_Controller:SetPoint("LEFT", button, -19.5, 0)
@@ -340,7 +344,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						local function Label()
+						do -- LABEL
 							button.Keybind_Controller.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind_Controller, { r = 1, g = 1, b = 1 }, 16, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 							button.Keybind_Controller.Label:SetSize(button.Keybind_Controller:GetWidth(), button.Keybind_Controller:GetHeight())
 							button.Keybind_Controller.Label:SetPoint("CENTER", button.Keybind_Controller)
@@ -355,13 +359,9 @@ function NS.Elements:Load()
 								button.Keybind_Controller.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2", 16, 16, 0, 0))
 							end
 						end
-
-						--------------------------------
-
-						Label()
 					end
 
-					local function Layout()
+					do -- LAYOUT
 						if addon.Input.Variables.IsController or addon.Input.Variables.SimulateController then
 							if button:GetHeight() <= 45 then
 								button.Icon:ClearAllPoints()
@@ -453,20 +453,8 @@ function NS.Elements:Load()
 						end
 					end
 
-					local function Animation()
-						local function HideButtons()
-							local Buttons = Frame.GetButtons()
-
-							if Buttons then
-								for i = 1, #Buttons do
-									if not button.AnimationState == "Leave" then
-										Buttons[i].Leave(true)
-									end
-								end
-							end
-						end
-
-						local function Enter(skipAnimation)
+					do -- ANIMATION
+						button.Enter = function(skipAnimation)
 							if button.selected then
 								return
 							end
@@ -474,7 +462,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							if not button.transition then
-								HideButtons()
+								button.HideButtons()
 							end
 
 							--------------------------------
@@ -497,15 +485,15 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								local function Text()
-									AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset, 0, button.Label.Offset + 7.5, 0, AdaptiveAPI.Animation.EaseExpo, function() return not button.selected end)
-								end
+								-- do -- TEXT
+								-- 	AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset, 0, button.Label.Offset + 7.5, 0, AdaptiveAPI.Animation.EaseExpo, function() return not button.selected end)
+								-- end
 
-								local function Button()
+								do -- BUTTON
 									AdaptiveAPI.Animation:Fade(button, .05, .75, 1, nil, function() return not button.selected end)
 								end
 
-								local function State()
+								do -- STATE
 									local transitionID = GetTime()
 									button.Label.transition = true
 									button.Label.transitionID = transitionID
@@ -516,30 +504,18 @@ function NS.Elements:Load()
 										end
 									end, 1)
 								end
-
-								--------------------------------
-
-								-- Text()
-								Button()
-								State()
 							else
-								local function Text()
-									button.Label:SetPoint("LEFT", button, button.Label.Offset + 7.5, 0)
-								end
+								-- do -- TEXT
+								-- 	button.Label:SetPoint("LEFT", button, button.Label.Offset + 7.5, 0)
+								-- end
 
-								local function Button()
+								do -- BUTTON
 									button:SetAlpha(1)
 								end
 
-								local function State()
+								do -- STATE
 									button.Label.transition = false
 								end
-
-								--------------------------------
-
-								-- Text()
-								Button()
-								State()
 							end
 
 							--------------------------------
@@ -547,7 +523,7 @@ function NS.Elements:Load()
 							CallbackRegistry:Trigger("GOSSIP_BUTTON_ENTER")
 						end
 
-						local function Leave(skipAnimation)
+						button.Leave = function(skipAnimation)
 							local State = NS.Variables.State
 
 							--------------------------------
@@ -570,15 +546,15 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								local function Text()
-									AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset + 7.5, 0, button.Label.Offset, 0, AdaptiveAPI.Animation.EaseExpo, function() return button.selected end)
-								end
+								-- do -- TEXT
+								-- 	AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset + 7.5, 0, button.Label.Offset, 0, AdaptiveAPI.Animation.EaseExpo, function() return button.selected end)
+								-- end
 
-								local function Button()
+								do -- BUTTON
 									AdaptiveAPI.Animation:Fade(button, .05, 1, 1, nil, function() return button.selected end)
 								end
 
-								local function State()
+								do -- STATE
 									local transitionID = GetTime()
 									button.Label.transition = true
 									button.Label.transitionID = transitionID
@@ -589,30 +565,18 @@ function NS.Elements:Load()
 										end
 									end, 1)
 								end
-
-								--------------------------------
-
-								-- Text()
-								Button()
-								State()
 							else
-								local function Text()
-									button.Label:SetPoint("LEFT", button, button.Label.Offset, 0)
-								end
+								-- do -- TEXT
+								-- 	button.Label:SetPoint("LEFT", button, button.Label.Offset, 0)
+								-- end
 
-								local function Button()
+								do -- BUTTON
 									button:SetAlpha(1)
 								end
 
-								local function State()
+								do -- STATE
 									button.Label.transition = false
 								end
-
-								--------------------------------
-
-								-- Text()
-								Button()
-								State()
 							end
 
 							--------------------------------
@@ -620,7 +584,7 @@ function NS.Elements:Load()
 							CallbackRegistry:Trigger("GOSSIP_BUTTON_LEAVE")
 						end
 
-						local function MouseDown(skipAnimation)
+						button.MouseDown = function(skipAnimation)
 							if not skipAnimation then
 								AdaptiveAPI.Animation:Fade(button, .125, 1, .75)
 							else
@@ -628,30 +592,30 @@ function NS.Elements:Load()
 							end
 						end
 
-						button.Enter = function(skipAnimation)
-							Enter(skipAnimation)
-						end
-
-						button.Leave = function(skipAnimation)
-							Leave(skipAnimation)
-						end
-
-						button.MouseDown = function(skipAnimation)
-							MouseDown(skipAnimation)
-						end
-
 						button.HideButtons = function()
-							HideButtons()
+							local Buttons = Frame.GetButtons()
+
+							--------------------------------
+
+							if Buttons then
+								for i = 1, #Buttons do
+									Buttons[i].Leave(true)
+								end
+							end
 						end
+
+						--------------------------------
 
 						button.Standalone.Background.AdaptiveAPI_Animation_Parallax_Weight = 2.5
 						AdaptiveAPI.Animation:AddParallax(button.Standalone.Background, button, function() return true end, function() return button.selected end, addon.Input.Variables.IsController)
+
+						--------------------------------
 
 						button.selected = false
 						button:SetAlpha(1)
 					end
 
-					local function Events()
+					do -- EVENTS
 						local function UpdateControllerKeybind()
 							if button.selected and button:IsVisible() then
 								if addon.Input.Variables.IsController then
@@ -677,23 +641,14 @@ function NS.Elements:Load()
 
 					--------------------------------
 
-					Icon()
-					Label()
-					Standalone()
-					Keybind()
-					Keybind_Controller()
-					Layout()
-					Animation()
-					Events()
-
-					--------------------------------
-
 					return button
 				end
 
 				--------------------------------
 
+				local spacing = NS.Variables.BUTTON_SPACING
 				local buttons = {}
+
 				for i = 1, 18 do
 					local button
 
@@ -702,7 +657,7 @@ function NS.Elements:Load()
 
 						button = CreateButton(Frame.Content,
 							function()
-								return -LastButton:GetHeight()
+								return -(LastButton:GetHeight() + spacing)
 							end,
 							LastButton)
 					else
@@ -720,8 +675,6 @@ function NS.Elements:Load()
 
 					table.insert(buttons, button)
 				end
-
-				--------------------------------
 
 				Frame.Buttons = buttons
 			end

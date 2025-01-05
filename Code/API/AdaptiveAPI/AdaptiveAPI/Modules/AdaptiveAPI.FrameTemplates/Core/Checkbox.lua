@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES
@@ -62,14 +63,14 @@ do
 			if (theme and theme == 2) or (theme == nil and AdaptiveAPI.NativeAPI:GetDarkTheme()) then
 				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
 				Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
-				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-light-mode.png"
-				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-light-mode.png"
+				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
+				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
 				Frame._Color = Frame._CustomColor or { r = 1, g = 1, b = 1 }
 			elseif (theme and theme == 1) or (theme == nil and not AdaptiveAPI.NativeAPI:GetDarkTheme()) then
 				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
 				Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
-				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-light-mode.png"
-				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-dark-mode.png"
+				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
+				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-light.png"
 				Frame._Color = Frame._CustomColor or { r = .1, g = .1, b = .1 }
 			end
 		end
@@ -226,11 +227,11 @@ do
 	--
 	-- Data Table
 	----
-	-- defaultTexture, highlightTexture, checkTexture, checkHighlightTexture, customColor
+	-- defaultTexture, highlightTexture, checkTexture, checkHighlightTexture, defaultColor
 	---@param checkbox any
 	---@param data table
 	function NS:UpdateCheckboxTheme(checkbox, data)
-		local defaultTexture, highlightTexture, checkTexture, checkHighlightTexture, customColor = data.defaultTexture, data.highlightTexture, data.checkTexture, data.checkHighlightTexture, data.customColor
+		local defaultTexture, highlightTexture, checkTexture, checkHighlightTexture, defaultColor = data.defaultTexture, data.highlightTexture, data.checkTexture, data.checkHighlightTexture, data.defaultColor
 
 		--------------------------------
 
@@ -238,7 +239,7 @@ do
 		if highlightTexture then checkbox._CustomHighlightTexture = highlightTexture end
 		if checkTexture then checkbox._CustomCheckTexture = checkTexture end
 		if checkHighlightTexture then checkbox._CustomCheckHighlightTexture = checkHighlightTexture end
-		if customColor then checkbox._CustomColor = customColor end
+		if defaultColor then checkbox._CustomColor = defaultColor end
 	end
 
 	-- Creates an advanced checkbox.

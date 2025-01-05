@@ -11,11 +11,11 @@ function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, toolti
 
 	--------------------------------
 
-	local function Button()
-		Frame.button = CreateFrame("Button", nil, Frame.container, "UIPanelButtonTemplate")
-		Frame.button:SetSize(Frame.container:GetWidth() - 5, Frame.container:GetHeight() - 5)
-		Frame.button:SetPoint("CENTER", Frame.container)
-		Frame.button:SetText("Placeholder")
+	do -- BUTTON
+		Frame.Button = CreateFrame("Button", nil, Frame.Container, "UIPanelButtonTemplate")
+		Frame.Button:SetSize(Frame.Container:GetWidth() - 5, Frame.Container:GetHeight() - 5)
+		Frame.Button:SetPoint("CENTER", Frame.Container)
+		Frame.Button:SetText("Placeholder")
 
 		--------------------------------
 
@@ -34,7 +34,7 @@ function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, toolti
 				ActiveColor = addon.Theme.Settings.Element_Active_LightTheme
 			end
 
-			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.button, {
+			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.Button, {
 				color = DefaultColor,
 				highlightColor = HighlightColor,
 				activeColor = ActiveColor
@@ -44,7 +44,7 @@ function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, toolti
 		UpdateTheme()
 		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
 
-		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.button, {
+		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.Button, {
 			edgeSize = 25,
 			scale = .25,
 			playAnimation = false,
@@ -56,18 +56,14 @@ function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, toolti
 
 		--------------------------------
 
-		addon.SoundEffects:SetButton(Frame.button, addon.SoundEffects.Settings_Button_Enter, addon.SoundEffects.Settings_Button_Leave, addon.SoundEffects.Settings_Button_MouseDown, addon.SoundEffects.Settings_Button_MouseUp)
+		addon.SoundEffects:SetButton(Frame.Button, addon.SoundEffects.Settings_Button_Enter, addon.SoundEffects.Settings_Button_Leave, addon.SoundEffects.Settings_Button_MouseDown, addon.SoundEffects.Settings_Button_MouseUp)
 
 		--------------------------------
 
-		Frame.button:SetScript("OnClick", function()
-			click(Frame.button)
+		Frame.Button:SetScript("OnClick", function()
+			click(Frame.Button)
 		end)
 	end
-
-	--------------------------------
-
-	Button()
 
 	--------------------------------
 

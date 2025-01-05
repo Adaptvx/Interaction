@@ -42,9 +42,9 @@ function NS.Elements:Load()
 					local BackgroundTexture
 
 					if addon.Theme.IsDarkTheme then
-						BackgroundTexture = NS.Variables.SETTINGS_PATH .. "background-nineslice-dark-mode.png"
+						BackgroundTexture = NS.Variables.SETTINGS_PATH .. "background-nineslice-dark.png"
 					else
-						BackgroundTexture = NS.Variables.SETTINGS_PATH .. "background-nineslice-light-mode.png"
+						BackgroundTexture = NS.Variables.SETTINGS_PATH .. "background-nineslice-light.png"
 					end
 
 					InteractionSettingsFrame.BackgroundTexture:SetTexture(BackgroundTexture)
@@ -132,9 +132,9 @@ function NS.Elements:Load()
 							local TEXTURE_Background
 
 							if addon.Theme.IsDarkTheme then
-								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "divider-vertical-dark-mode.png"
+								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "divider-vertical-dark.png"
 							else
-								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "divider-vertical-light-mode.png"
+								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "divider-vertical-light.png"
 							end
 
 							InteractionSettingsFrame.Divider.BackgroundTexture:SetTexture(TEXTURE_Background)
@@ -169,9 +169,9 @@ function NS.Elements:Load()
 								local COLOR_Background
 
 								if addon.Theme.IsDarkTheme then
-									COLOR_Background = addon.Theme.Settings.Secondary_DarkTheme
+									COLOR_Background = addon.Theme.Settings.Header_Background_DarkTheme
 								else
-									COLOR_Background = addon.Theme.Settings.Tertiary_LightTheme
+									COLOR_Background = addon.Theme.Settings.Header_Background_LightTheme
 								end
 
 								InteractionSettingsFrame.Content.Header.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
@@ -198,9 +198,9 @@ function NS.Elements:Load()
 									local COLOR_Background
 
 									if addon.Theme.IsDarkTheme then
-										COLOR_Background = addon.Theme.Settings.Element_Default_DarkTheme
+										COLOR_Background = addon.Theme.Settings.Header_Divider_DarkTheme
 									else
-										COLOR_Background = addon.Theme.Settings.Element_Default_LightTheme
+										COLOR_Background = addon.Theme.Settings.Header_Divider_LightTheme
 									end
 
 									InteractionSettingsFrame.Content.Header.Content.DividerTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
@@ -237,20 +237,20 @@ function NS.Elements:Load()
 									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:SetFrameLevel(6)
 
 									addon.API:RegisterThemeUpdate(function()
-										local FilledColor
-										local FilledHighlightColor
+										local COLOR_Default
+										local COLOR_Highlight
 
 										if addon.Theme.IsDarkTheme then
-											FilledColor = addon.Theme.Settings.Primary_DarkTheme
-											FilledHighlightColor = addon.Theme.Settings.Secondary_DarkTheme
+											COLOR_Default = addon.Theme.Settings.Header_CloseButton_DarkTheme
+											COLOR_Highlight = addon.Theme.Settings.Header_CloseButton_Highlight_DarkTheme
 										else
-											FilledColor = addon.Theme.Settings.Element_Default_LightTheme
-											FilledHighlightColor = addon.Theme.Settings.Element_Highlight_LightTheme
+											COLOR_Default = addon.Theme.Settings.Header_CloseButton_LightTheme
+											COLOR_Highlight = addon.Theme.Settings.Header_CloseButton_Highlight_LightTheme
 										end
 
 										AdaptiveAPI.FrameTemplates.Styles:UpdateButton(InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton, {
-											customColor = FilledColor,
-											customHighlightColor = FilledHighlightColor
+											customColor = COLOR_Default,
+											customHighlightColor = COLOR_Highlight
 										})
 									end, 3)
 
@@ -266,8 +266,18 @@ function NS.Elements:Load()
 										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetPoint("CENTER", InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton)
 										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameStrata("FULLSCREEN_DIALOG")
 										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameLevel(7)
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetAlpha(.5)
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture:SetVertexColor(1, 1, 1)
+
+										addon.API:RegisterThemeUpdate(function()
+											local COLOR_Default
+
+											if addon.Theme.IsDarkTheme then
+												COLOR_Default = addon.Theme.Settings.Header_CloseButton_Image_DarkTheme
+											else
+												COLOR_Default = addon.Theme.Settings.Header_CloseButton_Image_LightTheme
+											end
+
+											InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture:SetVertexColor(COLOR_Default.r, COLOR_Default.g, COLOR_Default.b, COLOR_Default.a)
+										end, 5)
 									end
 								end
 							end
@@ -501,7 +511,7 @@ function NS.Elements:Load()
 							local TEXTURE_Background
 
 							if addon.Theme.IsDarkTheme then
-								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "tooltip-image-background-dark-mode.png"
+								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "tooltip-image-background-dark.png"
 							else
 								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "tooltip-image-background.png"
 							end

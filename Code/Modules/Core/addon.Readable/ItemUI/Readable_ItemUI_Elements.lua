@@ -187,17 +187,101 @@ function NS.ItemUI.Elements:Load()
 
 				do -- BACKGROUND
 					ReadableUIFrame.ItemFrame.Background, ReadableUIFrame.ItemFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(ReadableUIFrame.ItemFrame, "FULLSCREEN", nil, "$parent.Background")
-					ReadableUIFrame.ItemFrame.Background:SetSize(ReadableUIFrame.ItemFrame:GetHeight(), ReadableUIFrame.ItemFrame:GetHeight())
-					ReadableUIFrame.ItemFrame.Background:SetScale(1.5)
+					ReadableUIFrame.ItemFrame.Background:SetSize(ReadableUIFrame.ItemFrame:GetHeight() + 275, ReadableUIFrame.ItemFrame:GetHeight() + 225)
 					ReadableUIFrame.ItemFrame.Background:SetPoint("CENTER", ReadableUIFrame.ItemFrame)
 					ReadableUIFrame.ItemFrame.Background:SetFrameStrata("FULLSCREEN")
 					ReadableUIFrame.ItemFrame.Background:SetFrameLevel(2)
 				end
 
 				do -- TEXT
-					ReadableUIFrame.ItemFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame, addon.Theme.RGB_BLACK, INTDB.profile.INT_CONTENT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
-					ReadableUIFrame.ItemFrame.Text:SetSize(ReadableUIFrame.ItemFrame:GetWidth() * .825, ReadableUIFrame.ItemFrame:GetHeight())
-					ReadableUIFrame.ItemFrame.Text:SetPoint("LEFT", ReadableUIFrame.ItemFrame)
+					ReadableUIFrame.ItemFrame.ScrollFrame, ReadableUIFrame.ItemFrame.ScrollChild = AdaptiveAPI.FrameTemplates:CreateScrollFrame(ReadableUIFrame.ItemFrame)
+					ReadableUIFrame.ItemFrame.ScrollFrame:SetSize(ReadableUIFrame.ItemFrame:GetWidth(), ReadableUIFrame.ItemFrame:GetHeight())
+					ReadableUIFrame.ItemFrame.ScrollFrame:SetPoint("CENTER", ReadableUIFrame.ItemFrame)
+					ReadableUIFrame.ItemFrame.ScrollFrame:SetFrameStrata("FULLSCREEN")
+					ReadableUIFrame.ItemFrame.ScrollFrame:SetFrameLevel(5)
+					ReadableUIFrame.ItemFrame.ScrollFrame.ScrollBar:Hide()
+
+					--------------------------------
+
+					ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator = function()
+						local VerticalScroll = ReadableUIFrame.ItemFrame.ScrollFrame:GetVerticalScroll()
+						local ScrollRange = ReadableUIFrame.ItemFrame.ScrollFrame:GetVerticalScrollRange()
+
+						if VerticalScroll < ScrollRange then
+							ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:Show()
+						else
+							ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:Hide()
+						end
+					end
+
+					ReadableUIFrame.ItemFrame.ScrollFrame.MouseWheel = function()
+						ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator()
+					end
+					ReadableUIFrame.ItemFrame.ScrollFrame:HookScript("OnMouseWheel", function()
+						ReadableUIFrame.ItemFrame.ScrollFrame.MouseWheel()
+					end)
+
+					--------------------------------
+
+					do -- TEXT
+						do -- MEASUREMENT
+							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollFrame, addon.Theme.RGB_BLACK, ItemTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
+							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetWidth(ReadableUIFrame.ItemFrame.ScrollFrame:GetWidth())
+							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetAlpha(0)
+						end
+
+						do -- TEXT
+							ReadableUIFrame.ItemFrame.ScrollFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollChild, addon.Theme.RGB_BLACK, INTDB.profile.INT_CONTENT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetSize(ReadableUIFrame.ItemFrame.ScrollChild:GetWidth(), 5000)
+							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetPoint("TOP", ReadableUIFrame.ItemFrame.ScrollChild)
+						end
+
+						--------------------------------
+
+						hooksecurefunc(ReadableUIFrame.ItemFrame.ScrollFrame.Text, "SetText", function()
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								local StringHeight
+
+								--------------------------------
+
+								ReadableUIFrame.ItemFrame.ScrollFrame:SetVerticalScroll(0)
+
+								--------------------------------
+
+								ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetText(ReadableUIFrame.ItemFrame.ScrollFrame.Text:GetText())
+								StringHeight = ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:GetStringHeight()
+
+								--------------------------------
+
+								ReadableUIFrame.ItemFrame.ScrollChild:SetHeight(StringHeight + 50)
+								ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetHeight(StringHeight + 50)
+
+								--------------------------------
+
+								addon.Libraries.AceTimer:ScheduleTimer(function()
+									ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator()
+								end, .25)
+							end, .1)
+						end)
+					end
+
+					do -- GRADIENT
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient, ReadableUIFrame.ItemFrame.ScrollFrame.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(ReadableUIFrame.ItemFrame.ScrollFrame, "FULLSCREEN", nil, "$parent.Gradient")
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetSize(ReadableUIFrame.ItemFrame.ScrollFrame:GetWidth(), 50)
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetPoint("BOTTOM", ReadableUIFrame.ItemFrame.ScrollFrame, 0, -1)
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetFrameStrata("FULLSCREEN")
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetFrameLevel(6)
+
+						--------------------------------
+
+						addon.API:RegisterThemeUpdate(function()
+							if addon.Theme.IsDarkTheme then
+								ReadableUIFrame.ItemFrame.ScrollFrame.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-dark.png")
+							else
+								ReadableUIFrame.ItemFrame.ScrollFrame.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-light.png")
+							end
+						end, 5)
+					end
 				end
 			end
 
@@ -367,7 +451,7 @@ function NS.ItemUI.Elements:Load()
 							do -- GRADIENT
 								ReadableUIFrame.BookFrame.Content.Left.Gradient, ReadableUIFrame.BookFrame.Content.Left.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(ReadableUIFrame.BookFrame.Content.Left, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Book/book-large-content-gradient.png", "$parent.Gradient")
 								ReadableUIFrame.BookFrame.Content.Left.Gradient:SetSize(ReadableUIFrame.BookFrame.Content.Left:GetWidth(), 50)
-								ReadableUIFrame.BookFrame.Content.Left.Gradient:SetPoint("BOTTOM", ReadableUIFrame.BookFrame.Content.Left, 0, 0)
+								ReadableUIFrame.BookFrame.Content.Left.Gradient:SetPoint("BOTTOM", ReadableUIFrame.BookFrame.Content.Left, 0, -1)
 								ReadableUIFrame.BookFrame.Content.Left.Gradient:SetFrameStrata("FULLSCREEN")
 								ReadableUIFrame.BookFrame.Content.Left.Gradient:SetFrameLevel(49)
 							end
@@ -405,8 +489,8 @@ function NS.ItemUI.Elements:Load()
 
 											--------------------------------
 
-											ReadableUIFrame.BookFrame.Content.LeftScrollChild:SetHeight(StringHeight + 5)
-											ReadableUIFrame.BookFrame.Content.Left.Text:SetHeight(StringHeight + 5)
+											ReadableUIFrame.BookFrame.Content.LeftScrollChild:SetHeight(StringHeight + 50)
+											ReadableUIFrame.BookFrame.Content.Left.Text:SetHeight(StringHeight + 50)
 
 											--------------------------------
 
@@ -456,7 +540,7 @@ function NS.ItemUI.Elements:Load()
 							do -- GRADIENT
 								ReadableUIFrame.BookFrame.Content.Right.Gradient, ReadableUIFrame.BookFrame.Content.Right.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(ReadableUIFrame.BookFrame.Content.Right, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Book/book-large-content-gradient.png", "$parent.Gradient")
 								ReadableUIFrame.BookFrame.Content.Right.Gradient:SetSize(ReadableUIFrame.BookFrame.Content.Right:GetWidth(), 50)
-								ReadableUIFrame.BookFrame.Content.Right.Gradient:SetPoint("BOTTOM", ReadableUIFrame.BookFrame.Content.Right, 0, 0)
+								ReadableUIFrame.BookFrame.Content.Right.Gradient:SetPoint("BOTTOM", ReadableUIFrame.BookFrame.Content.Right, 0, -1)
 								ReadableUIFrame.BookFrame.Content.Right.Gradient:SetFrameStrata("FULLSCREEN")
 								ReadableUIFrame.BookFrame.Content.Right.Gradient:SetFrameLevel(49)
 							end

@@ -14,7 +14,7 @@ function NS.Elements:Load()
 	-- CREATE ELEMENTS
     --------------------------------
 
-	local function CreateElements()
+	do -- CREATE ELEMENTS
         InteractionFriendshipBarParent = CreateFrame("Frame", "$parent.InteractionFriendshipBarParent", InteractionFrame)
         InteractionFriendshipBarParent:SetSize(350, 50)
         InteractionFriendshipBarParent:SetPoint("TOP", UIParent, 0, -(addon.API:GetScreenHeight() * .025))
@@ -33,14 +33,21 @@ function NS.Elements:Load()
 
         --------------------------------
 
-		NS.Variables.Parent = InteractionFriendshipBarParent
-		NS.Variables.Frame = InteractionFriendshipBarFrame
 		local Parent = InteractionFriendshipBarParent
         local Frame = InteractionFriendshipBarFrame
 
         --------------------------------
 
-        local function Image()
+		do -- TOOLTIP PARENT
+			Frame.TooltipParent = CreateFrame("Frame", "$parent.TooltipParent", Frame)
+			Frame.TooltipParent:SetSize(Frame:GetWidth(), Frame:GetHeight())
+			Frame.TooltipParent:SetPoint("CENTER", Frame)
+			Frame.TooltipParent:SetFrameStrata("FULLSCREEN")
+			Frame.TooltipParent:SetFrameLevel(1)
+			Frame.TooltipParent:SetIgnoreParentScale(true)
+		end
+
+		do -- IMAGE
             Frame.Image = CreateFrame("Frame", "$parent.Image", Frame)
             Frame.Image:SetSize(75, 75)
             Frame.Image:SetPoint("LEFT", Frame)
@@ -49,29 +56,23 @@ function NS.Elements:Load()
 
             --------------------------------
 
-            local function Background()
-                Frame.Image.Background, Frame.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", NS.Variables.PATH .. "image_background.png", "$parent.Background")
+			do -- BACKGROUND
+                Frame.Image.Background, Frame.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", NS.Variables.PATH .. "image-background.png", "$parent.Background")
                 Frame.Image.Background:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
                 Frame.Image.Background:SetPoint("CENTER", Frame.Image)
                 Frame.Image.Background:SetFrameLevel(6)
             end
 
-            local function Image()
+			do -- IMAGE
                 Frame.Image.Image, Frame.Image.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", nil, "$parent.Image")
                 Frame.Image.Image:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
                 Frame.Image.Image:SetPoint("CENTER", Frame.Image)
                 Frame.Image.Image:SetFrameLevel(7)
-
-                Frame.Image.ImageTexture:SetMask(NS.Variables.PATH .. "image_mask.png")
+                Frame.Image.ImageTexture:SetMask(NS.Variables.PATH .. "image-mask.png")
             end
-
-            --------------------------------
-
-            Background()
-            Image()
         end
 
-        local function ProgressBar()
+		do -- PROGRESS BAR
             Frame.Progress = CreateFrame("Frame", "$parent.Progress", Frame)
             Frame.Progress:SetSize(Frame:GetWidth() - Frame.Image:GetWidth() / 1.5, Frame:GetHeight())
             Frame.Progress:SetPoint("LEFT", Frame, Frame.Image:GetWidth() / 1.5, 0)
@@ -80,7 +81,7 @@ function NS.Elements:Load()
 
             --------------------------------
 
-            local function Background()
+			do -- BACKGROUND
                 Frame.Progress.Background, Frame.Progress.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "background.png", "$parent.Background")
                 Frame.Progress.Background:SetSize(Frame.Progress:GetWidth(), Frame.Progress:GetHeight())
                 Frame.Progress.Background:SetPoint("CENTER", Frame.Progress)
@@ -88,7 +89,7 @@ function NS.Elements:Load()
                 Frame.Progress.Background:SetFrameLevel(2)
             end
 
-            local function ProgressBar()
+			do -- PROGRESS BAR
                 Frame.Progress.Bar = AdaptiveAPI.FrameTemplates:CreateAdvancedProgressBar(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "bar.png", NS.Variables.PATH .. "flare.png", 8, 0, "$parent.Bar")
                 Frame.Progress.Bar:SetSize(Frame.Progress:GetWidth() - 25, Frame.Progress:GetHeight() - 25)
                 Frame.Progress.Bar:SetPoint("CENTER", Frame.Progress.Background)
@@ -100,25 +101,14 @@ function NS.Elements:Load()
                 Frame.Progress.Bar.Flare:SetFrameStrata("FULLSCREEN_DIALOG")
                 Frame.Progress.Bar.Flare:SetFrameLevel(4)
             end
-
-            --------------------------------
-
-            Background()
-            ProgressBar()
         end
-
-        --------------------------------
-
-        Image()
-        ProgressBar()
     end
-
-    CreateElements()
 
 	--------------------------------
 	-- REFERENCES
 	--------------------------------
 
+	local Parent = InteractionFriendshipBarParent
 	local Frame = InteractionFriendshipBarFrame
 	local Callback = NS.Script
 

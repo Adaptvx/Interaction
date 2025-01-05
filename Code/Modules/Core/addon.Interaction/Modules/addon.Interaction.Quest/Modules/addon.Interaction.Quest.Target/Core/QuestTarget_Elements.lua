@@ -19,7 +19,7 @@ function NS.Elements:Load()
 			InteractionQuestFrame.Target = CreateFrame("Frame", "$parent.Target", InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetParent(InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetSize(NS.Variables:RATIO(3), NS.Variables:RATIO(3))
-			InteractionQuestFrame.Target:SetPoint("LEFT", InteractionQuestFrame, -(InteractionQuestFrame.Target:GetWidth() / 2 + NS.Variables:RATIO(4)), 100)
+			InteractionQuestFrame.Target:SetPoint("LEFT", InteractionQuestFrame, -(InteractionQuestFrame.Target:GetWidth() / 2 + NS.Variables:RATIO(4)), 75)
 			InteractionQuestFrame.Target:SetFrameStrata("FULLSCREEN")
 			InteractionQuestFrame.Target:SetFrameLevel(999)
 
@@ -43,7 +43,7 @@ function NS.Elements:Load()
 					local BackgroundTexture
 
 					if addon.Theme.IsDarkTheme then
-						BackgroundTexture = NS.Variables.PATH .. "background-dark-mode.png"
+						BackgroundTexture = NS.Variables.PATH .. "background-dark.png"
 					else
 						BackgroundTexture = NS.Variables.PATH .. "background.png"
 					end
@@ -77,7 +77,7 @@ function NS.Elements:Load()
 					local BackgroundTexture
 
 					if addon.Theme.IsDarkTheme then
-						BackgroundTexture = NS.Variables.PATH .. "model-border-dark-mode.png"
+						BackgroundTexture = NS.Variables.PATH .. "model-border-dark.png"
 					else
 						BackgroundTexture = NS.Variables.PATH .. "model-border.png"
 					end

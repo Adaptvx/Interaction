@@ -55,17 +55,17 @@ do
 
 	do     -- SCROLL
 		do -- TOOLTIP
-			AdaptiveAPI.Presets.BG_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-center-light-mode.png"
-			AdaptiveAPI.Presets.EDGE_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-border-light-mode.png"
+			AdaptiveAPI.Presets.BG_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-center-light.png"
+			AdaptiveAPI.Presets.EDGE_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-border-light.png"
 
-			AdaptiveAPI.Presets.BG_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-center-dark-mode.png"
-			AdaptiveAPI.Presets.EDGE_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-border-dark-mode.png"
+			AdaptiveAPI.Presets.BG_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-center-dark.png"
+			AdaptiveAPI.Presets.EDGE_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-border-dark.png"
 		end
 
 		do -- NINESLICE
-			AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-nineslice-light-mode.png"
+			AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-nineslice-light.png"
 
-			AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-nineslice-dark-mode.png"
+			AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02 = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-nineslice-dark.png"
 		end
 	end
 end
@@ -100,10 +100,10 @@ end
 --------------------------------
 
 do
-	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-nineslice-light-mode.png"
-	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-highlighted-nineslice-light-mode.png"
-	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_02 = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-nineslice-dark-mode.png"
-	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_HIGHLIGHT_02 = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-highlighted-nineslice-dark-mode.png"
+	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-nineslice-light.png"
+	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-highlighted-nineslice-light.png"
+	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_02 = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-nineslice-dark.png"
+	AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BACKGROUND_HIGHLIGHT_02 = AdaptiveAPI.PATH .. "Inscribed/inscribed-background-highlighted-nineslice-dark.png"
 end
 
 --------------------------------
@@ -113,9 +113,9 @@ end
 do
 	do -- NINESLICE
 		AdaptiveAPI.Presets.NINESLICE_WEATHERED = AdaptiveAPI.PATH .. "Weathered/weathered-nineslice.png"
-		AdaptiveAPI.Presets.NINESLICE_WEATHERED_HIGHLIGHT = AdaptiveAPI.PATH .. "Weathered/weathered-highlighted-nineslice-light-mode.png"
-		AdaptiveAPI.Presets.NINESLICE_WEATHERED_02 = AdaptiveAPI.PATH .. "Weathered/weathered-nineslice-light-mode.png"
-		AdaptiveAPI.Presets.NINESLICE_WEATHERED_HIGHLIGHT_02 = AdaptiveAPI.PATH .. "Weathered/weathered-highlighted-nineslice-dark-mode.png"
+		AdaptiveAPI.Presets.NINESLICE_WEATHERED_HIGHLIGHT = AdaptiveAPI.PATH .. "Weathered/weathered-highlighted-nineslice-light.png"
+		AdaptiveAPI.Presets.NINESLICE_WEATHERED_02 = AdaptiveAPI.PATH .. "Weathered/weathered-nineslice-light.png"
+		AdaptiveAPI.Presets.NINESLICE_WEATHERED_HIGHLIGHT_02 = AdaptiveAPI.PATH .. "Weathered/weathered-highlighted-nineslice-dark.png"
 	end
 
 	do -- SPRITESHEET
@@ -144,8 +144,8 @@ end
 --------------------------------
 
 do
-	AdaptiveAPI.Presets.NINESLICE_TOOLTIP = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-light-mode.png"
-	AdaptiveAPI.Presets.NINESLICE_TOOLTIP_02 = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-dark-mode.png"
+	AdaptiveAPI.Presets.NINESLICE_TOOLTIP = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-light.png"
+	AdaptiveAPI.Presets.NINESLICE_TOOLTIP_02 = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-dark.png"
 end
 
 --------------------------------

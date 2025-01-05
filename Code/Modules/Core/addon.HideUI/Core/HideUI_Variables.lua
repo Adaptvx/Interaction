@@ -13,6 +13,7 @@ NS.Variables = {}
 
 do
 	NS.Variables.Active = false
+	NS.Variables.WorldActive = false
 	NS.Variables.Lock = false
 end
 

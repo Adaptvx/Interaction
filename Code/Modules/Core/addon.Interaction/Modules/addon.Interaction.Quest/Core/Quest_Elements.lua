@@ -33,35 +33,30 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				hooksecurefunc(Frame, "SetHeight", function()
-					Frame.Background:SetHeight(Frame:GetHeight() + 50)
-					Frame.Border:SetHeight(Frame:GetHeight() + 50)
-				end)
+				local function UpdateSize()
+					Frame.Background:ClearAllPoints()
+					Frame.Background:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
+					Frame.Background:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
 
-				hooksecurefunc(Frame, "SetWidth", function()
-					Frame.Background:SetWidth(Frame:GetWidth() + 50)
-					Frame.Border:SetWidth(Frame:GetWidth() + 50)
-				end)
+					Frame.Border:ClearAllPoints()
+					Frame.Border:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
+					Frame.Border:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
 
-				hooksecurefunc(Frame, "SetSize", function()
-					Frame.Background:SetSize(Frame:GetWidth() + 50, Frame.Background:GetHeight() + 50)
-					Frame.Border:SetSize(Frame:GetWidth() + 50, Frame:GetHeight() + 50)
-				end)
+					Frame.ContextIcon:SetScale(1 * NS.Variables.ScaleModifier)
+
+					Frame.Background.ScrollFrameIndicator:SetSize(Frame:GetWidth() - 50, (Frame:GetWidth() - 50) * .25)
+					Frame.ButtonContainer:SetWidth(Frame:GetWidth() - NS.Variables:RATIO(7))
+					Frame.ScrollFrame:SetSize(Frame:GetWidth() - NS.Variables:RATIO(5.5), Frame:GetHeight() - 70 - 35)
+				end
+
+				hooksecurefunc(Frame, "SetHeight", UpdateSize)
+				hooksecurefunc(Frame, "SetWidth", UpdateSize)
+				hooksecurefunc(Frame, "SetSize", UpdateSize)
 
 				--------------------------------
 
-				do -- GRADIENT
-					Frame.Gradient, Frame.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", nil, "$parent.Gradient")
-					Frame.Gradient:SetAllPoints(UIParent, true)
-					Frame.Gradient:SetFrameStrata("HIGH")
-					Frame.Gradient:SetFrameLevel(0)
-				end
-
 				do -- BACKGROUND
 					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Background:SetScale(1.125)
-					Frame.Background:SetSize(Frame:GetWidth() + 50, Frame:GetHeight() + 50)
-					Frame.Background:SetPoint("CENTER", Frame)
 					Frame.Background:SetFrameStrata("HIGH")
 					Frame.Background:SetFrameLevel(2)
 
@@ -73,9 +68,9 @@ function NS.Elements:Load()
 						--------------------------------
 
 						if addon.Theme.IsDarkTheme then
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "background-dark-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "background-dark.png"
 						else
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "background-light-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "background-light.png"
 						end
 
 						--------------------------------
@@ -86,9 +81,6 @@ function NS.Elements:Load()
 
 				do -- BORDER
 					Frame.Border, Frame.BorderTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Border:SetScale(1.125)
-					Frame.Border:SetSize(Frame:GetWidth() + 50, Frame:GetHeight() + 50)
-					Frame.Border:SetPoint("CENTER", Frame)
 					Frame.Border:SetFrameStrata("HIGH")
 					Frame.Border:SetFrameLevel(3)
 
@@ -100,9 +92,9 @@ function NS.Elements:Load()
 						--------------------------------
 
 						if addon.Theme.IsDarkTheme then
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "border-dark-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "border-dark.png"
 						else
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "border-light-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "border-light.png"
 						end
 
 						--------------------------------
@@ -113,8 +105,7 @@ function NS.Elements:Load()
 
 				do -- SCROLL FRAME INDICATOR
 					Frame.Background.ScrollFrameIndicator, Frame.Background.ScrollFrameIndicatorTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Background.ScrollFrameIndicator:SetSize(Frame:GetWidth() - 50, (Frame:GetWidth() - 50) * .25)
-					Frame.Background.ScrollFrameIndicator:SetPoint("BOTTOM", Frame, 0, 35)
+					Frame.Background.ScrollFrameIndicator:SetPoint("BOTTOM", Frame, 0, 42.5)
 					Frame.Background.ScrollFrameIndicator:SetFrameLevel(500)
 					Frame.Background.ScrollFrameIndicator:SetAlpha(.25)
 
@@ -124,9 +115,9 @@ function NS.Elements:Load()
 						local ScrollFrameIndicatorTexture
 
 						if addon.Theme.IsDarkTheme then
-							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-dark-mode.png"
+							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-dark.png"
 						else
-							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-light-mode.png"
+							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-light.png"
 						end
 
 						Frame.Background.ScrollFrameIndicatorTexture:SetTexture(ScrollFrameIndicatorTexture)
@@ -136,7 +127,7 @@ function NS.Elements:Load()
 
 			do -- BUTTONS
 				Frame.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", Frame)
-				Frame.ButtonContainer:SetSize(Frame:GetWidth() - NS.Variables:RATIO(7), NS.Variables:RATIO(5.75))
+				Frame.ButtonContainer:SetHeight(NS.Variables:RATIO(5.75))
 				Frame.ButtonContainer:SetPoint("BOTTOM", Frame, 0, 0)
 
 				--------------------------------
@@ -222,7 +213,6 @@ function NS.Elements:Load()
 
 			do -- SCROLL FRAME
 				Frame.ScrollFrame, Frame.ScrollChildFrame = AdaptiveAPI.FrameTemplates:CreateScrollFrame(Frame)
-				Frame.ScrollFrame:SetSize(Frame:GetWidth() - 50, Frame:GetHeight() - 70 - 35)
 				Frame.ScrollFrame:SetPoint("BOTTOM", Frame, 0, 65)
 
 				--------------------------------
@@ -235,9 +225,11 @@ function NS.Elements:Load()
 			do -- CONTEXT ICON
 				Frame.ContextIcon = CreateFrame("Frame", "$parent.ContextIcon", Frame)
 				Frame.ContextIcon:SetSize(NS.Variables:RATIO(3), NS.Variables:RATIO(3))
-				Frame.ContextIcon:SetPoint("TOPLEFT", Frame, -Frame.ContextIcon:GetWidth() * .575, Frame.ContextIcon:GetHeight() * .6)
+				Frame.ContextIcon:SetPoint("TOPLEFT", Frame, -Frame.ContextIcon:GetWidth() * .575, Frame.ContextIcon:GetHeight() * .5975)
 				Frame.ContextIcon:SetFrameStrata("HIGH")
 				Frame.ContextIcon:SetFrameLevel(10)
+
+				AdaptiveAPI:AnchorToCenter(Frame.ContextIcon)
 
 				--------------------------------
 
@@ -255,9 +247,9 @@ function NS.Elements:Load()
 						--------------------------------
 
 						if addon.Theme.IsDarkTheme then
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "context-background-dark-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "context-background-dark.png"
 						else
-							TEXTURE_Background = NS.Variables.QUEST_PATH .. "context-background-light-mode.png"
+							TEXTURE_Background = NS.Variables.QUEST_PATH .. "context-background-light.png"
 						end
 
 						--------------------------------
@@ -284,67 +276,37 @@ function NS.Elements:Load()
 
 				SCROLL_FRAME.Elements = {}
 
-				SCROLL_FRAME.SetLayout = function()
-					local CurrentOffset = 0
-
-					--------------------------------
-
-					for element = 1, #SCROLL_FRAME.Elements do
-						if SCROLL_FRAME.Elements[element]:IsShown() then
-							local CurrentElement = SCROLL_FRAME.Elements[element]
-							local CurrentElementHeight = 0
-
-							--------------------------------
-
-							if CurrentElement.GetStringHeight then
-								CurrentElementHeight = CurrentElement:GetStringHeight()
-							elseif CurrentElement.GetHeight then
-								CurrentElementHeight = CurrentElement:GetHeight()
-							end
-
-							--------------------------------
-
-							CurrentElement:ClearAllPoints()
-							CurrentElement:SetPoint("TOP", Frame.ScrollChildFrame, 0, -CurrentOffset)
-
-							--------------------------------
-
-							CurrentOffset = CurrentOffset + CurrentElementHeight + NS.Variables.PADDING
-						end
-					end
-
-					--------------------------------
-
-					Frame.ScrollChildFrame:SetHeight(CurrentOffset)
-				end
-
 				--------------------------------
 
 				local function CreateHeader(parent)
-					local Header, HeaderTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(parent, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 50, .125)
+					local Header = CreateFrame("Frame", "$parent.Header", parent)
 					Header:SetSize(SCROLL_FRAME:GetWidth(), NS.Variables:RATIO(5.25))
-					HeaderTexture:SetAlpha(1)
 
 					--------------------------------
 
-					addon.API:RegisterThemeUpdate(function()
-						local COLOR_Background
+					do -- BACKGROUND
+						Header.Background, Header.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Header, "HIGH", NS.Variables.THEME.INSCRIBED_HEADER, 86, .125, "$parent.Header", Enum.UITextureSliceMode.Stretched)
+						Header.Background:SetPoint("TOPLEFT", Header, -3.75, 2.5)
+						Header.Background:SetPoint("BOTTOMRIGHT", Header, 3.75, -2.5)
+					end
 
-						if addon.Theme.IsDarkTheme then
-							COLOR_Background = addon.Theme.Quest.Highlight_Secondary_DarkTheme
-						else
-							COLOR_Background = addon.Theme.Quest.Highlight_Secondary_LightTheme
+					do -- TEXT
+						Header.Label = AdaptiveAPI.FrameTemplates:CreateText(Header, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+						Header.Label:SetSize(Header:GetWidth() - NS.Variables:RATIO(6.5), Header:GetHeight() - NS.Variables:RATIO(6.5))
+						Header.Label:SetPoint("CENTER", Header)
+						Header.Label:SetAlpha(.75)
+					end
+
+					do -- EVENTS
+						local function UpdateSize()
+							Header:SetSize(SCROLL_FRAME:GetWidth(), NS.Variables:RATIO(5.25))
+							Header.Label:SetSize(Header:GetWidth() - NS.Variables:RATIO(6.5), Header:GetHeight() - NS.Variables:RATIO(6.5))
 						end
 
-						HeaderTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-					end, 5)
-
-					--------------------------------
-
-					Header.Label = AdaptiveAPI.FrameTemplates:CreateText(Header, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold)
-					Header.Label:SetSize(Header:GetWidth() - NS.Variables:RATIO(6.5), Header:GetHeight() - NS.Variables:RATIO(6.5))
-					Header.Label:SetPoint("CENTER", Header)
-					Header.Label:SetAlpha(1)
+						hooksecurefunc(SCROLL_FRAME, "SetHeight", UpdateSize)
+						hooksecurefunc(SCROLL_FRAME, "SetWidth", UpdateSize)
+						hooksecurefunc(SCROLL_FRAME, "SetSize", UpdateSize)
+					end
 
 					--------------------------------
 
@@ -352,11 +314,8 @@ function NS.Elements:Load()
 				end
 
 				local function CreateRewardText(parent)
-					local Background, BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(parent, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 50, .5, "$parent.Background")
-					Background:SetSize(SCROLL_FRAME:GetWidth(), NS.Variables:RATIO(5.25))
-					BackgroundTexture:SetAlpha(.5)
-
-					--------------------------------
+					local Background, BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(parent, "HIGH", nil, 50, 3.25, "$parent.Background")
+					Background:SetSize(SCROLL_FRAME:GetWidth(), NS.Variables:RATIO(6.5))
 
 					addon.API:RegisterThemeUpdate(function()
 						local COLOR_Background
@@ -372,10 +331,23 @@ function NS.Elements:Load()
 
 					--------------------------------
 
-					Background.Text = AdaptiveAPI.FrameTemplates:CreateText(Background, { r = 1, g = 1, b = 1 }, textSize_Reward, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
-					Background.Text:SetSize(Background:GetWidth() - NS.Variables:RATIO(6.5), Background:GetHeight() - NS.Variables:RATIO(6.5))
-					Background.Text:SetPoint("CENTER", Background)
-					Background.Text:SetAlpha(1)
+					do -- TEXT
+						Background.Text = AdaptiveAPI.FrameTemplates:CreateText(Background, { r = 1, g = 1, b = 1 }, textSize_Content, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
+						Background.Text:SetSize(Background:GetWidth(), Background:GetHeight() - NS.Variables:RATIO(7.5))
+						Background.Text:SetPoint("CENTER", Background)
+						Background.Text:SetAlpha(.75)
+					end
+
+					do -- EVENTS
+						local function UpdateSize()
+							Background:SetSize(SCROLL_FRAME:GetWidth(), NS.Variables:RATIO(6.5))
+							Background.Text:SetSize(Background:GetWidth(), Background:GetHeight() - NS.Variables:RATIO(7.5))
+						end
+
+						hooksecurefunc(SCROLL_FRAME, "SetHeight", UpdateSize)
+						hooksecurefunc(SCROLL_FRAME, "SetWidth", UpdateSize)
+						hooksecurefunc(SCROLL_FRAME, "SetSize", UpdateSize)
+					end
 
 					--------------------------------
 
@@ -383,8 +355,13 @@ function NS.Elements:Load()
 				end
 
 				local function CreateReward(parent, selectable)
+					local PADDING = NS.Variables:RATIO(9.5)
+					local TEXT_PADDING = NS.Variables:RATIO(7.5)
+
+					--------------------------------
+
 					local Button = CreateFrame("Frame", nil, parent)
-					Button:SetSize(parent:GetWidth(), NS.Variables:RATIO(5.25))
+					Button:SetSize(parent:GetWidth(), NS.Variables:RATIO(5.5))
 					Button:SetPoint("CENTER", parent)
 
 					--------------------------------
@@ -392,401 +369,420 @@ function NS.Elements:Load()
 					Button.Index = nil
 					Button.Type = nil
 					Button.Callback = nil
+					Button.Quality = nil
 					Button.State = "DEFAULT"
 					Button.SelectionState = "DEFAULT"
 
 					Button.MouseOver = false
 
-					Button.SetState = function(state, SelectionState)
-						Button.State = state
-						Button.SelectionState = SelectionState
+					--------------------------------
 
-						--------------------------------
+					do -- STATE
+						Button.SetState = function(state, SelectionState)
+							Button.State = state
+							Button.SelectionState = SelectionState
 
-						Button.UpdateState()
-					end
+							--------------------------------
 
-					Button.SetStateAuto = function()
-						if not Button.Type or not Button.Index then
-							return
+							Button.UpdateState()
 						end
 
-						--------------------------------
+						Button.SetStateAuto = function()
+							if not Button.Type or not Button.Index then
+								return
+							end
 
-						local type = Button.Type
-						local index = Button.Index
+							--------------------------------
 
-						local state
-						local selectionState
-						local selectedReward = QuestInfoFrame.itemChoice
+							local type = Button.Type
+							local index = Button.Index
 
-						--------------------------------
+							local state
+							local selectionState
+							local selectedReward = QuestInfoFrame.itemChoice
 
-						do -- STATE
-							if type ~= "spell" then
-								local name, texture, count, quality, isUsable, itemID, questRewardContextFlags = GetQuestItemInfo(type, index)
+							--------------------------------
 
-								if addon.Variables.IS_CLASSIC and not isUsable then
-									state = "INVALID"
+							do -- STATE
+								if type ~= "spell" then
+									local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, index)
+
+									--------------------------------
+
+									if addon.Variables.IS_CLASSIC and not isUsable then
+										state = "INVALID"
+									else
+										state = "DEFAULT"
+									end
 								else
 									state = "DEFAULT"
 								end
-							else
-								state = "DEFAULT"
 							end
-						end
 
-						do -- STATE (SELECTION)
-							if selectedReward == index then
-								selectionState = "SELECTED"
-							else
-								selectionState = "DEFAULT"
-							end
-						end
-
-						--------------------------------
-
-						Button.SetState(state, selectionState)
-						Button.UpdateState()
-					end
-
-					Button.UpdateState = function()
-						local state = Button.State
-						local selectionState = Button.SelectionState
-
-						--------------------------------
-
-						do -- STATE
-							if state == "DEFAULT" then
-								local COLOR_Background
-								local COLOR_Image
-								local GRADIENT_START_Image_Background
-								local GRADIENT_END_Image_Background
-
-								if addon.Theme.IsDarkTheme then
-									COLOR_Background = addon.Theme.Quest.Highlight_Tertiary_DarkTheme
-									COLOR_Image = { r = 1, g = 1, b = 1, a = 1 }
-
-									local colorStart = addon.Theme.Quest.Highlight_Primary_DarkTheme
-									local colorEnd = addon.Theme.Quest.Highlight_Secondary_DarkTheme
-									GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-									GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
+							do -- STATE (SELECTION)
+								if selectedReward == index then
+									selectionState = "SELECTED"
 								else
-									COLOR_Background = addon.Theme.Quest.Highlight_Tertiary_LightTheme
-									COLOR_Image = { r = 1, g = 1, b = 1, a = 1 }
-
-									local colorStart = addon.Theme.Quest.Highlight_Primary_DarkTheme
-									local colorEnd = addon.Theme.Quest.Highlight_Secondary_DarkTheme
-									GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-									GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
+									selectionState = "DEFAULT"
 								end
-
-								Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-								Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
-								Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_START_Image_Background, GRADIENT_END_Image_Background)
-							end
-
-							if state == "INVALID" then
-								local COLOR_Background
-								local COLOR_Image
-								local GRADIENT_START_Image_Background
-								local GRADIENT_END_Image_Background
-
-								if addon.Theme.IsDarkTheme then
-									COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_DarkTheme
-									COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
-
-									local colorStart = addon.Theme.Quest.Invalid_Primary_DarkTheme
-									local colorEnd = addon.Theme.Quest.Invalid_Secondary_DarkTheme
-									GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-									GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
-								else
-									COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_LightTheme
-									COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
-
-									local colorStart = addon.Theme.Quest.Invalid_Primary_LightTheme
-									local colorEnd = addon.Theme.Quest.Invalid_Secondary_LightTheme
-									GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-									GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
-								end
-
-								Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-								Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
-								Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_START_Image_Background, GRADIENT_END_Image_Background)
-							end
-						end
-
-						do -- STATE (SELECTION)
-							local isSelectable = selectable
-							local numChoices = NS.Variables.NumChoices
-							local selectedReward = QuestInfoFrame.itemChoice
-
-							local currentAlpha = Button:GetAlpha()
-							local targetAlpha = 1
-
-							--------------------------------
-
-							if selectionState == "SELECTED" or selectedReward == 0 then
-								targetAlpha = 1
-							elseif isSelectable and numChoices > 1 then
-								targetAlpha = .25
 							end
 
 							--------------------------------
 
-							if currentAlpha ~= targetAlpha then
-								AdaptiveAPI.Animation:Fade(Button, .25, currentAlpha, targetAlpha, AdaptiveAPI.Animation.EaseExpo)
-							else
-								Button:SetAlpha(targetAlpha)
-							end
-						end
-					end
-
-					Button.CanClick = function()
-						if selectable then
-							if NS.Variables.NumChoices > 1 and QuestFrameCompleteQuestButton:IsVisible() then
-								return true
-							else
-								return false
-							end
-						end
-					end
-
-					Button.Click = function()
-						Button.Callback:Click()
-
-						--------------------------------
-
-						if Button.Type == "choice" then
-							Frame.SetChoiceSelected(Button)
+							Button.SetState(state, selectionState)
+							Button.UpdateState()
 						end
 
-						--------------------------------
+						Button.UpdateState = function()
+							local state = Button.State
+							local selectionState = Button.SelectionState
 
-						CallbackRegistry:Trigger("QUEST_REWARD_SELECTED", Button)
+							--------------------------------
 
-						--------------------------------
+							do -- STATE
+								if state == "DEFAULT" then
+									local quality = Button.Quality
+									local qualityColors = {
+										[0] = { addon.Theme.Quest.Gradient_Quality_Poor_Start, addon.Theme.Quest.Gradient_Quality_Poor_End, addon.Theme.Quest.Text_Quality_Poor },
+										[1] = { addon.Theme.Quest.Gradient_Quality_Common_Start, addon.Theme.Quest.Gradient_Quality_Common_End, addon.Theme.Quest.Text_Quality_Common },
+										[2] = { addon.Theme.Quest.Gradient_Quality_Uncommon_Start, addon.Theme.Quest.Gradient_Quality_Uncommon_End, addon.Theme.Quest.Text_Quality_Uncommon },
+										[3] = { addon.Theme.Quest.Gradient_Quality_Rare_Start, addon.Theme.Quest.Gradient_Quality_Rare_End, addon.Theme.Quest.Text_Quality_Rare },
+										[4] = { addon.Theme.Quest.Gradient_Quality_Epic_Start, addon.Theme.Quest.Gradient_Quality_Epic_End, addon.Theme.Quest.Text_Quality_Epic },
+										[5] = { addon.Theme.Quest.Gradient_Quality_Legendary_Start, addon.Theme.Quest.Gradient_Quality_Legendary_End, addon.Theme.Quest.Text_Quality_Legendary },
+										[6] = { addon.Theme.Quest.Gradient_Quality_Artifact_Start, addon.Theme.Quest.Gradient_Quality_Artifact_End, addon.Theme.Quest.Text_Quality_Artifact },
+										[7] = { addon.Theme.Quest.Gradient_Quality_Heirloom_Start, addon.Theme.Quest.Gradient_Quality_Heirloom_End, addon.Theme.Quest.Text_Quality_Heirloom },
+										[8] = { addon.Theme.Quest.Gradient_Quality_WoWToken_Start, addon.Theme.Quest.Gradient_Quality_WoWToken_End, addon.Theme.Quest.Text_Quality_WoWToken },
+									}
 
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseUp)
-					end
+									local colors = qualityColors[quality] or (addon.Theme.IsDarkTheme and { addon.Theme.Quest.Highlight_Primary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme, addon.Theme.RGB_WHITE } or { addon.Theme.Quest.Highlight_Primary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.RGB_WHITE })
+									local GRADIENT_Start, GRADIENT_End, COLOR_Text = unpack(colors)
 
-					Button.MouseDownCallback = function()
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseDown)
-					end
+									local COLOR_Background = addon.Theme.IsDarkTheme and addon.Theme.Quest.Highlight_Tertiary_DarkTheme or addon.Theme.Quest.Highlight_Tertiary_LightTheme
+									local COLOR_Image = { r = 1, g = 1, b = 1, a = 1 }
 
-					Button.MouseEnterCallback = function()
-						GameTooltip.RewardButton = Button
+									Button.Label:SetTextColor(COLOR_Text.r, COLOR_Text.g, COLOR_Text.b, 1)
+									Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
+									Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
+									Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_Start, GRADIENT_End)
+								end
 
-						--------------------------------
+								if state == "INVALID" then
+									local COLOR_Background
+									local COLOR_Image
+									local GRADIENT_START_Image_Background
+									local GRADIENT_END_Image_Background
 
-						if Button.Callback then
-							-- Lua Taint?
-							-- Blizzard GameTooltip Code
+									if addon.Theme.IsDarkTheme then
+										COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_DarkTheme
+										COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
 
-							GameTooltip:SetOwner(Button, "ANCHOR_TOPRIGHT", 0, 0);
+										local colorStart = addon.Theme.Quest.Invalid_Primary_DarkTheme
+										local colorEnd = addon.Theme.Quest.Invalid_Secondary_DarkTheme
+										GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
+										GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
+									else
+										COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_LightTheme
+										COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
 
-							if (Button.Type == "spell") then
-								if (Button.Callback.factionID) then
-									local wrapText = false
-									GameTooltip_SetTitle(GameTooltip, QUEST_REPUTATION_REWARD_TITLE:format(Button.Callback.factionName), HIGHLIGHT_FONT_COLOR, wrapText)
-									if C_Reputation.IsAccountWideReputation(Button.Callback.factionID) then
-										GameTooltip_AddColoredLine(GameTooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR)
+										local colorStart = addon.Theme.Quest.Invalid_Primary_LightTheme
+										local colorEnd = addon.Theme.Quest.Invalid_Secondary_LightTheme
+										GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
+										GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
 									end
-									GameTooltip_AddNormalLine(GameTooltip, QUEST_REPUTATION_REWARD_TOOLTIP:format(Button.Callback.rewardAmount, Button.Callback.factionName))
-								else
-									GameTooltip:SetSpellByID(Button.Callback.rewardSpellID)
+
+									Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
+									Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
+									Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_START_Image_Background, GRADIENT_END_Image_Background)
 								end
-							elseif (Button.Callback.objectType == "item") then
-								GameTooltip:SetQuestItem(Button.Callback.type, Button.Callback:GetID())
-								GameTooltip_ShowCompareItem(GameTooltip)
-							elseif (Button.Callback.objectType == "currency") then
-								GameTooltip:SetQuestCurrency(Button.Callback.type, Button.Callback:GetID())
 							end
 
-							if (Button.Callback.rewardContextLine) then
-								GameTooltip_AddBlankLineToTooltip(GameTooltip)
-								GameTooltip_AddColoredLine(GameTooltip, Button.Callback.rewardContextLine, QUEST_REWARD_CONTEXT_FONT_COLOR)
-							end
+							do -- STATE (SELECTION)
+								local isSelectable = selectable
+								local numChoices = NS.Variables.Num_Choice
+								local selectedReward = QuestInfoFrame.itemChoice
 
-							GameTooltip:Show()
-							CursorUpdate(Button.Callback)
+								local currentAlpha = Button:GetAlpha()
+								local targetAlpha = 1
+
+								--------------------------------
+
+								if selectionState == "SELECTED" or selectedReward == 0 then
+									targetAlpha = 1
+								elseif isSelectable and numChoices > 1 then
+									targetAlpha = .25
+								end
+
+								--------------------------------
+
+								if currentAlpha ~= targetAlpha then
+									AdaptiveAPI.Animation:Fade(Button, .25, currentAlpha, targetAlpha, AdaptiveAPI.Animation.EaseExpo)
+								else
+									Button:SetAlpha(targetAlpha)
+								end
+							end
+						end
+					end
+
+					do -- CLICK EVENTS
+						Button.CanClick = function()
+							if selectable then
+								if NS.Variables.Num_Choice > 1 and QuestFrameCompleteQuestButton:IsVisible() then
+									return true
+								else
+									return false
+								end
+							end
+						end
+
+						Button.Click = function()
+							Button.Callback:Click()
 
 							--------------------------------
 
-							InteractionQuestFrame.UpdateGameTooltip()
+							if Button.Type == "choice" then
+								Frame.SetChoiceSelected(Button)
+							end
+
+							--------------------------------
+
+							CallbackRegistry:Trigger("QUEST_REWARD_SELECTED", Button)
+
+							--------------------------------
+
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseUp)
 						end
 
-						--------------------------------
+						Button.MouseDownCallback = function()
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseDown)
+						end
 
-						Button.Enter()
+						Button.MouseEnterCallback = function()
+							GameTooltip.RewardButton = Button
 
-						--------------------------------
+							--------------------------------
 
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Enter)
-					end
+							if Button.Callback then
+								-- Lua Taint?
+								-- Blizzard GameTooltip Code
 
-					Button.MouseLeaveCallback = function()
-						GameTooltip.RewardButton = nil
+								GameTooltip:SetOwner(Button, "ANCHOR_TOPRIGHT", 0, 0);
 
-						--------------------------------
+								if (Button.Type == "spell") then
+									if (Button.Callback.factionID) then
+										local wrapText = false
+										GameTooltip_SetTitle(GameTooltip, QUEST_REPUTATION_REWARD_TITLE:format(Button.Callback.factionName), HIGHLIGHT_FONT_COLOR, wrapText)
+										if C_Reputation.IsAccountWideReputation(Button.Callback.factionID) then
+											GameTooltip_AddColoredLine(GameTooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR)
+										end
+										GameTooltip_AddNormalLine(GameTooltip, QUEST_REPUTATION_REWARD_TOOLTIP:format(Button.Callback.rewardAmount, Button.Callback.factionName))
+									else
+										GameTooltip:SetSpellByID(Button.Callback.rewardSpellID)
+									end
+								elseif (Button.Callback.objectType == "item") then
+									GameTooltip:SetQuestItem(Button.Callback.type, Button.Callback:GetID())
+									GameTooltip_ShowCompareItem(GameTooltip)
+								elseif (Button.Callback.objectType == "currency") then
+									GameTooltip:SetQuestCurrency(Button.Callback.type, Button.Callback:GetID())
+								end
 
-						GameTooltip:Hide()
-						addon.BlizzardGameTooltip.Script:StopCustom()
-						InteractionQuestFrame.UpdateGameTooltip()
+								if (Button.Callback.rewardContextLine) then
+									GameTooltip_AddBlankLineToTooltip(GameTooltip)
+									GameTooltip_AddColoredLine(GameTooltip, Button.Callback.rewardContextLine, QUEST_REWARD_CONTEXT_FONT_COLOR)
+								end
 
-						--------------------------------
+								GameTooltip:Show()
+								CursorUpdate(Button.Callback)
 
-						if Button.Callback then
+								--------------------------------
+
+								InteractionQuestFrame.UpdateGameTooltip()
+							end
+
+							--------------------------------
+
+							Button.Enter()
+
+							--------------------------------
+
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Enter)
+						end
+
+						Button.MouseLeaveCallback = function()
+							GameTooltip.RewardButton = nil
+
+							--------------------------------
+
 							GameTooltip:Hide()
+							addon.BlizzardGameTooltip.Script:StopCustom()
+							InteractionQuestFrame.UpdateGameTooltip()
+
+							--------------------------------
+
+							if Button.Callback then
+								GameTooltip:Hide()
+							end
+
+							--------------------------------
+
+							Button.Leave()
+
+							--------------------------------
+
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Leave)
 						end
 
 						--------------------------------
 
-						Button.Leave()
+						Button:SetScript("OnEnter", function()
+							Button.MouseEnterCallback()
+						end)
 
-						--------------------------------
+						Button:SetScript("OnLeave", function()
+							Button.MouseLeaveCallback()
+						end)
 
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Leave)
+						Button:SetScript("OnMouseDown", function()
+							Button.MouseDownCallback()
+						end)
+
+						Button:SetScript("OnMouseUp", function()
+							Button.Click()
+						end)
 					end
 
-					--------------------------------
-
-					Button:SetScript("OnEnter", function()
-						Button.MouseEnterCallback()
-					end)
-
-					Button:SetScript("OnLeave", function()
-						Button.MouseLeaveCallback()
-					end)
-
-					Button:SetScript("OnMouseDown", function()
-						Button.MouseDownCallback()
-					end)
-
-					Button:SetScript("OnMouseUp", function()
-						Button.Click()
-					end)
-
-					--------------------------------
-
-					local PADDING = NS.Variables:RATIO(9.25)
-					local TEXT_PADDING = NS.Variables:RATIO(7.5)
-
-					do -- BACKGROUND
-						Button.Background, Button.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Button, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 50, .25, "$parent.Background")
-						Button.Background:SetSize(Button:GetWidth() + 2.5, Button:GetHeight() + 2.5)
-						Button.Background:SetPoint("CENTER", Button, 0, 0)
-						Button.Background:SetFrameStrata("HIGH")
-						Button.Background:SetFrameLevel(1)
-
-						Button.BackgroundTexture:SetAlpha(.5)
-					end
-
-					do -- IMAGE
-						Button.Image = CreateFrame("Frame", "$parent.Image", Button)
-						Button.Image:SetSize(Button:GetHeight(), Button:GetHeight())
-						Button.Image:SetPoint("LEFT", Button)
-						Button.Image:SetFrameLevel(2)
-
-						--------------------------------
-
+					do -- ELEMENTS
 						do -- BACKGROUND
-							Button.Image.Background, Button.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image, "HIGH", AdaptiveAPI.Presets.BASIC_SQUARE, "$parent.Background")
-							Button.Image.Background:SetSize(Button.Image:GetWidth(), Button.Image:GetHeight())
-							Button.Image.Background:SetPoint("CENTER", Button.Image)
-							Button.Image.Background:SetFrameLevel(3)
+							Button.Background, Button.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Button, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 50, 3.25, "$parent.Background")
+							Button.Background:SetSize(Button:GetWidth() + 2.5, Button:GetHeight() + 2.5)
+							Button.Background:SetPoint("CENTER", Button, 0, 0)
+							Button.Background:SetFrameStrata("HIGH")
+							Button.Background:SetFrameLevel(1)
 						end
 
-						do -- ICON
-							Button.Image.Icon, Button.Image.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image, "HIGH", nil, "$parent.Texture")
-							Button.Image.Icon:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() - PADDING)
-							Button.Image.Icon:SetPoint("CENTER", Button.Image)
-							Button.Image.Icon:SetFrameLevel(4)
-							Button.Image.IconTexture:SetSize(Button.Image.Icon:GetWidth(), Button.Image.Icon:GetHeight())
-							Button.Image.IconTexture:SetPoint("CENTER", Button.Image.Icon)
-							Button.Image.IconTexture:SetTexCoord(.15, .85, .15, .85)
-						end
-
-						do -- TEXT
-							Button.Image.LabelFrame = CreateFrame("Frame", "$parent.LabelFrame", Button.Image)
-							Button.Image.LabelFrame:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() / (addon.Variables.GOLDEN_RATIO ^ 2))
-							Button.Image.LabelFrame:SetPoint("BOTTOM", Button.Image, 0, PADDING / 2)
-							Button.Image.LabelFrame:SetFrameLevel(6)
+						do -- IMAGE
+							Button.Image = CreateFrame("Frame", "$parent.Image", Button)
+							Button.Image:SetSize(Button:GetHeight(), Button:GetHeight())
+							Button.Image:SetPoint("LEFT", Button)
+							Button.Image:SetFrameLevel(2)
 
 							--------------------------------
 
 							do -- BACKGROUND
-								Button.Image.LabelFrame.Background, Button.Image.LabelFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image.LabelFrame, "HIGH", AdaptiveAPI.Presets.BASIC_SQUARE, "$parent.Background")
-								Button.Image.LabelFrame.Background:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
-								Button.Image.LabelFrame.Background:SetPoint("CENTER", Button.Image.LabelFrame)
-								Button.Image.LabelFrame.Background:SetFrameLevel(5)
-								Button.Image.LabelFrame.BackgroundTexture:SetVertexColor(.1, .1, .1, .825)
+								Button.Image.Background, Button.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image, "HIGH", AdaptiveAPI.Presets.BASIC_SQUARE, "$parent.Background")
+								Button.Image.Background:SetSize(Button.Image:GetWidth(), Button.Image:GetHeight())
+								Button.Image.Background:SetPoint("CENTER", Button.Image)
+								Button.Image.Background:SetFrameLevel(3)
 							end
 
-							do -- LABEL
-								Button.Image.LabelFrame.Label = AdaptiveAPI.FrameTemplates:CreateText(Button.Image.LabelFrame, { r = 1, g = 1, b = 1 }, textSize_Tooltip, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
-								Button.Image.LabelFrame.Label:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
-								Button.Image.LabelFrame.Label:SetPoint("CENTER", Button.Image.LabelFrame)
+							do -- ICON
+								Button.Image.Icon, Button.Image.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image, "HIGH", nil, "$parent.Texture")
+								Button.Image.Icon:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() - PADDING)
+								Button.Image.Icon:SetPoint("CENTER", Button.Image)
+								Button.Image.Icon:SetFrameLevel(4)
+								Button.Image.IconTexture:SetSize(Button.Image.Icon:GetWidth(), Button.Image.Icon:GetHeight())
+								Button.Image.IconTexture:SetPoint("CENTER", Button.Image.Icon)
+								Button.Image.IconTexture:SetTexCoord(.15, .85, .15, .85)
+							end
+
+							do -- TEXT
+								Button.Image.LabelFrame = CreateFrame("Frame", "$parent.LabelFrame", Button.Image)
+								Button.Image.LabelFrame:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() / (addon.Variables.GOLDEN_RATIO ^ 2))
+								Button.Image.LabelFrame:SetPoint("BOTTOM", Button.Image, 0, PADDING / 2)
+								Button.Image.LabelFrame:SetFrameLevel(6)
+
+								--------------------------------
+
+								do -- BACKGROUND
+									Button.Image.LabelFrame.Background, Button.Image.LabelFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Image.LabelFrame, "HIGH", AdaptiveAPI.Presets.BASIC_SQUARE, "$parent.Background")
+									Button.Image.LabelFrame.Background:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
+									Button.Image.LabelFrame.Background:SetPoint("CENTER", Button.Image.LabelFrame)
+									Button.Image.LabelFrame.Background:SetFrameLevel(5)
+									Button.Image.LabelFrame.BackgroundTexture:SetVertexColor(.1, .1, .1, .825)
+								end
+
+								do -- LABEL
+									Button.Image.LabelFrame.Label = AdaptiveAPI.FrameTemplates:CreateText(Button.Image.LabelFrame, { r = 1, g = 1, b = 1 }, textSize_Tooltip, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
+									Button.Image.LabelFrame.Label:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
+									Button.Image.LabelFrame.Label:SetPoint("CENTER", Button.Image.LabelFrame)
+								end
 							end
 						end
-					end
 
-					do -- LABEL
-						Button.Label = AdaptiveAPI.FrameTemplates:CreateText(Button, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-						Button.Label:SetSize(Button:GetWidth() - TEXT_PADDING - Button.Image:GetWidth() - TEXT_PADDING, Button:GetHeight())
-						Button.Label:SetPoint("LEFT", Button, Button.Image:GetWidth() + TEXT_PADDING, 0)
-						Button.Label:SetAlpha(.75)
-					end
-
-					do -- HIGHLIGHT
-						Button.Highlight = CreateFrame("Frame", "$parent.Highlight", Button)
-						Button.Highlight:SetAllPoints(Button, true)
-						Button.Highlight:SetFrameStrata("HIGH")
-						Button.Highlight:SetFrameLevel(5)
-
-						--------------------------------
-
-						do -- BACKGROUND
-							Button.Highlight.Background, Button.Highlight.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Highlight, "HIGH", NS.Variables.QUEST_PATH .. "reward-highlight-add.png", "$parent.Texture")
-							Button.Highlight.Background:SetAllPoints(Button.Highlight, true)
-							Button.Highlight.Background:SetFrameStrata("HIGH")
-							Button.Highlight.Background:SetFrameLevel(99)
-
-							Button.Highlight.BackgroundTexture:SetBlendMode("ADD")
+						do -- LABEL
+							Button.Label = AdaptiveAPI.FrameTemplates:CreateText(Button, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+							Button.Label:SetSize(Button:GetWidth() - TEXT_PADDING - Button.Image:GetWidth() - TEXT_PADDING, Button:GetHeight())
+							Button.Label:SetPoint("LEFT", Button, Button.Image:GetWidth() + TEXT_PADDING, 0)
+							Button.Label:SetAlpha(.75)
 						end
-					end
 
-					do -- ANIMATION
-						Button.Enter = function()
-							Button.MouseOver = true
+						do -- HIGHLIGHT
+							Button.Highlight = CreateFrame("Frame", "$parent.Highlight", Button)
+							Button.Highlight:SetAllPoints(Button, true)
+							Button.Highlight:SetFrameStrata("HIGH")
+							Button.Highlight:SetFrameLevel(5)
 
 							--------------------------------
 
-							AdaptiveAPI.Animation:Fade(Button.Highlight, .25, Button.Highlight:GetAlpha(), 1, AdaptiveAPI.Animation.EaseExpo, function() return not Button.MouseOver end)
+							do -- BACKGROUND
+								Button.Highlight.Background, Button.Highlight.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Highlight, "HIGH", NS.Variables.QUEST_PATH .. "reward-highlight-add.png", "$parent.Texture")
+								Button.Highlight.Background:SetAllPoints(Button.Highlight, true)
+								Button.Highlight.Background:SetFrameStrata("HIGH")
+								Button.Highlight.Background:SetFrameLevel(99)
+
+								Button.Highlight.BackgroundTexture:SetBlendMode("ADD")
+							end
 						end
 
-						Button.Leave = function()
-							Button.MouseOver = false
+						do -- ANIMATION
+							Button.Enter = function()
+								Button.MouseOver = true
+
+								--------------------------------
+
+								AdaptiveAPI.Animation:Fade(Button.Highlight, .075, Button.Highlight:GetAlpha(), 1, AdaptiveAPI.Animation.EaseExpo, function() return not Button.MouseOver end)
+							end
+
+							Button.Leave = function()
+								Button.MouseOver = false
+
+								--------------------------------
+
+								AdaptiveAPI.Animation:Fade(Button.Highlight, .075, Button.Highlight:GetAlpha(), 0, AdaptiveAPI.Animation.EaseSine, function() return Button.MouseOver end)
+							end
 
 							--------------------------------
 
-							AdaptiveAPI.Animation:Fade(Button.Highlight, .25, Button.Highlight:GetAlpha(), 0, AdaptiveAPI.Animation.EaseSine, function() return Button.MouseOver end)
+							Button.Highlight:SetAlpha(0)
 						end
 
-						--------------------------------
+						do -- EVENTS
+							CallbackRegistry:Add("START_QUEST", function() Button.SetStateAuto() end, 0)
+							CallbackRegistry:Add("QUEST_REWARD_SELECTED", function() Button.SetStateAuto() end, 0)
 
-						Button.Highlight:SetAlpha(0)
+							--------------------------------
+
+							addon.API:RegisterThemeUpdate(function()
+								Button.UpdateState()
+							end, 10)
+						end
 					end
 
 					do -- EVENTS
-						CallbackRegistry:Add("START_QUEST", function() Button.SetStateAuto() end, 0)
-						CallbackRegistry:Add("QUEST_REWARD_SELECTED", function() Button.SetStateAuto() end, 0)
+						local function UpdateSize()
+							Button:SetSize(parent:GetWidth(), NS.Variables:RATIO(5.5))
+							Button.Background:SetSize(Button:GetWidth() + 2.5, Button:GetHeight() + 2.5)
+							Button.Image:SetSize(Button:GetHeight(), Button:GetHeight())
+							Button.Image.Background:SetSize(Button.Image:GetWidth(), Button.Image:GetHeight())
+							Button.Image.Icon:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() - PADDING)
+							Button.Image.LabelFrame:SetSize(Button.Image:GetWidth() - PADDING, Button.Image:GetHeight() / (addon.Variables.GOLDEN_RATIO ^ 2))
+							Button.Image.LabelFrame.Background:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
+							Button.Image.LabelFrame.Label:SetSize(Button.Image.LabelFrame:GetWidth(), Button.Image.LabelFrame:GetHeight())
+							Button.Label:SetSize(Button:GetWidth() - TEXT_PADDING - Button.Image:GetWidth() - TEXT_PADDING, Button:GetHeight())
+						end
 
-						--------------------------------
-
-						addon.API:RegisterThemeUpdate(function()
-							Button.UpdateState()
-						end, 10)
+						hooksecurefunc(parent, "SetHeight", UpdateSize)
+						hooksecurefunc(parent, "SetWidth", UpdateSize)
+						hooksecurefunc(parent, "SetSize", UpdateSize)
 					end
 
 					--------------------------------
@@ -807,15 +803,16 @@ function NS.Elements:Load()
 					hooksecurefunc(frame, "SetText", Update)
 				end
 
-				local function RegisterElement(frame)
+				local function RegisterElement(frame, type)
+					frame.type = type
 					table.insert(Frame.ScrollChildFrame.Elements, frame)
 				end
 
 				--------------------------------
 
 				do -- TITLE
-					Frame.Title = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, textSize_Title, "LEFT", "TOP", AdaptiveAPI.Fonts.Title_ExtraBold)
-					Frame.Title:SetPoint("TOPLEFT", Frame, 60, NS.Variables:RATIO(7))
+					Frame.Title = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, textSize_Title, "LEFT", "TOP", AdaptiveAPI.Fonts.Title_Bold)
+					Frame.Title:SetPoint("TOPLEFT", Frame, 55, NS.Variables:RATIO(7))
 
 					--------------------------------
 
@@ -826,24 +823,42 @@ function NS.Elements:Load()
 					Frame.TitleHeader, Frame.TitleHeaderTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", nil, "$parent.TitleHeader")
 					Frame.TitleHeader:SetSize(Frame:GetWidth() - 20, (Frame:GetWidth() - 20) * .14)
 					Frame.TitleHeader:SetPoint("TOP", Frame.ScrollFrame, 0, (Frame.TitleHeader:GetHeight() + NS.Variables.PADDING))
+
+					--------------------------------
+
+					do -- EVENTS
+						local function UpdateSize()
+							Frame.TitleHeader:SetSize(Frame:GetWidth() - 20, (Frame:GetWidth() - 20) * .14)
+							Frame.TitleHeader:SetPoint("TOP", Frame.ScrollFrame, 0, (Frame.TitleHeader:GetHeight() + NS.Variables.PADDING))
+						end
+
+						hooksecurefunc(Frame, "SetHeight", UpdateSize)
+						hooksecurefunc(Frame, "SetWidth", UpdateSize)
+						hooksecurefunc(Frame, "SetSize", UpdateSize)
+					end
 				end
 
 				do -- STORYLINE
 					Frame.Storyline = CreateFrame("Frame", "$parent.Storyline", Frame)
 					Frame.Storyline:SetSize(Frame.ScrollChildFrame:GetWidth(), 15)
-					Frame.Storyline:SetPoint("BOTTOM", Frame.TitleHeader, 35, 20)
-					Frame.Storyline:SetAlpha(.5)
+					Frame.Storyline:SetPoint("BOTTOM", Frame.TitleHeader, 33.75, 20)
 
 					--------------------------------
 
-					local function Text()
+					do -- TEXT
 						Frame.Storyline.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Storyline, addon.Theme.RGB_WHITE, textSize_Content, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Title_Medium)
 						Frame.Storyline.Text:SetAllPoints(Frame.Storyline, true)
 					end
 
-					--------------------------------
+					do -- EVENTS
+						local function UpdateSize()
+							Frame.Storyline:SetSize(Frame.ScrollChildFrame:GetWidth(), 15)
+						end
 
-					Text()
+						hooksecurefunc(Frame, "SetHeight", UpdateSize)
+						hooksecurefunc(Frame, "SetWidth", UpdateSize)
+						hooksecurefunc(Frame, "SetSize", UpdateSize)
+					end
 				end
 
 				do -- OBJECTIVES
@@ -853,16 +868,17 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Objectives_Header)
+						RegisterElement(Frame.Objectives_Header, "Header")
 					end
 
 					do -- TEXT
 						Frame.Objectives_Text = AdaptiveAPI.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, textSize_Content, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+						Frame.Objectives_Text:SetAlpha(.75)
 
 						--------------------------------
 
 						SetAutoTextHeight(Frame.Objectives_Text)
-						RegisterElement(Frame.Objectives_Text)
+						RegisterElement(Frame.Objectives_Text, "Text")
 					end
 				end
 
@@ -873,7 +889,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Rewards_Header)
+						RegisterElement(Frame.Rewards_Header, "Header")
 					end
 
 					--------------------------------
@@ -883,7 +899,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Rewards_Experience)
+						RegisterElement(Frame.Rewards_Experience, "RewardText")
 					end
 
 					do -- CURRENCY TEXT
@@ -891,7 +907,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Rewards_Currency)
+						RegisterElement(Frame.Rewards_Currency, "RewardText")
 					end
 
 					do -- HONOR TEXT
@@ -899,19 +915,18 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Rewards_Honor)
+						RegisterElement(Frame.Rewards_Honor, "RewardText")
 					end
-
-					--------------------------------
 
 					do -- CHOICE
 						do -- CHOICE
 							Frame.Rewards_Choice = AdaptiveAPI.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, textSize_Content, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+							Frame.Rewards_Choice:SetAlpha(.75)
 
 							--------------------------------
 
 							SetAutoTextHeight(Frame.Rewards_Choice)
-							RegisterElement(Frame.Rewards_Choice)
+							RegisterElement(Frame.Rewards_Choice, "Text")
 						end
 
 						do -- CHOICE BUTTONS
@@ -921,7 +936,7 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								RegisterElement(Button)
+								RegisterElement(Button, "Button")
 
 								--------------------------------
 
@@ -930,20 +945,19 @@ function NS.Elements:Load()
 
 							--------------------------------
 
-							NS.Variables.ChoiceButtons = buttons
+							NS.Variables.Buttons_Choice = buttons
 						end
 					end
-
-					--------------------------------
 
 					do -- RECEIVE
 						do -- TEXT
 							Frame.Rewards_Receive = AdaptiveAPI.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, textSize_Content, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+							Frame.Rewards_Receive:SetAlpha(.75)
 
 							--------------------------------
 
 							SetAutoTextHeight(Frame.Rewards_Receive)
-							RegisterElement(Frame.Rewards_Receive)
+							RegisterElement(Frame.Rewards_Receive, "Text")
 						end
 
 						do -- RECEIVE BUTTONS
@@ -953,7 +967,7 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								RegisterElement(Button)
+								RegisterElement(Button, "Button")
 
 								--------------------------------
 
@@ -962,20 +976,19 @@ function NS.Elements:Load()
 
 							--------------------------------
 
-							NS.Variables.ReceiveButtons = buttons
+							NS.Variables.Buttons_Reward = buttons
 						end
 					end
-
-					--------------------------------
 
 					do -- SPELL
 						do -- TEXT
 							Frame.Rewards_Spell = AdaptiveAPI.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, textSize_Content, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+							Frame.Rewards_Spell:SetAlpha(.75)
 
 							--------------------------------
 
 							SetAutoTextHeight(Frame.Rewards_Spell)
-							RegisterElement(Frame.Rewards_Spell)
+							RegisterElement(Frame.Rewards_Spell, "Text")
 						end
 
 						do -- SPELL BUTTONS
@@ -985,7 +998,7 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								RegisterElement(Button)
+								RegisterElement(Button, "Button")
 
 								--------------------------------
 
@@ -994,7 +1007,7 @@ function NS.Elements:Load()
 
 							--------------------------------
 
-							NS.Variables.SpellButtons = buttons
+							NS.Variables.Buttons_Spell = buttons
 						end
 					end
 				end
@@ -1006,7 +1019,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						RegisterElement(Frame.Progress_Header)
+						RegisterElement(Frame.Progress_Header, "Header")
 					end
 
 					do -- REQUIRED ITEM BUTTONS
@@ -1016,7 +1029,7 @@ function NS.Elements:Load()
 
 							--------------------------------
 
-							RegisterElement(Button)
+							RegisterElement(Button, "Button")
 
 							--------------------------------
 
@@ -1025,7 +1038,7 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						NS.Variables.RequireItemButtons = buttons
+						NS.Variables.Buttons_Required = buttons
 					end
 				end
 			end

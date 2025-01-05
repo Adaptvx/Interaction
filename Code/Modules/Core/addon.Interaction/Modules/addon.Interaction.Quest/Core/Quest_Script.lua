@@ -23,17 +23,15 @@ function NS.Script:Load()
 
 	do
 		Frame.ButtonContainer.AcceptButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation(true)
+			Frame.HideWithAnimation()
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AcceptQuest()
-			end, .35)
+			AcceptQuest()
 		end)
 
 		Frame.ButtonContainer.ContinueButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation(true)
+			Frame.HideWithAnimation()
 
 			--------------------------------
 
@@ -56,7 +54,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.HideWithAnimation(true)
+			Frame.HideWithAnimation()
 
 			--------------------------------
 
@@ -66,11 +64,11 @@ function NS.Script:Load()
 		end)
 
 		Frame.ButtonContainer.DeclineButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation()
+			Frame.HideWithAnimation(true)
 		end)
 
 		Frame.ButtonContainer.GoodbyeButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation()
+			Frame.HideWithAnimation(true)
 		end)
 	end
 
@@ -79,34 +77,52 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.UpdateVisibility = function()
-			local IsReady = addon.Initialize.Ready
-			if not IsReady then
-				return
+		Frame.ScrollChildFrame.UpdateLayout = function()
+			local elements = Frame.ScrollChildFrame.Elements
+			local currentOffset = 0
+
+			--------------------------------
+
+			for element = 1, #elements do
+				if elements[element]:IsShown() then
+					local currentElement = elements[element]
+					local nextElement = elements[element + 1]
+
+					local currentElementHeight = 0
+
+					--------------------------------
+
+					if currentElement.GetStringHeight then
+						currentElementHeight = currentElement:GetStringHeight()
+					elseif currentElement.GetHeight then
+						currentElementHeight = currentElement:GetHeight()
+					end
+
+					--------------------------------
+
+					currentElement:ClearAllPoints()
+					currentElement:SetPoint("TOP", Frame.ScrollChildFrame, 0, -currentOffset)
+
+					--------------------------------
+
+					if (currentElement.type == "RewardText") and (nextElement and nextElement:IsShown() and nextElement.type == "RewardText") then
+						currentOffset = currentOffset + currentElementHeight + NS.Variables.PADDING
+					else
+						currentOffset = currentOffset + currentElementHeight + NS.Variables.PADDING
+					end
+				end
 			end
 
 			--------------------------------
 
-			local IsFinishedDialog = (addon.Interaction.Dialog.Variables.Finished)
-			local IsGossip = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
-			local IsQuest = (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible())
-			local IsHidden = (Frame.hidden)
+			Frame.ScrollChildFrame:SetHeight(currentOffset)
+		end
 
-			--------------------------------
-
-			if INTDB.profile.INT_ALWAYS_SHOW_QUEST then
-				if IsQuest and not IsGossip and IsHidden then
-					Frame.ShowWithAnimation()
-				end
-			else
-				if IsQuest and not IsGossip and IsFinishedDialog and IsHidden then
-					Frame.ShowWithAnimation()
-				end
-			end
-
-			if not IsQuest and not IsHidden then
-				Frame.HideWithAnimation()
-			end
+		Frame.UpdateAll = function()
+			Frame.UpdateWarbandHeader()
+			Frame.UpdateScrollFrameFormat()
+			Frame.UpdateScrollIndicator()
+			Frame.UpdateFocus()
 		end
 
 		Frame.UpdateWarbandHeader = function()
@@ -115,7 +131,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			if WarbandCompleted then
-				AdaptiveAPI:AddTooltip(Frame.TitleHeader, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOP", 0, -47.5, true)
+				AdaptiveAPI:AddTooltip(Frame.TitleHeader, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, -35, true)
 			else
 				AdaptiveAPI:RemoveTooltip(Frame.TitleHeader)
 			end
@@ -126,15 +142,15 @@ function NS.Script:Load()
 
 			if addon.Theme.IsDarkTheme then
 				if WarbandCompleted then
-					Texture = NS.Variables.QUEST_PATH .. "header-complete-dark-mode.png"
+					Texture = NS.Variables.QUEST_PATH .. "header-complete-dark.png"
 				else
-					Texture = NS.Variables.QUEST_PATH .. "header-dark-mode.png"
+					Texture = NS.Variables.QUEST_PATH .. "header-dark.png"
 				end
 			else
 				if WarbandCompleted then
-					Texture = NS.Variables.QUEST_PATH .. "header-complete-light-mode.png"
+					Texture = NS.Variables.QUEST_PATH .. "header-complete-light.png"
 				else
-					Texture = NS.Variables.QUEST_PATH .. "header-light-mode.png"
+					Texture = NS.Variables.QUEST_PATH .. "header-light.png"
 				end
 			end
 
@@ -144,12 +160,12 @@ function NS.Script:Load()
 		Frame.UpdateScrollFrameFormat = function()
 			if not Frame.Title then return end
 
-			if Frame.Storyline:IsVisible() then
+			if Frame.Storyline:IsShown() then
 				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
-				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - 70 - TitleHeight)
+				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (70 / NS.Variables.ScaleModifier) - TitleHeight)
 			else
 				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
-				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - 52.5 - TitleHeight)
+				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (52.5 / NS.Variables.ScaleModifier) - TitleHeight)
 			end
 
 			Frame.ScrollFrame:ClearAllPoints()
@@ -209,7 +225,7 @@ function NS.Script:Load()
 			local IsCurrentHighlightedButtonSelected = (addon.Input.Variables.CurrentFrame == NS.Variables.ChoiceSelected)
 			local IsCompleteButtonHighlighted = (addon.Input.Variables.CurrentFrame == InteractionQuestFrame.ButtonContainer.CompleteButton)
 
-			local IsRewardSelection = (NS.Variables.NumChoices > 1 and QuestFrameCompleteQuestButton:IsVisible())
+			local IsRewardSelection = (NS.Variables.Num_Choice > 1 and QuestFrameCompleteQuestButton:IsVisible())
 			local IsChoiceSelected = (NS.Variables.ChoiceSelected)
 
 			if (not IsRewardSelection) or (IsRewardSelection and ((not IsController) or (IsController and (IsCurrentHighlightedButtonSelected or IsCompleteButtonHighlighted))) and (IsChoiceSelected)) then
@@ -225,746 +241,846 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.GetChoiceButtons = function()
-			return NS.Variables.ChoiceButtons
-		end
-
-		Frame.GetReceiveButtons = function()
-			return NS.Variables.ReceiveButtons
-		end
-
-		Frame.GetSpellButtons = function()
-			return NS.Variables.SpellButtons
-		end
-
-		Frame.GetRequireItemButtons = function()
-			return NS.Variables.RequireItemButtons
-		end
-
-		--------------------------------
-
-		Frame.HideQuestChoice = function()
-			NS.Variables.NumChoices = 0
-			Frame.Rewards_Choice:Hide()
-
-			for i = 1, #Frame.GetChoiceButtons() do
-				local CurrentButton = Frame.GetChoiceButtons()[i]
-
-				CurrentButton:Hide()
-			end
-		end
-
-		Frame.HideReceive = function()
-			NS.Variables.NumReceive = 0
-			Frame.Rewards_Receive:Hide()
-
-			for i = 1, #Frame.GetReceiveButtons() do
-				local CurrentButton = Frame.GetReceiveButtons()[i]
-
-				CurrentButton:Hide()
-			end
-		end
-
-		Frame.HideSpell = function()
-			NS.Variables.NumSpell = 0
-			Frame.Rewards_Spell:Hide()
-
-			for i = 1, #Frame.GetSpellButtons() do
-				local CurrentButton = Frame.GetSpellButtons()[i]
-
-				CurrentButton:Hide()
-			end
-		end
-
-		Frame.HideRequireItems = function()
-			NS.Variables.NumRequireItem = 0
-			Frame.Progress_Header:Hide()
-
-			for i = 1, #Frame.GetRequireItemButtons() do
-				local CurrentButton = Frame.GetRequireItemButtons()[i]
-
-				CurrentButton:Hide()
-			end
-		end
-
-		--------------------------------
-
-		Frame.SetChoice = function(callbacks)
-			NS.Variables.NumChoices = #callbacks
-
-			--------------------------------
-
-			Frame.Rewards_Choice:Show()
-
-			--------------------------------
-
-			local Buttons = Frame.GetChoiceButtons()
-
-			for i = 1, #Buttons do
-				Buttons[i]:Hide()
-			end
-
-			for i = 1, NS.Variables.NumChoices do
-				Buttons[i]:Show()
-				Buttons[i].Index = i
-				Buttons[i].Type = "choice"
-				Buttons[i].Callback = callbacks[i]
-
-				--------------------------------
-
-				local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
-				local CallbackContextIcon = callbacks[i].QuestRewardContextIcon
-				local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
-				local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
-				local CallbackCount = callbacks[i].count
-
-				--------------------------------
-
-				local function Text()
-					if CallbackContextIcon and CallbackContextIcon:IsVisible() then
-						if CallbackContextIcon:GetAtlas() then
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetAtlas(), 15, 15, 0, 0, "Atlas") .. " " .. CallbackLabelText:GetText())
-						else
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetTexture(), 15, 15, 0, 0, "|T") .. " " .. CallbackLabelText:GetText())
-						end
-					else
-						Buttons[i].Label:SetText(CallbackLabelText:GetText())
-					end
+		do -- BUTTONS
+			do -- GET
+				Frame.GetButtons_Choice = function()
+					return NS.Variables.Buttons_Choice
 				end
 
-				local function Icon()
-					if CallbackIcon:GetAtlas() then
-						Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
-					else
-						Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
-					end
+				Frame.GetButtons_Reward = function()
+					return NS.Variables.Buttons_Reward
 				end
 
-				local function Count()
-					if CallbackCount > 1 then
-						Buttons[i].Image.LabelFrame:Show()
-						Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-						Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
-					else
-						Buttons[i].Image.LabelFrame:Hide()
-						Buttons[i].Image.LabelFrame.Label:SetText("")
-					end
+				Frame.GetButtons_Spell = function()
+					return NS.Variables.Buttons_Spell
 				end
 
-				local function State()
-					Buttons[i].SetStateAuto()
-				end
-
-				--------------------------------
-
-				Text()
-				Icon()
-				Count()
-				State()
-			end
-		end
-
-		Frame.SetReceive = function(callbacks)
-			NS.Variables.NumReceive = #callbacks
-
-			--------------------------------
-
-			Frame.Rewards_Receive:Show()
-
-			--------------------------------
-
-			local Buttons = Frame.GetReceiveButtons()
-
-			for i = 1, #Buttons do
-				Buttons[i]:Hide()
-			end
-
-			for i = 1, NS.Variables.NumReceive do
-				Buttons[i]:Show()
-				Buttons[i].Index = i
-				Buttons[i].Type = "reward"
-				Buttons[i].Callback = callbacks[i]
-
-				--------------------------------
-
-				local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
-				local CallbackContextIcon = callbacks[i].QuestRewardContextIcon
-				local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
-				local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
-				local CallbackCount = callbacks[i].count or 0
-
-				--------------------------------
-
-				local function Text()
-					if CallbackContextIcon and CallbackContextIcon:IsVisible() then
-						if CallbackContextIcon:GetAtlas() then
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetAtlas(), 15, 15, 0, 0, "Atlas") .. " " .. CallbackLabelText:GetText())
-						else
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetTexture(), 15, 15, 0, 0, "|T") .. " " .. CallbackLabelText:GetText())
-						end
-					else
-						Buttons[i].Label:SetText(CallbackLabelText:GetText())
-					end
-				end
-
-				local function Icon()
-					if CallbackIcon:GetAtlas() then
-						Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
-					else
-						Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
-					end
-				end
-
-				local function Count()
-					if CallbackCount > 1 then
-						Buttons[i].Image.LabelFrame:Show()
-						Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-						Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
-					else
-						Buttons[i].Image.LabelFrame:Hide()
-						Buttons[i].Image.LabelFrame.Label:SetText("")
-					end
-				end
-
-				local function State()
-					Buttons[i].SetStateAuto()
-				end
-
-				--------------------------------
-
-				Text()
-				Icon()
-				Count()
-				State()
-			end
-		end
-
-		Frame.SetSpell = function(callbacks)
-			NS.Variables.NumSpell = #callbacks
-
-			--------------------------------
-
-			Frame.Rewards_Spell:Show()
-
-			--------------------------------
-
-			local Buttons = Frame.GetSpellButtons()
-
-			for i = 1, #Buttons do
-				Buttons[i]:Hide()
-			end
-
-			for i = 1, NS.Variables.NumSpell do
-				Buttons[i]:Show()
-				Buttons[i].Index = i
-				Buttons[i].Type = "spell"
-				Buttons[i].Callback = callbacks[i]
-
-				--------------------------------
-
-				local CallbackLabelText = callbacks[i].Name
-				local CallbackContextIcon = callbacks[i].QuestRewardContextIcon
-				local CallbackIcon = callbacks[i].Icon
-				local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
-				local CallbackCount = callbacks[i].count
-
-				--------------------------------
-
-				local function Text()
-					if CallbackContextIcon and CallbackContextIcon:IsVisible() then
-						if CallbackContextIcon:GetAtlas() then
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetAtlas(), 15, 15, 0, 0, "Atlas") .. " " .. CallbackLabelText:GetText())
-						else
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetTexture(), 15, 15, 0, 0, "|T") .. " " .. CallbackLabelText:GetText())
-						end
-					else
-						Buttons[i].Label:SetText(CallbackLabelText:GetText())
-					end
-				end
-
-				local function Icon()
-					if CallbackIcon:GetAtlas() then
-						Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
-					else
-						Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
-					end
-				end
-
-				local function Count()
-					if CallbackCount and CallbackCount > 1 then
-						Buttons[i].Image.LabelFrame:Show()
-						Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-						Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
-					else
-						Buttons[i].Image.LabelFrame:Hide()
-						Buttons[i].Image.LabelFrame.Label:SetText("")
-					end
-				end
-
-				local function State()
-					Buttons[i].SetStateAuto()
-				end
-
-				--------------------------------
-
-				Text()
-				Icon()
-				Count()
-				State()
-			end
-		end
-
-		Frame.SetRequireItem = function(callbacks)
-			NS.Variables.NumRequireItem = #callbacks
-
-			--------------------------------
-
-			Frame.Progress_Header:Show()
-
-			--------------------------------
-
-			local Buttons = Frame.GetRequireItemButtons()
-
-			for i = 1, #Buttons do
-				Buttons[i]:Hide()
-			end
-
-			for i = 1, NS.Variables.NumRequireItem do
-				Buttons[i]:Show()
-				Buttons[i].Index = i
-				Buttons[i].Type = "required"
-				Buttons[i].Callback = callbacks[i]
-
-				--------------------------------
-
-				local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
-				local CallbackContextIcon = callbacks[i].QuestRewardContextIcon
-				local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
-				local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
-				local CallbackCount = callbacks[i].count
-
-				--------------------------------
-
-				local function Text()
-					if CallbackContextIcon and CallbackContextIcon:IsVisible() then
-						if CallbackContextIcon:GetAtlas() then
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetAtlas(), 15, 15, 0, 0, "Atlas") .. " " .. CallbackLabelText:GetText())
-						else
-							Buttons[i].Label:SetText(AdaptiveAPI:InlineIcon(CallbackContextIcon:GetTexture(), 15, 15, 0, 0, "|T") .. " " .. CallbackLabelText:GetText())
-						end
-					else
-						Buttons[i].Label:SetText(CallbackLabelText:GetText())
-					end
-				end
-
-				local function Icon()
-					if CallbackIcon:GetAtlas() then
-						Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
-					else
-						Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
-					end
-				end
-
-				local function Count()
-					if CallbackCount > 1 then
-						Buttons[i].Image.LabelFrame:Show()
-						Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-						Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
-					else
-						Buttons[i].Image.LabelFrame:Hide()
-						Buttons[i].Image.LabelFrame.Label:SetText("")
-					end
-				end
-
-				local function State()
-					Buttons[i].SetStateAuto()
-				end
-
-				--------------------------------
-
-				Text()
-				Icon()
-				Count()
-				State()
-			end
-		end
-
-		--------------------------------
-
-		QuestFrame.GetRewards = function(type)
-			local results = {}
-
-			local frame = QuestInfoRewardsFrame
-			for f1 = 1, frame:GetNumChildren() do
-				local _frameIndex1 = select(f1, frame:GetChildren())
-
-				if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestInfoItem") and not AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "Highlight") and _frameIndex1:IsVisible() and _frameIndex1.type == type then
-					if _frameIndex1:IsVisible() and _frameIndex1:GetPoint() then
-						table.insert(results, _frameIndex1)
-					end
+				Frame.GetButtons_Required = function()
+					return NS.Variables.Buttons_Required
 				end
 			end
 
-			return results
-		end
-
-		QuestFrame.GetProgressRequireItems = function()
-			local results = {}
-
-			local frame = QuestProgressScrollChildFrame
-			for f1 = 1, frame:GetNumChildren() do
-				local _frameIndex1 = select(f1, frame:GetChildren())
-
-				if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestProgressItem") and not AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "Highlight") and _frameIndex1:IsVisible() and _frameIndex1.type == "required" then
-					table.insert(results, _frameIndex1)
-				end
-			end
-
-			return results
-		end
-
-		QuestFrame.GetSpells = function()
-			local title
-			local results = {}
-
-			local frame = QuestInfoRewardsFrame
-			for f1 = 1, frame:GetNumChildren() do
-				local _frameIndex1 = select(f1, frame:GetChildren())
-
-				if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
-					table.insert(results, _frameIndex1)
-				end
-			end
-			for f1 = 1, frame:GetNumRegions() do
-				local _frameIndex1 = select(f1, frame:GetRegions())
-
-				if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
-					title = _frameIndex1
-				end
-			end
-
-			return title, results
-		end
-
-		Frame.SetData = function()
-			local function Text()
-				local Title = QuestInfoTitleHeader
-				local ProgressTitle = QuestProgressTitleText
-				local ObjectivesHeader = QuestInfoObjectivesHeader
-				local Objectives = QuestInfoObjectivesText
-				local RewardsHeader = QuestInfoRewardsFrame.Header
-				local RewardsItemChoose = QuestInfoRewardsFrame.ItemChooseText
-				local RewardsItemReceive = QuestInfoRewardsFrame.ItemReceiveText
-				local RewardsItemPartySync = (not addon.Variables.IS_CLASSIC and QuestInfoRewardsFrame.QuestSessionBonusReward) or (addon.Variables.IS_CLASSIC and nil)
-				local RewardsItemSpell, _ = QuestFrame.GetSpells()
-				local ProgressRequireItemHeader = QuestProgressRequiredItemsText
-				local StorylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(GetQuestID()) and C_QuestLine.GetQuestLineInfo(GetQuestID()).questLineName) or (addon.Variables.IS_CLASSIC and nil)
-
-				local Experience = GetRewardXP()
-				local ExperiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
-				local Gold, Silver, Copper = AdaptiveAPI:FormatMoney(GetRewardMoney())
-				local Honor = GetRewardHonor()
-
-				--------------------------------
-
-				local function Text_Storyline()
-					Frame.Storyline:SetShown(StorylineInfo and not ProgressTitle:IsVisible())
+			do -- UPDATE
+				Frame.UpdateAllButtonStates = function()
+					local numChoices = NS.Variables.Num_Choice
+					local numRewards = NS.Variables.Num_Reward
+					local numRequired = NS.Variables.Num_Required
+					local numSpell = NS.Variables.Num_Spell
 
 					--------------------------------
 
-					if StorylineInfo then
-						Frame.Storyline.Text:SetText(StorylineInfo)
+					for i = 1, numChoices do
+						NS.Variables.Buttons_Choice[i].UpdateState()
+					end
+
+					for i = 1, numRewards do
+						NS.Variables.Buttons_Reward[i].UpdateState()
+					end
+
+					for i = 1, numRequired do
+						NS.Variables.Buttons_Required[i].UpdateState()
+					end
+
+					for i = 1, numSpell do
+						NS.Variables.Buttons_Spell[i].UpdateState()
+					end
+				end
+			end
+		end
+
+		do -- HIDE
+			Frame.HideQuestChoice = function()
+				NS.Variables.Num_Choice = 0
+				Frame.Rewards_Choice:Hide()
+
+				for i = 1, #Frame.GetButtons_Choice() do
+					local CurrentButton = Frame.GetButtons_Choice()[i]
+
+					CurrentButton:Hide()
+				end
+			end
+
+			Frame.HideReceive = function()
+				NS.Variables.Num_Reward = 0
+				Frame.Rewards_Receive:Hide()
+
+				for i = 1, #Frame.GetButtons_Reward() do
+					local CurrentButton = Frame.GetButtons_Reward()[i]
+
+					CurrentButton:Hide()
+				end
+			end
+
+			Frame.HideSpell = function()
+				NS.Variables.Num_Spell = 0
+				Frame.Rewards_Spell:Hide()
+
+				for i = 1, #Frame.GetButtons_Spell() do
+					local CurrentButton = Frame.GetButtons_Spell()[i]
+
+					CurrentButton:Hide()
+				end
+			end
+
+			Frame.HideRequired = function()
+				NS.Variables.Num_Required = 0
+				Frame.Progress_Header:Hide()
+
+				for i = 1, #Frame.GetButtons_Required() do
+					local CurrentButton = Frame.GetButtons_Required()[i]
+
+					CurrentButton:Hide()
+				end
+			end
+		end
+
+		do -- SET
+			Frame.SetChoice = function(callbacks)
+				NS.Variables.Num_Choice = #callbacks
+
+				--------------------------------
+
+				Frame.Rewards_Choice:Show()
+
+				--------------------------------
+
+				local Buttons = Frame.GetButtons_Choice()
+
+				for i = 1, #Buttons do
+					Buttons[i]:Hide()
+				end
+
+				for i = 1, NS.Variables.Num_Choice do
+					Buttons[i]:Show()
+					Buttons[i].Index = i
+					Buttons[i].Type = "choice"
+					Buttons[i].Callback = callbacks[i]
+
+					--------------------------------
+
+					local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
+					local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
+					local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
+					local CallbackCount = callbacks[i].count
+
+					--------------------------------
+
+					do -- TEXT
+						Buttons[i].Label:SetText(CallbackLabelText:GetText())
+					end
+
+					do -- ICON
+						if CallbackIcon:GetAtlas() then
+							Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
+						else
+							Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
+						end
+					end
+
+					do -- COUNT
+						if CallbackCount > 1 then
+							Buttons[i].Image.LabelFrame:Show()
+							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+						else
+							Buttons[i].Image.LabelFrame:Hide()
+							Buttons[i].Image.LabelFrame.Label:SetText("")
+						end
+					end
+
+					do -- STATE
+						Buttons[i].SetStateAuto()
+					end
+				end
+			end
+
+			Frame.SetReward = function(callbacks)
+				NS.Variables.Num_Reward = #callbacks
+
+				--------------------------------
+
+				Frame.Rewards_Receive:Show()
+
+				--------------------------------
+
+				local Buttons = Frame.GetButtons_Reward()
+
+				for i = 1, #Buttons do
+					Buttons[i]:Hide()
+				end
+
+				for i = 1, NS.Variables.Num_Reward do
+					Buttons[i]:Show()
+					Buttons[i].Index = i
+					Buttons[i].Type = "reward"
+					Buttons[i].Callback = callbacks[i]
+
+					--------------------------------
+
+					local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
+					local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
+					local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
+					local CallbackCount = callbacks[i].count or 0
+
+					--------------------------------
+
+					do -- TEXT
+						Buttons[i].Label:SetText(CallbackLabelText:GetText())
+					end
+
+					do -- ICON
+						if CallbackIcon:GetAtlas() then
+							Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
+						else
+							Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
+						end
+					end
+
+					do -- COUNT
+						if CallbackCount > 1 then
+							Buttons[i].Image.LabelFrame:Show()
+							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+						else
+							Buttons[i].Image.LabelFrame:Hide()
+							Buttons[i].Image.LabelFrame.Label:SetText("")
+						end
+					end
+
+					do -- STATE
+						Buttons[i].SetStateAuto()
+					end
+				end
+			end
+
+			Frame.SetSpell = function(callbacks)
+				NS.Variables.Num_Spell = #callbacks
+
+				--------------------------------
+
+				Frame.Rewards_Spell:Show()
+
+				--------------------------------
+
+				local Buttons = Frame.GetButtons_Spell()
+
+				for i = 1, #Buttons do
+					Buttons[i]:Hide()
+				end
+
+				for i = 1, NS.Variables.Num_Spell do
+					Buttons[i]:Show()
+					Buttons[i].Index = i
+					Buttons[i].Type = "spell"
+					Buttons[i].Callback = callbacks[i]
+
+					--------------------------------
+
+					local CallbackLabelText = callbacks[i].Name
+					local CallbackIcon = callbacks[i].Icon
+					local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
+					local CallbackCount = callbacks[i].count
+
+					--------------------------------
+
+					do -- TEXT
+						Buttons[i].Label:SetText(CallbackLabelText:GetText())
+					end
+
+					do -- ICON
+						if CallbackIcon:GetAtlas() then
+							Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
+						else
+							Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
+						end
+					end
+
+					do -- COUNT
+						if CallbackCount and CallbackCount > 1 then
+							Buttons[i].Image.LabelFrame:Show()
+							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+						else
+							Buttons[i].Image.LabelFrame:Hide()
+							Buttons[i].Image.LabelFrame.Label:SetText("")
+						end
+					end
+
+					do -- STATE
+						Buttons[i].SetStateAuto()
+					end
+				end
+			end
+
+			Frame.SetRequired = function(callbacks)
+				NS.Variables.Num_Required = #callbacks
+
+				--------------------------------
+
+				Frame.Progress_Header:Show()
+
+				--------------------------------
+
+				local Buttons = Frame.GetButtons_Required()
+
+				for i = 1, #Buttons do
+					Buttons[i]:Hide()
+				end
+
+				for i = 1, NS.Variables.Num_Required do
+					Buttons[i]:Show()
+					Buttons[i].Index = i
+					Buttons[i].Type = "required"
+					Buttons[i].Callback = callbacks[i]
+
+					--------------------------------
+
+					local CallbackLabelText = _G[callbacks[i]:GetDebugName() .. "Name"]
+					local CallbackIcon = _G[callbacks[i]:GetDebugName() .. "IconTexture"]
+					local CallbackCountText = _G[callbacks[i]:GetDebugName() .. "Count"]
+					local CallbackCount = callbacks[i].count
+
+					--------------------------------
+
+					do -- TEXT
+						Buttons[i].Label:SetText(CallbackLabelText:GetText())
+					end
+
+					do -- ICON
+						if CallbackIcon:GetAtlas() then
+							Buttons[i].Image.IconTexture:SetAtlas(CallbackIcon:GetAtlas())
+						else
+							Buttons[i].Image.IconTexture:SetTexture(CallbackIcon:GetTexture())
+						end
+					end
+
+					do -- COUNT
+						if CallbackCount > 1 then
+							Buttons[i].Image.LabelFrame:Show()
+							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+						else
+							Buttons[i].Image.LabelFrame:Hide()
+							Buttons[i].Image.LabelFrame.Label:SetText("")
+						end
+					end
+
+					do -- STATE
+						Buttons[i].SetStateAuto()
+					end
+				end
+			end
+		end
+
+		do -- DATA
+			local function QuestFrame_GetRewards(type)
+				local results = {}
+
+				local frame = QuestInfoRewardsFrame
+				for f1 = 1, frame:GetNumChildren() do
+					local _frameIndex1 = select(f1, frame:GetChildren())
+
+					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestInfoItem") and _frameIndex1:IsVisible() and _frameIndex1:GetPoint() and _frameIndex1.type == type then
+						table.insert(results, _frameIndex1)
 					end
 				end
 
-				local function Text_Title()
-					if not ProgressTitle:IsVisible() then
-						Frame.Title:SetShown(Title:IsVisible())
+				return results
+			end
+
+			local function QuestFrame_GetRequired()
+				local results = {}
+
+				local frame = QuestProgressScrollChildFrame
+				for f1 = 1, frame:GetNumChildren() do
+					local _frameIndex1 = select(f1, frame:GetChildren())
+
+					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestProgressItem") and not AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "Highlight") and _frameIndex1:IsVisible() and _frameIndex1.type == "required" then
+						table.insert(results, _frameIndex1)
+					end
+				end
+
+				return results
+			end
+
+			local function QuestFrame_GetSpells()
+				local title
+				local results = {}
+
+				local frame = QuestInfoRewardsFrame
+				for f1 = 1, frame:GetNumChildren() do
+					local _frameIndex1 = select(f1, frame:GetChildren())
+
+					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
+						table.insert(results, _frameIndex1)
+					end
+				end
+				for f1 = 1, frame:GetNumRegions() do
+					local _frameIndex1 = select(f1, frame:GetRegions())
+
+					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
+						title = _frameIndex1
+					end
+				end
+
+				return title, results
+			end
+
+			--------------------------------
+
+			Frame.SetData = function()
+				do -- TEXT
+					local Title = QuestInfoTitleHeader
+					local ProgressTitle = QuestProgressTitleText
+					local ObjectivesHeader = QuestInfoObjectivesHeader
+					local Objectives = QuestInfoObjectivesText
+					local RewardsHeader = QuestInfoRewardsFrame.Header
+					local RewardsItemChoose = QuestInfoRewardsFrame.ItemChooseText
+					local RewardsItemReceive = QuestInfoRewardsFrame.ItemReceiveText
+					local RewardsItemPartySync = (not addon.Variables.IS_CLASSIC and QuestInfoRewardsFrame.QuestSessionBonusReward) or (addon.Variables.IS_CLASSIC and nil)
+					local RewardsItemSpell, _ = QuestFrame_GetSpells()
+					local ProgressRequireItemHeader = QuestProgressRequiredItemsText
+					local StorylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(GetQuestID()) and C_QuestLine.GetQuestLineInfo(GetQuestID()).questLineName) or (addon.Variables.IS_CLASSIC and nil)
+
+					local Experience = GetRewardXP()
+					local ExperiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
+					local Gold, Silver, Copper = AdaptiveAPI:FormatMoney(GetRewardMoney())
+					local Honor = GetRewardHonor()
+
+					--------------------------------
+
+					do -- TEXT (STORYLINE)
+						Frame.Storyline:SetShown(StorylineInfo and not ProgressTitle:IsVisible())
 
 						--------------------------------
 
-						if Title:IsVisible() then
-							Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(Title:GetText(), true))
+						if StorylineInfo then
+							Frame.Storyline.Text:SetText(StorylineInfo)
+						end
+					end
+
+					do -- TEXT (TITLE)
+						if not ProgressTitle:IsVisible() then
+							Frame.Title:SetShown(Title:IsVisible())
+
+							--------------------------------
+
+							if Title:IsVisible() then
+								Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(Title:GetText(), true))
+
+								--------------------------------
+
+								Frame.Title:ClearAllPoints()
+								if StorylineInfo then
+									Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
+								else
+									Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
+								end
+							end
+						else
+							Frame.Title:SetShown(ProgressTitle:IsVisible())
+
+							--------------------------------
+
+							Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(ProgressTitle:GetText(), true))
 
 							--------------------------------
 
 							Frame.Title:ClearAllPoints()
 							if StorylineInfo then
-								Frame.Title:SetPoint("TOPLEFT", Frame, 60, -NS.Variables:RATIO(7))
+								Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
 							else
-								Frame.Title:SetPoint("TOPLEFT", Frame, 60, -NS.Variables:RATIO(7))
+								Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
 							end
 						end
+					end
+
+					do -- TEXT (OBJECTIVES)
+						Frame.Objectives_Header:SetShown(ObjectivesHeader:IsVisible())
+						Frame.Objectives_Text:SetShown(Objectives:IsVisible())
+
+						--------------------------------
+
+						if ObjectivesHeader:IsVisible() then
+							Frame.Objectives_Text:SetText(Objectives:GetText())
+						end
+					end
+
+					do -- REWARDS
+						do -- HEADER
+							Frame.Rewards_Header:SetShown(RewardsHeader:IsVisible() and not ProgressTitle:IsVisible())
+						end
+
+						do -- EXPERIENCE
+							Frame.Rewards_Experience:SetShown(Experience > 0 and not ProgressTitle:IsVisible())
+
+							--------------------------------
+
+							if Experience > 0 then
+								Frame.Rewards_Experience.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/xp.png", 25, 25, 0, 0) .. " " .. AdaptiveAPI:FormatNumber(Experience) .. " " .. "(" .. ExperiencePercentage .. ")")
+							end
+						end
+
+						do -- CURRENCY
+							Frame.Rewards_Currency:SetShown(GetRewardMoney() > 0 and not ProgressTitle:IsVisible())
+
+							--------------------------------
+
+							if GetRewardMoney() > 0 then
+								local gold, silver, copper
+
+								--------------------------------
+
+								if Gold > 0 then
+									gold = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. Gold .. "|r" .. " "
+								end
+
+								if Silver > 0 then
+									silver = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. Silver .. "|r" .. " "
+								end
+
+								if Copper > 0 then
+									copper = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. Copper .. "|r" .. " "
+								end
+
+								--------------------------------
+
+								Frame.Rewards_Currency.Text:SetText((gold or "") .. (silver or "") .. (copper or ""))
+							end
+						end
+
+						do -- HONOR
+							Frame.Rewards_Honor:SetShown(Honor > 0 and not ProgressTitle:IsVisible())
+
+							--------------------------------
+
+							if Honor > 0 then
+								Frame.Rewards_Honor.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. Honor .. "|r")
+							end
+						end
+
+						do -- CHOICE
+							Frame.Rewards_Choice:SetShown(RewardsItemChoose:IsVisible())
+
+							--------------------------------
+
+							Frame.Rewards_Choice:SetText(RewardsItemChoose:GetText())
+						end
+
+						do -- RECIEVE
+							Frame.Rewards_Receive:SetShown(RewardsItemPartySync and RewardsItemPartySync:IsVisible() or RewardsItemReceive:IsVisible())
+
+							--------------------------------
+
+							if RewardsItemPartySync and RewardsItemPartySync:IsVisible() then
+								Frame.Rewards_Receive:SetText(RewardsItemPartySync:GetText())
+							else
+								Frame.Rewards_Receive:SetText(RewardsItemReceive:GetText())
+							end
+						end
+
+						do -- SPELL
+							Frame.Rewards_Spell:SetShown(RewardsItemSpell and RewardsItemSpell:IsVisible())
+
+							--------------------------------
+
+							if RewardsItemSpell then
+								Frame.Rewards_Spell:SetText(RewardsItemSpell:GetText())
+							end
+						end
+
+						do -- PROGRESS
+							Frame.Progress_Header:SetShown(ProgressRequireItemHeader:IsVisible())
+						end
+					end
+				end
+
+				do -- CONTEXT ICON
+					local ContextIcon = addon.ContextIcon.Script:GetContextIcon()
+
+					--------------------------------
+
+					Frame.ContextIcon.Label:SetText(ContextIcon)
+				end
+
+				do -- REWARDS
+					local choices = QuestFrame_GetRewards("choice")
+					local reward = QuestFrame_GetRewards("reward")
+					local _, spells = QuestFrame_GetSpells()
+					local required = QuestFrame_GetRequired()
+
+					--------------------------------
+
+					if #choices >= 1 then
+						Frame.SetChoice(choices)
 					else
-						Frame.Title:SetShown(ProgressTitle:IsVisible())
-
-						--------------------------------
-
-						Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(ProgressTitle:GetText(), true))
-
-						--------------------------------
-
-						Frame.Title:ClearAllPoints()
-						if StorylineInfo then
-							Frame.Title:SetPoint("TOPLEFT", Frame, 60, -NS.Variables:RATIO(7))
-						else
-							Frame.Title:SetPoint("TOPLEFT", Frame, 60, -NS.Variables:RATIO(7))
-						end
-					end
-				end
-
-				local function Text_Objectives()
-					Frame.Objectives_Header:SetShown(ObjectivesHeader:IsVisible())
-					Frame.Objectives_Text:SetShown(Objectives:IsVisible())
-
-					--------------------------------
-
-					if ObjectivesHeader:IsVisible() then
-						Frame.Objectives_Header.Label:SetText(ObjectivesHeader:GetText())
-						Frame.Objectives_Text:SetText(Objectives:GetText())
-					end
-				end
-
-				local function Rewards()
-					local function Rewards_Header()
-						Frame.Rewards_Header:SetShown(RewardsHeader:IsVisible() and not ProgressTitle:IsVisible())
-						Frame.Rewards_Header.Label:SetText(RewardsHeader:GetText())
+						Frame.HideQuestChoice()
 					end
 
-					local function Rewards_Experience()
-						Frame.Rewards_Experience:SetShown(Experience > 0 and not ProgressTitle:IsVisible())
-
-						--------------------------------
-
-						if Experience > 0 then
-							Frame.Rewards_Experience.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/xp.png", 25, 25, 0, 0) .. " " .. AdaptiveAPI:FormatNumber(Experience) .. " " .. "(" .. ExperiencePercentage .. ")")
-						end
+					if #reward >= 1 then
+						Frame.SetReward(reward)
+					else
+						Frame.HideReceive()
 					end
 
-					local function Rewards_Currency()
-						Frame.Rewards_Currency:SetShown(GetRewardMoney() > 0 and not ProgressTitle:IsVisible())
-
-						--------------------------------
-
-						if GetRewardMoney() > 0 then
-							local gold, silver, copper
-
-							--------------------------------
-
-							if Gold > 0 then
-								gold = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. Gold .. "|r" .. " "
-							end
-
-							if Silver > 0 then
-								silver = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. Silver .. "|r" .. " "
-							end
-
-							if Copper > 0 then
-								copper = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. Copper .. "|r" .. " "
-							end
-
-							--------------------------------
-
-							Frame.Rewards_Currency.Text:SetText((gold or "") .. (silver or "") .. (copper or ""))
-						end
+					if #spells >= 1 then
+						Frame.SetSpell(spells)
+					else
+						Frame.HideSpell()
 					end
 
-					local function Rewards_Honor()
-						Frame.Rewards_Honor:SetShown(Honor > 0 and not ProgressTitle:IsVisible())
-
-						--------------------------------
-
-						if Honor > 0 then
-							Frame.Rewards_Honor.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/honor.png", 12.5, 12.5, 0, 0) .. Honor)
-						end
-					end
-
-					local function Rewards_Choice()
-						Frame.Rewards_Choice:SetShown(RewardsItemChoose:IsVisible())
-
-						--------------------------------
-
-						Frame.Rewards_Choice:SetText(RewardsItemChoose:GetText())
-					end
-
-					local function Rewards_Receive()
-						Frame.Rewards_Receive:SetShown(RewardsItemPartySync and RewardsItemPartySync:IsVisible() or RewardsItemReceive:IsVisible())
-
-						--------------------------------
-
-						if RewardsItemPartySync and RewardsItemPartySync:IsVisible() then
-							Frame.Rewards_Receive:SetText(RewardsItemPartySync:GetText())
-						else
-							Frame.Rewards_Receive:SetText(RewardsItemReceive:GetText())
-						end
-					end
-
-					local function Rewards_Spell()
-						Frame.Rewards_Spell:SetShown(RewardsItemSpell and RewardsItemSpell:IsVisible())
-
-						--------------------------------
-
-						if RewardsItemSpell then
-							Frame.Rewards_Spell:SetText(RewardsItemSpell:GetText())
-						end
-					end
-
-					local function Rewards_Progress()
-						Frame.Progress_Header:SetShown(ProgressRequireItemHeader:IsVisible())
-
-						--------------------------------
-
-						if ProgressRequireItemHeader:IsVisible() then
-							Frame.Progress_Header.Label:SetText(ProgressRequireItemHeader:GetText())
-						end
+					if #required >= 1 then
+						Frame.SetRequired(required)
+					else
+						Frame.HideRequired()
 					end
 
 					--------------------------------
 
-					Rewards_Header()
-					Rewards_Experience()
-					Rewards_Currency()
-					Rewards_Honor()
-					Rewards_Choice()
-					Rewards_Receive()
-					Rewards_Spell()
-					Rewards_Progress()
+					Frame.SetQuality()
+					Frame.UpdateAllButtonStates()
 				end
 
-				--------------------------------
+				do -- BUTTONS
+					local CompleteButton = QuestFrameCompleteQuestButton
+					local ContinueButton = QuestFrameCompleteButton
+					local AcceptButton = QuestFrameAcceptButton
+					local DeclineButton = QuestFrameDeclineButton
+					local GoodbyeButton = QuestFrameGoodbyeButton
 
-				Text_Storyline()
-				Text_Title()
-				Text_Objectives()
-				Rewards()
-			end
+					-- Can't seem to query if the quest log is full - C_QuestLog.GetNumQuestWatches() returns values
+					-- higher than C_QuestLog.GetMaxNumQuestsCanAccept() even though it is still within the limit?
+					local QuestLogFull = false -- (select(2, C_QuestLog.GetNumQuestWatches()) >= C_QuestLog.GetMaxNumQuestsCanAccept())
+					local IsAutoAccept = addon.API:IsAutoAccept()
 
-			local function ContextIcon()
-				local ContextIcon = addon.ContextIcon.Script:GetContextIcon()
+					--------------------------------
 
-				--------------------------------
+					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.CompleteButton, CompleteButton:IsVisible())
+					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.ContinueButton, ContinueButton:IsVisible() and ContinueButton:IsEnabled())
+					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.AcceptButton, AcceptButton:IsVisible())
+					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.DeclineButton, DeclineButton:IsVisible())
+					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.GoodbyeButton, not DeclineButton:IsVisible())
 
-				Frame.ContextIcon.Label:SetText(ContextIcon)
-			end
+					--------------------------------
 
-			local function Rewards()
-				local choices = QuestFrame.GetRewards("choice")
-				local receive = QuestFrame.GetRewards("reward")
-				local _, spells = QuestFrame.GetSpells()
-				local requireItems = QuestFrame.GetProgressRequireItems()
+					Frame.ButtonContainer.CompleteButton:SetEnabled(CompleteButton:IsEnabled())
+					Frame.ButtonContainer.ContinueButton:SetEnabled(ContinueButton:IsEnabled())
+					Frame.ButtonContainer.AcceptButton:SetEnabled(not QuestLogFull)
+					Frame.ButtonContainer.DeclineButton:SetEnabled(true)
+					Frame.ButtonContainer.GoodbyeButton:SetEnabled(true)
 
-				--------------------------------
+					--------------------------------
 
-				if #choices >= 1 then
-					Frame.SetChoice(choices)
-				else
-					Frame.HideQuestChoice()
-				end
+					local function SetButtonText(frame, text, keybindVariable)
+						frame:SetText(text)
 
-				--------------------------------
+						--------------------------------
 
-				if #receive >= 1 then
-					Frame.SetReceive(receive)
-				else
-					Frame.HideReceive()
-				end
+						do -- ACCEPT
+							if frame == Frame.ButtonContainer.AcceptButton then
+								if QuestLogFull then
+									frame:SetText(L["InteractionQuestFrame - Accept - Quest Log Full"])
+								end
 
-				--------------------------------
+								if IsAutoAccept then
+									frame:SetText(L["InteractionQuestFrame - Accept - Auto Accept"])
+								end
 
-				if #spells >= 1 then
-					Frame.SetSpell(spells)
-				else
-					Frame.HideSpell()
-				end
+								--------------------------------
 
-				--------------------------------
+								frame:SetEnabled(not QuestLogFull and not IsAutoAccept)
+							end
+						end
 
-				if #requireItems >= 1 then
-					Frame.SetRequireItem(requireItems)
-				else
-					Frame.HideRequireItems()
-				end
-			end
+						do -- GOODBYE
+							if frame == Frame.ButtonContainer.GoodbyeButton then
+								if IsAutoAccept then
+									frame:SetText(L["InteractionQuestFrame - Goodbye - Auto Accept"])
+									keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress)
+								end
+							end
+						end
 
-			local function Buttons()
-				local CompleteButton = QuestFrameCompleteQuestButton
-				local ContinueButton = QuestFrameCompleteButton
-				local AcceptButton = QuestFrameAcceptButton
-				local DeclineButton = QuestFrameDeclineButton
-				local GoodbyeButton = QuestFrameGoodbyeButton
+						--------------------------------
 
-				-- Can't seem to query if the quest log is full - C_QuestLog.GetNumQuestWatches() returns values
-				-- higher than C_QuestLog.GetMaxNumQuestsCanAccept() even though it is still within the limit?
-
-				local QuestLogFull = false -- (select(2, C_QuestLog.GetNumQuestWatches()) >= C_QuestLog.GetMaxNumQuestsCanAccept())
-
-				--------------------------------
-
-				AdaptiveAPI:SetVisibility(Frame.ButtonContainer.CompleteButton, CompleteButton:IsVisible())
-				AdaptiveAPI:SetVisibility(Frame.ButtonContainer.ContinueButton, ContinueButton:IsVisible() and ContinueButton:IsEnabled())
-				AdaptiveAPI:SetVisibility(Frame.ButtonContainer.AcceptButton, AcceptButton:IsVisible())
-				AdaptiveAPI:SetVisibility(Frame.ButtonContainer.DeclineButton, DeclineButton:IsVisible())
-				AdaptiveAPI:SetVisibility(Frame.ButtonContainer.GoodbyeButton, not DeclineButton:IsVisible())
-
-				--------------------------------
-
-				Frame.ButtonContainer.CompleteButton:SetEnabled(CompleteButton:IsEnabled())
-				Frame.ButtonContainer.ContinueButton:SetEnabled(ContinueButton:IsEnabled())
-				Frame.ButtonContainer.AcceptButton:SetEnabled(not QuestLogFull)
-				Frame.ButtonContainer.DeclineButton:SetEnabled(true)
-				Frame.ButtonContainer.GoodbyeButton:SetEnabled(true)
-
-				--------------------------------
-
-				local function SetButtonText(frame, reference, text, buttonType)
-					frame:SetText(text)
-					addon.API:SetButtonToPlatform(frame, buttonType, true, frame.Text)
-
-					if frame == Frame.ButtonContainer.AcceptButton then
-						if QuestLogFull then
-							frame:SetText(L["InteractionQuestFrame - Quest Log Full"])
+						if frame:IsEnabled() then
+							addon.API:SetButtonToPlatform(frame, frame.Text, keybindVariable)
+						else
+							addon.API:SetButtonToPlatform(frame, frame.Text, "")
 						end
 					end
+
+					if ContinueButton:IsEnabled() then
+						SetButtonText(Frame.ButtonContainer.ContinueButton, L["InteractionQuestFrame - Continue"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					else
+						SetButtonText(Frame.ButtonContainer.ContinueButton, L["InteractionQuestFrame - In Progress"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					end
+
+					SetButtonText(Frame.ButtonContainer.CompleteButton, L["InteractionQuestFrame - Complete"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					SetButtonText(Frame.ButtonContainer.AcceptButton, L["InteractionQuestFrame - Accept"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					SetButtonText(Frame.ButtonContainer.DeclineButton, L["InteractionQuestFrame - Decline"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
+					SetButtonText(Frame.ButtonContainer.GoodbyeButton, L["InteractionQuestFrame - Goodbye"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 				end
 
-				if ContinueButton:IsEnabled() then
-					SetButtonText(Frame.ButtonContainer.ContinueButton, ContinueButton, L["InteractionQuestFrame - Continue"], "Accept")
-				else
-					SetButtonText(Frame.ButtonContainer.ContinueButton, ContinueButton, L["InteractionQuestFrame - In Progress"], "Accept")
-				end
+				--------------------------------
 
-				SetButtonText(Frame.ButtonContainer.CompleteButton, CompleteButton, L["InteractionQuestFrame - Complete"], "Accept")
-				SetButtonText(Frame.ButtonContainer.AcceptButton, AcceptButton, L["InteractionQuestFrame - Accept"], "Accept")
-				SetButtonText(Frame.ButtonContainer.DeclineButton, DeclineButton, L["InteractionQuestFrame - Decline"], "Decline")
-				SetButtonText(Frame.ButtonContainer.GoodbyeButton, GoodbyeButton, L["InteractionQuestFrame - Goodbye"], "Decline")
-			end
-
-			--------------------------------
-
-			Text()
-			ContextIcon()
-			Rewards()
-			Buttons()
-
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
 				CallbackRegistry:Trigger("QUEST_DATA_LOADED")
-			end, .1)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.ScrollChildFrame.SetLayout()
+				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					CallbackRegistry:Trigger("QUEST_DATA_READY")
-				end, .1)
-			end, .2)
+				Frame.ScrollChildFrame.UpdateLayout()
+				Frame.UpdateCompleteButton()
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("QUEST_DATA_READY")
+
+				--------------------------------
+
+				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateAll, .1)
+			end
+		end
+
+		do -- QUALITY
+			local TYPE_ITEM = 0
+			local TYPE_CURRENCY = 1
+
+			local itemIndex = 1
+			local currencyIndex = 1
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.UpdateCompleteButton()
-			end, .3)
+			local function GetQuestItem(type)
+				local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, itemIndex)
+
+				--------------------------------
+
+				if #name > 1 then
+					itemIndex = itemIndex + 1
+				end
+
+				--------------------------------
+
+				return name, texture, count, quality, isUsable, itemID
+			end
+
+			local function GetQuestCurrency(type)
+				local quality
+
+				--------------------------------
+
+				if type == "reward" or type == "choice" then
+					if not addon.Variables.IS_CLASSIC then -- Retail
+						local currencyInfo = C_QuestOffer.GetQuestRewardCurrencyInfo(type, currencyIndex)
+
+						--------------------------------
+
+						if currencyInfo then
+							quality = currencyInfo.quality
+						end
+					else -- Classic
+						local currencyInfo = GetQuestCurrencyInfo(type, currencyIndex)
+
+						--------------------------------
+
+						if currencyInfo then
+							quality = currencyInfo.quality
+						end
+					end
+				elseif type == "required" then
+					if not addon.Variables.IS_CLASSIC then -- Retail
+						local currencyInfo = C_QuestOffer.GetQuestRequiredCurrencyInfo(type, currencyIndex)
+
+						--------------------------------
+
+						if currencyInfo then
+							quality = currencyInfo.quality
+						end
+					else -- Classic
+						local currencyInfo = GetQuestCurrencyInfo(type, currencyIndex)
+
+						--------------------------------
+
+						if currencyInfo then
+							quality = currencyInfo.quality
+						end
+					end
+				end
+
+				--------------------------------
+
+				currencyIndex = currencyIndex + 1
+
+				--------------------------------
+
+				return quality
+			end
+
+			local function ParseType(type, index)
+				local questItemInfoType = GetQuestItemInfoLootType and GetQuestItemInfoLootType(type, index) or 0
+				local resultQuality
+
+				--------------------------------
+
+				if questItemInfoType == TYPE_ITEM then
+					local name, _, _, quality, _, _ = GetQuestItem(type)
+					resultQuality = quality
+
+					--------------------------------
+
+					if #name <= 1 then
+						resultQuality = GetQuestCurrency(type)
+					end
+
+					--------------------------------
+
+					return resultQuality
+				end
+
+				if questItemInfoType == TYPE_CURRENCY then
+					resultQuality = GetQuestCurrency(type)
+
+					--------------------------------
+
+					return resultQuality
+				end
+			end
+
+			local function ResetIndex()
+				itemIndex = 1
+				currencyIndex = 1
+			end
+
+			--------------------------------
+
+			Frame.SetQuality = function()
+				local numChoices = NS.Variables.Num_Choice
+				local numRewards = NS.Variables.Num_Reward
+				local numRequired = NS.Variables.Num_Required
+
+				--------------------------------
+
+				do -- CHOICES
+					ResetIndex()
+					for i = 1, numChoices do
+						NS.Variables.Buttons_Choice[i].Quality = ParseType("choice", i)
+					end
+				end
+
+				do -- REWARDS
+					ResetIndex()
+					for i = 1, numRewards do
+						NS.Variables.Buttons_Reward[i].Quality = ParseType("reward", i)
+					end
+				end
+
+				do -- REQUIRED
+					ResetIndex()
+					for i = 1, numRequired do
+						NS.Variables.Buttons_Required[i].Quality = ParseType("required", i)
+					end
+				end
+			end
 		end
 	end
 
@@ -977,21 +1093,23 @@ function NS.Script:Load()
 			if not Frame.hidden then
 				return
 			end
+			Frame.hidden = false
+
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
 					Frame:Show()
 				end
 			end, .075)
-			Frame.hidden = false
 
 			--------------------------------
 
-			Frame.Animation = true
+			Frame.animation = true
+
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
-					Frame.Animation = false
+					Frame.animation = false
 				end
-			end, .25)
+			end, .175)
 
 			--------------------------------
 
@@ -1010,33 +1128,32 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .375, 0, 1, nil, function() return w end)
+			AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
 			AdaptiveAPI.Animation:Fade(Frame.ContextIcon.Label, .5, 0, 1, nil, function() return Frame.hidden end)
 			AdaptiveAPI.Animation:Scale(Frame.ContextIcon, .5, 10, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.Background, 1, 200, Frame:GetHeight() + 50, "y", AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:Fade(Frame.Background, .5, 0, 1, nil, function() return Frame.hidden end)
-			end, .25)
+				AdaptiveAPI.Animation:Fade(Frame.Background, .375, 0, 1, nil, function() return Frame.hidden end)
+			end, .175)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame.Title, .5, 0, 1, nil, function() return Frame.hidden end)
+					AdaptiveAPI.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.hidden end)
 
-					if Frame.Storyline:IsVisible() then
-						AdaptiveAPI.Animation:Fade(Frame.Storyline.Text, .5, 0, 1, nil, function() return Frame.hidden end)
+					if Frame.Storyline:IsShown() then
+						AdaptiveAPI.Animation:Fade(Frame.Storyline.Text, .375, 0, .5, nil, function() return Frame.hidden end)
 					end
 
 					--------------------------------
 
 					Frame.ScrollFrame:Hide()
-					Frame.ScrollChildFrame.SetLayout()
+					Frame.ScrollChildFrame.UpdateLayout()
 
 					--------------------------------
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if not Frame.hidden then
-							AdaptiveAPI.Animation:Fade(Frame.ScrollFrame, .5, 0, 1, nil, function() return Frame.hidden end)
+							AdaptiveAPI.Animation:Fade(Frame.ScrollFrame, .375, 0, 1, nil, function() return Frame.hidden end)
 
 							--------------------------------
 
@@ -1044,11 +1161,11 @@ function NS.Script:Load()
 								Frame.ScrollFrame:Show()
 							end, 0)
 						end
-					end, .075)
+					end, .05)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if not Frame.hidden then
-							AdaptiveAPI.Animation:Fade(Frame.ButtonContainer, .75, 0, 1, AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
+							AdaptiveAPI.Animation:Fade(Frame.ButtonContainer, .5, 0, 1, AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
 
 							--------------------------------
 
@@ -1056,7 +1173,7 @@ function NS.Script:Load()
 								Frame.ButtonContainer:Show()
 							end, 0)
 						end
-					end, .175)
+					end, .125)
 				end
 			end, .125)
 
@@ -1071,50 +1188,55 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Show)
 		end
 
-		Frame.HideWithAnimation = function(bypass)
+		Frame.HideWithAnimation = function(stopSession)
 			if Frame.hidden then
 				return
 			end
 			Frame.hidden = true
 
-			--------------------------------
-
-			Frame.Animation = true
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if Frame.hidden then
-					Frame.Animation = false
+					Frame:Hide()
 				end
 			end, .25)
 
 			--------------------------------
 
+			Frame.animation = true
+
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				if Frame.hidden then
+					Frame.animation = false
+				end
+			end, .25)
+
+			--------------------------------
+
+			Frame.validForNotification = true
+
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				if Frame.hidden then
+					Frame.validForNotification = false
+				end
+			end, 1)
+
+			--------------------------------
+
 			AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.ContextIcon.Label, .25, Frame.ContextIcon.Label:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame.ContextIcon.Label, .175, Frame.ContextIcon.Label:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 			AdaptiveAPI.Animation:Scale(Frame.ContextIcon, 2.5, Frame.ContextIcon:GetScale(), 3.75, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.hidden then
-					AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetHeight(), 200, "y", AdaptiveAPI.Animation.EaseSine, function() return not Frame.hidden end)
-				end
-			end, .125)
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.hidden then
-					if bypass then
-						Frame:Hide()
-						Frame.hidden = true
-					else
-						Frame:Hide()
-						-- addon.Interaction.Script:Stop(true)
-					end
-				end
-			end, .35)
 
 			--------------------------------
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				addon.BlizzardGameTooltip.Script:StopCustom()
-			end, .5)
+			end, .375)
+
+			--------------------------------
+
+			if stopSession then
+				addon.Interaction.Script:Stop(true)
+			end
 
 			--------------------------------
 
@@ -1154,6 +1276,58 @@ function NS.Script:Load()
 	end
 
 	--------------------------------
+	-- FUNCTIONS (FOCUS)
+	--------------------------------
+
+	do
+		function Frame.Enter()
+			Frame.mouseOver = true
+
+			--------------------------------
+
+			Frame.UpdateFocus()
+		end
+
+		function Frame.Leave()
+			Frame.mouseOver = false
+
+			--------------------------------
+
+			Frame.UpdateFocus()
+		end
+
+		function Frame.UpdateFocus()
+			if not addon.Input.Variables.IsController then
+				local IsMouseOver = (Frame.mouseOver)
+				local IsInDialog = (not InteractionDialogFrame.hidden)
+
+				--------------------------------
+
+				if IsInDialog and not IsMouseOver then
+					Frame.focused = false
+				else
+					Frame.focused = true
+				end
+
+				--------------------------------
+
+				if Frame.focused then
+					AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
+				else
+					AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return Frame.focused end)
+				end
+			else
+				InteractionQuestParent:SetAlpha(1)
+			end
+		end
+
+		AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame, Frame.Enter, Frame.Leave, nil, nil, { x = 175, y = 175 })
+
+		CallbackRegistry:Add("START_DIALOG", Frame.UpdateFocus, 0)
+		CallbackRegistry:Add("STOP_DIALOG", Frame.UpdateFocus, 0)
+	end
+
+	--------------------------------
 	-- SETTINGS
 	--------------------------------
 
@@ -1186,7 +1360,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame:SetPoint("LEFT", UIParent, quarterEdgePadding, offsetY)
+					Frame:SetPoint("LEFT", UIParent, quarterEdgePadding + InteractionQuestFrame.Target:GetWidth(), offsetY)
 				else
 					offsetX = quarterEdgePadding
 
@@ -1194,33 +1368,68 @@ function NS.Script:Load()
 
 					Frame:SetPoint("LEFT", UIParent, quarterEdgePadding, offsetY)
 				end
-
-				--------------------------------
-
-				Frame.GradientTexture:SetTexture(NS.Variables.QUEST_PATH .. "gradient-left.png")
 			else
 				offsetX = screenWidth - frameWidth - quarterEdgePadding
 
 				--------------------------------
 
 				Frame:SetPoint("LEFT", UIParent, offsetX, offsetY)
-
-				--------------------------------
-
-				Frame.GradientTexture:SetTexture(NS.Variables.QUEST_PATH .. "gradient-right.png")
 			end
 		end
 		Settings_UIDirection()
+
+		local function Settings_QuestFrameSize()
+			local presetSizeModifier = {
+				[1] = .75,
+				[2] = .875,
+				[3] = 1,
+				[4] = 1.125,
+			}
+			local presetWidthModifier = {
+				[1] = .825,
+				[2] = .75,
+				[3] = .75,
+				[4] = .75,
+			}
+
+			local widthModifier = presetWidthModifier[INTDB.profile.INT_QUESTFRAME_SIZE]
+			local sizeModifier = presetSizeModifier[INTDB.profile.INT_QUESTFRAME_SIZE]
+			local defaultSize = { x = 625 * widthModifier, y = 625 }
+			local targetSize = { x = defaultSize.x * sizeModifier, y = defaultSize.y * sizeModifier }
+
+			--------------------------------
+
+			NS.Variables:UpdateScaleModifier(targetSize.x)
+			Frame:SetSize(targetSize.x, targetSize.y)
+
+			--------------------------------
+
+			if not Frame.hidden then
+				Frame.SetData() -- Refresh Formatting
+				Settings_UIDirection() -- Refresh Position
+			end
+		end
+		Settings_QuestFrameSize()
 
 		--------------------------------
 
 		CallbackRegistry:Add("THEME_UPDATE", Settings_ThemeUpdate, 10)
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 0)
 		CallbackRegistry:Add("BLIZZARD_SETTINGS_RESOLUTION_CHANGED", Settings_UIDirection, 0)
+		CallbackRegistry:Add("START_QUEST", Settings_UIDirection, 0)
+		CallbackRegistry:Add("SETTINGS_QUESTFRAME_SIZE_CHANGED", Settings_QuestFrameSize, 0)
 
 		if QuestModelScene then -- Fix for Classic Era
 			hooksecurefunc(QuestModelScene, "Show", Settings_UIDirection)
 		end
+	end
+
+	function UpdateScale(modifier)
+		INTDB.profile.INT_QUESTFRAME_SIZE = modifier
+
+		--------------------------------
+
+		CallbackRegistry:Trigger("QUEST_FRAME_SIZE_CHANGED")
 	end
 
 	--------------------------------
@@ -1228,59 +1437,8 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		local function UpdateAll()
-			Frame.UpdateVisibility()
-			Frame.UpdateFocus()
-		end
-
-		CallbackRegistry:Add("START_INTERACTION", function()
-			UpdateAll()
-		end, 5)
-
-		CallbackRegistry:Add("STOP_INTERACTION", function()
-			if Frame:IsVisible() then
-				Frame.HideWithAnimation()
-			else
-				Frame.hidden = true
-				Frame:Hide()
-			end
-		end, 5)
-
-		CallbackRegistry:Add("START_DIALOG", function()
-			UpdateAll()
-
-			--------------------------------
-
-			if not INTDB.profile.INT_ALWAYS_SHOW_QUEST then
-				if Frame:IsVisible() then
-					Frame.HideWithAnimation(true)
-				else
-					Frame:Hide()
-				end
-			end
-		end, 5)
-
-		CallbackRegistry:Add("FINISH_DIALOG", function()
-			UpdateAll()
-		end, 5)
-
-		CallbackRegistry:Add("PREVIOUS_DIALOG", function()
-			UpdateAll()
-		end, 5)
-
 		CallbackRegistry:Add("QUEST_DATA_LOADED", function()
-			UpdateAll()
-
-			--------------------------------
-
-			Frame.UpdateWarbandHeader()
-			Frame.UpdateScrollFrameFormat()
-
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.UpdateScrollIndicator()
-			end, .1)
+			Frame.UpdateAll()
 		end, 5)
 
 		CallbackRegistry:Add("INPUT_NAVIGATION_HIGHLIGHTED", function()
@@ -1288,30 +1446,6 @@ function NS.Script:Load()
 		end, 0)
 
 		--------------------------------
-
-		function Frame.UpdateFocus()
-			local IsFocused = (Frame.Focused)
-			local IsMouseOver = (Frame.MouseOver)
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-
-			if IsInDialog and not IsMouseOver then
-				Frame.Focused = false
-			else
-				Frame.Focused = true
-			end
-		end
-
-		function Frame.SetFocusTransition()
-			local IsFocused = (Frame.Focused)
-			local IsMouseOver = (Frame.MouseOver)
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-
-			if IsFocused then
-				AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return not IsFocused end)
-			else
-				AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), .875, nil, function() return IsFocused end)
-			end
-		end
 
 		Frame:SetScript("OnMouseUp", function(self, button)
 			if INTDB.profile.INT_FLIPMOUSE == false and button == "RightButton" then

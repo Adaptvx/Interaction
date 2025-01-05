@@ -17,6 +17,22 @@ function NS.Script:Load()
 	local Callback = NS.Script
 
 	--------------------------------
+	-- FUNCTIONS (MAIN)
+	--------------------------------
+
+	do
+		function Callback:SelectOption(index)
+			C_GossipInfo.SelectOptionByIndex(index)
+
+			--------------------------------
+
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				addon.Interaction.Script:Stop(true)
+			end, .25)
+		end
+	end
+
+	--------------------------------
 	-- EVENTS
 	--------------------------------
 
@@ -51,10 +67,10 @@ function NS.Script:Load()
 				for key, value in pairs(NS.Variables.DB) do
 					if key == GossipOptionID then
 						if value == NS.Variables.ALWAYS then
-							C_GossipInfo.SelectOptionByIndex(OrderIndex)
+							Callback:SelectOption(OrderIndex)
 						elseif value == NS.Variables.ONLY_OPTION then
 							if OrderIndex == 0 then
-								C_GossipInfo.SelectOptionByIndex(OrderIndex)
+								Callback:SelectOption(OrderIndex)
 							end
 						end
 					end

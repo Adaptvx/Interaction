@@ -11,28 +11,6 @@ NS.Variables = {}
 -- VARIABLES
 --------------------------------
 
-do  -- MAIN
-	do -- THEME
-		NS.Variables.THEME = {}
-		NS.Variables.THEME.INSCRIBED_BACKGROUND = nil
-		NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = nil
-	end
-
-	do -- FRAME
-		NS.Variables.ChoiceButtons = {}
-		NS.Variables.ReceiveButtons = {}
-		NS.Variables.RequiredItemButtons = {}
-		NS.Variables.SpellButtons = {}
-		NS.Variables.NumChoices = 0
-		NS.Variables.NumReceive = 0
-		NS.Variables.NumRequireItem = 0
-		NS.Variables.NumSpell = 0
-		NS.Variables.State = ""
-
-		NS.Variables.ChoiceSelected = nil
-	end
-end
-
 do  -- CONSTANTS
 	do -- SCALE
 		NS.Variables.BASELINE_WIDTH = 625 * .75
@@ -55,6 +33,41 @@ do  -- CONSTANTS
 	end
 end
 
+do  -- MAIN
+	do -- THEME
+		NS.Variables.THEME = {}
+		NS.Variables.THEME.INSCRIBED_BACKGROUND = nil
+		NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = nil
+	end
+
+	do -- FRAME
+		NS.Variables.Buttons_Choice = {}
+		NS.Variables.Buttons_Reward = {}
+		NS.Variables.Buttons_Required = {}
+		NS.Variables.Buttons_Spell = {}
+		NS.Variables.Num_Choice = 0
+		NS.Variables.Num_Reward = 0
+		NS.Variables.Num_Required = 0
+		NS.Variables.Num_Spell = 0
+		NS.Variables.State = ""
+
+		NS.Variables.ChoiceSelected = nil
+	end
+
+	do -- SCALE
+		NS.Variables.ScaleModifier = 1
+
+		--------------------------------
+
+		function NS.Variables:UpdateScaleModifier(x)
+			local baseScale = NS.Variables.FRAME_SIZE.x
+			local newScale = x
+			local scaleModifier = newScale / baseScale
+			NS.Variables.ScaleModifier = scaleModifier
+		end
+	end
+end
+
 --------------------------------
 -- FUNCTIONS (VARIABLES)
 --------------------------------
@@ -71,10 +84,12 @@ do
 	addon.API:RegisterThemeUpdate(function()
 		if addon.Theme.IsDarkTheme then
 			NS.Variables.THEME.INSCRIBED_BACKGROUND = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-			NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
 		else
 			NS.Variables.THEME.INSCRIBED_BACKGROUND = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-			NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
 		end
 	end, 0)
 end

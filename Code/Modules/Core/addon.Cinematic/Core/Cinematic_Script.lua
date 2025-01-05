@@ -20,7 +20,7 @@ function NS.Script:Load()
 
 	do -- EFFECTS
 		do -- INIT
-			function NS.Script.StartTransition()
+			function NS.Script:StartTransition()
 				local SavedTime = GetTime()
 				NS.Variables.ActiveID = SavedTime
 
@@ -34,12 +34,29 @@ function NS.Script:Load()
 				end, 2.5)
 			end
 
-			function NS.Script.CancelTransition()
+			function NS.Script:CancelTransition()
 				NS.Variables.IsTransition = false
 			end
 
-			function NS.Script.SaveView()
-				if addon.Variables.Platform == 1 then
+			function NS.Script:SaveView()
+				local IsCinematicMode = not NS.Variables.IsHorizontalMode
+				local IsHorizontalMode = NS.Variables.IsHorizontalMode
+
+				local IsPan = (addon.Database.VAR_CINEMATIC_PAN)
+				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOM)
+				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOM_PITCH)
+				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOM_FOV)
+				local IsActionCam = (addon.Database.VAR_CINEMATIC_ACTIONCAM)
+				local IsActionCamSide = (addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE)
+				local IsActionCamOffset = (addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET)
+				local IsActionCamFocus = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS)
+				local IsActionCamFocusX = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_X)
+				local IsActionCamFocusY = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y)
+				local IsVignette = (addon.Database.VAR_CINEMATIC_VIGNETTE)
+
+				--------------------------------
+
+				if (addon.Variables.Platform == 1) and (IsPan or IsActionCamSide) then
 					SaveView(3)
 				end
 
@@ -48,8 +65,25 @@ function NS.Script:Load()
 				NS.Variables.Saved_Zoom = GetCameraZoom()
 			end
 
-			function NS.Script.ResetView()
-				if addon.Variables.Platform == 1 then
+			function NS.Script:ResetView()
+				local IsCinematicMode = not NS.Variables.IsHorizontalMode
+				local IsHorizontalMode = NS.Variables.IsHorizontalMode
+
+				local IsPan = (addon.Database.VAR_CINEMATIC_PAN)
+				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOM)
+				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOM_PITCH)
+				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOM_FOV)
+				local IsActionCam = (addon.Database.VAR_CINEMATIC_ACTIONCAM)
+				local IsActionCamSide = (addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE)
+				local IsActionCamOffset = (addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET)
+				local IsActionCamFocus = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS)
+				local IsActionCamFocusX = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_X)
+				local IsActionCamFocusY = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y)
+				local IsVignette = (addon.Database.VAR_CINEMATIC_VIGNETTE)
+
+				--------------------------------
+
+				if (addon.Variables.Platform == 1) and (IsPan or IsActionCamSide) then
 					SetView(3)
 				else
 					NS.Util:SetCameraZoom(NS.Variables.Saved_Zoom, true)
@@ -58,7 +92,7 @@ function NS.Script:Load()
 		end
 
 		do -- ZOOM
-			function NS.Script.StartZoom()
+			function NS.Script:StartZoom()
 				NS.Variables.IsZooming = true
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					NS.Variables.IsZooming = false
@@ -66,42 +100,50 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					SetCVar("cameraViewBlendStyle", 1)
+				SetCVar("cameraViewBlendStyle", 1)
 
-					--------------------------------
+				--------------------------------
 
-					NS.Util:SetCameraZoom(addon.Database.VAR_CINEMATIC_ZOOMIN_DISTANCE)
-				end, 0)
+				local current = GetCameraZoom()
+				local target
+				if current < addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MIN then
+					target = addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MIN
+				elseif current > addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MAX then
+					target = addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MAX
+				else
+					target = current
+				end
+
+				NS.Util:SetCameraZoom(target, true)
 			end
 
-			function NS.Script.CancelZoom()
+			function NS.Script:CancelZoom()
 				NS.Variables.IsZooming = false
 			end
 		end
 
 		do -- PITCH
-			function NS.Script.StartPitch()
-				NS.Util:SetCameraPitch(addon.Database.VAR_CINEMATIC_ZOOMIN_PITCH_LEVEL, 1.75)
+			function NS.Script:StartPitch()
+				NS.Util:SetCameraPitch(addon.Database.VAR_CINEMATIC_ZOOM_PITCH_LEVEL, 1.75)
 			end
 
-			function NS.Script.CancelPitch()
+			function NS.Script:CancelPitch()
 				NS.Util:StopCameraPitch()
 			end
 		end
 
 		do -- FOV
-			function NS.Script.StartFOV()
+			function NS.Script:StartFOV()
 				NS.Util:SetCameraFieldOfView(75, 5)
 			end
 
-			function NS.Script.CancelFOV()
+			function NS.Script:CancelFOV()
 				NS.Util:StopCameraFieldOfView()
 			end
 		end
 
 		do -- PAN
-			function NS.Script.StartPan()
+			function NS.Script:StartPan()
 				NS.Variables.IsPanning = true
 
 				--------------------------------
@@ -117,7 +159,7 @@ function NS.Script:Load()
 				end
 			end
 
-			function NS.Script.CancelPan()
+			function NS.Script:CancelPan()
 				NS.Variables.IsPanning = false
 				NS.Variables.IsPanning_Direction = ""
 
@@ -133,7 +175,7 @@ function NS.Script:Load()
 		end
 
 		do -- SIDE VIEW
-			function NS.Script.StartSideView()
+			function NS.Script:StartSideView()
 				if INTDB.profile.INT_UIDIRECTION == 1 then
 					NS.Util:SetCameraYaw(addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH, "LEFT")
 				else
@@ -141,13 +183,13 @@ function NS.Script:Load()
 				end
 			end
 
-			function NS.Script.CancelSideView()
+			function NS.Script:CancelSideView()
 				NS.Util:StopCameraYaw()
 			end
 		end
 
 		do -- FOCUS
-			function NS.Script.StartFocus(strength, limitX, limitY)
+			function NS.Script:StartFocus(strength, limitX, limitY)
 				SetCVar("test_cameraTargetFocusInteractEnable", 1)
 
 				--------------------------------
@@ -160,14 +202,14 @@ function NS.Script:Load()
 				NS.Util:SetFocusInteractStrength(strength, 1, limitX, limitY)
 			end
 
-			function NS.Script.CancelFocus()
+			function NS.Script:CancelFocus()
 				SetCVar("test_cameraTargetFocusInteractEnable", addon.ConsoleVariables.Variables.Saved_cameraTargetFocusInteractEnable)
 				NS.Util:StopFocusInteractStrength()
 			end
 		end
 
 		do -- OFFSET
-			function NS.Script.StartOffset(IsAutoZoom, OffsetStrength)
+			function NS.Script:StartOffset(IsAutoZoom, OffsetStrength)
 				local Strength
 				local Modifier = 1
 
@@ -189,10 +231,24 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				if (IsAutoZoom) and (addon.Database.VAR_CINEMATIC_ZOOMIN_DISTANCE < GetCameraZoom()) then
-					Strength = (OffsetStrength * (addon.Database.VAR_CINEMATIC_ZOOMIN_DISTANCE / 39) * Modifier)
+				local Current = GetCameraZoom()
+				local Target
+				local Valid
+				if addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MIN and Current < addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MIN then
+					Valid = true
+					Target = (addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MIN / 39)
+				elseif addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MAX and Current > addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MAX then
+					Valid = true
+					Target = (addon.Database.VAR_CINEMATIC_ZOOM_DISTANCE_MAX / 39)
 				else
-					Strength = (OffsetStrength * (GetCameraZoom() / 39) * Modifier)
+					Valid = false
+					Target = (Current / 39)
+				end
+
+				if (IsAutoZoom) and (Valid) then
+					Strength = (OffsetStrength * (Target) * Modifier)
+				else
+					Strength = (OffsetStrength * (Current / 39) * Modifier)
 				end
 
 				--------------------------------
@@ -214,17 +270,17 @@ function NS.Script:Load()
 				end, 0)
 			end
 
-			function NS.Script.CancelOffset()
+			function NS.Script:CancelOffset()
 				NS.Util:StopSetShoulderOffset()
 			end
 		end
 
 		do -- VIGNETTE
-			function NS.Script.StartCinematicVignette()
+			function NS.Script:StartCinematicVignette()
 				InteractionFrame.CinematicMode.Vignette.ShowWithAnimation()
 			end
 
-			function NS.Script.CancelCinematicVignette()
+			function NS.Script:StopCinematicVignette()
 				InteractionFrame.CinematicMode.Vignette.HideWithAnimation()
 			end
 		end
@@ -252,9 +308,9 @@ function NS.Script:Load()
 				local IsHorizontalMode = NS.Variables.IsHorizontalMode
 
 				local IsPan = (addon.Database.VAR_CINEMATIC_PAN)
-				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOMIN)
-				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOMIN_PITCH)
-				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOMIN_FOV)
+				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOM)
+				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOM_PITCH)
+				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOM_FOV)
 				local IsActionCam = (addon.Database.VAR_CINEMATIC_ACTIONCAM)
 				local IsActionCamSide = (addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE)
 				local IsActionCamOffset = (addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET)
@@ -267,13 +323,13 @@ function NS.Script:Load()
 				-- SAVE STATE
 				--------------------------------
 
-				NS.Script.SaveView()
+				NS.Script:SaveView()
 
 				--------------------------------
 				-- TRANSITION STATE
 				--------------------------------
 
-				NS.Script.StartTransition()
+				NS.Script:StartTransition()
 
 				--------------------------------
 				-- ZOOM
@@ -281,19 +337,19 @@ function NS.Script:Load()
 
 				if IsCinematicMode then
 					if IsZoom then
-						NS.Script.StartZoom()
+						NS.Script:StartZoom()
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
-							if IsPitch then
-								NS.Script.StartPitch()
-							end
+						--------------------------------
 
-							--------------------------------
+						if IsPitch then
+							NS.Script:StartPitch()
+						end
 
-							if IsFOV then
-								NS.Script.StartFOV()
-							end
-						end, 0)
+						--------------------------------
+
+						if IsFOV then
+							NS.Script:StartFOV()
+						end
 					end
 				end
 
@@ -307,20 +363,24 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						NS.Script.StartSideView()
+						NS.Script:StartSideView()
 
 						--------------------------------
 
 						addon.Libraries.AceTimer:ScheduleTimer(function()
-							NS.Script.CancelSideView()
+							if NS.Variables.Active then
+								NS.Script:CancelSideView()
 
-							if IsPan then
-								NS.Script.StartPan()
+								--------------------------------
+
+								if IsPan then
+									NS.Script:StartPan()
+								end
 							end
-						end, SideViewDuration - .05)
+						end, SideViewDuration - .25)
 					else
 						if IsPan then
-							NS.Script.StartPan()
+							NS.Script:StartPan()
 						end
 					end
 				end
@@ -331,20 +391,20 @@ function NS.Script:Load()
 
 				if IsHorizontalMode or IsActionCam then
 					if IsHorizontalMode then
-						NS.Script.StartOffset(false, 15)
+						NS.Script:StartOffset(false, 15)
 					end
 
 					if IsCinematicMode then
 						if IsActionCamFocus then
-							NS.Script.StartFocus(addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH, IsActionCamFocusX, IsActionCamFocusY)
+							NS.Script:StartFocus(addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH, IsActionCamFocusX, IsActionCamFocusY)
 						end
 
 						if IsActionCamOffset then
-							NS.Script.StartOffset(IsZoom, addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH)
+							NS.Script:StartOffset(IsZoom, addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH)
 						end
 
 						if IsActionCamSide then
-							NS.Script.StartSideView()
+							NS.Script:StartSideView()
 						end
 					end
 				end
@@ -355,7 +415,7 @@ function NS.Script:Load()
 
 				if IsCinematicMode then
 					if IsVignette then
-						NS.Script.StartCinematicVignette()
+						NS.Script:StartCinematicVignette()
 					end
 				end
 			end
@@ -379,9 +439,9 @@ function NS.Script:Load()
 				local IsHorizontalMode = NS.Variables.IsHorizontalMode
 
 				local IsPan = (addon.Database.VAR_CINEMATIC_PAN)
-				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOMIN)
-				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOMIN_PITCH)
-				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOMIN_FOV)
+				local IsZoom = (addon.Database.VAR_CINEMATIC_ZOOM)
+				local IsPitch = (addon.Database.VAR_CINEMATIC_ZOOM_PITCH)
+				local IsFOV = (addon.Database.VAR_CINEMATIC_ZOOM_FOV)
 				local IsActionCam = (addon.Database.VAR_CINEMATIC_ACTIONCAM)
 				local IsActionCamSide = (addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE)
 				local IsActionCamOffset = (addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET)
@@ -396,7 +456,7 @@ function NS.Script:Load()
 					local InCombat = (InCombatLockdown())
 
 					if not InCombat and (IsPan or IsZoom or (IsActionCam and IsActionCamSide)) then
-						NS.Script.ResetView()
+						NS.Script:ResetView()
 					end
 				end
 
@@ -404,7 +464,7 @@ function NS.Script:Load()
 				-- TRANSITION STATE
 				--------------------------------
 
-				NS.Script.CancelTransition()
+				NS.Script:CancelTransition()
 
 				--------------------------------
 				-- ZOOM
@@ -412,18 +472,18 @@ function NS.Script:Load()
 
 				if IsCinematicMode then
 					if IsZoom then
-						NS.Script.CancelZoom()
+						NS.Script:CancelZoom()
 
 						--------------------------------
 
 						if IsPitch then
-							NS.Script.CancelPitch()
+							NS.Script:CancelPitch()
 						end
 
 						--------------------------------
 
 						if IsFOV then
-							NS.Script.CancelFOV()
+							NS.Script:CancelFOV()
 						end
 					end
 				end
@@ -433,7 +493,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				if IsCinematicMode then
-					NS.Script.CancelPan()
+					NS.Script:CancelPan()
 				end
 
 				--------------------------------
@@ -443,18 +503,18 @@ function NS.Script:Load()
 				if IsHorizontalMode or IsActionCam then
 					if IsCinematicMode then
 						if IsActionCamFocus then
-							NS.Script.CancelFocus()
+							NS.Script:CancelFocus()
 						end
 
 						if IsActionCamOffset then
-							NS.Script.CancelOffset()
+							NS.Script:CancelOffset()
 						end
 
 						if IsActionCamSide then
-							NS.Script.CancelSideView()
+							NS.Script:CancelSideView()
 						end
 					else
-						NS.Script.CancelOffset()
+						NS.Script:CancelOffset()
 					end
 				end
 
@@ -464,7 +524,7 @@ function NS.Script:Load()
 
 				if IsCinematicMode then
 					if IsVignette then
-						NS.Script.CancelCinematicVignette()
+						NS.Script:StopCinematicVignette()
 					end
 				end
 			end
@@ -574,7 +634,7 @@ function NS.Script:Load()
 
 	do
 		addon.Libraries.AceTimer:ScheduleTimer(function()
-			local function Pan()
+			do -- PAN
 				InteractionFrame.CinematicMode.PanHandler = CreateFrame("Frame")
 				local Frame = InteractionFrame.CinematicMode.PanHandler
 
@@ -588,18 +648,27 @@ function NS.Script:Load()
 
 				Frame:SetScript("OnUpdate", function(self, elapsed)
 					if NS.Variables.IsPanning then
-						local function UseEasing()
+						do -- EASING
 							Frame.ElapsedTime = Frame.ElapsedTime + elapsed
 
-							local easeFactor = math.min(Frame.ElapsedTime / Frame.EasingDuration, 1)
-							Frame.PanSpeed = addon.Database.VAR_CINEMATIC_PAN_SPEED * easeFactor * .01
+							--------------------------------
+
+							local easeFactor = 2 - math.min(Frame.ElapsedTime / Frame.EasingDuration, 1)
+							local startValue = .015
+							local targetValue = addon.Database.VAR_CINEMATIC_PAN_SPEED * easeFactor * 0.01
+							local easeDuration = 2
+							local easedValue = startValue + (targetValue - startValue) * (Frame.ElapsedTime / easeDuration)
+
+							Frame.PanSpeed = easedValue
+
+							if Frame.ElapsedTime >= easeDuration then
+								Frame.PanSpeed = targetValue
+							end
 						end
 
-						local function UseFixed()
-							Frame.PanSpeed = addon.Database.VAR_CINEMATIC_PAN_SPEED * .01
-						end
-
-						UseEasing()
+						-- do -- FIXED
+						-- 	Frame.PanSpeed = addon.Database.VAR_CINEMATIC_PAN_SPEED * .01
+						-- end
 
 						--------------------------------
 
@@ -643,10 +712,6 @@ function NS.Script:Load()
 					end
 				end)
 			end
-
-			--------------------------------
-
-			Pan()
 		end, addon.Variables.INIT_DELAY_LAST)
 
 		--------------------------------

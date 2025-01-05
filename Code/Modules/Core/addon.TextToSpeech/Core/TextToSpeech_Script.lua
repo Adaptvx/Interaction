@@ -10,33 +10,60 @@ NS.Script = {}
 --------------------------------
 
 function NS.Script:Load()
+	--------------------------------
+	-- FUNCTIONS (MAIN)
+	--------------------------------
 
-    --------------------------------
-    -- FUNCTIONS
-    --------------------------------
+	do
+		function NS.Script:SpeakText(voice, text, destination, rate, volume)
+			MuteSoundFile(4192839) -- TTS line break
 
-    function NS.Script:Speak(voice, string)
-        local IsTextToSpeech = INTDB.profile.INT_TTS
+			--------------------------------
 
-        local Voice = (voice or 1) - 1
-        local Rate = INTDB.profile.INT_TTS_SPEED * .725
-        local Volume = INTDB.profile.INT_TTS_VOLUME
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_VoiceChat.StopSpeakingText()
+				C_VoiceChat.SpeakText(voice, text, destination, rate, volume)
+			end, 0)
+		end
 
+		function NS.Script:StopSpeakingText()
+			C_VoiceChat.StopSpeakingText()
 
-        --------------------------------
+			--------------------------------
 
-        if IsTextToSpeech then
-            C_VoiceChat.StopSpeakingText()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				UnmuteSoundFile(4192839) -- TTS line break
+			end, .1)
+		end
 
-            --------------------------------
+		function NS.Script:PlayConfiguredTTS(voice, text)
+			local IsTextToSpeech = INTDB.profile.INT_TTS
 
-            addon.Libraries.AceTimer:ScheduleTimer(function()
-                C_VoiceChat.SpeakText(Voice, string, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
-            end, 0)
-        end
-    end
+			local Voice = (voice or 1) - 1
+			local Rate = INTDB.profile.INT_TTS_SPEED * .725
+			local Volume = INTDB.profile.INT_TTS_VOLUME
 
-    function NS.Script:Stop()
-        C_VoiceChat.StopSpeakingText()
-    end
+			--------------------------------
+
+			if IsTextToSpeech then
+				NS.Script:SpeakText(Voice, text, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+			end
+		end
+	end
+
+	----------------------------------
+	-- EVENTS
+	----------------------------------
+
+	do
+
+	end
+
+	----------------------------------
+	-- SETUP
+	----------------------------------
+
+	do
+
+	end
 end

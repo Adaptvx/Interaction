@@ -56,6 +56,7 @@ function NS.Script:Load()
 				LibraryUI:Hide()
 
 				ReadableUI:SetAlpha(1)
+				ReadableUI.ShowWithAnimation()
 			end
 
 			if type == "Library" then
@@ -63,13 +64,12 @@ function NS.Script:Load()
 				LibraryUI:Show()
 
 				LibraryUI:SetAlpha(1)
+				LibraryUI.ShowWithAnimation()
 			end
 
 			--------------------------------
 
 			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, nil)
-			AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", -100, 0, "y", AdaptiveAPI.Animation.EaseExpo)
-			AdaptiveAPI.Animation:Move(ReadableUI_BookUI, 1, "CENTER", -100, 0, "y", AdaptiveAPI.Animation.EaseExpo)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				local RingScale
@@ -111,7 +111,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if not IsPlayerMoving() then
+			if not IsPlayerMoving() and not InCombatLockdown() then
 				DoEmote("READ")
 			end
 

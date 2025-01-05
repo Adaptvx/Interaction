@@ -542,7 +542,7 @@ function NS.Navigation:Load()
 	do
 		function Script:Settings_SpecialInteractFunc1(Type, Frame)
 			if Type == "Checkbox" then
-				Frame.checkbox:Click()
+				Frame.Checkbox:Click()
 
 				--------------------------------
 
@@ -550,7 +550,7 @@ function NS.Navigation:Load()
 			end
 
 			if Type == "Button" then
-				Frame.button:Click()
+				Frame.Button:Click()
 
 				--------------------------------
 

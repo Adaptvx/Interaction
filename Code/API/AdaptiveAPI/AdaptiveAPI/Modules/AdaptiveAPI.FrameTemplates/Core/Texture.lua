@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES
@@ -34,7 +35,7 @@ do
 		Frame:SetFrameStrata(frameStrata)
 
 		local Texture = Frame:CreateTexture(tostring(name) .. "Texture" or nil, "BACKGROUND")
-		Texture:SetAllPoints(true)
+		Texture:SetAllPoints(Frame, true)
 		Texture:SetTexture(texture)
 
 		--------------------------------

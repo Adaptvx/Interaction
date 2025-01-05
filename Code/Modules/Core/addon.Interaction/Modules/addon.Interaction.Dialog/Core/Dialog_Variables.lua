@@ -12,10 +12,9 @@ NS.Variables = {}
 --------------------------------
 
 do -- MAIN
+	NS.Variables.IsInInteraction = false
 	NS.Variables.AllowAutoProgress = nil
 	NS.Variables.Finished = nil
-	NS.Variables.IsEmoteDialog = nil
-	NS.Variables.IsScrollDialog = nil
 	NS.Variables.ThemeUpdateTransition = false
 
 	NS.Variables.Temp_FrameType = nil
@@ -30,7 +29,7 @@ do -- MAIN
 	NS.Variables.Temp_IsStylisedDialog = nil
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
 		NS.Variables.BASELINE_WIDTH = 100
 		NS.Variables.BASELINE_HEIGHT = 45

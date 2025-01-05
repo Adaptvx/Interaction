@@ -46,7 +46,12 @@ function NS.Script:Load()
 								end
 							end
 						end, 0)
+
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							InteractionWaypointFrame.Line:SetHeight(1000)
+						end, 2)
 					else
+						InteractionWaypointFrame.Line:SetHeight(1000)
 						InteractionWaypointFrame.GlowAnimation:SetAlpha(0)
 					end
 
@@ -123,7 +128,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local function Pinpoint()
+			do -- PINPOINT
 				--------------------------------
 				-- BLOCKED
 				--------------------------------
@@ -295,7 +300,7 @@ function NS.Script:Load()
 				end
 			end
 
-			local function Waypoint()
+			do -- WAYPOINT
 				--------------------------------
 				-- IN DISTANCE (PIN)
 				--------------------------------
@@ -365,10 +370,6 @@ function NS.Script:Load()
 				if State == "PinInvalid" then
 					if LastState ~= State then
 						InteractionPinpointFrame.SetIntroAnimation(State, false)
-
-						if NS.Variables.AudioEnable then
-							addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_REMOVE)
-						end
 
 						--------------------------------
 
@@ -500,11 +501,6 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Pinpoint()
-			Waypoint()
-
-			--------------------------------
-
 			addon.Waypoint.LastState = State
 		end
 
@@ -540,7 +536,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
 				AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Shine, .25, 1, 0, AdaptiveAPI.Animation.EaseSine)
 			end, .125)
 		end
@@ -667,30 +663,37 @@ function NS.Script:Load()
 				-- NAVIGATION STATE
 				--------------------------------
 
-				if C_Navigation.GetDistance() >= 200 then
+				local InvalidInRange = (NavState == Enum.NavigationState.Invalid and C_Navigation.GetDistance() < 200)
+				local Blocked = (NavState == Enum.NavigationState.Occluded or (NavState == Enum.NavigationState.Invalid and C_Navigation.GetDistance() >= 200))
+				local NotBlocked = (NavState == Enum.NavigationState.InRange)
+				local Invalid = (NavState == Enum.NavigationState.Invalid)
+
+				if (not Invalid and C_Navigation.GetDistance() >= 200) or (Invalid and C_Navigation.GetDistance() > 1000) then
 					addon.Waypoint.SetState("OutDistance")
 				else
 					if SuperTrackType == Enum.SuperTrackingType.Quest then
 						--------------------------------
 
 						local IsMultiObjectiveQuest = SelectedQuestObjectives and #SelectedQuestObjectives > 1
-						local InvalidInRange = (NavState == Enum.NavigationState.Invalid and C_Navigation.GetDistance() < 200)
-						local Blocked = (NavState == Enum.NavigationState.Occluded or (NavState == Enum.NavigationState.Invalid and C_Navigation.GetDistance() >= 200))
-						local NotBlocked = (NavState == Enum.NavigationState.InRange)
-						local Invalid = (NavState == Enum.NavigationState.Invalid)
 
 						--------------------------------
 
 						if IsMultiObjectiveQuest then
-							addon.Waypoint.SetState("Pin")
-						elseif InvalidInRange then
-							addon.Waypoint.SetState("Invalid")
-						elseif Blocked then
-							addon.Waypoint.SetState("Blocked")
-						elseif NotBlocked then
-							addon.Waypoint.SetState("NotBlocked")
-						elseif Invalid then
-							addon.Waypoint.SetState("Invalid")
+							if Invalid then
+								addon.Waypoint.SetState("PinInvalid")
+							else
+								addon.Waypoint.SetState("Pin")
+							end
+						else
+							if InvalidInRange then
+								addon.Waypoint.SetState("Invalid")
+							elseif Blocked then
+								addon.Waypoint.SetState("Blocked")
+							elseif NotBlocked then
+								addon.Waypoint.SetState("NotBlocked")
+							elseif Invalid then
+								addon.Waypoint.SetState("Invalid")
+							end
 						end
 					else
 						local PinInvalid = (NavState == Enum.NavigationState.Invalid or C_Navigation.GetDistance() <= 50)
@@ -829,8 +832,8 @@ function NS.Script:Load()
 						-- WAYPOINT
 						or (SuperTrackType ~= Enum.SuperTrackingType.Quest)
 					then
-						SuperTrackedFrame.Icon:SetAlpha(1)
-						SuperTrackedFrame.Arrow:SetAlpha(1)
+						SuperTrackedFrame.Icon:SetAlpha(0)
+						SuperTrackedFrame.Arrow:SetAlpha(0)
 					else
 						SuperTrackedFrame.Icon:SetAlpha(1)
 						SuperTrackedFrame.Arrow:SetAlpha(1)

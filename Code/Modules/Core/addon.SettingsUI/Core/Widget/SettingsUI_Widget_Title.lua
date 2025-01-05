@@ -14,52 +14,27 @@ function NS.Widgets:CreateTitle(parent, iconPath, textSize, subcategory, hidden,
 
     --------------------------------
 
-    local function Icon()
-        Frame.icon, Frame.iconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", iconPath)
-        Frame.icon:SetSize(Frame:GetHeight() - 10, Frame:GetHeight() - 10)
-        Frame.icon:SetPoint("LEFT", Frame, 5, 0)
+	do -- ICON
+        Frame.Icon, Frame.iconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", iconPath)
+        Frame.Icon:SetSize(Frame:GetHeight() - 10, Frame:GetHeight() - 10)
+        Frame.Icon:SetPoint("LEFT", Frame, 5, 0)
     end
 
-    local function Label()
-        Frame.label = AdaptiveAPI.FrameTemplates:CreateText(Frame.container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+	do -- LABEL
+        Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+
+		--------------------------------
 
         if iconPath then
-            Frame.label:SetSize(Frame:GetWidth() - Frame.icon:GetWidth() - 5, Frame:GetHeight())
-            Frame.label:SetPoint("LEFT", Frame.container, Frame.icon:GetWidth() + 5, 0)
-            Frame.label:SetAlpha(1)
+            Frame.Label:SetSize(Frame:GetWidth() - Frame.Icon:GetWidth() - 5, Frame:GetHeight())
+            Frame.Label:SetPoint("LEFT", Frame.Container, Frame.Icon:GetWidth() + 5, 0)
+            Frame.Label:SetAlpha(1)
         else
-            Frame.label:SetSize(Frame:GetWidth() - 10, Frame:GetHeight())
-            Frame.label:SetPoint("LEFT", Frame.container)
-            Frame.label:SetAlpha(1)
+            Frame.Label:SetSize(Frame:GetWidth() - 10, Frame:GetHeight())
+            Frame.Label:SetPoint("LEFT", Frame.Container)
+            Frame.Label:SetAlpha(1)
         end
     end
-
-    local function Divider()
-        Frame.divider, Frame.dividerTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", AdaptiveAPI.Presets.BASIC_SQUARE)
-        Frame.divider:SetSize(Frame:GetWidth(), 1)
-        Frame.divider:SetPoint("BOTTOM", Frame)
-
-        --------------------------------
-
-        local function UpdateTheme()
-            local DividerColor
-            if addon.Theme.IsDarkTheme then
-                DividerColor = { r = 1, g = 1, b = 1, a = .125 }
-            else
-                DividerColor = { r = .1, g = .1, b = .1, a = 1 }
-            end
-
-            Frame.dividerTexture:SetVertexColor(DividerColor.r, DividerColor.g, DividerColor.b, DividerColor.a)
-        end
-
-        UpdateTheme()
-        addon.API:RegisterThemeUpdate(UpdateTheme, 5)
-    end
-
-    --------------------------------
-
-    Icon()
-    Label()
 
     --------------------------------
 

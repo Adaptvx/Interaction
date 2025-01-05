@@ -341,16 +341,33 @@ do
 		-- Removes inline formatting from the given text.
 		---@param text string
 		function AdaptiveAPI:GetUnformattedText(text)
-			local UnformattedText = text
+			local Result = text
 
 			--------------------------------
 
 			if text ~= "" and text ~= nil then
-				UnformattedText = UnformattedText:gsub("|c%x%x%x%x%x%x%x%x(.-)|r", "%1")
-				UnformattedText = UnformattedText:gsub("\124cn.-:", "")
-				UnformattedText = UnformattedText:gsub("|H(.-)|h(.-)|h", "%2")
+				Result = Result:gsub("|c%x%x%x%x%x%x%x%x(.-)|r", "%1")
+				Result = Result:gsub("\124cn.-:", "")
+				Result = Result:gsub("|H(.-)|h(.-)|h", "%2")
 
-				return UnformattedText
+				return Result
+			else
+				return ""
+			end
+		end
+
+		-- Removes non-colored formmating from a given text.
+		---@param text string
+		function AdaptiveAPI:GetImportantFormattedText(text)
+			local Result = text
+
+			--------------------------------
+
+			if text ~= "" and text ~= nil then
+				Result = Result:gsub("|cff000000", "")
+				Result = Result:gsub("|cffFFFFFF", "")
+
+				return Result
 			else
 				return ""
 			end

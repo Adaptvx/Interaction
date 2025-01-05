@@ -44,8 +44,8 @@ function NS.Script:Load()
 			InteractionPromptFrame.Content.ButtonArea.Button1:SetText(NS.Variables.Button1Text)
 			InteractionPromptFrame.Content.ButtonArea.Button2:SetText(NS.Variables.Button2Text)
 
-			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button1, "PromptAccept", true)
-			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button2, "PromptDecline", true)
+			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button1, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Accept))
+			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button2, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Decline))
 
 			InteractionPromptFrame.Content.ButtonArea.Button1.SetActive(addon.Prompt.Button1Active)
 			InteractionPromptFrame.Content.ButtonArea.Button2.SetActive(addon.Prompt.Button2Active)

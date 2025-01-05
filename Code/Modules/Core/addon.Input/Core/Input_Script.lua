@@ -34,14 +34,12 @@ function NS.Script:Load()
 
 				Checks.IsDialog = (InteractionDialogFrame:IsVisible())
 				Checks.IsGossip = (not Checks.IsDialog and InteractionGossipFrame:IsVisible())
-				Checks.IsGossipVisible = (InteractionGossipFrame:IsVisible())
+				Checks.IsGossipVisible = (not InteractionGossipFrame.hidden)
 				Checks.IsAlwaysShowGossip = (InteractionGossipFrame:IsVisible())
 				Checks.IsQuest = (InteractionQuestFrame:IsVisible())
-				Checks.IsQuestRewardSelection = (Checks.IsQuest and addon.Interaction.Quest.Variables.NumChoices >= 1)
+				Checks.IsQuestRewardSelection = (Checks.IsQuest and addon.Interaction.Quest.Variables.Num_Choice >= 1)
 				Checks.IsPrompt = (InteractionPromptFrame:IsVisible())
 			end
-
-			--------------------------------
 
 			local function PreventInput()
 				addon.API:PreventInput(Script.KeybindFrame)
@@ -50,45 +48,6 @@ function NS.Script:Load()
 			--------------------------------
 
 			do -- KEYBIND
-				-- Interface
-				local Key_Skip
-				local Key_Escape = { [1] = "ESCAPE", [2] = "PAD2" }
-				local Key_NextDialog = { [1] = "E", [2] = "PADRTRIGGER" }
-				local Key_PreviousDialog = { [1] = "Q", [2] = "PADLTRIGGER" }
-				local Key_Accept
-				local Key_Prompt_Accept = { [1] = "", [2] = "PADLSHOULDER" }
-				local Key_Prompt_Decline = { [1] = "", [2] = "PADRSHOULDER" }
-
-				-- Navigation
-				local Key_MoveUp = { [1] = "W", [2] = "PADDUP" }
-				local Key_MoveLeft = { [1] = "A", [2] = "PADDLEFT" }
-				local Key_MoveRight = { [1] = "D", [2] = "PADDRIGHT" }
-				local Key_MoveDown = { [1] = "S", [2] = "PADDDOWN" }
-				local Key_ScrollUp = { [1] = "UP", [2] = "PADDUP" }
-				local Key_ScrollDown = { [1] = "DOWN", [2] = "PADDDOWN" }
-				local Key_Interact = { [1] = "SPACE", [2] = "PAD1" }
-
-				local Key_Settings_Toggle = { [1] = "", [2] = "PADFORWARD" }
-				local Key_Settings_ChangeTabUp = { [1] = "", [2] = "PADRSHOULDER" }
-				local Key_Settings_ChangeTabDown = { [1] = "", [2] = "PADLSHOULDER" }
-				local Key_Settings_SpecialInteract1 = { [1] = "", [2] = "PADDRIGHT" }
-				local Key_Settings_SpecialInteract2 = { [1] = "", [2] = "PADDLEFT" }
-				local Key_Settings_SpecialInteract3 = { [1] = "", [2] = "PAD1" }
-
-				local Key_ReadableUI_Library_Toggle = { [1] = "", [2] = "" }
-
-				--------------------------------
-
-				local function SetInteractKeybinds()
-					if INTDB.profile.INT_USEINTERACTKEY then
-						Key_Skip = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
-						Key_Accept = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
-					else
-						Key_Skip = { [1] = "SPACE", [2] = "PAD1" }
-						Key_Accept = { [1] = "SPACE", [2] = "PAD1" }
-					end
-				end
-
 				local function GetMatchingKey(key, keyTable)
 					for i = 1, #keyTable do
 						if key == keyTable[i] then
@@ -103,7 +62,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				SetInteractKeybinds()
+				NS.Variables:UpdateKeybinds()
 
 				--------------------------------
 
@@ -116,83 +75,127 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					do -- InteractionPromptFrame Navigation
-						if (Checks.IsPrompt) then
-							if key == "ESCAPE" then
-								PreventInput()
-								Result = false
+					do -- Prompt
+						if (Checks.IsPrompt) and (Result) then
+							do -- Accept/Decline
+								if GetMatchingKey(key, NS.Variables.Key_Prompt_Accept) then
+									PreventInput()
+									Result = false
 
-								--------------------------------
+									--------------------------------
 
-								InteractionPromptFrame.Clear()
+									InteractionPromptFrame.Content.ButtonArea.Button1:Click()
+								end
 
-								--------------------------------
+								if GetMatchingKey(key, NS.Variables.Key_Prompt_Decline) then
+									PreventInput()
+									Result = false
 
-								return
+									--------------------------------
+
+									InteractionPromptFrame.Content.ButtonArea.Button2:Click()
+								end
 							end
-						end
-					end
 
-					do -- InteractionQuestFrame Navigation
-						if (Checks.IsQuest) then
-							if GetMatchingKey(key, Key_Accept) then
-								if InteractionQuestFrame.ButtonContainer.AcceptButton:IsVisible() and InteractionQuestFrame.ButtonContainer.AcceptButton:IsEnabled() then
+							do -- Close
+								if GetMatchingKey(key, NS.Variables.Key_Close) then
 									PreventInput()
 									Result = false
 
 									--------------------------------
 
-									InteractionQuestFrame.ButtonContainer.AcceptButton:Click()
-								end
-
-								if InteractionQuestFrame.ButtonContainer.ContinueButton:IsVisible() and InteractionQuestFrame.ButtonContainer.ContinueButton:IsEnabled() then
-									PreventInput()
-									Result = false
+									InteractionPromptFrame.Clear()
 
 									--------------------------------
 
-									InteractionQuestFrame.ButtonContainer.ContinueButton:Click()
-								end
-
-								if InteractionQuestFrame.ButtonContainer.CompleteButton:IsVisible() and InteractionQuestFrame.ButtonContainer.CompleteButton:IsEnabled() then
-									PreventInput()
-									Result = false
-
-									--------------------------------
-
-									InteractionQuestFrame.ButtonContainer.CompleteButton:Click()
+									return
 								end
 							end
 						end
 					end
 
-					do -- InteractionDialogFrame Navigation
-						if addon.Interaction.Variables.Active then
-							do -- SKIP
-								if GetMatchingKey(key, Key_Skip) or GetMatchingKey(key, Key_Escape) then
-									if GetMatchingKey(key, Key_Escape) and (not IsShiftKeyDown()) then
+					do -- Settings
+						if Result then
+							if InteractionSettingsFrame then
+								do -- Toggle
+									local IsReadableUI = InteractionReadableUIFrame:IsVisible()
+									local IsInteraction = addon.Interaction.Variables.Active
+									local IsSettings = InteractionSettingsFrame:IsVisible()
+
+									--------------------------------
+
+									if (IsSettings and GetMatchingKey(key, NS.Variables.Key_Close)) or (not IsSettings and key == "ESCAPE" and IsShiftKeyDown()) then
 										PreventInput()
 										Result = false
 
 										--------------------------------
 
-										GossipFrame:Hide()
-										if InteractionQuestFrame:IsVisible() then
-											InteractionQuestFrame.HideWithAnimation()
+										if IsSettings then
+											addon.SettingsUI.Script:HideSettingsUI()
+										else
+											addon.SettingsUI.Script:ShowSettingsUI()
+										end
+									end
+								end
+							end
+						end
+					end
+
+					do -- Quest
+						if (Checks.IsQuest) and (Result) then
+							do -- Progress
+								if GetMatchingKey(key, NS.Variables.Key_Progress) then
+									local IsAutoAccept = addon.API:IsAutoAccept()
+
+									--------------------------------
+
+									if IsAutoAccept then
+										if InteractionQuestFrame.ButtonContainer.GoodbyeButton:IsVisible() and InteractionQuestFrame.ButtonContainer.GoodbyeButton:IsEnabled() then
+											PreventInput()
+											Result = false
 
 											--------------------------------
 
-											addon.Libraries.AceTimer:ScheduleTimer(function()
-												addon.Interaction.Script:Stop(true)
-											end, .25)
-										else
-											addon.Interaction.Script:Stop(true)
+											InteractionQuestFrame.ButtonContainer.GoodbyeButton:Click()
 										end
+									else
+										if InteractionQuestFrame.ButtonContainer.AcceptButton:IsVisible() and InteractionQuestFrame.ButtonContainer.AcceptButton:IsEnabled() then
+											PreventInput()
+											Result = false
+
+											--------------------------------
+
+											InteractionQuestFrame.ButtonContainer.AcceptButton:Click()
+										end
+									end
+
+									if InteractionQuestFrame.ButtonContainer.ContinueButton:IsVisible() and InteractionQuestFrame.ButtonContainer.ContinueButton:IsEnabled() then
+										PreventInput()
+										Result = false
 
 										--------------------------------
 
-										return
-									elseif GetMatchingKey(key, Key_Skip) then
+										InteractionQuestFrame.ButtonContainer.ContinueButton:Click()
+									end
+
+									if InteractionQuestFrame.ButtonContainer.CompleteButton:IsVisible() and InteractionQuestFrame.ButtonContainer.CompleteButton:IsEnabled() then
+										PreventInput()
+										Result = false
+
+										--------------------------------
+
+										InteractionQuestFrame.ButtonContainer.CompleteButton:Click()
+									end
+								end
+							end
+						end
+					end
+
+					do -- Dialog
+						if Result then
+							if addon.Interaction.Variables.Active then
+								do -- Skip
+									if GetMatchingKey(key, NS.Variables.Key_Skip) then
 										local IsController = ((NS.Variables.IsController or NS.Variables.SimulateController))
 										local IsQuestFrameVisible = (InteractionQuestFrame:IsVisible() and InteractionQuestFrame:GetAlpha() > .1)
 										local IsGossipFrameVisible = (InteractionGossipFrame:IsVisible() and InteractionGossipFrame:GetAlpha() > .1)
@@ -219,31 +222,69 @@ function NS.Script:Load()
 										end
 									end
 								end
-							end
 
-							do -- NEXT / PREVIOUS DIALOG
-								if Checks.IsDialog or Checks.IsGossip or Checks.IsQuest then
-									if GetMatchingKey(key, Key_NextDialog) and Checks.IsDialog then
-										PreventInput()
-										Result = false
+								do -- Next/Previous
+									if Checks.IsDialog or Checks.IsGossip or Checks.IsQuest then
+										if GetMatchingKey(key, NS.Variables.Key_Next) and Checks.IsDialog then
+											PreventInput()
+											Result = false
 
-										--------------------------------
+											--------------------------------
 
-										addon.Interaction.Dialog.Variables.AllowAutoProgress = false
-										InteractionDialogFrame.IncrementIndex()
+											addon.Interaction.Dialog.Variables.AllowAutoProgress = false
+											InteractionDialogFrame.IncrementIndex()
 
-										--------------------------------
+											--------------------------------
 
-										return
+											return
+										end
+
+										if GetMatchingKey(key, NS.Variables.Key_Previous) then
+											PreventInput()
+											Result = false
+
+											--------------------------------
+
+											InteractionDialogFrame.DecrementIndex()
+
+											--------------------------------
+
+											return
+										end
 									end
+								end
+							end
+						end
+					end
 
-									if GetMatchingKey(key, Key_PreviousDialog) then
+					do -- Interaction
+						if Result then
+							if addon.Interaction.Variables.Active then
+								do -- Close
+									if GetMatchingKey(key, NS.Variables.Key_Close) then
 										PreventInput()
 										Result = false
 
 										--------------------------------
 
-										InteractionDialogFrame.DecrementIndex()
+										local isGossip = (InteractionGossipFrame:IsVisible())
+										local isQuest = (InteractionQuestFrame:IsVisible())
+
+										if isGossip or isQuest then
+											if isGossip then
+												InteractionGossipFrame.HideWithAnimation()
+											end
+
+											if isQuest then
+												InteractionQuestFrame.HideWithAnimation()
+											end
+
+											--------------------------------
+
+											addon.Interaction.Script:Stop(true)
+										else
+											addon.Interaction.Script:Stop(true)
+										end
 
 										--------------------------------
 
@@ -254,54 +295,21 @@ function NS.Script:Load()
 						end
 					end
 
-					do -- InteractionPromptFrame Navigation
-						if Checks.IsPrompt then
-							if GetMatchingKey(key, Key_Prompt_Accept) then
-								PreventInput()
-								Result = false
+					do -- Library
+						if Result then
+							if InteractionReadableUIFrame then
+								do -- Close
+									if InteractionReadableUIFrame:IsVisible() then
+										if GetMatchingKey(key, NS.Variables.Key_Close) then
+											PreventInput()
+											Result = false
 
-								--------------------------------
+											--------------------------------
 
-								InteractionPromptFrame.Content.ButtonArea.Button1:Click()
-							end
-
-							if GetMatchingKey(key, Key_Prompt_Decline) then
-								PreventInput()
-								Result = false
-
-								--------------------------------
-
-								InteractionPromptFrame.Content.ButtonArea.Button2:Click()
-							end
-						end
-					end
-
-					do -- InteractionSettingsFrame Toggle Visibility
-						if InteractionSettingsFrame then
-							if (InteractionSettingsFrame:IsVisible() and key == "ESCAPE") or (not InteractionSettingsFrame:IsVisible() and key == "ESCAPE" and IsShiftKeyDown()) then
-								PreventInput()
-								Result = false
-
-								--------------------------------
-
-								if InteractionSettingsFrame:IsVisible() then
-									addon.SettingsUI.Script:HideSettingsUI()
-								else
-									addon.SettingsUI.Script:ShowSettingsUI()
+											InteractionReadableUIFrame.HideWithAnimation()
+										end
+									end
 								end
-							end
-						end
-					end
-
-					do -- InteractionReadableUILibrary Toggle Visibility
-						if InteractionReadableUIFrame then
-							if (InteractionReadableUIFrame:IsVisible() and key == "ESCAPE" and not IsShiftKeyDown()) then
-								PreventInput()
-								Result = false
-
-								--------------------------------
-
-								InteractionReadableUIFrame.HideWithAnimation()
 							end
 						end
 					end
@@ -321,7 +329,7 @@ function NS.Script:Load()
 					end
 
 					if NS.Variables.IsPC or not NS.Variables.IsControllerEnabled then
-						do -- InteractionGossipFrame Navigation
+						do -- Gossip
 							if (Checks.IsGossip) or (Checks.Settings_AlwaysShowGossipFrame and Checks.IsGossipVisible) then
 								local Buttons = InteractionGossipFrame.GetButtons()
 
@@ -373,7 +381,7 @@ function NS.Script:Load()
 							end
 						end
 
-						do -- InteractionQuestFrame Navigation
+						do -- Quest
 							if (Checks.IsQuest) then
 								-- <MORE TO ADD>
 							end
@@ -395,19 +403,19 @@ function NS.Script:Load()
 
 								--------------------------------
 
-								if GetMatchingKey(key, Key_ScrollUp) then
+								if GetMatchingKey(key, NS.Variables.Key_ScrollUp) then
 									if Script:Nav_ScrollUp() then
 										PreventInput()
 									end
 								end
 
-								if GetMatchingKey(key, Key_ScrollDown) then
+								if GetMatchingKey(key, NS.Variables.Key_ScrollDown) then
 									if Script:Nav_ScrollDown() then
 										PreventInput()
 									end
 								end
 
-								if GetMatchingKey(key, Key_MoveUp) then
+								if GetMatchingKey(key, NS.Variables.Key_MoveUp) then
 									PreventInput()
 
 									--------------------------------
@@ -415,7 +423,7 @@ function NS.Script:Load()
 									Script:Nav_MoveUp()
 								end
 
-								if GetMatchingKey(key, Key_MoveLeft) then
+								if GetMatchingKey(key, NS.Variables.Key_MoveLeft) then
 									PreventInput()
 
 									--------------------------------
@@ -423,7 +431,7 @@ function NS.Script:Load()
 									Script:Nav_MoveLeft()
 								end
 
-								if GetMatchingKey(key, Key_MoveRight) then
+								if GetMatchingKey(key, NS.Variables.Key_MoveRight) then
 									PreventInput()
 
 									--------------------------------
@@ -431,7 +439,7 @@ function NS.Script:Load()
 									Script:Nav_MoveRight()
 								end
 
-								if GetMatchingKey(key, Key_MoveDown) then
+								if GetMatchingKey(key, NS.Variables.Key_MoveDown) then
 									PreventInput()
 
 									--------------------------------
@@ -447,7 +455,7 @@ function NS.Script:Load()
 
 								--------------------------------
 
-								if GetMatchingKey(key, Key_Interact) then
+								if GetMatchingKey(key, NS.Variables.Key_Interact) then
 									PreventInput()
 
 									--------------------------------
@@ -455,7 +463,7 @@ function NS.Script:Load()
 									Script:Nav_Interact()
 								end
 
-								if GetMatchingKey(key, Key_Settings_SpecialInteract3) then
+								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract3) then
 									PreventInput()
 
 									--------------------------------
@@ -465,7 +473,7 @@ function NS.Script:Load()
 									end
 								end
 
-								if GetMatchingKey(key, Key_Settings_SpecialInteract2) then
+								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract2) then
 									PreventInput()
 
 									--------------------------------
@@ -475,7 +483,7 @@ function NS.Script:Load()
 									end
 								end
 
-								if GetMatchingKey(key, Key_Settings_SpecialInteract1) then
+								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract1) then
 									PreventInput()
 
 									--------------------------------
@@ -494,7 +502,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									if GetMatchingKey(key, Key_Settings_Toggle) and (IsInteraction or IsReadableUI or IsSettings) then
+									if GetMatchingKey(key, NS.Variables.Key_Settings_Toggle) and (IsInteraction or IsReadableUI or IsSettings) then
 										PreventInput()
 
 										--------------------------------
@@ -522,7 +530,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									if GetMatchingKey(key, Key_Settings_ChangeTabUp) then
+									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabUp) then
 										if Script.CurrentNavigationSession == "SETTING" then
 											PreventInput()
 
@@ -542,11 +550,11 @@ function NS.Script:Load()
 												New = #Tabs
 											end
 
-											addon.SettingsUI.Script:SelectTab(Buttons[New].button, New)
+											addon.SettingsUI.Script:SelectTab(Buttons[New].Button, New)
 										end
 									end
 
-									if GetMatchingKey(key, Key_Settings_ChangeTabDown) then
+									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabDown) then
 										if Script.CurrentNavigationSession == "SETTING" then
 											PreventInput()
 
@@ -566,7 +574,7 @@ function NS.Script:Load()
 												New = #Tabs
 											end
 
-											addon.SettingsUI.Script:SelectTab(Buttons[New].button, New)
+											addon.SettingsUI.Script:SelectTab(Buttons[New].Button, New)
 										end
 									end
 								end
@@ -661,7 +669,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							SetInteractKeybinds()
+							NS.Variables:UpdateKeybinds()
 
 							--------------------------------
 
@@ -686,7 +694,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							SetInteractKeybinds()
+							NS.Variables:UpdateKeybinds()
 
 							--------------------------------
 
@@ -703,7 +711,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							SetInteractKeybinds()
+							NS.Variables:UpdateKeybinds()
 
 							--------------------------------
 
@@ -728,7 +736,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							SetInteractKeybinds()
+							NS.Variables:UpdateKeybinds()
 
 							--------------------------------
 

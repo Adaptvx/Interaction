@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES

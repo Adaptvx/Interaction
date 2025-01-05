@@ -11,92 +11,99 @@ NS.Script = {}
 
 function NS.Script:Load()
 	--------------------------------
+	-- REFERENCES
+	--------------------------------
+
+	local Frame = InteractionSettingsFrame
+	local Callback = NS.Script
+
+	--------------------------------
 	-- FUNCTIONS (TOOLTIP)
 	--------------------------------
 
-	do -- TOOLTIP
-		function NS.Script:ShowTooltip(frame, text, image, imageType, skipAnimation)
+	do
+		function Callback:ShowTooltip(frame, text, image, imageType, skipAnimation)
 			if not text or text == "" then
 				return
 			end
 
 			--------------------------------
 
-			InteractionSettingsFrame.Tooltip.frame = frame
+			Frame.Tooltip.frame = frame
 
 			--------------------------------
 
-			InteractionSettingsFrame.Tooltip:Show()
+			Frame.Tooltip:Show()
 
 			--------------------------------
 
-			local startPos = InteractionSettingsFrame.Tooltip:GetWidth() - 15
-			local endPos = InteractionSettingsFrame.Tooltip:GetWidth()
+			local startPos = Frame.Tooltip:GetWidth() - 15
+			local endPos = Frame.Tooltip:GetWidth()
 
-			InteractionSettingsFrame.Tooltip:SetPoint("RIGHT", InteractionSettingsFrame.Tooltip.frame, 225, 0)
+			Frame.Tooltip:SetPoint("RIGHT", Frame.Tooltip.frame, 225, 0)
 
 			if not skipAnimation then
-				AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Tooltip, .125, InteractionSettingsFrame.Tooltip:GetAlpha(), 1, nil, function() return not InteractionSettingsFrame:IsVisible() end)
-				AdaptiveAPI.Animation:Move(InteractionSettingsFrame.Tooltip, .25, "RIGHT", startPos, endPos, "x", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionSettingsFrame:IsVisible() end)
+				AdaptiveAPI.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 1, nil, function() return not Frame:IsVisible() end)
+				AdaptiveAPI.Animation:Move(Frame.Tooltip, .25, "RIGHT", startPos, endPos, "x", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 			else
-				InteractionSettingsFrame.Tooltip:SetAlpha(1)
-				InteractionSettingsFrame.Tooltip:SetPoint("RIGHT", InteractionSettingsFrame.Tooltip.frame, endPos, 0)
+				Frame.Tooltip:SetAlpha(1)
+				Frame.Tooltip:SetPoint("RIGHT", Frame.Tooltip.frame, endPos, 0)
 			end
 
 			--------------------------------
 
 			if image and image ~= "" then
-				InteractionSettingsFrame.Tooltip.Content.Image:Show()
-				InteractionSettingsFrame.Tooltip.Content.ImageTexture:SetTexture(image)
+				Frame.Tooltip.Content.Image:Show()
+				Frame.Tooltip.Content.ImageTexture:SetTexture(image)
 
 				--------------------------------
 
-				local width = imageType == "Small" and InteractionSettingsFrame.Tooltip.Content:GetWidth() / 2 or InteractionSettingsFrame.Tooltip.Content:GetWidth()
+				local width = imageType == "Small" and Frame.Tooltip.Content:GetWidth() / 2 or Frame.Tooltip.Content:GetWidth()
 				local height = imageType == "Small" and width or width / 2
 
 				--------------------------------
 
 				if imageType == "Small" then
-					InteractionSettingsFrame.Tooltip.Content.Image:SetSize(width, height)
+					Frame.Tooltip.Content.Image:SetSize(width, height)
 				end
 
 				if imageType == "Large" then
-					InteractionSettingsFrame.Tooltip.Content.Image:SetSize(width, height)
+					Frame.Tooltip.Content.Image:SetSize(width, height)
 				end
 			else
-				InteractionSettingsFrame.Tooltip.Content.Image:Hide()
+				Frame.Tooltip.Content.Image:Hide()
 			end
 
 			--------------------------------
 
-			InteractionSettingsFrame.Tooltip.Content.Text:SetText(text)
+			Frame.Tooltip.Content.Text:SetText(text)
 		end
 
-		function NS.Script:HideTooltip(skipAnimation)
-			InteractionSettingsFrame.Tooltip.frame = nil
+		function Callback:HideTooltip(skipAnimation)
+			Frame.Tooltip.frame = nil
 
 			--------------------------------
 
-			local startPos = InteractionSettingsFrame.Tooltip:GetWidth() - 15
-			local endPos = InteractionSettingsFrame.Tooltip:GetWidth()
+			local startPos = Frame.Tooltip:GetWidth() - 15
+			local endPos = Frame.Tooltip:GetWidth()
 
 			--------------------------------
 
 			if skipAnimation then
-				InteractionSettingsFrame.Tooltip:Hide()
+				Frame.Tooltip:Hide()
 			else
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if InteractionSettingsFrame.Tooltip.frame == nil then
-						InteractionSettingsFrame.Tooltip:Hide()
+					if Frame.Tooltip.frame == nil then
+						Frame.Tooltip:Hide()
 					end
 				end, .25)
 
 				--------------------------------
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if not InteractionSettingsFrame.Tooltip.frame then
-						AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Tooltip, .125, InteractionSettingsFrame.Tooltip:GetAlpha(), 0)
-						AdaptiveAPI.Animation:Move(InteractionSettingsFrame.Tooltip, .25, "RIGHT", endPos, startPos, "x", AdaptiveAPI.Animation.EaseExpo)
+					if not Frame.Tooltip.frame then
+						AdaptiveAPI.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 0)
+						AdaptiveAPI.Animation:Move(Frame.Tooltip, .25, "RIGHT", endPos, startPos, "x", AdaptiveAPI.Animation.EaseExpo)
 					end
 				end, .1)
 			end
@@ -107,268 +114,270 @@ function NS.Script:Load()
 	-- FUNCTIONS (FRAME)
 	--------------------------------
 
-	do -- FRAME
-		function NS.Script:SelectTab(button, tabIndex)
-			local tabPool = InteractionSettingsFrame.Content.ScrollFrame.tabPool
+	do
+		do -- FRAME
+			function Callback:SelectTab(button, tabIndex)
+				local tabPool = Frame.Content.ScrollFrame.tabPool
 
-			local tab = tabPool[tabIndex]
-			local tabButton = button
-			local tabIndex = tabIndex
+				local tab = tabPool[tabIndex]
+				local tabButton = button
+				local tabIndex = tabIndex
 
-			--------------------------------
+				--------------------------------
 
-			local function TabButton()
-				local function ResetAll()
-					local widgetPool = InteractionSettingsFrame.Sidebar.Legend.widgetPool
+				local function TabButton()
+					local function ResetAll()
+						local widgetPool = Frame.Sidebar.Legend.widgetPool
+
+						--------------------------------
+
+						for i = 1, #widgetPool do
+							if widgetPool[i].Button then
+								local button = widgetPool[i].Button
+								button.SetActive(false)
+							end
+						end
+					end
+
+					local function SetCurrent()
+						tabButton.SetActive(true)
+					end
 
 					--------------------------------
 
-					for i = 1, #widgetPool do
-						if widgetPool[i].button then
-							local button = widgetPool[i].button
-							button.SetActive(false)
+					ResetAll()
+					SetCurrent()
+				end
+
+				local function Tab()
+					local function HideAll()
+						for i = 1, #tabPool do
+							local currentTab = tabPool[i]
+							local elements = currentTab.widgetPool
+
+							--------------------------------
+
+							currentTab:Hide()
+
+							--------------------------------
+
+							for element = 1, #elements do
+								elements[element].Leave()
+							end
 						end
 					end
-				end
 
-				local function SetCurrent()
-					tabButton.SetActive(true)
-				end
-
-				--------------------------------
-
-				ResetAll()
-				SetCurrent()
-			end
-
-			local function Tab()
-				local function HideAll()
-					for i = 1, #tabPool do
-						local currentTab = tabPool[i]
-						local elements = currentTab.widgetPool
-
-						--------------------------------
-
-						currentTab:Hide()
-
-						--------------------------------
-
-						for element = 1, #elements do
-							elements[element].Leave()
-						end
+					local function ShowCurrent()
+						tab:Show()
+						AdaptiveAPI.Animation:Fade(tab, .25, 0, 1)
 					end
-				end
 
-				local function ShowCurrent()
-					tab:Show()
-					AdaptiveAPI.Animation:Fade(tab, .25, 0, 1)
+					--------------------------------
+
+					HideAll()
+					ShowCurrent()
+
+					--------------------------------
+
+					Frame.Content.ScrollFrame.tabIndex = tabIndex
 				end
 
 				--------------------------------
 
-				HideAll()
-				ShowCurrent()
+				TabButton()
+				Tab()
 
 				--------------------------------
 
-				InteractionSettingsFrame.Content.ScrollFrame.tabIndex = tabIndex
+				Callback:HideTooltip(true)
+				Frame.Content.Header.Content.Title:SetText(tabButton:GetText())
+				Frame.Content.ScrollFrame:SetVerticalScroll(0)
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("SETTING_TAB_CHANGED", tab, tabButton, tabIndex)
 			end
 
-			--------------------------------
-
-			TabButton()
-			Tab()
-
-			--------------------------------
-
-			NS.Script:HideTooltip(true)
-			InteractionSettingsFrame.Content.Header.Content.Title:SetText(tabButton:GetText())
-			InteractionSettingsFrame.Content.ScrollFrame:SetVerticalScroll(0)
-
-			--------------------------------
-
-			CallbackRegistry:Trigger("SETTING_TAB_CHANGED", tab, tabButton, tabIndex)
-		end
-
-		function NS.Script:ShowSettingsUI(bypass, focus)
-			if (not addon.Initialize.Ready) then
-				return
-			end
-
-			--------------------------------
-
-			if (InteractionSettingsFrame.hidden) or (bypass) then
-				InteractionSettingsFrame.hidden = false
-
-				--------------------------------
-
-				if bypass then
-					InteractionSettingsFrame:Show()
-				else
-					InteractionSettingsFrame.ShowWithAnimation()
-				end
-
-				--------------------------------
-
-				NS.Script:SelectTab(InteractionSettingsFrame.Sidebar.Legend.widgetPool[1].button, 1)
-
-				--------------------------------
-
-				if focus then
-					addon.HideUI.Variables.Lock = true
-					addon.HideUI.Script:HideUI(true)
-				end
-
-				--------------------------------
-
-				CallbackRegistry:Trigger("START_SETTING")
-
-				--------------------------------
-
-				addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Settings_Open)
-			end
-		end
-
-		function NS.Script:HideSettingsUI(bypass, focus)
-			if not InteractionSettingsFrame.hidden or bypass then
-				InteractionSettingsFrame.hidden = true
-
-				--------------------------------
-
-				if bypass then
-					InteractionSettingsFrame:Hide()
-				else
-					InteractionSettingsFrame.HideWithAnimation()
-				end
-
-				--------------------------------
-
-				if focus or addon.HideUI.Variables.Lock then
-					addon.HideUI.Variables.Lock = false
-					addon.HideUI.Script:ShowUI(true)
-				end
-
-				--------------------------------
-
-				CallbackRegistry:Trigger("STOP_SETTING")
-
-				--------------------------------
-
-				if not bypass then
-					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Settings_Close)
-				end
-			end
-		end
-
-		function Interaction_ShowSettingsUI()
-			NS.Script:ShowSettingsUI(false, true)
-		end
-	end
-
-	do -- SCROLL FRAME
-		InteractionSettingsFrame.Content.ScrollFrame.Update = function(PreventRepeat)
-			if InteractionSettingsFrame.Content.ScrollFrame.tabIndex == nil then
-				return
-			end
-
-			--------------------------------
-
-			if PreventRepeat then
-				if InteractionSettingsFrame.Content.ScrollFrame.LastUpdateTab == InteractionSettingsFrame.Content.ScrollFrame.tabIndex then
+			function Callback:ShowSettingsUI(bypass, focus)
+				if (not addon.Initialize.Ready) then
 					return
 				end
-			end
-
-			InteractionSettingsFrame.Content.ScrollFrame.LastUpdateTab = InteractionSettingsFrame.Content.ScrollFrame.tabIndex
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				InteractionSettingsFrame.Content.ScrollFrame.LastUpdateTab = nil
-			end, .25)
-
-			--------------------------------
-
-			local WidgetPool = InteractionSettingsFrame.Content.ScrollFrame.tabPool[InteractionSettingsFrame.Content.ScrollFrame.tabIndex].widgetPool
-
-			if not WidgetPool then
-				return
-			end
-
-			--------------------------------
-
-			local TotalHeight = 0
-			local Spacing = 0
-			for i = 1, #WidgetPool do
-				local Widget = WidgetPool[i]
-				local Widget_Type = Widget.Type
-				local Widget_Height = Widget:GetHeight()
-				local Widget_Visible = Widget:IsVisible()
 
 				--------------------------------
 
-				if Widget_Visible then
-					Widget:SetAlpha(1)
+				if (Frame.hidden) or (bypass) then
+					Frame.hidden = false
 
 					--------------------------------
 
-					Widget:ClearAllPoints()
-					Widget:SetPoint("TOP", InteractionSettingsFrame.Content.ScrollChildFrame, 0, -TotalHeight)
-
-					--------------------------------
-
-					if Widget_Type ~= "Group" then
-						TotalHeight = TotalHeight + Widget_Height + Spacing
+					if bypass then
+						Frame:Show()
+					else
+						Frame.ShowWithAnimation()
 					end
-				else
-					Widget:SetAlpha(0)
+
+					--------------------------------
+
+					Callback:SelectTab(Frame.Sidebar.Legend.widgetPool[1].Button, 1)
+
+					--------------------------------
+
+					if focus then
+						addon.HideUI.Variables.Lock = true
+						addon.HideUI.Script:HideUI(true)
+					end
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("START_SETTING")
+
+					--------------------------------
+
+					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Settings_Open)
 				end
 			end
 
-			--------------------------------
+			function Callback:HideSettingsUI(bypass, focus)
+				if not Frame.hidden or bypass then
+					Frame.hidden = true
 
-			InteractionSettingsFrame.Content.ScrollChildFrame:SetHeight(TotalHeight)
+					--------------------------------
+
+					if bypass then
+						Frame:Hide()
+					else
+						Frame.HideWithAnimation()
+					end
+
+					--------------------------------
+
+					if focus or addon.HideUI.Variables.Lock then
+						addon.HideUI.Variables.Lock = false
+						addon.HideUI.Script:ShowUI(true)
+					end
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("STOP_SETTING")
+
+					--------------------------------
+
+					if not bypass then
+						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Settings_Close)
+					end
+				end
+			end
+
+			function Interaction_ShowSettingsUI()
+				Callback:ShowSettingsUI(false, true)
+			end
 		end
 
-		InteractionSettingsFrame.Sidebar.Legend.Update = function()
-			local WidgetPool = InteractionSettingsFrame.Sidebar.Legend.widgetPool
-
-			if WidgetPool == nil then
-				return
-			end
-
-			--------------------------------
-
-			local TotalHeight = 0
-			local Spacing = .5
-
-			for i = 1, #WidgetPool do
-				local Widget = WidgetPool[i]
-				local Widget_Height = Widget:GetHeight()
-				local Widget_Visible = Widget:GetAlpha() > 0
-
-				if Widget_Visible then
-					Widget:Show()
-
-					--------------------------------
-
-					Widget:ClearAllPoints()
-					Widget:SetPoint("TOP", InteractionSettingsFrame.Sidebar.LegendScrollChildFrame, 0, -TotalHeight)
-
-					--------------------------------
-
-					TotalHeight = TotalHeight + Widget_Height + Spacing
+		do -- SCROLL FRAME
+			Frame.Content.ScrollFrame.Update = function(PreventRepeat)
+				if Frame.Content.ScrollFrame.tabIndex == nil then
+					return
 				end
+
+				--------------------------------
+
+				if PreventRepeat then
+					if Frame.Content.ScrollFrame.LastUpdateTab == Frame.Content.ScrollFrame.tabIndex then
+						return
+					end
+				end
+
+				Frame.Content.ScrollFrame.LastUpdateTab = Frame.Content.ScrollFrame.tabIndex
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					Frame.Content.ScrollFrame.LastUpdateTab = nil
+				end, .25)
+
+				--------------------------------
+
+				local WidgetPool = Frame.Content.ScrollFrame.tabPool[Frame.Content.ScrollFrame.tabIndex].widgetPool
+
+				if not WidgetPool then
+					return
+				end
+
+				--------------------------------
+
+				local TotalHeight = 0
+				local Spacing = 0
+				for i = 1, #WidgetPool do
+					local Widget = WidgetPool[i]
+					local Widget_Type = Widget.Type
+					local Widget_Height = Widget:GetHeight()
+					local Widget_Visible = Widget:IsVisible()
+
+					--------------------------------
+
+					if Widget_Visible then
+						Widget:SetAlpha(1)
+
+						--------------------------------
+
+						Widget:ClearAllPoints()
+						Widget:SetPoint("TOP", Frame.Content.ScrollChildFrame, 0, -TotalHeight)
+
+						--------------------------------
+
+						if Widget_Type ~= "Group" then
+							TotalHeight = TotalHeight + Widget_Height + Spacing
+						end
+					else
+						Widget:SetAlpha(0)
+					end
+				end
+
+				--------------------------------
+
+				Frame.Content.ScrollChildFrame:SetHeight(TotalHeight)
 			end
 
-			--------------------------------
+			Frame.Sidebar.Legend.Update = function()
+				local WidgetPool = Frame.Sidebar.Legend.widgetPool
 
-			InteractionSettingsFrame.Sidebar.LegendScrollChildFrame:SetHeight(TotalHeight)
+				if WidgetPool == nil then
+					return
+				end
 
-			--------------------------------
+				--------------------------------
 
-			local IsController = (addon.Input.Variables.IsController or addon.Input.Variables.SimulateController)
+				local TotalHeight = 0
+				local Spacing = .5
 
-			InteractionSettingsFrame.Sidebar.Legend.GamePad:SetShown(IsController)
-			if IsController then
-				InteractionSettingsFrame.Sidebar.Legend:SetHeight(TotalHeight)
+				for i = 1, #WidgetPool do
+					local Widget = WidgetPool[i]
+					local Widget_Height = Widget:GetHeight()
+					local Widget_Visible = Widget:GetAlpha() > 0
+
+					if Widget_Visible then
+						Widget:Show()
+
+						--------------------------------
+
+						Widget:ClearAllPoints()
+						Widget:SetPoint("TOP", Frame.Sidebar.LegendScrollChildFrame, 0, -TotalHeight)
+
+						--------------------------------
+
+						TotalHeight = TotalHeight + Widget_Height + Spacing
+					end
+				end
+
+				--------------------------------
+
+				Frame.Sidebar.LegendScrollChildFrame:SetHeight(TotalHeight)
+
+				--------------------------------
+
+				local IsController = (addon.Input.Variables.IsController or addon.Input.Variables.SimulateController)
+
+				Frame.Sidebar.Legend.GamePad:SetShown(IsController)
+				if IsController then
+					Frame.Sidebar.Legend:SetHeight(TotalHeight)
+				end
 			end
 		end
 	end
@@ -377,50 +386,66 @@ function NS.Script:Load()
 	-- FUNCTIONS (ANIMATION)
 	--------------------------------
 
-	do -- ANIMATION
-		InteractionSettingsFrame.ShowWithAnimation = function()
-			InteractionSettingsFrame:Show()
+	do
+		Frame.ShowWithAnimation = function()
+			Frame.PreventMouse = true
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				Frame.PreventMouse = false
+			end, .25)
 
 			--------------------------------
 
-			InteractionSettingsFrame:SetAlpha(0)
-			InteractionSettingsFrame:SetScale(.75)
-			InteractionSettingsFrame.Container:SetAlpha(0)
+			Frame:Show()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame, .25, 0, 1, nil, function() return InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Scale(InteractionSettingsFrame, .5, 2, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return InteractionSettingsFrame.hidden end)
+			Frame:SetAlpha(0)
+			Frame.Background:SetScale(2)
+			Frame.Container:SetAlpha(0)
+
+			--------------------------------
+
+			AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
+			AdaptiveAPI.Animation:Scale(Frame.Background, .5, 2, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Container, .5, 0, 1, nil, function() return InteractionSettingsFrame.hidden end)
+				AdaptiveAPI.Animation:Fade(Frame.Container, .5, 0, 1, nil, function() return Frame.hidden end)
 			end, .325)
 		end
 
-		InteractionSettingsFrame.HideWithAnimation = function()
+		Frame.HideWithAnimation = function()
+			Frame.PreventMouse = true
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if InteractionSettingsFrame.hidden then
-					InteractionSettingsFrame:Hide()
+				Frame.PreventMouse = false
+
+				--------------------------------
+
+				if Frame.hidden then
+					Frame:Hide()
 				end
 			end, .25)
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame, .25, 1, 0, nil, function() return not InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Scale(InteractionSettingsFrame, .5, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return not InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Container, .125, InteractionSettingsFrame.Container:GetAlpha(), 0, nil, function() return not InteractionSettingsFrame.hidden end)
+			Callback:HideTooltip(true)
+
+			--------------------------------
+
+			AdaptiveAPI.Animation:Fade(Frame, .25, 1, 0, nil, function() return not Frame.hidden end)
+			AdaptiveAPI.Animation:Scale(Frame.Background, .5, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame.Container, .125, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 		end
 
-		function NS.Script:MoveActive()
-			AdaptiveAPI.Animation:Scale(InteractionSettingsFrame.Background, .25, InteractionSettingsFrame.Background:GetScale(), .975, nil, AdaptiveAPI.Animation.EaseExpo, function() return not InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame, .125, InteractionSettingsFrame:GetAlpha(), .75, nil, function() return not InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Container, .075, InteractionSettingsFrame.Container:GetAlpha(), 0, nil, function() return not InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
+		function Callback:MoveActive()
+			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .975, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.moving or Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, function() return not Frame.moving or Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
 		end
 
-		function NS.Script:MoveDisabled()
-			AdaptiveAPI.Animation:Scale(InteractionSettingsFrame.Background, .25, InteractionSettingsFrame.Background:GetScale(), 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame, .125, InteractionSettingsFrame:GetAlpha(), 1, nil, function() return InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionSettingsFrame.Container, .075, InteractionSettingsFrame.Container:GetAlpha(), 1, nil, function() return InteractionSettingsFrame.moving or InteractionSettingsFrame.hidden end)
+		function Callback:MoveDisabled()
+			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
 		end
 	end
 
@@ -448,7 +473,7 @@ function NS.Script:Load()
 	-- EVENTS
 	--------------------------------
 
-	do -- EVENTS
+	do
 
 	end
 
@@ -456,5 +481,5 @@ function NS.Script:Load()
 	-- SETUP
 	--------------------------------
 
-	NS.Script:HideSettingsUI(true)
+	Callback:HideSettingsUI(true)
 end

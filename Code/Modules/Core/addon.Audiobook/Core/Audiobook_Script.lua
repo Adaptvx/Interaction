@@ -92,7 +92,7 @@ function NS.Script:Load()
 			local Volume = (INTDB.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				C_VoiceChat.SpeakText(Voice, line, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+				addon.TextToSpeech.Script:SpeakText(Voice, line, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
 			end, 0)
 		end
 
@@ -216,7 +216,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				C_VoiceChat.StopSpeakingText()
+				addon.TextToSpeech.Script:StopSpeakingText()
 
 				--------------------------------
 
@@ -259,7 +259,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				C_VoiceChat.StopSpeakingText()
+				addon.TextToSpeech.Script:StopSpeakingText()
 
 				--------------------------------
 
@@ -294,7 +294,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			C_VoiceChat.StopSpeakingText()
+			addon.TextToSpeech.Script:StopSpeakingText()
 
 			--------------------------------
 
@@ -472,7 +472,7 @@ function NS.Script:Load()
 	ResponseFrame:RegisterEvent("ADDONS_UNLOADING")
 	ResponseFrame:SetScript("OnEvent", function(self, event, ...)
 		if event == "ADDONS_UNLOADING" then
-			C_VoiceChat.StopSpeakingText()
+			addon.TextToSpeech.Script:StopSpeakingText()
 		end
 	end)
 end

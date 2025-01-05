@@ -17,6 +17,7 @@
 	<Script file="Core/Widget/SettingsUI_Widget_Container.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_Dropdown.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_Group.lua"/>
+	<Script file="Core/Widget/SettingsUI_Widget_Keybind.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_Slider.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_TabButton.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_Title.lua"/>

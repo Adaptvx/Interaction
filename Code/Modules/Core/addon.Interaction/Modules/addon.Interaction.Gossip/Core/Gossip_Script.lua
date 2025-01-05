@@ -9,6 +9,11 @@ NS.Script = {}
 
 --------------------------------
 
+local GetAvailableQuestInfo = GetAvailableQuestInfo or function() return false, 0, false, false, 0 end
+local GetActiveQuestID = GetActiveQuestID or function() return 0 end
+
+--------------------------------
+
 function NS.Script:Load()
 	--------------------------------
 	-- REFERENCES
@@ -45,17 +50,22 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame, .25, 1, 0)
+				AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
 			end
 
 			local function Finish(button)
-				local IsInGossipOrQuestGreeting = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
+				local IsGossipOrQuestGreetingStillVisible = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
 
 				--------------------------------
 
-				if IsInGossipOrQuestGreeting then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
+				if IsGossipOrQuestGreetingStillVisible then
+					Frame.GoodbyeButton:Hide()
+					AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
+
+					--------------------------------
+
 					Frame:UpdateButtons()
+					Frame.StartButtonSequence()
 				end
 
 				--------------------------------
@@ -64,7 +74,7 @@ function NS.Script:Load()
 					if Frame.SelectedOptionTransition then
 						Frame.SelectedOptionTransition = false
 					end
-				end, .25)
+				end, .125)
 
 				--------------------------------
 
@@ -91,7 +101,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.TextToSpeech.Script:Speak(INTDB.profile.INT_TTS_PLAYER_VOICE, string)
+				addon.TextToSpeech.Script:PlayConfiguredTTS(INTDB.profile.INT_TTS_PLAYER_VOICE, string)
 			end
 
 			local function Click(button)
@@ -120,9 +130,9 @@ function NS.Script:Load()
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						IsTTSPlayback = { ["playback"] = true, ["button"] = button }
-					end, 1)
+					end, .25)
 				else
-					button.Callback:Click()
+					button.SelectOption()
 
 					--------------------------------
 
@@ -146,7 +156,7 @@ function NS.Script:Load()
 				if event == "VOICE_CHAT_TTS_PLAYBACK_FINISHED" then
 					if IsTTSPlayback.playback then
 						if IsTTSPlayback.button then
-							IsTTSPlayback.button.Callback:Click()
+							IsTTSPlayback.button.SelectOption()
 						end
 
 						--------------------------------
@@ -168,6 +178,16 @@ function NS.Script:Load()
 			CallbackRegistry:Add("STOP_PROMPT", function()
 				if IsWaitingForGossipShow then
 					Finish()
+				end
+			end)
+		end
+
+		do -- MOUSE RESPONDER
+			Frame.MouseResponder:SetScript("OnMouseUp", function(self, button)
+				if INTDB.profile.INT_FLIPMOUSE == false and button == "RightButton" then
+					InteractionDialogFrame.ReturnToPreviousDialog()
+				elseif INTDB.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
+					InteractionDialogFrame.ReturnToPreviousDialog()
 				end
 			end)
 		end
@@ -199,162 +219,354 @@ function NS.Script:Load()
 			return Frame.Buttons
 		end
 
-		Frame.SetButtons = function(callbacks)
-			local NumAvailableQuests = GetNumAvailableQuests()
-			local NumActiveQuests = GetNumActiveQuests()
-			local NumAvailableOptions = #C_GossipInfo.GetOptions()
+		Frame.SetButtons = function(hideButtons)
+			local buttons = Frame.GetAllButtons()
 
-			NS.Variables.NumCurrentButtons = #callbacks
+			local availableQuests = C_GossipInfo.GetAvailableQuests()
+			local activeQuests = C_GossipInfo.GetActiveQuests()
+			local options = C_GossipInfo.GetOptions()
 
-			--------------------------------
+			local entries = {}
+			local currentIndex = 0
 
-			local Buttons = Frame.GetAllButtons()
-			if Buttons then
-				for i = 1, #Buttons do
-					Buttons[i]:Hide()
-				end
-
-				for i = 1, #callbacks do
-					Buttons[i]:Show()
-					Buttons[i].Callback = callbacks[i]
-
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						Buttons[i].UpdatePosition()
-					end, 0)
+			do -- GOSSIP
+				if addon.Interaction.Variables.Type == "gossip" then
+					availableQuests = C_GossipInfo.GetAvailableQuests()
+					activeQuests = C_GossipInfo.GetActiveQuests()
+					options = C_GossipInfo.GetOptions()
 
 					--------------------------------
 
-					local LabelText = AdaptiveAPI:GetUnformattedText(callbacks[i].Label:GetText())
+					for i = 1, #availableQuests do
+						currentIndex = currentIndex + 1
 
-					--------------------------------
+						--------------------------------
 
-					local function AddTriggerIcons()
-						LabelText = (string.gsub(LabelText, L["GossipData - Trigger - Quest"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
-						LabelText = (string.gsub(LabelText, L["GossipData - Trigger - Movie 1"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-						LabelText = (string.gsub(LabelText, L["GossipData - Trigger - Movie 2"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-						LabelText = (string.gsub(LabelText, L["GossipData - Trigger - NPC Dialog"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+						local entry = {}
+
+						for k, v in pairs(availableQuests[i]) do
+							entry[k] = v
+						end
+
+						entry.optionFrame = "gossip"
+						entry.optionType = "available"
+						entry.optionID = entry.questID
+						entry.optionIndex = i
+						entry.flag = "available"
+
+						--------------------------------
+
+						table.insert(entries, entry)
 					end
 
-					--------------------------------
+					for i = 1, #activeQuests do
+						currentIndex = currentIndex + 1
 
-					AddTriggerIcons()
+						--------------------------------
 
-					--------------------------------
+						local entry = {}
 
-					Buttons[i].Label:SetText(LabelText)
-					Buttons[i]:SetHeight(Buttons[i].Label:GetStringHeight() + NS.Variables:RATIO(.5))
+						for k, v in pairs(activeQuests[i]) do
+							entry[k] = v
+						end
 
-					--------------------------------
+						entry.optionFrame = "gossip"
+						entry.optionType = "active"
+						entry.optionID = entry.questID
+						entry.optionIndex = i
 
-					local function UpdateContextIcon()
-						local _, texture = addon.ContextIcon.Script:GetContextIcon(i)
-
-						if not texture then
-							local icon = callbacks[i].Icon
-							if icon.GetAtlas and icon:GetAtlas() ~= nil then
-								texture = icon:GetAtlas()
-								local replaced = addon.ContextIcon.Script:ReplaceIcon(texture)
-
-								--------------------------------
-
-								if replaced then
-									Buttons[i].IconTexture:SetTexture(replaced)
-								else
-									Buttons[i].IconTexture:SetAtlas(texture)
-								end
-
-								--------------------------------
-
-								Buttons[i].texture = replaced or texture
-							else
-								texture = icon:GetTexture()
-								local replaced = addon.ContextIcon.Script:ReplaceIcon(texture)
-
-								--------------------------------
-
-								if replaced then
-									Buttons[i].IconTexture:SetTexture(replaced)
-								else
-									Buttons[i].IconTexture:SetTexture(texture)
-								end
-
-								--------------------------------
-
-								Buttons[i].texture = replaced or texture
-							end
-						else
-							Buttons[i].IconTexture:SetTexture(texture)
+						if not entry.isComplete then
+							local isRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
+							local result
 
 							--------------------------------
 
-							Buttons[i].texture = texture
+							if isRetail then
+								result = C_QuestLog.IsComplete(entry.questID)
+							else
+								result = IsQuestComplete(entry.questID)
+							end
+
+							--------------------------------
+
+							entry.isComplete = result
 						end
+
+						entry.flag = entry.isComplete and "complete" or "active"
+
+						--------------------------------
+
+						table.insert(entries, entry)
 					end
+
+					for i = 1, #options do
+						currentIndex = currentIndex + 1
+
+						--------------------------------
+
+						local entry = {}
+
+						for k, v in pairs(options[i]) do
+							entry[k] = v
+						end
+
+						entry.optionFrame = "gossip"
+						entry.optionType = "option"
+						entry.optionID = entry.gossipOptionID
+						entry.optionIndex = i
+						entry.flag = "option"
+
+						--------------------------------
+
+						table.insert(entries, entry)
+					end
+				end
+			end
+
+			do -- QUEST GREETING
+				if addon.Interaction.Variables.Type == "quest-greeting" then
+					local numAvailableQuests = GetNumAvailableQuests()
+					local numActiveQuests = GetNumActiveQuests()
+					local currentIndex = 0
 
 					--------------------------------
 
-					UpdateContextIcon()
+					for i = 1, numAvailableQuests do
+						currentIndex = currentIndex + 1
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						UpdateContextIcon()
-					end, .25)
+						--------------------------------
 
-					if i <= 18 then
-						if i <= 9 then
-							Buttons[i].Keybind.Label:SetScale(1)
-							Buttons[i].Keybind.Label:SetText(i .. ".")
-						else
-							Buttons[i].Keybind.Label:SetScale(.75)
-							Buttons[i].Keybind.Label:SetText("S" .. i - 9 .. ".")
+						local title = GetAvailableTitle(i)
+						local isTrivial, frequency, isRepeatable, isLegendary, questID = GetAvailableQuestInfo(i)
+
+						--------------------------------
+
+						local questInfo = {
+							index = i,
+							title = title,
+							isComplete = false,
+							questID = questID,
+							isOnQuest = false,
+							isTrivial = isTrivial,
+							frequency = frequency,
+							repeatable = isRepeatable,
+							isLegendary = isLegendary,
+							isAvailableQuest = true,
+						}
+
+						if not questInfo.isComplete then
+							local isRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
+							local result
+
+							--------------------------------
+
+							if isRetail then
+								result = C_QuestLog.IsComplete(questInfo.questID)
+							else
+								result = IsQuestComplete(questInfo.questID)
+							end
+
+							--------------------------------
+
+							questInfo.isComplete = result
+						end
+
+						questInfo.optionFrame = "quest-greeting"
+						questInfo.optionType = "available"
+						questInfo.optionID = questID
+						questInfo.optionIndex = i
+						questInfo.flag = "available"
+
+						--------------------------------
+
+						entries[currentIndex] = questInfo
+					end
+
+					for i = 1, numActiveQuests do
+						currentIndex = currentIndex + 1;
+
+						--------------------------------
+
+						local title, isComplete = GetActiveTitle(i)
+						local questID = GetActiveQuestID(i)
+
+						--------------------------------
+
+						local questInfo = {
+							index = i,
+							title = title,
+							isComplete = isComplete,
+							questID = questID,
+							isAvailableQuest = false,
+							isOnQuest = true,
+						}
+
+						if not questInfo.isComplete then
+							local isRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
+							local result
+
+							--------------------------------
+
+							if isRetail then
+								result = C_QuestLog.IsComplete(questInfo.questID)
+							else
+								result = IsQuestComplete(questInfo.questID)
+							end
+
+							--------------------------------
+
+							questInfo.isComplete = result
+						end
+
+						questInfo.optionFrame = "quest-greeting"
+						questInfo.optionType = "active"
+						questInfo.optionID = questID
+						questInfo.optionIndex = i
+						questInfo.flag = isComplete and "complete" or "active"
+
+						--------------------------------
+
+						entries[currentIndex] = questInfo
+					end
+				end
+			end
+
+			table.sort(entries, function(a, b)
+				local flagOrder = { ["complete"] = 0, ["available"] = 1, ["active"] = 2, ["option"] = 3 }
+				return flagOrder[a.flag] < flagOrder[b.flag]
+			end)
+
+			--------------------------------
+
+			NS.Variables.NumCurrentButtons = #entries
+
+			--------------------------------
+
+			do -- BUTTONS
+				if buttons then
+					for i = 1, #buttons do
+						buttons[i]:Hide()
+					end
+
+					for i = 1, #entries do
+						if not hideButtons then
+							buttons[i]:Show()
+						end
+
+						--------------------------------
+
+						buttons[i].OptionFrame = entries[i].optionFrame
+						buttons[i].OptionType = entries[i].optionType
+						buttons[i].OptionID = entries[i].optionID
+						buttons[i].OptionIndex = entries[i].optionIndex
+
+						--------------------------------
+
+						buttons[i].UpdatePosition()
+
+						--------------------------------
+
+						do -- TEXT
+							local text = entries[i].title or entries[i].name
+							text = (string.gsub(text, L["GossipData - Trigger - Quest"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
+							text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+							text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+							text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+
+							--------------------------------
+
+							buttons[i].Label:SetText(text)
+						end
+
+						do -- CONTEXT ICON
+							local gossipOptionTexture = entries[i].optionType == "option" and options[entries[i].optionIndex].icon
+							local _, texture = addon.ContextIcon.Script:GetContextIcon(entries[i], gossipOptionTexture)
+
+							--------------------------------
+
+							buttons[i].IconTexture:SetTexture(texture)
+						end
+
+						do -- INDEX KEYBIND
+							if i <= 18 then
+								if i <= 9 then
+									buttons[i].Keybind.Label:SetScale(1)
+									buttons[i].Keybind.Label:SetText(i)
+								else
+									buttons[i].Keybind.Label:SetScale(.75)
+									buttons[i].Keybind.Label:SetText("S" .. i - 9)
+								end
+							end
+						end
+
+						do -- SCALE
+							buttons[i]:SetHeight(buttons[i].Label:GetStringHeight() + NS.Variables:RATIO(.5))
 						end
 					end
 				end
 			end
 
-			--------------------------------
+			do -- FORMATTING
+				local spacing = NS.Variables.BUTTON_SPACING
+				local totalHeight = 0
 
-			local TotalHeight = 0
+				--------------------------------
 
-			for i = 1, NS.Variables.NumCurrentButtons do
-				TotalHeight = TotalHeight + Buttons[i]:GetHeight()
+				for i = 1, NS.Variables.NumCurrentButtons do
+					totalHeight = totalHeight + (buttons[i]:GetHeight() + spacing)
+				end
+
+				--------------------------------
+
+				Frame:SetWidth(325)
+				Frame.GoodbyeButton:ClearAllPoints()
+
+				if #entries >= 1 then
+					Frame:SetHeight(totalHeight)
+
+					--------------------------------
+
+					Frame.GoodbyeButton:SetPoint("BOTTOM", Frame, 0, -Frame.GoodbyeButton:GetHeight() - NS.Variables:RATIO(2))
+				else
+					Frame:SetHeight(50)
+
+					--------------------------------
+
+					Frame.GoodbyeButton:SetPoint("CENTER", Frame)
+				end
 			end
-
-			if #callbacks >= 1 then
-				Frame:SetSize(325, (TotalHeight) + 25 + (NS.Variables.PADDING + Frame.GoodbyeButton:GetHeight()))
-			else
-				Frame:SetSize(150, 50)
-			end
-
-			--------------------------------
-
-			-- Temporarily disabled due to FadeText bug.
-			-- Frame.StartButtonSequence()
 
 			--------------------------------
 
 			CallbackRegistry:Trigger("GOSSIP_DATA_LOADED")
 		end
 
-		Frame.UpdateButtons = function()
+		Frame.SetAllButtons = function(hideButtons)
+			if GossipFrame:IsVisible() then
+				Frame.SetButtons(hideButtons)
+			end
+
+			if QuestFrameGreetingPanel:IsVisible() then
+				Frame.SetButtons(hideButtons)
+			end
+		end
+
+		Frame.UpdateButtons = function(hideButtons)
 			if addon.Interaction.Variables.Active then
 				CallbackRegistry:Trigger("UPDATE_GOSSIP")
 			end
 
 			--------------------------------
 
-			if GossipFrame:IsVisible() then
-				Frame.SetButtons(addon.Get.Blizzard_GossipButtons())
-			end
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				Frame.SetAllButtons(hideButtons)
 
-			if QuestFrameGreetingPanel:IsVisible() then
-				Frame.SetButtons(addon.Get.Blizzard_QuestButtons())
-			end
+				--------------------------------
 
-			--------------------------------
-
-			if addon.Interaction.Variables.Active then
-				CallbackRegistry:Trigger("UPDATE_GOSSIP_READY")
-			end
+				if addon.Interaction.Variables.Active then
+					CallbackRegistry:Trigger("UPDATE_GOSSIP_READY")
+				end
+			end, 0)
 		end
 
 		Frame.UpdateAllButtonStates = function()
@@ -373,22 +585,17 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		Frame.UpdateAll = function()
+			NS.Variables.LastNPC = NS.Variables.NPC
+
+			Frame.SetAllButtons()
+			Frame.UpdatePosition()
+			Frame.UpdateStyle()
+			Frame.UpdateFocus()
+		end
+
 		Frame.UpdatePosition = function()
-			local Nameplate = C_NamePlate.GetNamePlateForUnit("npc")
-			local PlayerNameplate = C_NamePlate.GetNamePlateForUnit("player")
-
-			--------------------------------
-
 			local Settings_UIDirection = INTDB.profile.INT_UIDIRECTION
-			local Settings_AlwaysShowGossipFrame = INTDB.profile.INT_ALWAYS_SHOW_GOSSIP
-
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-			local IsDynamicView = (tonumber(GetCVar("test_cameraDynamicPitch")) > 0 or tonumber(GetCVar("test_cameraOverShoulder")) > 0 or tostring(GetCVar("test_cameraTargetFocusInteractEnable")) == "1")
-			local IsStaticNPC = (not (Nameplate and Nameplate ~= PlayerNameplate))
-			local IsDialogOutOfScreen = (addon.API:GetScreenHeight() * .5 + Frame:GetHeight() >= addon.API:GetScreenHeight())
-			local IsCinematicModeZoomInStandaloneRange = (addon.Cinematic.Variables.IsZooming and INTDB.profile.INT_CINEMATIC_ZOOMIN_DISTANCE <= 8)
-			local IsStandaloneZoomRange = (GetCameraZoom() <= 8 or IsCinematicModeZoomInStandaloneRange)
-			local IsPersonalNameplateVisible = (tostring(GetCVar("NameplateShowSelf")) ~= "0")
 
 			--------------------------------
 
@@ -397,7 +604,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			local screenWidth = addon.API:GetScreenWidth()
-			local frameWidth = Frame:GetWidth()
+			local frameWidth = 325
 			local dialogMaxWidth = 350
 
 			local quarterWidth = (screenWidth - dialogMaxWidth) / 2
@@ -420,40 +627,6 @@ function NS.Script:Load()
 			end
 		end
 
-		Frame.UpdateVisibility = function()
-			local IsReady = addon.Initialize.Ready
-			if not IsReady then
-				return
-			end
-
-			--------------------------------
-
-			local NumAvailableQuests = GetNumAvailableQuests()
-			local NumActiveQuests = GetNumActiveQuests()
-			local NumAvailableOptions = #C_GossipInfo.GetOptions()
-
-			--------------------------------
-
-			local Settings_AlwaysShowGossipFrame = INTDB.profile.INT_ALWAYS_SHOW_GOSSIP
-
-			local IsInteractingWithNPC = (UnitName("npc") or UnitName("questnpc"))
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-			local IsQuest = (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible())
-			local IsInGossipOrQuestGreeting = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
-			local IsQuestFrameVisible = (InteractionQuestFrame:IsVisible())
-
-			local IsInitalized = (addon.Interaction.Variables.Active)
-			local IsDialogFinished = (addon.Interaction.Dialog.Variables.Finished)
-
-			--------------------------------
-
-			if IsInitalized and IsInteractingWithNPC and IsInGossipOrQuestGreeting and (Settings_AlwaysShowGossipFrame or (not Settings_AlwaysShowGossipFrame and not IsInDialog and IsDialogFinished)) then
-				Frame.ShowWithAnimation()
-			else
-				Frame.HideWithAnimation()
-			end
-		end
-
 		Frame.UpdateStyle = function()
 			local LastNPC = NS.Variables.LastNPC
 			local NPC = NS.Variables.NPC
@@ -464,28 +637,20 @@ function NS.Script:Load()
 
 			if (LastNPC ~= NPC and NPC ~= "") then
 				Frame:SetAlpha(0)
-				Frame.GoodbyeButton.Text:SetAlpha(0)
+				Frame.GoodbyeButton:Hide()
 
 				--------------------------------
 
 				Frame.animation = true
-				addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+				addon.Libraries.AceTimer:ScheduleTimer(function()
 					Frame.animation = false
 				end, .5)
 
 				--------------------------------
 
-				addon.Libraries.AdaptiveTimer.Script:Schedule(function()
-					if Frame:GetAlpha() < .1 then
-						AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return NPC ~= UnitName("npc") or NPC == "" or Frame.hidden end)
-						AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton.Text, .25, 0, 1, nil, function() return Frame.hidden end)
-					end
-				end, .125)
-
-				--------------------------------
-
-				Frame.UpdateButtons()
-				Frame.StartButtonSequence()
+				if Frame:GetAlpha() < .1 then
+					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return NPC ~= UnitName("npc") or NPC == "" or Frame.hidden end)
+				end
 
 				--------------------------------
 
@@ -493,6 +658,11 @@ function NS.Script:Load()
 					Buttons[i].HideButtons()
 					Buttons[i].Standalone:Show()
 				end
+
+				--------------------------------
+
+				Frame.UpdateButtons(true)
+				addon.Libraries.AceTimer:ScheduleTimer(Frame.StartButtonSequence, .125)
 			end
 		end
 	end
@@ -505,51 +675,98 @@ function NS.Script:Load()
 		Frame.StartButtonSequence = function()
 			local Buttons = Frame.GetButtons()
 
+			local StartPosition
+			if INTDB.profile.INT_UIDIRECTION == 1 then
+				StartPosition = 12.5
+			else
+				StartPosition = -12.5
+			end
+
 			--------------------------------
 
 			if Buttons then
-				for i = 1, NS.Variables.NumCurrentButtons do
-					local button = Buttons[i]
+				if NS.Variables.NumCurrentButtons >= 1 then
+					local function ButtonAnimation(index, button)
+						local valid = true -- Flag to check if button was hidden
 
-					--------------------------------
+						--------------------------------
 
-					button.transition = true
+						button.transition = true
+						if addon.Variables.Platform == 1 then
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								if valid then
+									button.transition = false
+								end
+							end, .325)
+						end
 
-					--------------------------------
+						--------------------------------
 
-					button.Label:SetAlpha(0)
-
-					--------------------------------
-
-					local valid = true -- Flag to check if button was hidden
-
-					--------------------------------
-
-					if button:IsVisible() then
 						button:Show()
 
 						--------------------------------
 
-						AdaptiveAPI.Animation:Fade(button.Label, .25, 0, 1, AdaptiveAPI.Animation.EaseExpo, function()
-							if not button:IsVisible() then
+						AdaptiveAPI.Animation:Fade(button, .25, 0, 1, nil, function()
+							if not button:IsVisible() or Frame.hidden then
+								valid = false; return true
+							end
+						end)
+						AdaptiveAPI.Animation:Fade(button.Label, .25, 0, 1, nil, function()
+							if not button:IsVisible() or Frame.hidden then
+								valid = false; return true
+							end
+						end)
+						AdaptiveAPI.Animation:Move(button.Standalone.Background, .5, "CENTER", StartPosition, 0, "x", AdaptiveAPI.Animation.EaseSine, function()
+							if not button:IsVisible() or Frame.hidden then
 								valid = false; return true
 							end
 						end)
 
 						--------------------------------
 
-						if addon.Variables.Platform == 1 then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
-								if valid then
-									button.transition = false
+						if index == NS.Variables.NumCurrentButtons then
+							Frame.GoodbyeButton:Show()
 
-									--------------------------------
+							--------------------------------
 
-									button:EnableMouse(true)
+							AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton, .25, 0, .5, nil, function()
+								if Frame.hidden then
+									valid = false; return true
 								end
-							end, .325)
+							end)
+							AdaptiveAPI.Animation:Move(Frame.GoodbyeButton.API_ButtonTextFrame, .5, "CENTER", StartPosition, 0, "x", AdaptiveAPI.Animation.EaseSine, function()
+								if Frame.hidden then
+									valid = false; return true
+								end
+							end)
 						end
 					end
+
+					for i = 1, NS.Variables.NumCurrentButtons do
+						local button = Buttons[i]
+						local delay = .0125 * i
+
+						--------------------------------
+
+						button:Hide()
+						button.Label:SetAlpha(0)
+
+						--------------------------------
+
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							ButtonAnimation(i, button)
+						end, delay)
+					end
+				else
+                    Frame.GoodbyeButton:Show()
+
+					--------------------------------
+
+                    Frame.GoodbyeButton:SetAlpha(1)
+
+					local point, relativeTo, relativePoint, offsetX, offsetY = Frame.GoodbyeButton:GetPoint()
+					Frame.GoodbyeButton:ClearAllPoints()
+					Frame.GoodbyeButton:SetPoint("CENTER", relativeTo, 0, 0)
 				end
 			end
 		end
@@ -589,8 +806,57 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 		end
+	end
+
+	--------------------------------
+	-- FUNCTIONS (FOCUS)
+	--------------------------------
+
+	do
+		function Frame.Enter()
+			Frame.mouseOver = true
+
+			--------------------------------
+
+			Frame.UpdateFocus()
+		end
+
+		function Frame.Leave()
+			Frame.mouseOver = false
+
+			--------------------------------
+
+			Frame.UpdateFocus()
+		end
+
+		function Frame.UpdateFocus()
+			if not addon.Input.Variables.IsController then
+				local IsMouseOver = (Frame.mouseOver)
+				local IsInDialog = (not InteractionDialogFrame.hidden)
+
+				--------------------------------
+
+				if IsInDialog and not IsMouseOver then
+					Frame.focused = false
+				else
+					Frame.focused = true
+				end
+
+				--------------------------------
+
+				if Frame.focused then
+					AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
+				else
+					AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), .75, nil, function() return Frame.focused end)
+				end
+			else
+				InteractionGossipParent:SetAlpha(1)
+			end
+		end
+
+		AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame, Frame.Enter, Frame.Leave)
 	end
 
 	--------------------------------
@@ -638,102 +904,6 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.UpdateAll = function()
-			NS.Variables.LastNPC = NS.Variables.NPC
-
-			Frame.UpdatePosition()
-			Frame.UpdateVisibility()
-			Frame.UpdateStyle()
-		end
-
-		Frame.MouseResponder:SetScript("OnMouseUp", function(self, button)
-			if INTDB.profile.INT_FLIPMOUSE == false and button == "RightButton" then
-				InteractionDialogFrame.ReturnToPreviousDialog()
-			elseif INTDB.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
-				InteractionDialogFrame.ReturnToPreviousDialog()
-			end
-		end)
-
-		Frame:HookScript("OnShow", function()
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if GossipFrame:IsVisible() then
-					Frame.SetButtons(addon.Get.Blizzard_GossipButtons())
-				end
-
-				if QuestFrameGreetingPanel:IsVisible() then
-					Frame.SetButtons(addon.Get.Blizzard_QuestButtons())
-
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						Frame.SetButtons(addon.Get.Blizzard_QuestButtons())
-					end, .1)
-				end
-			end, .1)
-		end)
-
-		--------------------------------
-
-		CallbackRegistry:Add("START_INTERACTION", function()
-			Frame.UpdateFocus()
-			Frame.SetFocusTransition()
-
-			Frame.UpdateAll()
-		end, 0)
-
-		CallbackRegistry:Add("FINISH_DIALOG", function()
-			Frame.UpdateFocus()
-			Frame.SetFocusTransition()
-
-			Frame.UpdateAll()
-		end, 0)
-
-		CallbackRegistry:Add("START_DIALOG", function()
-			Frame.UpdateFocus()
-			Frame.SetFocusTransition()
-
-			Frame.UpdateAll()
-		end, 0)
-
-		CallbackRegistry:Add("PREVIOUS_DIALOG", function()
-			Frame.UpdateFocus()
-			Frame.SetFocusTransition()
-
-			Frame.UpdateAll()
-		end, 0)
-
-		--------------------------------
-
-		function Frame.UpdateFocus()
-			local IsFocused = (Frame.Focused)
-			local IsMouseOver = (Frame.MouseOver)
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-
-			if IsInDialog and not IsMouseOver then
-				Frame.Focused = false
-			else
-				Frame.Focused = true
-			end
-		end
-
-		function Frame.SetFocusTransition()
-			local IsFocused = (Frame.Focused)
-			local IsMouseOver = (Frame.MouseOver)
-			local IsInDialog = (InteractionDialogFrame:IsVisible())
-
-			--------------------------------
-
-			if IsFocused then
-				AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), 1, nil, function() return not IsFocused end)
-			else
-				AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), .875, nil, function() return IsFocused end)
-			end
-		end
-
-		--------------------------------
-
-		hooksecurefunc(GossipFrame, "Hide", function()
-			Frame.UpdateVisibility()
-		end)
-
 		hooksecurefunc(Frame, "Show", function()
 			CallbackRegistry:Trigger("START_GOSSIP")
 		end)
@@ -743,17 +913,12 @@ function NS.Script:Load()
 		end)
 
 		local Events = CreateFrame("Frame")
-		Events:RegisterEvent("PLAYER_TARGET_CHANGED")
+		Events:RegisterEvent("QUEST_LOG_UPDATE")
 		Events:SetScript("OnEvent", function(self, event, ...)
-			if event == "PLAYER_TARGET_CHANGED" then
-				Frame.UpdateAll()
-			end
-		end)
-
-		local _ = CreateFrame("Frame", "UpdateFrame/InteractionGossipFrame.lua", nil)
-		_:SetScript("OnUpdate", function()
-			if not addon.Interaction.Variables.Active and Frame:IsVisible() then
-				Frame.UpdateAll()
+			if event == "QUEST_LOG_UPDATE" then
+				if not Frame.SelectedOptionTransition then
+					Frame.SetAllButtons()
+				end
 			end
 		end)
 	end

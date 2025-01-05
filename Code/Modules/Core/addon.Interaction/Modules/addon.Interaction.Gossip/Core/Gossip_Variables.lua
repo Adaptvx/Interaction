@@ -19,8 +19,9 @@ do -- MAIN
 	NS.Variables.ThemeUpdateTransition = false
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
+		NS.Variables.BUTTON_SPACING = -5
 		NS.Variables.BASELINE_WIDTH = 100
 		NS.Variables.BASELINE_HEIGHT = 45
 

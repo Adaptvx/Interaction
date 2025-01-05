@@ -677,7 +677,7 @@ function NS.LibraryUI.Elements:Load()
 
 									--------------------------------
 
-									Button.ImageTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light-mode.png")
+									Button.ImageTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png")
 
 									--------------------------------
 

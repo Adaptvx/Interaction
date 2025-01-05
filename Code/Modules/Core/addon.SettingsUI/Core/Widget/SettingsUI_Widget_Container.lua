@@ -40,7 +40,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 	local function UpdateTheme()
 		if addon.Theme.IsDarkTheme then
-			Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark-mode.png"
+			Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark.png"
 			Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
 			Frame.COLOR_Background = addon.Theme.Settings.Tertiary_DarkTheme
 		else
@@ -59,9 +59,9 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		if background then
 			if not InteractionSettingsFrame.PreventMouse then
 				if skipAnimation then
-					Frame.background:SetAlpha(1)
+					Frame.Background:SetAlpha(1)
 				else
-					Frame.background:SetAlpha(1)
+					Frame.Background:SetAlpha(1)
 				end
 			end
 		end
@@ -74,17 +74,17 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			end
 		end
 
-		if Frame.button then
-			Frame.button.Enter()
+		if Frame.Button then
+			Frame.Button.Enter()
 		end
 	end
 
 	Frame.Leave = function(skipAnimation, keepTooltip)
 		if background then
 			if skipAnimation then
-				Frame.background:SetAlpha(0)
+				Frame.Background:SetAlpha(0)
 			else
-				Frame.background:SetAlpha(0)
+				Frame.Background:SetAlpha(0)
 			end
 		end
 
@@ -96,8 +96,8 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			end
 		end
 
-		if Frame.button then
-			Frame.button.Leave()
+		if Frame.Button then
+			Frame.Button.Leave()
 		end
 	end
 
@@ -109,13 +109,12 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			function()
 				Frame.Leave()
 			end
-			, nil, nil, true
-		)
+		, nil, nil)
 	end
 
 	--------------------------------
 
-	local function Icon()
+	do -- ICON
 		if subcategory and subcategory >= 1 then
 			-- INDENTATION
 			IndentationOffsetX = (IndentationOffset) * (subcategory - 1)
@@ -137,20 +136,20 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		end
 	end
 
-	local function Container()
-		Frame.container = CreateFrame("Frame")
-		Frame.container:SetParent(Frame)
-		Frame.container:SetSize(Frame:GetWidth() - OffsetX - Padding, Frame:GetHeight() - Padding)
-		Frame.container:SetPoint("CENTER", Frame, OffsetX / 2, 0)
+	do -- CONTAINER
+		Frame.Container = CreateFrame("Frame")
+		Frame.Container:SetParent(Frame)
+		Frame.Container:SetSize(Frame:GetWidth() - OffsetX - Padding, Frame:GetHeight() - Padding)
+		Frame.Container:SetPoint("CENTER", Frame, OffsetX / 2, 0)
 	end
 
-	local function Background()
+	do -- BACKGROUND
 		if background then
-			Frame.background, Frame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
-			Frame.background:SetSize(Frame:GetWidth(), Frame:GetHeight())
-			Frame.background:SetPoint("CENTER", Frame)
-			Frame.background:SetFrameLevel(0)
-			Frame.background:SetAlpha(0)
+			Frame.Background, Frame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
+			Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
+			Frame.Background:SetPoint("CENTER", Frame)
+			Frame.Background:SetFrameLevel(0)
+			Frame.Background:SetAlpha(0)
 
 			-- THEME
 			addon.API:RegisterThemeUpdate(function()
@@ -159,14 +158,14 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		end
 	end
 
-	local function Label()
-		Frame.label = AdaptiveAPI.FrameTemplates:CreateText(Frame.container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-		Frame.label:SetSize(Frame.container:GetWidth() - 10, Frame.container:GetHeight() - 10)
-		Frame.label:SetPoint("CENTER", Frame.container, 0, 0)
-		Frame.label:SetAlpha(.75)
+	do -- TEXT
+		Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+		Frame.Text:SetSize(Frame.Container:GetWidth() - 10, Frame.Container:GetHeight() - 10)
+		Frame.Text:SetPoint("CENTER", Frame.Container, 0, 0)
+		Frame.Text:SetAlpha(.75)
 
 		if subcategory and subcategory >= 1 then
-			Frame.label:SetAlpha(.75)
+			Frame.Text:SetAlpha(.75)
 		end
 	end
 
@@ -217,10 +216,10 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			local locked = locked()
 
 			if locked then
-				Frame.container:SetAlpha(.25)
+				Frame.Container:SetAlpha(.25)
 				Frame:EnableMouse(false)
 			else
-				Frame.container:SetAlpha(1)
+				Frame.Container:SetAlpha(1)
 				Frame:EnableMouse(true)
 			end
 		end
@@ -235,13 +234,6 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	CallbackRegistry:Add("SETTING_TAB_CHANGED", function() UpdateState() end, 0)
 	CallbackRegistry:Add("START_INTERACTION", function() UpdateState() end, 2)
 	CallbackRegistry:Add("STOP_INTERACTION", function() UpdateState() end, 2)
-
-	--------------------------------
-
-	Icon()
-	Container()
-	Background()
-	Label()
 
 	--------------------------------
 

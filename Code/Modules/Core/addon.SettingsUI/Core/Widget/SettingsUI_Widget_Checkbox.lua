@@ -15,27 +15,27 @@ function NS.Widgets:CreateCheckbox(parent, setFunc, getFunc, subcategory, toolti
 
 	--------------------------------
 
-	local function Checkbox()
+	do -- CHECKBOX
 		local TEXTURE_Check
 		local TEXTURE_CheckHighlight
 		local COLOR_Default
 
 		local function UpdateTheme()
 			if addon.Theme.IsDarkTheme then
-				TEXTURE_Check = AdaptiveAPI.PATH .. "Elements/check-dark-mode.png"
-				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-light-mode.png"
+				TEXTURE_Check = AdaptiveAPI.PATH .. "Elements/check-light.png"
+				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-dark.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_DarkTheme
 			else
-				TEXTURE_Check = addon.Variables.PATH .. "Art/Settings/check-light-mode.png"
-				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-dark-mode.png"
+				TEXTURE_Check = addon.Variables.PATH .. "Art/Settings/check-dark.png"
+				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-light.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_LightTheme
 			end
 
-			if Frame.checkbox then
-				AdaptiveAPI.FrameTemplates:UpdateCheckboxTheme(Frame.checkbox, {
+			if Frame.Checkbox then
+				AdaptiveAPI.FrameTemplates:UpdateCheckboxTheme(Frame.Checkbox, {
 					checkTexture = TEXTURE_Check,
 					checkHighlightTexture = TEXTURE_CheckHighlight,
-					customColor = COLOR_Default
+					defaultColor = COLOR_Default
 				})
 			end
 		end
@@ -45,33 +45,29 @@ function NS.Widgets:CreateCheckbox(parent, setFunc, getFunc, subcategory, toolti
 
 		--------------------------------
 
-		Frame.checkbox = AdaptiveAPI.FrameTemplates:CreateCheckbox(Frame.container, Frame:GetFrameStrata(), {
+		Frame.Checkbox = AdaptiveAPI.FrameTemplates:CreateCheckbox(Frame.Container, Frame:GetFrameStrata(), {
 			scale = .425,
 			customColor = COLOR_Default,
 			callbackFunction = setFunc
-		}, "$parent.checkbox")
-		Frame.checkbox:SetSize(Frame.container:GetHeight(), Frame.container:GetHeight())
-		Frame.checkbox:SetPoint("RIGHT", Frame.container)
+		}, "$parent.Checkbox")
+		Frame.Checkbox:SetSize(Frame.Container:GetHeight(), Frame.Container:GetHeight())
+		Frame.Checkbox:SetPoint("RIGHT", Frame.Container)
 
 		--------------------------------
 
 		local function UpdateState()
-			Frame.checkbox.SetChecked(getFunc())
+			Frame.Checkbox.SetChecked(getFunc())
 		end
 
 		--------------------------------
 
-		table.insert(Frame.checkbox.MouseUpCallbacks, UpdateState)
+		table.insert(Frame.Checkbox.MouseUpCallbacks, UpdateState)
 		CallbackRegistry:Add("START_SETTING", UpdateState, 0)
 
 		--------------------------------
 
-		addon.SoundEffects:SetCheckbox(Frame.checkbox, addon.SoundEffects.Settings_Checkbox_Enter, addon.SoundEffects.Settings_Checkbox_Leave, addon.SoundEffects.Settings_Checkbox_MouseDown, addon.SoundEffects.Settings_Checkbox_MouseUp)
+		addon.SoundEffects:SetCheckbox(Frame.Checkbox, addon.SoundEffects.Settings_Checkbox_Enter, addon.SoundEffects.Settings_Checkbox_Leave, addon.SoundEffects.Settings_Checkbox_MouseDown, addon.SoundEffects.Settings_Checkbox_MouseUp)
 	end
-
-	--------------------------------
-
-	Checkbox()
 
 	--------------------------------
 

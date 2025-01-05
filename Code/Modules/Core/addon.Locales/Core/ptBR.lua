@@ -5,11 +5,9 @@ local L = addon.Locales
 --------------------------------
 
 local function Load()
-    if (not GetLocale() == "ptBR") then return end
-
-	--------------------------------
-
-	-- Add localization here:
+	if GetLocale() ~= "ptBR" then
+		return
+	end
 end
 
 Load()

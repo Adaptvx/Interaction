@@ -8,6 +8,7 @@
 	<Script file="Core/Checkbox.lua"/>
 	<Script file="Core/Dropdown.lua"/>
 	<Script file="Core/InputBox.lua"/>
+	<Script file="Core/Keybind.lua"/>
 	<Script file="Core/MouseResponder.lua"/>
 	<Script file="Core/ProgressBar.lua"/>
 	<Script file="Core/ScrollBar.lua"/>

@@ -80,6 +80,7 @@ function NS.Script:Load()
 			QuestFrame:SetParent(InteractionFrame)
 
 			StaticPopup1:SetIgnoreParentAlpha(true)
+			if not addon.Variables.IS_CLASSIC_ERA then LFDRoleCheckPopup:SetIgnoreParentAlpha(true) end
 
 			--------------------------------
 

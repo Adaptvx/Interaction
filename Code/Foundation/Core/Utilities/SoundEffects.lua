@@ -93,6 +93,12 @@ do -- CONSTANTS
 		NS.Settings_Dropdown_ListElementMouseUp = NS.PATH .. "Settings/Settings_Dropdown_ListElement_MouseUp.mp3"
 		NS.Settings_Dropdown_ValueChanged = NS.PATH .. "Settings/Settings_Dropdown_ValueChanged.mp3"
 
+		NS.Settings_Keybind_Enter = NS.PATH .. "Settings/Settings_Keybind_Enter.mp3"
+		NS.Settings_Keybind_Leave = NS.PATH .. "Settings/Settings_Keybind_Leave.mp3"
+		NS.Settings_Keybind_MouseDown = NS.PATH .. "Settings/Settings_Keybind_MouseDown.mp3"
+		NS.Settings_Keybind_MouseUp = NS.PATH .. "Settings/Settings_Keybind_MouseUp.mp3"
+		NS.Settings_Keybind_ValueChanged = NS.PATH .. "Settings/Settings_Keybind_ValueChanged.mp3"
+
 		NS.Settings_TabButton_Enter = NS.PATH .. "Settings/Settings_TabButton_Enter.mp3"
 		NS.Settings_TabButton_Leave = NS.PATH .. "Settings/Settings_TabButton_Leave.mp3"
 		NS.Settings_TabButton_MouseDown = NS.PATH .. "Settings/Settings_TabButton_MouseDown.mp3"
@@ -205,20 +211,16 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.MouseEnterCallbacks then
-				table.insert(frame.MouseEnterCallbacks, function()
-					Enter()
-				end)
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.MouseLeaveCallbacks then
-				table.insert(frame.MouseLeaveCallbacks, function()
-					Leave()
-				end)
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
@@ -226,9 +228,7 @@ function NS:Load()
 			end
 
 			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, function()
-					MouseDown()
-				end)
+				table.insert(frame.MouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
@@ -236,9 +236,7 @@ function NS:Load()
 			end
 
 			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, function()
-					MouseUp()
-				end)
+				table.insert(frame.MouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -265,20 +263,16 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.MouseEnterCallbacks then
-				table.insert(frame.MouseEnterCallbacks, function()
-					Enter()
-				end)
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.MouseLeaveCallbacks then
-				table.insert(frame.MouseLeaveCallbacks, function()
-					Leave()
-				end)
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
@@ -286,9 +280,7 @@ function NS:Load()
 			end
 
 			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, function()
-					MouseDown()
-				end)
+				table.insert(frame.MouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
@@ -296,9 +288,7 @@ function NS:Load()
 			end
 
 			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, function()
-					MouseUp()
-				end)
+				table.insert(frame.MouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -329,20 +319,16 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.MouseEnterCallbacks then
-				table.insert(frame.MouseEnterCallbacks, function()
-					Enter()
-				end)
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.MouseLeaveCallbacks then
-				table.insert(frame.MouseLeaveCallbacks, function()
-					Leave()
-				end)
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
@@ -350,9 +336,7 @@ function NS:Load()
 			end
 
 			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, function()
-					MouseDown()
-				end)
+				table.insert(frame.MouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
@@ -360,9 +344,7 @@ function NS:Load()
 			end
 
 			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, function()
-					MouseUp()
-				end)
+				table.insert(frame.MouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -370,11 +352,75 @@ function NS:Load()
 			end
 
 			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, function()
-					ValueChanged()
-				end)
+				table.insert(frame.ValueChangedCallbacks, ValueChanged)
 			else
 				frame:HookScript("OnValueChanged", function(self, new, userInput)
+					if userInput then
+						NS:PlaySoundFile(valueChanged)
+					end
+				end)
+			end
+		end
+
+		function NS:SetInputBox(frame, enter, leave, mouseDown, mouseUp, valueChanged)
+			local function Enter()
+				NS:PlaySoundFile(enter)
+			end
+
+			local function Leave()
+				NS:PlaySoundFile(leave)
+			end
+
+			local function MouseDown()
+				NS:PlaySoundFile(mouseDown)
+			end
+
+			local function MouseUp()
+				NS:PlaySoundFile(mouseUp)
+			end
+
+			local function ValueChanged()
+				NS:PlaySoundFile(valueChanged)
+			end
+
+			--------------------------------
+
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
+			else
+				frame:HookScript("OnEnter", function()
+					NS:PlaySoundFile(enter)
+				end)
+			end
+
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
+			else
+				frame:HookScript("OnLeave", function()
+					NS:PlaySoundFile(leave)
+				end)
+			end
+
+			if frame.MouseDownCallbacks then
+				table.insert(frame.MouseDownCallbacks, MouseDown)
+			else
+				frame:HookScript("OnMouseDown", function()
+					NS:PlaySoundFile(mouseDown)
+				end)
+			end
+
+			if frame.MouseUpCallbacks then
+				table.insert(frame.MouseUpCallbacks, MouseUp)
+			else
+				frame:HookScript("OnMouseUp", function()
+					NS:PlaySoundFile(mouseUp)
+				end)
+			end
+
+			if frame.ValueChangedCallbacks then
+				table.insert(frame.ValueChangedCallbacks, ValueChanged)
+			else
+				frame:HookScript("OnTextChanged", function(self, userInput)
 					if userInput then
 						NS:PlaySoundFile(valueChanged)
 					end
@@ -421,20 +467,16 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.MouseEnterCallbacks then
-				table.insert(frame.MouseEnterCallbacks, function()
-					Enter()
-				end)
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.MouseLeaveCallbacks then
-				table.insert(frame.MouseLeaveCallbacks, function()
-					Leave()
-				end)
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
@@ -442,9 +484,7 @@ function NS:Load()
 			end
 
 			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, function()
-					MouseDown()
-				end)
+				table.insert(frame.MouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
@@ -452,47 +492,35 @@ function NS:Load()
 			end
 
 			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, function()
-					MouseUp()
-				end)
+				table.insert(frame.MouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
 				end)
 			end
 
-			if frame.ListElementMouseEnterCallbacks then
-				table.insert(frame.ListElementMouseEnterCallbacks, function()
-					ListElementEnter()
-				end)
+			if frame.ListElementEnterCallbacks then
+				table.insert(frame.ListElementEnterCallbacks, ListElementEnter)
 			end
 
-			if frame.ListElementMouseLeaveCallbacks then
-				table.insert(frame.ListElementMouseLeaveCallbacks, function()
-					ListElementLeave()
-				end)
+			if frame.ListElementLeaveCallbacks then
+				table.insert(frame.ListElementLeaveCallbacks, ListElementLeave)
 			end
 
 			if frame.ListElementMouseDownCallbacks then
-				table.insert(frame.ListElementMouseDownCallbacks, function()
-					ListElementMouseDown()
-				end)
+				table.insert(frame.ListElementMouseDownCallbacks, ListElementMouseDown)
 			end
 
 			if frame.ListElementMouseUpCallbacks then
-				table.insert(frame.ListElementMouseUpCallbacks, function()
-					ListElementMouseUp()
-				end)
+				table.insert(frame.ListElementMouseUpCallbacks, ListElementMouseUp)
 			end
 
 			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, function()
-					ValueChanged()
-				end)
+				table.insert(frame.ValueChangedCallbacks, ValueChanged)
 			end
 		end
 
-		function NS:SetInputBox(frame, enter, leave, mouseDown, mouseUp, valueChanged)
+		function NS:SetKeybind(frame, enter, leave, mouseDown, mouseUp, valueChanged)
 			local function Enter()
 				NS:PlaySoundFile(enter)
 			end
@@ -515,20 +543,16 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.MouseEnterCallbacks then
-				table.insert(frame.MouseEnterCallbacks, function()
-					Enter()
-				end)
+			if frame.EnterCallbacks then
+				table.insert(frame.EnterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.MouseLeaveCallbacks then
-				table.insert(frame.MouseLeaveCallbacks, function()
-					Leave()
-				end)
+			if frame.LeaveCallbacks then
+				table.insert(frame.LeaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
@@ -536,9 +560,7 @@ function NS:Load()
 			end
 
 			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, function()
-					MouseDown()
-				end)
+				table.insert(frame.MouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
@@ -546,9 +568,7 @@ function NS:Load()
 			end
 
 			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, function()
-					MouseUp()
-				end)
+				table.insert(frame.MouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -556,15 +576,7 @@ function NS:Load()
 			end
 
 			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, function()
-					ValueChanged()
-				end)
-			else
-				frame:HookScript("OnTextChanged", function(self, userInput)
-					if userInput then
-						NS:PlaySoundFile(valueChanged)
-					end
-				end)
+				table.insert(frame.ValueChangedCallbacks, ValueChanged)
 			end
 		end
 	end

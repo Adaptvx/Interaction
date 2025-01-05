@@ -32,7 +32,7 @@ function NS.Elements:Load()
 				do -- TEXTURE
 					InteractionFrame.CinematicMode.Vignette.Texture, _ = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionFrame.CinematicMode.Vignette, "BACKGROUND", AdaptiveAPI.Presets.NINESLICE_VIGNETTE_DARK, 256, 1)
 					InteractionFrame.CinematicMode.Vignette.Texture:SetAllPoints(InteractionFrame.CinematicMode.Vignette, true)
-					InteractionFrame.CinematicMode.Vignette.Texture:SetAlpha(.75)
+					InteractionFrame.CinematicMode.Vignette.Texture:SetAlpha(.5)
 					InteractionFrame.CinematicMode.Vignette.Texture:SetScale(1)
 				end
 

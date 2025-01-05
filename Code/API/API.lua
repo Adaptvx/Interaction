@@ -44,6 +44,14 @@ do
 	function NS:IsNPCQuestOrGossip()
 		return (NS:IsNPCGossip() or NS:IsNPCQuest())
 	end
+
+	function NS:IsAutoAccept()
+		if not addon.Variables.IS_CLASSIC then
+			return QuestGetAutoAccept() and QuestFrameAcceptButton:IsVisible()
+		else
+			return false
+		end
+	end
 end
 
 --------------------------------
@@ -51,280 +59,248 @@ end
 --------------------------------
 
 do
-	function NS:SetButtonToPlatform(frame, buttonType, preventExpand, text, textOnly)
-		if not preventExpand then
-			frame:SetWidth(frame:GetWidth() + 20)
-			frame:SetHeight(frame:GetHeight() + 5)
-		end
+	function NS:SetButtonToPlatform(frame, textFrame, keybindVariable, height, padding, paddingWidth)
+		local Text = textFrame or _G[frame:GetDebugName() .. "Text"]
+		local Frame = frame.API_ButtonTextFrame
 
-		if buttonType == "Decline" then
-			frame:HookScript("OnClick", function()
-				addon.Interaction.Script:Stop(true)
-			end)
-		end
-
-		local PlatformIcon
-		if addon.Variables.Platform == 1 then
-			if buttonType == "Accept" then
-				if INTDB.profile.INT_USEINTERACTKEY then
-					if textOnly then
-						PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-PC-Interact.png"
-					else
-						PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-PC-Interact.png"
-					end
-				else
-					if textOnly then
-						PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-PC-Space.png"
-					else
-						PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-PC-Space.png"
-					end
-				end
-			end
-
-			if buttonType == "Decline" then
-				if textOnly then
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-PC-Esc.png"
-				else
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-PC-Esc.png"
-				end
-			end
-		end
-
-		if addon.Variables.Platform == 2 then
-			if buttonType == "Accept" then
-				if textOnly then
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-PS-3.png"
-				else
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-PS-3.png"
-				end
-			end
-
-			if buttonType == "Decline" then
-				if textOnly then
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-PS-1.png"
-				else
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-PS-1.png"
-				end
-			end
-		end
-
-		if addon.Variables.Platform == 3 then
-			if buttonType == "Accept" then
-				if textOnly then
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-XBOX-2.png"
-				else
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2.png"
-				end
-			end
-
-			if buttonType == "Decline" then
-				if textOnly then
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Text-Platform-XBOX-1.png"
-				else
-					PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-XBOX-1.png"
-				end
-			end
-		end
-
-		if addon.Variables.Platform == 2 or addon.Variables.Platform == 3 then
-			if buttonType == "PromptAccept" then
-				PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-LB.png"
-			end
-
-			if buttonType == "PromptDecline" then
-				PlatformIcon = addon.Variables.PATH .. "Art/Platform/Platform-RB.png"
-			end
-		end
-
-		local Text
-		if text then
-			Text = text
-		else
-			Text = _G[frame:GetDebugName() .. "Text"]
-		end
-
-		Text:SetTextColor(1, 1, 1)
-		Text:SetText(((PlatformIcon and AdaptiveAPI:InlineIcon(PlatformIcon, 30, 30, 0, 0) .. "  ") or "") .. Text:GetText())
-	end
-end
-
---------------------------------
--- ANIMATION
---------------------------------
-
-do
-	function NS:StopTextPlayback(textFrame)
-		if textFrame.TextAnimationFrame then
-			textFrame.TextAnimationFrame:SetScript("OnUpdate", nil)
-
-			--------------------------------
-
-			if textFrame.TextAnimationCallbackTimer then
-				addon.Libraries.AceTimer:CancelTimer(textFrame.TextAnimationCallbackTimer)
-			end
-		end
-	end
-
-	function NS:StartTextPlayback(frame, interval, callback, callbackDelay, skipAnimation, usePausing)
-		local text = frame:GetText() or ""
-		local textLength = strlenutf8(text)
-		local pauseDuration = .125
-		local timer = 0
-		local paused = false
-		local pauseTimer = 0
-
-		local pauseCharsDB = {
-			"!",
-			"?",
-			".",
-			",",
-			"--"
-		}
+		frame.API_ButtonTextFrame_Variables = frame.API_ButtonTextFrame_Variables or {}
+		frame.API_ButtonTextFrame_Variables.keybindVariable = keybindVariable or ""
+		if AdaptiveAPI:FindString(frame.API_ButtonTextFrame_Variables.keybindVariable, "-") then frame.API_ButtonTextFrame_Variables.keybindVariable = "" end
 
 		--------------------------------
 
-		frame.TextAnimationFrame = frame.TextAnimationFrame or CreateFrame("Frame", "$parent.TextAnimationFrame", nil)
+		if not Frame then
+			local padding = padding or 7.5
+			local paddingWidth = paddingWidth or 10
+			local contentHeight = height or 30
 
-		--------------------------------
-
-		local function GetTextColor()
-			local color
-
-			--------------------------------
-
-			if addon.Theme.IsDarkTheme_Dialog or (addon.Theme.IsDarkTheme and addon.Interaction.Dialog.Variables.IsScrollDialog) then
-				color = { r = 1, g = 1, b = 1 }
-			elseif not addon.Theme.IsDarkTheme_Dialog and not addon.Interaction.Dialog.Variables.IsScrollDialog then
-				color = { r = 1, g = .87, b = .67 }
-			elseif addon.Theme.IsStylisedTheme_Dialog then
-				color = { r = 1, g = .87, b = .67 }
-			elseif not addon.Theme.IsDarkTheme and addon.Interaction.Dialog.Variables.IsScrollDialog then
-				color = { r = .1, g = .1, b = .1 }
-			end
+			local frameStrata = frame:GetFrameStrata()
+			local frameLevel = frame:GetFrameLevel()
 
 			--------------------------------
 
-			return color
-		end
-
-		local function GetColor(textColor, isMouseOver)
-			local color
-
-			--------------------------------
-
-			if INTDB.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
-				if addon.Theme.IsDarkTheme_Dialog or not addon.Theme.IsDarkTheme_Dialog and not addon.Interaction.Dialog.Variables.IsScrollDialog then
-					color = isMouseOver and "181818" or "171717"
-				elseif addon.Theme.IsStylisedTheme_Dialog then
-					color = "000000"
-				elseif not addon.Theme.IsDarkTheme and addon.Interaction.Dialog.Variables.IsScrollDialog then
-					color = "AA906C"
-				elseif addon.Theme.IsDarkTheme and addon.Interaction.Dialog.Variables.IsScrollDialog then
-					color = isMouseOver and "303030" or "303030"
-				end
-			else
-				local modifier = .2 + (INTDB.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
-				if not addon.Theme.IsDarkTheme and addon.Interaction.Dialog.Variables.IsScrollDialog then
-					return AdaptiveAPI:SetHexColorFromModifierWithBase(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "AA906C")
-				else
-					return AdaptiveAPI:SetHexColorFromModifier(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
-				end
-			end
-
-			--------------------------------
-
-			return color
-		end
-
-		--------------------------------
-
-		local function Update(self, elapsed)
-			if paused then
-				pauseTimer = pauseTimer + elapsed
+			do -- FRAME
+				Frame = CreateFrame("Frame", "$parent.API_ButtonTextFrame", frame)
+				Frame:SetSize(frame:GetWidth(), contentHeight)
 
 				--------------------------------
 
-				if pauseTimer >= pauseDuration then
-					paused = false
-					pauseTimer = 0
-				else
-					return
+				frame.API_ButtonTextFrame = Frame
+
+				--------------------------------
+
+				do -- ELEMENTS
+					do -- KEYBIND FRAME
+						Frame.KeybindFrame = CreateFrame("Frame", "$parent.API_ButtonTextFrame.KeybindFrame", Frame)
+						Frame.KeybindFrame:SetSize(contentHeight, contentHeight)
+						Frame.KeybindFrame:SetPoint("LEFT", Frame, 0, 0)
+						Frame.KeybindFrame:SetFrameStrata(frameStrata)
+						Frame.KeybindFrame:SetFrameLevel(frameLevel + 5)
+
+						--------------------------------
+
+						do -- BACKGROUND
+							Frame.KeybindFrame.Background, Frame.KeybindFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.KeybindFrame, frameStrata, addon.Variables.PATH .. "Art/Platform/Platform-Keybind-Background.png", 128, .125, "$parent.Background")
+							Frame.KeybindFrame.Background:SetSize(Frame.KeybindFrame:GetWidth(), Frame.KeybindFrame:GetHeight())
+							Frame.KeybindFrame.Background:SetPoint("CENTER", Frame.KeybindFrame)
+							Frame.KeybindFrame.Background:SetFrameStrata(frameStrata)
+							Frame.KeybindFrame.Background:SetFrameLevel(frameLevel + 4)
+
+							--------------------------------
+
+							hooksecurefunc(Frame.KeybindFrame, "SetSize", function()
+								Frame.KeybindFrame.Background:SetSize(Frame.KeybindFrame:GetWidth(), Frame.KeybindFrame:GetHeight())
+							end)
+
+							hooksecurefunc(Frame.KeybindFrame, "SetWidth", function()
+								Frame.KeybindFrame.Background:SetSize(Frame.KeybindFrame:GetWidth(), Frame.KeybindFrame:GetHeight())
+							end)
+
+							hooksecurefunc(Frame.KeybindFrame, "SetHeight", function()
+								Frame.KeybindFrame.Background:SetSize(Frame.KeybindFrame:GetWidth(), Frame.KeybindFrame:GetHeight())
+							end)
+						end
+
+						do -- TEXT
+							Frame.KeybindFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.KeybindFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+							Frame.KeybindFrame.Text:SetAllPoints(Frame.KeybindFrame, true)
+							Frame.KeybindFrame.Text:SetAlpha(.75)
+						end
+
+						do -- IMAGE
+							Frame.KeybindFrame.Image, Frame.KeybindFrame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.KeybindFrame, frameStrata, nil, "$parent.Image")
+							Frame.KeybindFrame.Image:SetSize(contentHeight - 5, contentHeight - 5)
+							Frame.KeybindFrame.Image:SetPoint("CENTER", Frame.KeybindFrame)
+							Frame.KeybindFrame.Image:SetAlpha(.75)
+							Frame.KeybindFrame.Image:SetFrameStrata(frameStrata)
+							Frame.KeybindFrame.Image:SetFrameLevel(frameLevel + 6)
+						end
+					end
+
+					do -- TEXT
+						Text:ClearAllPoints()
+						Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + padding, 0)
+					end
 				end
-			end
 
-			--------------------------------
+				do -- EVENTS
+					local function UpdateFormatting()
+						if #frame.API_ButtonTextFrame_Variables.keybindVariable >= 1 then
+							Frame:Show()
 
-			timer = timer + elapsed
+							--------------------------------
 
-			--------------------------------
+							local IsPC = addon.Variables.Platform == 1
+							local IsPlaystation = addon.Variables.Platform == 2
+							local IsXbox = addon.Variables.Platform == 3
 
-			local numCharsToShow = math.min(math.floor(timer / interval) + 1, textLength)
-			local current = AdaptiveAPI:GetSubstring(text, 1, numCharsToShow)
-			local remaining = AdaptiveAPI:GetSubstring(text, numCharsToShow + 1, textLength)
-			local new
+							local replaceWithImageList = {
+								["SPACE"] = addon.Variables.PATH .. "Art/Platform/Text-Platform-PC-Space.png",
+								["PAD1"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-1.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-1.png",
+								["PAD2"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-2.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2.png",
+								["PAD3"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-3.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-3.png",
+								["PAD4"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-4.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-4.png",
+								["PADLSHOULDER"] = addon.Variables.PATH .. "Art/Platform/Platform-LB.png",
+								["PADRSHOULDER"] = addon.Variables.PATH .. "Art/Platform/Platform-RB.png",
+								["PADLTRIGGER"] = addon.Variables.PATH .. "Art/Platform/Platform-LT.png",
+								["PADRTRIGGER"] = addon.Variables.PATH .. "Art/Platform/Platform-RT.png",
+							}
+							local replaceWithTextList = {
+								["ESCAPE"] = "Esc",
+							}
 
-			local textColor = GetTextColor()
-			local color = GetColor(textColor, frame.mouseOver)
+							--------------------------------
 
-			--------------------------------
+							local keybindTextWidth
+							local valid = false
+							local texture = nil
+							local text = nil
 
-			local function ShouldPause()
-				if usePausing then
-					local lastChar = AdaptiveAPI:GetSubstring(text, numCharsToShow, numCharsToShow)
+							for k, v in pairs(replaceWithImageList) do
+								if tostring(Frame.KeybindFrame.Text:GetText()) == tostring(k) then
+									valid = true
+									texture = v
+									break
+								else
+									valid = false
+									texture = v
+								end
+							end
+							for k, v in pairs(replaceWithTextList) do
+								if tostring(Frame.KeybindFrame.Text:GetText()) == tostring(k) then
+									text = v
+									break
+								else
+									text = Frame.KeybindFrame.Text:GetText()
+								end
+							end
+
+							--------------------------------
+
+							Frame.KeybindFrame.Text:SetText(text)
+
+							if valid then
+								Frame.KeybindFrame.Text:Hide()
+
+								--------------------------------
+
+								Frame.KeybindFrame.Image:Show()
+								Frame.KeybindFrame.ImageTexture:SetTexture(texture)
+
+								--------------------------------
+
+								keybindTextWidth = contentHeight - paddingWidth - paddingWidth
+							else
+								Frame.KeybindFrame.Text:Show()
+
+								--------------------------------
+
+								Frame.KeybindFrame.Image:Hide()
+								Frame.KeybindFrame.ImageTexture:SetTexture(nil)
+
+								--------------------------------
+
+								keybindTextWidth = Frame.KeybindFrame.Text:GetStringWidth()
+							end
+
+							if IsPC then
+								Frame.KeybindFrame.Background:Show()
+							elseif IsPlaystation or IsXbox then
+								Frame.KeybindFrame.Background:Hide()
+							end
+
+							--------------------------------
+
+							Frame.KeybindFrame:SetWidth(paddingWidth + keybindTextWidth + paddingWidth)
+
+							--------------------------------
+
+							local textWidth = Text:GetStringWidth()
+							Frame:SetWidth(Frame.KeybindFrame:GetWidth() + padding + textWidth)
+
+							--------------------------------
+
+							Text:ClearAllPoints()
+							Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + padding, 0)
+						else
+							Frame:Hide()
+
+							--------------------------------
+
+							local justifyH = Text:GetJustifyH()
+							local justifyV = Text:GetJustifyV()
+
+							--------------------------------
+
+							Text:ClearAllPoints()
+							Text:SetPoint("CENTER", frame, 0, 0)
+						end
+					end
+
+					local function UpdateJustify()
+						local justifyH = Text:GetJustifyH()
+						local justifyV = Text:GetJustifyV()
+
+						--------------------------------
+
+						Frame:ClearAllPoints()
+						if justifyH == "LEFT" then
+							Frame:SetPoint("LEFT", frame, 0, 0)
+						elseif justifyH == "CENTER" then
+							Frame:SetPoint("CENTER", frame, 0, 0)
+						elseif justifyH == "RIGHT" then
+							Frame:SetPoint("RIGHT", frame, 0, 0)
+						end
+					end
+
+					Frame.KeybindFrame.Update = function()
+						UpdateFormatting()
+					end
 
 					--------------------------------
 
-					for char = 1, #pauseCharsDB do
-						if AdaptiveAPI:FindString(pauseCharsDB[char], lastChar) then
-							paused = true
-							break
-						else
-							paused = false
-						end
-					end
-				end
-			end
+					UpdateFormatting()
+					UpdateJustify()
 
-			local function SetNewText()
-				if strlenutf8(remaining) > 0 and not frame.freezePlayback then
-					new = current .. "|cff" .. color .. remaining .. "|r"
-				else
-					new = current .. remaining
-				end
-			end
+					--------------------------------
 
-			--------------------------------
-
-			ShouldPause()
-			SetNewText()
-
-			--------------------------------
-
-			if not skipAnimation then
-				frame:SetText(new)
-				frame.currentText = new
-			end
-
-			--------------------------------
-
-			if numCharsToShow >= textLength then
-				frame.TextAnimationFrame:SetScript("OnUpdate", nil)
-
-				--------------------------------
-
-				if callback then
-					if callbackDelay then
-						frame.TextAnimationCallbackTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-							callback()
-						end, callbackDelay)
-					else
-						callback()
-					end
+					if frame.SetText then hooksecurefunc(frame, "SetText", UpdateFormatting) end
+					if Text.SetText then hooksecurefunc(Text, "SetText", UpdateFormatting) end
+					if Text.SetJustifyH then hooksecurefunc(Text, "SetJustifyH", UpdateJustify) end
+					if Text.SetJustifyV then hooksecurefunc(Text, "SetJustifyV", UpdateJustify) end
 				end
 			end
 		end
 
-		frame.TextAnimationFrame:SetScript("OnUpdate", Update)
+		--------------------------------
+
+		do -- TEXT
+			Frame.KeybindFrame.Text:SetText(frame.API_ButtonTextFrame_Variables.keybindVariable)
+
+			--------------------------------
+
+			Frame.KeybindFrame.Update()
+		end
 	end
 end
 

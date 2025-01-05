@@ -14,9 +14,11 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Parent = NS.Variables.Parent
-	local Frame = NS.Variables.Frame
+	local Parent = InteractionFriendshipBarParent
+	local Frame = InteractionFriendshipBarFrame
 	local Callback = NS.Script
+
+	local BlizzardFriendshipBar; if not addon.Variables.IS_CLASSIC then BlizzardFriendshipBar = GossipFrame.FriendshipStatusBar else BlizzardFriendshipBar = NPCFriendshipStatusBar end
 
 	--------------------------------
 	-- FUNCTIONS (FRAME)
@@ -28,10 +30,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local Frame = GossipFrame.FriendshipStatusBar
-			local NewValue = (Frame:GetValue())
-			local Min = (select(1, Frame:GetMinMaxValues()))
-			local Max = (select(2, Frame:GetMinMaxValues()))
+			local NewValue = (BlizzardFriendshipBar:GetValue())
+			local Min = (select(1, BlizzardFriendshipBar:GetMinMaxValues()))
+			local Max = (select(2, BlizzardFriendshipBar:GetMinMaxValues()))
 
 			Frame.Progress.Bar:SetValue(0)
 			Frame.Progress.Bar:SetMinMaxValues(Min, Max)
@@ -39,7 +40,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local ImageTexture = (Frame.icon:GetTexture())
+			local ImageTexture = (BlizzardFriendshipBar.icon:GetTexture())
 			Frame.Image.ImageTexture:SetTexture(ImageTexture)
 		end
 	end
@@ -65,13 +66,13 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .25, 0, 1, nil, StopEvent())
-			AdaptiveAPI.Animation:Fade(Frame.Progress, .25, 0, 1, nil, StopEvent())
-			AdaptiveAPI.Animation:Fade(Frame.Image, .25, 0, 1, nil, StopEvent())
+			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .125, 0, 1, nil, StopEvent())
+			AdaptiveAPI.Animation:Fade(Frame.Progress, .125, 0, 1, nil, StopEvent())
+			AdaptiveAPI.Animation:Fade(Frame.Image, .125, 0, 1, nil, StopEvent())
 		end
 
 		Frame.HideWithAnimation = function()
-			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .25, InteractionFriendshipBarFrame:GetAlpha(), 0)
+			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .125, InteractionFriendshipBarFrame:GetAlpha(), 0)
 
 			--------------------------------
 
@@ -88,11 +89,11 @@ function NS.Script:Load()
 	do
 		Parent:SetScript("OnEnter", function()
 			if not addon.Variables.IS_CLASSIC then
-				ReputationEntryMixin.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame, NS.Variables.BLIZZARD_BAR_FRIENDSHIP.friendshipFactionID, "ANCHOR_BOTTOM", false)
+				ReputationEntryMixin.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame.TooltipParent, BlizzardFriendshipBar.friendshipFactionID, "ANCHOR_BOTTOM", false)
 
 				addon.BlizzardGameTooltip.Script:StartCustom()
 			else
-				ShowFriendshipReputationTooltip(NS.Variables.BLIZZARD_BAR_FRIENDSHIP.friendshipFactionID, InteractionFriendshipBarFrame, "ANCHOR_BOTTOM")
+				ShowFriendshipReputationTooltip(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
 
 				addon.BlizzardGameTooltip.Script:StartCustom()
 			end
@@ -112,7 +113,7 @@ function NS.Script:Load()
 		Events:RegisterEvent("GOSSIP_SHOW")
 		Events:SetScript("OnEvent", function(self, event, ...)
 			if event == "GOSSIP_SHOW" then
-				if NS.Variables.BLIZZARD_BAR_FRIENDSHIP:IsVisible() then
+				if BlizzardFriendshipBar:IsVisible() then
 					Frame.ShowProgress()
 				else
 					Frame.HideWithAnimation()

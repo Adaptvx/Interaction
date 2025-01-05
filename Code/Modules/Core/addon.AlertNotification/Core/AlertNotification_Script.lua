@@ -143,7 +143,7 @@ function NS.Script:Load()
 
 		--------------------------------
 
-		CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 2)
+		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 2)
 	end
 
 	--------------------------------
@@ -154,29 +154,24 @@ function NS.Script:Load()
 		local Events = CreateFrame("Frame")
 		Events:RegisterEvent("QUEST_ACCEPTED")
 		Events:RegisterEvent("QUEST_TURNED_IN")
-		Events:SetScript("OnEvent", function(self, event, arg1)
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				local IsInLastActiveTime = (addon.Interaction.Variables.LastActiveTime and (GetTime() - addon.Interaction.Variables.LastActiveTime) < 5)
-				local IsInLastStartTime = (addon.Interaction.Variables.StartInteractionTime and (GetTime() - addon.Interaction.Variables.StartInteractionTime) < 5)
-				local InNPCInteraction = (IsInLastActiveTime == true or IsInLastStartTime == true)
+		Events:SetScript("OnEvent", function(self, event, ...)
+			do -- QUEST
+				local isQuestFrameVisible = (InteractionQuestFrame.validForNotification)
 
-				local IsWorldQuest = (C_QuestLog.IsWorldQuest and C_QuestLog.IsWorldQuest(arg1))
-				local IsBonusObjective = (C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification and C_QuestInfoSystem.GetQuestClassification(GetQuestID()) == Enum.QuestClassification.BonusObjective)
+				if not isQuestFrameVisible then
+					return
+				end
 
 				--------------------------------
 
 				if event == "QUEST_ACCEPTED" then
-					if InNPCInteraction and not IsWorldQuest and not IsBonusObjective then
-						Frame.ShowWithText("Quest Accepted")
-					end
+					Frame.ShowWithText(L["Alert Notification - Accept"])
 				end
 
 				if event == "QUEST_TURNED_IN" then
-					if InNPCInteraction and not IsWorldQuest and not IsBonusObjective then
-						Frame.ShowWithText("Quest Completed")
-					end
+					Frame.ShowWithText(L["Alert Notification - Complete"])
 				end
-			end, .1)
+			end
 		end)
 	end
 

@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES
@@ -55,8 +56,8 @@ do
 		frame._CustomColor = customColor
 		frame._CustomThumbColor = customThumbColor
 
-		frame.MouseEnterCallbacks = {}
-		frame.MouseLeaveCallbacks = {}
+		frame.EnterCallbacks = {}
+		frame.LeaveCallbacks = {}
 		frame.MouseDownCallbacks = {}
 		frame.MouseUpCallbacks = {}
 		frame.ValueChangedCallbacks = {}
@@ -231,10 +232,10 @@ do
 
 			--------------------------------
 
-			local MouseEnterCallbacks = frame.MouseEnterCallbacks
+			local EnterCallbacks = frame.EnterCallbacks
 
-			for callback = 1, #MouseEnterCallbacks do
-				MouseEnterCallbacks[callback]()
+			for callback = 1, #EnterCallbacks do
+				EnterCallbacks[callback]()
 			end
 		end
 
@@ -243,10 +244,10 @@ do
 
 			--------------------------------
 
-			local MouseLeaveCallbacks = frame.MouseLeaveCallbacks
+			local LeaveCallbacks = frame.LeaveCallbacks
 
-			for callback = 1, #MouseLeaveCallbacks do
-				MouseLeaveCallbacks[callback]()
+			for callback = 1, #LeaveCallbacks do
+				LeaveCallbacks[callback]()
 			end
 		end
 

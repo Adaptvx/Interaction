@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES
@@ -647,7 +648,7 @@ do
 
 					--------------------------------
 
-					addon.Libraries.AdaptiveTimer.Script:Schedule(function()
+					addon.Libraries.AceTimer:ScheduleTimer(function()
 						frame.UpdateActive()
 					end, 0)
 				end

@@ -57,7 +57,7 @@ function NS.Elements:Load()
 						local TEXTURE_Background
 
 						if addon.Theme.IsDarkTheme_Dialog then
-							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-dark-mode.png"
+							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-dark.png"
 						else
 							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail.png"
 						end
@@ -77,7 +77,7 @@ function NS.Elements:Load()
 				addon.API:RegisterThemeUpdate(function()
 					local ScrollTexture
 
-					if addon.Theme.IsDarkTheme then
+					if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
 						ScrollTexture = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02
 					else
 						ScrollTexture = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL
@@ -97,25 +97,25 @@ function NS.Elements:Load()
 				InteractionDialogFrame.ScrollBackground:Hide()
 			end
 
-			do -- STYLE SHADOW
-				InteractionDialogFrame.ShadowBackground, InteractionDialogFrame.ShadowBackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.ShadowBackground")
-				InteractionDialogFrame.ShadowBackground:SetSize(InteractionDialogFrame.DialogBackground:GetWidth() + 55, InteractionDialogFrame.DialogBackground:GetHeight() + 55)
-				InteractionDialogFrame.ShadowBackground:SetPoint("CENTER", InteractionDialogFrame)
-				InteractionDialogFrame.ShadowBackground:SetFrameStrata("LOW")
-				InteractionDialogFrame.ShadowBackground:SetFrameLevel(0)
+			do -- STYLE RUSTIC
+				InteractionDialogFrame.RusticBackground, InteractionDialogFrame.RusticBackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.RusticBackground")
+				InteractionDialogFrame.RusticBackground:SetSize(InteractionDialogFrame.DialogBackground:GetWidth() + 55, InteractionDialogFrame.DialogBackground:GetHeight() + 55)
+				InteractionDialogFrame.RusticBackground:SetPoint("CENTER", InteractionDialogFrame)
+				InteractionDialogFrame.RusticBackground:SetFrameStrata("LOW")
+				InteractionDialogFrame.RusticBackground:SetFrameLevel(0)
 
-				InteractionDialogFrame.ShadowBackgroundTexture:SetSize(InteractionDialogFrame.ShadowBackground:GetWidth(), InteractionDialogFrame.ShadowBackground:GetHeight())
-				InteractionDialogFrame.ShadowBackgroundTexture:SetPoint("CENTER", InteractionDialogFrame.ShadowBackground)
-				InteractionDialogFrame.ShadowBackgroundTexture:SetAlpha(.875)
+				InteractionDialogFrame.RusticBackgroundTexture:SetSize(InteractionDialogFrame.RusticBackground:GetWidth(), InteractionDialogFrame.RusticBackground:GetHeight())
+				InteractionDialogFrame.RusticBackgroundTexture:SetPoint("CENTER", InteractionDialogFrame.RusticBackground)
+				InteractionDialogFrame.RusticBackgroundTexture:SetAlpha(.875)
 
 				--------------------------------
 
 				hooksecurefunc(InteractionDialogFrame.DialogBackground, "SetWidth", function()
-					InteractionDialogFrame.ShadowBackground:SetWidth(InteractionDialogFrame.DialogBackground:GetWidth() + 55)
+					InteractionDialogFrame.RusticBackground:SetWidth(InteractionDialogFrame.DialogBackground:GetWidth() + 55)
 				end)
 
 				hooksecurefunc(InteractionDialogFrame.DialogBackground, "SetHeight", function()
-					InteractionDialogFrame.ShadowBackground:SetHeight(InteractionDialogFrame.DialogBackground:GetHeight() + 55)
+					InteractionDialogFrame.RusticBackground:SetHeight(InteractionDialogFrame.DialogBackground:GetHeight() + 55)
 				end)
 			end
 
@@ -174,66 +174,6 @@ function NS.Elements:Load()
 						InteractionDialogFrame.Title.Progress.Bar:SetMinMaxValues(0, 1)
 						InteractionDialogFrame.Title.Progress.Bar:SetValue(1)
 					end
-				end
-
-				do -- KEYBIND HINT
-					InteractionDialogFrame.Title.KeybindHint = CreateFrame("Frame", "$parent.KeybindHint", InteractionDialogFrame)
-					InteractionDialogFrame.Title.KeybindHint:SetSize(150, 30)
-					InteractionDialogFrame.Title.KeybindHint:SetPoint("CENTER", InteractionDialogFrame.Title.Progress)
-					InteractionDialogFrame.Title.KeybindHint:SetFrameStrata("BACKGROUND")
-					InteractionDialogFrame.Title.KeybindHint:SetPropagateKeyboardInput(true)
-
-					--------------------------------
-
-					do -- LABEL
-						InteractionDialogFrame.Title.KeybindHint.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Title.KeybindHint, { r = 1, g = 1, b = 1 }, 12.5, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Bold, "$parent.Label")
-						InteractionDialogFrame.Title.KeybindHint.Label:SetSize(50, InteractionDialogFrame.Title.KeybindHint:GetHeight() - 10)
-						InteractionDialogFrame.Title.KeybindHint.Label:SetPoint("CENTER", InteractionDialogFrame.Title.KeybindHint, InteractionDialogFrame.Title.KeybindHint.Label:GetWidth() / 2 - 2.5, 0)
-						InteractionDialogFrame.Title.KeybindHint.Label:SetText(L["InteractionDialogFrame - Skip"])
-					end
-
-					do -- FRAME
-						InteractionDialogFrame.Title.KeybindHint.KeybindFrame = CreateFrame("Frame", "$parent.KeybindFrame", InteractionDialogFrame.Title.KeybindHint)
-						InteractionDialogFrame.Title.KeybindHint.KeybindFrame:SetSize(35, InteractionDialogFrame.Title.KeybindHint:GetHeight() - 10)
-						InteractionDialogFrame.Title.KeybindHint.KeybindFrame:SetPoint("CENTER", InteractionDialogFrame.Title.KeybindHint, -InteractionDialogFrame.Title.KeybindHint.KeybindFrame:GetWidth() / 2 - 5, 0)
-						InteractionDialogFrame.Title.KeybindHint.KeybindFrame:SetFrameStrata("BACKGROUND")
-
-						--------------------------------
-
-						do -- LABEL
-							InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Title.KeybindHint.KeybindFrame, { r = 1, g = 1, b = 1 }, 20, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
-							InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetPoint("CENTER", InteractionDialogFrame.Title.KeybindHint.KeybindFrame)
-							InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetSize(InteractionDialogFrame.Title.KeybindHint.KeybindFrame:GetWidth(), InteractionDialogFrame.Title.KeybindHint.KeybindFrame:GetHeight())
-						end
-					end
-
-					--------------------------------
-					-- FUNCTIONS
-					--------------------------------
-
-					InteractionDialogFrame.Title.KeybindHint.UpdateHint = function()
-						if addon.Variables.Platform == 1 then
-							if INTDB.profile.INT_USEINTERACTKEY then
-								InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Interact.png", 16, 16, 0, 0))
-							else
-								InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Space.png", 16, 16, 0, 0))
-							end
-						elseif addon.Variables.Platform == 2 then
-							InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PS-3.png", 16, 16, 0, 0))
-						elseif addon.Variables.Platform == 3 then
-							InteractionDialogFrame.Title.KeybindHint.KeybindFrame.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2.png", 16, 16, 0, 0))
-						end
-					end
-
-					--------------------------------
-					-- SETUP
-					--------------------------------
-
-					InteractionDialogFrame.Title.KeybindHint.UpdateHint()
-
-					CallbackRegistry:Add("SETTINGS_CONTROLS_CHANGED", function()
-						InteractionDialogFrame.Title.KeybindHint.UpdateHint()
-					end)
 				end
 			end
 

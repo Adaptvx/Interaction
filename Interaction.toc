@@ -3,7 +3,7 @@
 ## Notes: Immersive lore and quest add-on.
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.0.1
+## Version: 0.0.2
 ## SavedVariables: InteractionDB
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI

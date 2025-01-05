@@ -198,18 +198,19 @@ function NS.Util:Load()
 			InteractionFrame.INT_ShoulderOffset:SetScript("OnUpdate", function()
 				local Current = GetTime() - Start
 				local StartOffset = customStartOffset or tonumber(NS.Variables.Saved_ShoulderOffset)
+				local EndOffset = level - StartOffset
 
 				local Offset
 				if StartOffset < level then
 					if INTDB.profile.INT_UIDIRECTION == 1 then
-						Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, StartOffset, level, duration)
+						Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
 					else
-						Offset = AdaptiveAPI.Animation.EaseExpo(Current, StartOffset, level, duration)
+						Offset = AdaptiveAPI.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
 					end
 				elseif StartOffset > level then
-					Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, StartOffset, level, duration)
+					Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
 				else
-					Offset = AdaptiveAPI.Animation.EaseExpo(Current, StartOffset, level, duration)
+					Offset = AdaptiveAPI.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
 				end
 
 				--------------------------------
@@ -220,6 +221,10 @@ function NS.Util:Load()
 					--------------------------------
 
 					InteractionFrame.INT_ShoulderOffset:SetScript("OnUpdate", nil)
+
+					--------------------------------
+
+					return
 				end
 
 				--------------------------------

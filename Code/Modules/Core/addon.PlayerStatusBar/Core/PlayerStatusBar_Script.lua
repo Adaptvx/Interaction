@@ -141,38 +141,49 @@ function NS.Script:Load()
 	-- EVENTS
 	--------------------------------
 
-	CallbackRegistry:Add("START_INTERACTION", function()
-		addon.Libraries.AceTimer:ScheduleTimer(function()
-			local UnitIsMaxLevel = (GetMaxPlayerLevel() == UnitLevel(UnitName("player")))
+	do
+		hooksecurefunc(Frame, "Show", function()
+			CallbackRegistry:Trigger("START_STATUSBAR")
+		end)
+		hooksecurefunc(Frame, "Hide", function()
+			CallbackRegistry:Trigger("STOP_STATUSBAR")
+		end)
 
-			--------------------------------
-
-			if addon.HideUI.Variables.Active and addon.Interaction.Variables.Active and not UnitIsMaxLevel then
-				Callback:Update()
+		CallbackRegistry:Add("START_INTERACTION", function()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				local UnitIsMaxLevel = (GetMaxPlayerLevel() == UnitLevel(UnitName("player")))
 
 				--------------------------------
 
-				Frame.ShowWithAnimation()
+				if addon.HideUI.Variables.Active and addon.Interaction.Variables.Active and not UnitIsMaxLevel and not InCombatLockdown() then
+					Callback:Update()
+
+					--------------------------------
+
+					Frame.ShowWithAnimation()
+				end
+			end, .1)
+		end, 0)
+
+		CallbackRegistry:Add("STOP_INTERACTION", function()
+			Frame.HideWithAnimation()
+		end, 0)
+
+		local Events = CreateFrame("Frame")
+		Events:RegisterEvent("PLAYER_XP_UPDATE")
+		Events:SetScript("OnEvent", function(_, event, arg1)
+			if event == "PLAYER_XP_UPDATE" and arg1 == "player" then
+				Callback:Update()
 			end
-		end, .1)
-	end, 0)
-
-	CallbackRegistry:Add("STOP_INTERACTION", function()
-		Frame.HideWithAnimation()
-	end, 0)
-
-	local Events = CreateFrame("Frame")
-	Events:RegisterEvent("PLAYER_XP_UPDATE")
-	Events:SetScript("OnEvent", function(_, event, arg1)
-		if event == "PLAYER_XP_UPDATE" and arg1 == "player" then
-			Callback:Update()
-		end
-	end)
+		end)
+	end
 
 	--------------------------------
 	-- SETUP
 	--------------------------------
 
-	local Level = UnitLevel(UnitName("player"))
-	Callback.SavedLevel = Level
+	do
+		local Level = UnitLevel(UnitName("player"))
+		Callback.SavedLevel = Level
+	end
 end

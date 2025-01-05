@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local NS = AdaptiveAPI.FrameTemplates
+local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------
 -- VARIABLES
@@ -55,31 +56,25 @@ do
 
 		--------------------------------
 
-		local function Background()
+		do -- BACKGROUND
 			Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, frameStrata, defaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
 			Frame.Background:SetPoint("CENTER", Frame)
 			Frame.Background:SetAlpha(.5)
 		end
 
-		local function Text()
+		do -- TEXT
 			Frame.Text = Frame:GetFontObject()
 			Frame.Text:SetJustifyH(justifyH or "LEFT")
 			Frame.Text:SetJustifyV(justifyV or "MIDDLE")
 			Frame.Text:SetFont(font or GameFontNormal:GetFont(), fontSize or 12.5, "")
 		end
 
-		local function Placeholder()
+		do -- PLACEHOLDER
 			Frame.PlaceholderText = AdaptiveAPI.FrameTemplates:CreateText(Frame, textColor, fontSize, justifyH or "LEFT", justifyV or "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.PlaceholderText")
 			Frame.PlaceholderText:SetPoint("CENTER", Frame)
 			Frame.PlaceholderText:SetText(hint)
 			Frame.PlaceholderText:SetAlpha(.5)
 		end
-
-		--------------------------------
-
-		Background()
-		Text()
-		Placeholder()
 
 		--------------------------------
 
@@ -97,12 +92,12 @@ do
 
 			--------------------------------
 
-			local MouseEnterCallbacks = Frame.EnterCallbacks
+			local EnterCallbacks = Frame.EnterCallbacks
 
 			--------------------------------
 
-			for callback = 1, #MouseEnterCallbacks do
-				MouseEnterCallbacks[callback]()
+			for callback = 1, #EnterCallbacks do
+				EnterCallbacks[callback]()
 			end
 		end
 

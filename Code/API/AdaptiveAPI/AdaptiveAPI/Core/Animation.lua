@@ -120,7 +120,7 @@ end
 do -- ANIMATIONS
 	-- Fades in the frame over the duration from A to B. Not restricted.
 	function AdaptiveAPI.Animation:Fade(frame, duration, startAlpha, endAlpha, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
@@ -130,7 +130,7 @@ do -- ANIMATIONS
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -148,7 +148,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAFadeIdentifier = startTime
+		frame.AdaptiveAPI_Animation_FadeIdentifier = startTime
 
 		--------------------------------
 
@@ -161,7 +161,7 @@ do -- ANIMATIONS
 				AdaptiveAPI.Animation:RemoveFromQueue(updateFrame)
 			end
 
-			if frame.ATAFadeIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_FadeIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -299,7 +299,7 @@ do -- ANIMATIONS
 
 	-- Scales the frame from A to B over the duration. Not restricted.
 	function AdaptiveAPI.Animation:Scale(frame, duration, startScale, endScale, axis, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
@@ -309,7 +309,7 @@ do -- ANIMATIONS
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -327,7 +327,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAScaleIdentifier = startTime
+		frame.AdaptiveAPI_Animation_ScaleIdentifier = startTime
 
 		--------------------------------
 
@@ -360,7 +360,7 @@ do -- ANIMATIONS
 				AdaptiveAPI.Animation:RemoveFromQueue(updateFrame)
 			end
 
-			if frame.ATAScaleIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_ScaleIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -409,7 +409,7 @@ do -- ANIMATIONS
 
 	-- Moves the frame from Point A to B over the duration. Restricted.
 	function AdaptiveAPI.Animation:Move(frame, duration, point, startPosition, endPosition, axis, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
@@ -419,7 +419,7 @@ do -- ANIMATIONS
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -435,7 +435,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAPositionIdentifier = startTime
+		frame.AdaptiveAPI_Animation_PositionIdentifier = startTime
 
 		--------------------------------
 
@@ -445,7 +445,7 @@ do -- ANIMATIONS
 				return
 			end
 
-			if frame.ATAPositionIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_PositionIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -506,7 +506,7 @@ do -- ANIMATIONS
 
 	-- Moves the frame in both X and Y axes. Not restricted.
 	function AdaptiveAPI.Animation:PreciseMove(frame, duration, relativeTo, point, startX, startY, endX, endY, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
@@ -516,7 +516,7 @@ do -- ANIMATIONS
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -532,7 +532,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAPositionIdentifier = startTime
+		frame.AdaptiveAPI_Animation_PositionIdentifier = startTime
 
 		--------------------------------
 
@@ -541,7 +541,7 @@ do -- ANIMATIONS
 				AdaptiveAPI.Animation:RemoveFromQueue(updateFrame)
 			end
 
-			if frame.ATAPositionIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_PositionIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -593,7 +593,7 @@ do -- ANIMATIONS
 
 	-- Moves the frame from the current position to the specified position over the duration. Restricted.
 	function AdaptiveAPI.Animation:MoveTo(frame, duration, point, parent, currentX, currentY, endX, endY, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
@@ -603,7 +603,7 @@ do -- ANIMATIONS
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -619,7 +619,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		if currentX == nil or currentY == nil then
+		if not currentX or not currentY then
 			local _, _, _, _currentX, _currentY = frame:GetPoint()
 			currentX = _currentX
 			currentY = _currentY
@@ -627,7 +627,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAPositionIdentifier = startTime
+		frame.AdaptiveAPI_Animation_PositionIdentifier = startTime
 
 		--------------------------------
 
@@ -636,7 +636,7 @@ do -- ANIMATIONS
 				AdaptiveAPI.Animation:RemoveFromQueue(updateFrame)
 			end
 
-			if frame.ATAPositionIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_PositionIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -688,17 +688,17 @@ do -- ANIMATIONS
 
 	-- Rotates the texture from Point A to B over the duration. Not Restricted. Must be used on 'Texture'.
 	function AdaptiveAPI.Animation:Rotate(frame, duration, startRotation, endRotation, animationStyle, stopEvent)
-		if duration == nil then
+		if not duration then
 			print("Failed Animation: No duration specified.")
 			return
 		end
 
-		if startRotation == nil or endRotation == nil then
+		if not startRotation or not endRotation then
 			print("Failed Animation: Parameters not specified.")
 			return
 		end
 
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -711,7 +711,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATARotationIdentifier = startTime
+		frame.AdaptiveAPI_Animation_RotationIdentifier = startTime
 
 		--------------------------------
 
@@ -724,7 +724,7 @@ do -- ANIMATIONS
 				AdaptiveAPI.Animation:RemoveFromQueue(updateFrame)
 			end
 
-			if frame.ATARotationIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_RotationIdentifier ~= startTime then
 				RemoveFromQueue()
 				return
 			end
@@ -817,7 +817,7 @@ do -- ANIMATIONS
 
 	-- Starts rotating the Texture until cancelled. Not Restricted. Must be used on 'Texture'.
 	function AdaptiveAPI.Animation:StartRotate(frame, speed)
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -828,7 +828,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATARotationIdentifier = nil
+		frame.AdaptiveAPI_Animation_RotationIdentifier = nil
 		frame.AdaptiveAPI_Animation_Rotation.Speed = speed
 
 		--------------------------------
@@ -838,7 +838,7 @@ do -- ANIMATIONS
 
 	-- Stops rotating the Texture. Not Restricted. Must be used on 'Texture'.
 	function AdaptiveAPI.Animation:StopRotate(frame)
-		if frame == nil then
+		if not frame then
 			print("Failed Animation: No frame specified.")
 			return
 		end
@@ -868,12 +868,12 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		frame.ATAProgressIdentifier = startTime
+		frame.AdaptiveAPI_Animation_ProgressIdentifier = startTime
 
 		--------------------------------
 
 		local function UpdateProgress(self)
-			if frame.ATAProgressIdentifier ~= startTime then
+			if frame.AdaptiveAPI_Animation_ProgressIdentifier ~= startTime then
 				self:SetScript("OnUpdate", nil)
 				return
 			end
@@ -1151,10 +1151,6 @@ do -- ANIMATIONS
 	end
 
 	function AdaptiveAPI.Animation:AddParallax(frame, parent, startRequirement, snapStopEvent, isController)
-		local IsSnapTransition = false
-
-		--------------------------------
-
 		frame.EnterMouseX = nil
 		frame.EnterMouseY = nil
 
@@ -1167,14 +1163,14 @@ do -- ANIMATIONS
 				--------------------------------
 
 				if not isController then
-					if startRequirement == nil or (startRequirement and startRequirement()) then
+					if not startRequirement or (startRequirement and startRequirement()) then
 						frame:SetPoint("CENTER", parent, MouseX / (25 * (frame.AdaptiveAPI_Animation_Parallax_Weight or 1)), -MouseY / (7.5 * (frame.AdaptiveAPI_Animation_Parallax_Weight or 1)))
 					end
 				end
 			end
 		end
 
-		function OnEnter()
+		local function OnEnter()
 			if not isController then
 				if startRequirement() then
 					frame.EnterMouseX, frame.EnterMouseY = GetCursorPosition()
@@ -1183,7 +1179,7 @@ do -- ANIMATIONS
 			end
 		end
 
-		function OnLeave()
+		local function OnLeave()
 			frame.EnterMouseX, frame.EnterMouseY = nil, nil
 			frame.AdaptiveAPI_Animation_Parallax_Update:Hide()
 
@@ -1194,7 +1190,7 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		local HoverFrame = AdaptiveAPI.FrameTemplates:CreateMouseResponder(parent, OnEnter, OnLeave, nil, nil, true)
+		AdaptiveAPI.FrameTemplates:CreateMouseResponder(parent, OnEnter, OnLeave, nil, nil)
 
 		--------------------------------
 

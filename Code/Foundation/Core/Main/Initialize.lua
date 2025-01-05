@@ -52,7 +52,7 @@ function NS:Load()
 
 			--------------------------------
 
-			C_Timer.After(2.5, function()
+			C_Timer.After(1.5, function()
 				NS.Ready = true
 			end)
 		end
