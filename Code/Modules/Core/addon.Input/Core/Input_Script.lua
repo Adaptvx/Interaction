@@ -124,7 +124,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									if (IsSettings and GetMatchingKey(key, NS.Variables.Key_Close)) or (not IsSettings and key == "ESCAPE" and IsShiftKeyDown()) then
+									if (IsSettings and key == "ESCAPE") or (not IsSettings and key == "ESCAPE" and IsShiftKeyDown()) then
 										PreventInput()
 										Result = false
 
@@ -641,12 +641,6 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							if Type == "PC" then
-								if Script:Input_Global(nil, Key) then
-									Script:Input_Keyboard(nil, Key)
-								end
-							end
-
 							if Type == "Controller" then
 								if Script:Input_Global(nil, Key) then
 									Script:Input_Gamepad(nil, Key)
@@ -676,16 +670,6 @@ function NS.Script:Load()
 							if Script:Input_Global(_, key) then
 								Script:Input_Keyboard(_, key)
 							end
-
-							--------------------------------
-
-							if NS.Variables.IsNavigating then
-								Session = {
-									key = key,
-									lastRepeat = GetTime(),
-									type = "PC"
-								}
-							end
 						end)
 						Script.KeybindFrame:SetScript("OnKeyUp", function(_, key)
 							if not addon.Initialize.Ready then
@@ -695,10 +679,6 @@ function NS.Script:Load()
 							--------------------------------
 
 							NS.Variables:UpdateKeybinds()
-
-							--------------------------------
-
-							ResetSession()
 						end)
 					end
 
@@ -721,6 +701,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
+							ResetSession()
 							if NS.Variables.IsNavigating then
 								Session = {
 									key = key,

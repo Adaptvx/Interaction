@@ -21,7 +21,7 @@ function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, su
 			getFunc = getFunc,
 			enableFunc = enableFunc
 		}, "$parent.KeybindButton")
-		Frame.KeybindButton:SetSize(150, Frame.Container:GetHeight())
+		Frame.KeybindButton:SetSize(225, Frame.Container:GetHeight())
 		Frame.KeybindButton:SetPoint("RIGHT", Frame.Container)
 
 		--------------------------------

@@ -577,6 +577,10 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
+				Frame.OnMouseUp()
+
+				--------------------------------
+
 				return true
 			end
 
@@ -631,6 +635,10 @@ function NS.Navigation:Load()
 				else
 					Slider:SetValue(New)
 				end
+
+				--------------------------------
+
+				Frame.OnMouseUp()
 
 				--------------------------------
 

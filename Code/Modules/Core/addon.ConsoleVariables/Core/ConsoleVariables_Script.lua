@@ -235,8 +235,7 @@ function NS.Script:Load()
 
 		if event == "CVAR_UPDATE" then
 			local name, value = ...
-
-			-- addon._DEV:Print("Console Variable Event - ", name, value) -- DEBUG
+			addon._DEV:Print("Console Variable Event - " .. name or "nil" .. " Value - " .. value or "nil") -- DEBUG
 
 			--------------------------------
 			-- SET CVAR

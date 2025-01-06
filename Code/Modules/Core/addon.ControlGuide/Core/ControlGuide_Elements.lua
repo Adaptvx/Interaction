@@ -59,6 +59,12 @@ function NS.Elements:Load()
 						do -- EVENTS
 							Element.UpdateSize = function()
 								Element:SetWidth(Element.API_ButtonTextFrame:GetWidth())
+
+								--------------------------------
+
+								addon.Libraries.AceTimer:ScheduleTimer(function()
+									Element:SetWidth(Element.API_ButtonTextFrame:GetWidth())
+								end, .1)
 							end
 							Element.UpdateSize()
 
