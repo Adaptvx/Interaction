@@ -1,3 +1,6 @@
+-- Base Localization
+-- Languages with no translations will default to this:
+
 local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
@@ -5,8 +8,6 @@ local L = addon.Locales
 --------------------------------
 
 local function Load()
-	-- Base Localization -- Other languages if with no translations will default to this.
-
 	--------------------------------
 	-- SETTINGS
 	--------------------------------
@@ -232,40 +233,48 @@ local function Load()
 	--------------------------------
 
 	do
-		-- PROMPTS
-		L["Readable - Prompt - Delete"] = "This will permanently remove this entry from your library."
-		L["Readable - Prompt - Delete Button 1"] = "Remove"
-		L["Readable - Prompt - Delete Button 2"] = "Cancel"
+		do -- LIBRARY
+			-- PROMPTS
+			L["Readable - Library - Prompt - Delete"] = "This will permanently remove this entry from your library."
+			L["Readable - Library - Prompt - Delete Button 1"] = "Remove"
+			L["Readable - Library - Prompt - Delete Button 2"] = "Cancel"
 
-		L["Readable - Prompt - Import"] = "Importing a saved state will overwrite your current library."
-		L["Readable - Prompt - Import Button 1"] = "Import and Reload"
-		L["Readable - Prompt - Import Button 2"] = "Cancel"
+			L["Readable - Library - Prompt - Import"] = "Importing a saved state will overwrite your current library."
+			L["Readable - Library - Prompt - Import Button 1"] = "Import and Reload"
+			L["Readable - Library - Prompt - Import Button 2"] = "Cancel"
 
-		L["Readable - TextPrompt - Import"] = "Paste Data Text"
-		L["Readable - TextPrompt - Import Input Placeholder"] = "Enter Data Text"
-		L["Readable - TextPrompt - Import Button 1"] = "Import"
+			L["Readable - Library - TextPrompt - Import"] = "Paste Data Text"
+			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Enter Data Text"
+			L["Readable - Library - TextPrompt - Import Button 1"] = "Import"
 
-		L["Readable - TextPrompt - Export"] = "Copy Data to Clipboard "
-		L["Readable - TextPrompt - Export Input Placeholder"] = "Invalid Export Code"
+			L["Readable - Library - TextPrompt - Export"] = "Copy Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Invalid Export Code"
 
-		-- NOTIFICATIONS
-		L["Readable - Notification - Saved To Library"] = "Saved to Library"
+			-- SIDEBAR
+			L["Readable - Library - Search Input Placeholder"] = "Search"
+			L["Readable - Library - Export Button"] = "Export"
+			L["Readable - Library - Import Button"] = "Import"
+			L["Readable - Library - Show"] = "Show"
+			L["Readable - Library - Letters"] = "Letters"
+			L["Readable - Library - Books"] = "Books"
+			L["Readable - Library - Slates"] = "Slates"
+			L["Readable - Library - Show only World"] = "Only World"
 
-		-- SIDEBAR
-		L["Readable - Show"] = "Show"
-		L["Readable - Letters"] = "Letters"
-		L["Readable - Books"] = "Books"
-		L["Readable - Slates"] = "Slates"
-		L["Readable - Show only World"] = "Only World"
+			-- TITLE
+			L["Readable - Library - Name Text Append"] = "'s Library"
+			L["Readable - Library - Showing Status Text - Subtext 1"] = "Showing "
+			L["Readable - Library - Showing Status Text - Subtext 2"] = " Items"
 
-		-- TITLE
-		L["Readable - Showing Status Text - Subtext 1"] = "Showing "
-		L["Readable - Showing Status Text - Subtext 2"] = " Items"
+			-- CONTENT
+			L["Readable - Library - No Results Text - Subtext 1"] = "No Results for "
+			L["Readable - Library - No Results Text - Subtext 2"] = "."
+			L["Readable - Library - Empty Library Text"] = "Empty Library."
+		end
 
-		-- CONTENT
-		L["Readable - No Results Text - Subtext 1"] = "No Results for "
-		L["Readable - No Results Text - Subtext 2"] = "."
-		L["Readable - Empty Library Text"] = "Empty Library."
+		do -- READABLE
+			-- NOTIFICATIONS
+			L["Readable - Notification - Saved To Library"] = "Saved to Library"
+		end
 	end
 
 	--------------------------------
@@ -318,6 +327,7 @@ local function Load()
 		L["ControlGuide - Decline"] = "Decline"
 		L["ControlGuide - Goodbye"] = "Goodbye"
 		L["ControlGuide - Got it"] = "Got it"
+		L["ControlGuide - Gossip Option Interact"] = "Select Option"
 	end
 
 	--------------------------------
@@ -370,14 +380,6 @@ local function Load()
 	do
 		L["BlizzardSettings - Title"] = "Open Settings"
 		L["BlizzardSettings - Shortcut - Controller"] = "in any Interaction UI."
-	end
-
-	--------------------------------
-	-- AUTO SELECT OPTIONS
-	--------------------------------
-
-	do
-		L["AutoSelectOptions - Check - Trading Post"] = ""
 	end
 
 	--------------------------------

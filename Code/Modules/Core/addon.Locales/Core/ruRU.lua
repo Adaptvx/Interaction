@@ -6,6 +6,12 @@ local L = addon.Locales
 
 --------------------------------
 
+local addonName, addon = ...
+local CallbackRegistry = addon.CallbackRegistry
+local L = addon.Locales
+
+--------------------------------
+
 local function Load()
 	if GetLocale() ~= "ruRU" then
 		return
@@ -145,7 +151,7 @@ local function Load()
 		L["Checkbox - Text To Speech / Quest"] = "Воспроизвести задание"
 		L["Checkbox - Text To Speech / Quest - Tooltip"] = "Включить преобразование текста в речь в диалоговом окне задания.\n\nПо умолчанию: Вкл."
 		L["Checkbox - Text To Speech / Gossip"] = "Воспроизвести сплетни"
-		L["Checkbox - Text To Speech / Gossip - Tooltip"] = "Включить преобразование текста в речь в диалоговом окне Сплетен.\n\nПо умолчанию: Вкл."		
+		L["Checkbox - Text To Speech / Gossip - Tooltip"] = "Включить преобразование текста в речь в диалоговом окне Сплетен.\n\nПо умолчанию: Вкл."
 		L["Range - Text To Speech / Rate"] = "Скорость"
 		L["Range - Text To Speech / Rate - Tooltip"] = "Смещение скорости речи.\n\nПо умолчанию: 100%."
 		L["Range - Text To Speech / Volume"] = "Громкость"
@@ -170,20 +176,20 @@ local function Load()
 		-- CONTROLS
 		L["Title - UI"] = "UI"
 		L["Checkbox - UI / Control Guide"] = "Показать руководство по управлению"
-		L["Checkbox - UI / Control Guide - Tooltip"] = "Показывает направляющее окно управления.\n\nПо умолчанию: Вкл."		
+		L["Checkbox - UI / Control Guide - Tooltip"] = "Показывает направляющее окно управления.\n\nПо умолчанию: Вкл."
 		L["Title - Platform"] = "Платформа"
 		L["Range - Platform"] = "Платформа"
 		L["Range - Platform - Tooltip"] = "Для вступления изменений в силу требуется перезагрузка интерфейса."
 		L["Range - Platform - PC"] = "PC"
 		L["Range - Platform - Playstation"] = "Playstation"
 		L["Range - Platform - Xbox"] = "Xbox"
-		L["Title - PC"] = "PC"		
+		L["Title - PC"] = "PC"
 		L["Title - PC / Keyboard"] = "Клавиатура"
-		L["Checkbox - PC / Use Interact Key"] = "Использовать клавишу взаимодействия"
-		L["Checkbox - PC / Use Interact Key - Tooltip"] = "Используйте клавишу взаимодействия для пропуска/принятия вместо пробела. Комбинации из нескольких клавиш не поддерживаются.\n\nПо умолчанию: Выкл."
+		L["Checkbox - PC / Keyboard / Use Interact Key"] = "Использовать клавишу взаимодействия"
+		L["Checkbox - PC / Keyboard / Use Interact Key - Tooltip"] = "Используйте клавишу взаимодействия для пропуска/принятия вместо пробела. Комбинации из нескольких клавиш не поддерживаются.\n\nПо умолчанию: Выкл."
 		L["Title - PC / Mouse"] = "Мышь"
-		L["Checkbox - PC / Flip Mouse Controls"] = "Переключайте элементы управления мышью"
-		L["Checkbox - PC / Flip Mouse Controls - Tooltip"] = "Переключайте элементы управления ЛКМ и ПКМ.\n\nПо умолчанию: Выкл."
+		L["Checkbox - PC / Mouse / Flip Mouse Controls"] = "Переключайте элементы управления мышью"
+		L["Checkbox - PC / Mouse / Flip Mouse Controls - Tooltip"] = "Переключайте элементы управления ЛКМ и ПКМ.\n\nПо умолчанию: Выкл."
 		L["Title - PC / Keybind"] = "Сочетания клавиш"
 		L["Keybind - PC / Keybind / Previous"] = "Предыдущее"
 		L["Keybind - PC / Keybind / Previous - Tooltip"] = "Предыдущее диалоговое сочетание клавиш.\n\nПо умолчанию: Q."
@@ -191,7 +197,7 @@ local function Load()
 		L["Keybind - PC / Keybind / Next - Tooltip"] = "Следующая комбинация клавиш диалога.\n\nПо умолчанию: E."
 		L["Keybind - PC / Keybind / Progress"] = "Прогресс"
 		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Сочетание клавиш для продолжения текущего сеанса.\n\nПо умолчанию: ПРОБЕЛ."
-		L["Title - Controller"] = "Контроллер"		
+		L["Title - Controller"] = "Контроллер"
 		L["Title - Controller / Controller"] = "Контроллер"
 
 		-- GAMEPLAY
@@ -218,7 +224,7 @@ local function Load()
 		L["Range - Readable / Audiobook - Volume"] = "Громкость"
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Громкость воспроизведения.\n\nПо умолчанию: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Рассказчик"
-		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Воспроизведение голоса."		
+		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Воспроизведение голоса."
 		L["Title - Gameplay"] = "Геймплей"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Автоматический выбор параметров"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Выбирает лучший вариант для определенных НПС.\n\nПо умолчанию: Выкл."
@@ -236,41 +242,47 @@ local function Load()
 	-- READABLE UI
 	--------------------------------
 
-	do
+	do -- LIBRARY
 		-- PROMPTS
-		L["Readable - Prompt - Delete"] = "Это навсегда удалит эту запись из вашей библиотеки."
-		L["Readable - Prompt - Delete Button 1"] = "Удалить"
-		L["Readable - Prompt - Delete Button 2"] = "Отмена"
+		L["Readable - Library - Prompt - Delete"] = "Это навсегда удалит эту запись из вашей библиотеки."
+		L["Readable - Library - Prompt - Delete Button 1"] = "Удалить"
+		L["Readable - Library - Prompt - Delete Button 2"] = "Отмена"
 
-		L["Readable - Prompt - Import"] = "Импорт сохраненного состояния перезапишет вашу текущую библиотеку."
-		L["Readable - Prompt - Import Button 1"] = "Импорт и перезагрузка"
-		L["Readable - Prompt - Import Button 2"] = "Отмена"
+		L["Readable - Library - Prompt - Import"] = "Импорт сохраненного состояния перезапишет вашу текущую библиотеку."
+		L["Readable - Library - Prompt - Import Button 1"] = "Импорт и перезагрузка"
+		L["Readable - Library - Prompt - Import Button 2"] = "Отмена"
 
-		L["Readable - TextPrompt - Import"] = "Вставить текст данных"
-		L["Readable - TextPrompt - Import Input Placeholder"] = "Введите текст данных"
-		L["Readable - TextPrompt - Import Button 1"] = "Импорт"
+		L["Readable - Library - TextPrompt - Import"] = "Вставить текст данных"
+		L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Введите текст данных"
+		L["Readable - Library - TextPrompt - Import Button 1"] = "Импорт"
 
-		L["Readable - TextPrompt - Export"] = "Копировать данные в буфер обмена "
-		L["Readable - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
-
-		-- NOTIFICATIONS
-		L["Readable - Notification - Saved To Library"] = "Сохранено в библиотеке"
+		L["Readable - Library - TextPrompt - Export"] = "Копировать данные в буфер обмена "
+		L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
 
 		-- SIDEBAR
-		L["Readable - Show"] = "Показать"
-		L["Readable - Letters"] = "Письма"
-		L["Readable - Books"] = "Книги"
-		L["Readable - Slates"] = "Доски"
-		L["Readable - Show only World"] = "Только Мир"
+		L["Readable - Library - Search Input Placeholder"] = "Search"
+		L["Readable - Library - Export Button"] = "Export"
+		L["Readable - Library - Import Button"] = "Import"
+		L["Readable - Library - Show"] = "Показать"
+		L["Readable - Library - Letters"] = "Письма"
+		L["Readable - Library - Books"] = "Книги"
+		L["Readable - Library - Slates"] = "Доски"
+		L["Readable - Library - Show only World"] = "Только Мир"
 
 		-- TITLE
-		L["Readable - Showing Status Text - Subtext 1"] = "Показ "
-		L["Readable - Showing Status Text - Subtext 2"] = " Предметы"
+		L["Readable - Library - Name Text Append"] = "'s Library"
+		L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
+		L["Readable - Library - Showing Status Text - Subtext 2"] = " Предметы"
 
 		-- CONTENT
-		L["Readable - No Results Text - Subtext 1"] = "Нет результатов для "
-		L["Readable - No Results Text - Subtext 2"] = "."
-		L["Readable - Empty Library Text"] = "Пустая библиотека."
+		L["Readable - Library - No Results Text - Subtext 1"] = "Нет результатов для "
+		L["Readable - Library - No Results Text - Subtext 2"] = "."
+		L["Readable - Library - Empty Library Text"] = "Пустая библиотека."
+	end
+
+	do -- READABLE
+		-- NOTIFICATIONS
+		L["Readable - Library - Notification - Saved To Library"] = "Сохранено в библиотеке"
 	end
 
 	--------------------------------
@@ -283,11 +295,11 @@ local function Load()
 		L["InteractionQuestFrame - Required Items"] = "Необходимые предметы"
 
 		L["InteractionQuestFrame - Accept - Quest Log Full"] = "Журнал заданий заполнен"
-		L["InteractionQuestFrame - Accept - Auto Accept"] = "Автоматически принято"		
+		L["InteractionQuestFrame - Accept - Auto Accept"] = "Автоматически принято"
 		L["InteractionQuestFrame - Accept"] = "Принять"
 		L["InteractionQuestFrame - Decline"] = "Отклонить"
 		L["InteractionQuestFrame - Goodbye"] = "Попрощаться"
-		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Понятно"		
+		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Понятно"
 		L["InteractionQuestFrame - Continue"] = "Продолжить"
 		L["InteractionQuestFrame - In Progress"] = "В ходе выполнения"
 		L["InteractionQuestFrame - Complete"] = "Завершенное"
@@ -323,6 +335,7 @@ local function Load()
 		L["ControlGuide - Decline"] = "Отклонить"
 		L["ControlGuide - Goodbye"] = "Прощание"
 		L["ControlGuide - Got it"] = "Понятно"
+		L["ControlGuide - Gossip Option Interact"] = "Select Option"
 	end
 
 	--------------------------------
@@ -375,14 +388,6 @@ local function Load()
 	do
 		L["BlizzardSettings - Title"] = "Открыть настройки"
 		L["BlizzardSettings - Shortcut - Controller"] = "в любом интерактивном пользовательском интерфейсе."
-	end
-
-	--------------------------------
-	-- AUTO SELECT OPTIONS
-	--------------------------------
-
-	do
-		L["AutoSelectOptions - Check - Trading Post"] = ""
 	end
 
 	--------------------------------

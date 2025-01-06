@@ -17,14 +17,14 @@ function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFun
 
 	do -- FRAME (SLIDER)
 		Frame.SliderFrame = CreateFrame("Frame", "$parent.SliderFrame", Frame.Container)
-		Frame.SliderFrame:SetSize(325, Frame.Container:GetHeight())
+		Frame.SliderFrame:SetSize(225, Frame.Container:GetHeight())
 		Frame.SliderFrame:SetPoint("RIGHT", Frame.Container)
 
 		--------------------------------
 
 		do -- SLIDER
 			Frame.SliderFrame.Slider = CreateFrame("Slider", nil, Frame, "MinimalSliderTemplate")
-			Frame.SliderFrame.Slider:SetSize(325, Frame.Container:GetHeight() + 10)
+			Frame.SliderFrame.Slider:SetSize(Frame.SliderFrame:GetWidth(), Frame.Container:GetHeight() + 10)
 			Frame.SliderFrame.Slider:SetPoint("RIGHT", Frame.Container)
 			Frame.SliderFrame.Slider:SetMinMaxValues(min, max)
 			Frame.SliderFrame.Slider:SetValueStep(valueStep)

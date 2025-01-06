@@ -525,7 +525,7 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				Frame.LibraryUIFrame.Content.Title.Main.Subtext:SetText(L["Readable - Showing Status Text - Subtext 1"] .. #Entries .. "/" .. #AllEntries .. L["Readable - Showing Status Text - Subtext 2"])
+				Frame.LibraryUIFrame.Content.Title.Main.Subtext:SetText(L["Readable - Library - Showing Status Text - Subtext 1"] .. #Entries .. "/" .. #AllEntries .. L["Readable - Library - Showing Status Text - Subtext 2"])
 
 				--------------------------------
 
@@ -659,9 +659,9 @@ function NS.LibraryUI.Script:Load()
 					--------------------------------
 
 					if IsSearch then
-						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - No Results Text - Subtext 1"] .. "\"" .. SearchText .. "\"" .. L["Readable - No Results Text - Subtext 2"])
+						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - No Results Text - Subtext 1"] .. "\"" .. SearchText .. "\"" .. L["Readable - Library - No Results Text - Subtext 2"])
 					else
-						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Empty Library Text"])
+						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - Empty Library Text"])
 					end
 				else
 					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:Hide()
@@ -740,7 +740,7 @@ function NS.LibraryUI.Script:Load()
 
 				if not INTLIB.profile.READABLE[ID] then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						InteractionAlertNotificationFrame.ShowWithText(L["Readable - Notification - Saved To Library"])
+						InteractionAlertNotificationFrame.ShowWithText(L["Readable - Library - Notification - Saved To Library"])
 					end, .1)
 				end
 
@@ -751,7 +751,7 @@ function NS.LibraryUI.Script:Load()
 				local Entry = AdaptiveAPI:FindIndexInTable(INTLIB.profile.READABLE, ID)
 
 				if Entry then
-					InteractionPromptFrame.Set(L["Readable - Prompt - Delete"], L["Readable - Prompt - Delete Button 1"], L["Readable - Prompt - Delete Button 2"],
+					InteractionPromptFrame.Set(L["Readable - Library - Prompt - Delete"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
 						function()
 							INTLIB.profile.READABLE[ID] = nil
 							LibraryCallback:SetPageButtons(true)
@@ -804,7 +804,7 @@ function NS.LibraryUI.Script:Load()
 				local compressed = addon.Libraries.LibDeflate:CompressDeflate(serialized)
 				local encoded = addon.Libraries.LibDeflate:EncodeForPrint(compressed)
 
-				addon.PromptTextShowTextFrame(L["Readable - TextPrompt - Export"] .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy.png", 25, 100, 0, 0), true, L["Readable - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export"] .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy.png", 25, 100, 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 			end
 
 			function LibraryCallback:Import(string)
@@ -816,11 +816,11 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:ImportPrompt()
-				addon.PromptTextShowTextFrame(L["Readable - TextPrompt - Import"], true, L["Readable - TextPrompt - Import Input Placeholder"], "", L["Readable - TextPrompt - Import Button 1"], function(_, val)
+				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Import"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
 					local success, values = LibraryCallback:Import(val)
 
 					if val ~= "" and success then
-						InteractionPromptFrame.Set(L["Readable - Prompt - Import"], L["Readable - Prompt - Import Button 1"], L["Readable - Prompt - Import Button 2"], function()
+						InteractionPromptFrame.Set(L["Readable - Library - Prompt - Import"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
 								INTLIB.profile.READABLE = values
 
 								ReloadUI()

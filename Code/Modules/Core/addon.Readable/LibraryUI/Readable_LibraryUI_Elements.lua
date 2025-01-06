@@ -76,7 +76,7 @@ function NS.LibraryUI.Elements:Load()
 							LibraryUIFrame.Content.Title.Main.Text:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Text:SetPoint("TOP", LibraryUIFrame.Content.Title)
 							LibraryUIFrame.Content.Title.Main.Text:SetAlpha(.75)
-							LibraryUIFrame.Content.Title.Main.Text:SetText(UnitName("player") .. "'s Library")
+							LibraryUIFrame.Content.Title.Main.Text:SetText(UnitName("player") .. L["Readable - Library - Name Text Append"])
 						end
 
 						do -- SUBTEXT
@@ -136,7 +136,7 @@ function NS.LibraryUI.Elements:Load()
 							fontSize = 12.5,
 							justifyH = "LEFT",
 							justifyV = "MIDDLE",
-							hint = "Search",
+							hint = L["Readable - Library - Search Input Placeholder"],
 							valueUpdateCallback = UpdateSearch
 						}, "$parent.Search")
 						LibraryUIFrame.Content.Sidebar.Search:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth() - 20, 35)
@@ -191,7 +191,7 @@ function NS.LibraryUI.Elements:Load()
 							LibraryUIFrame.Content.Sidebar.Label_Show = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.Sidebar, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label_Show")
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth(), 35)
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetAlpha(.5)
-							LibraryUIFrame.Content.Sidebar.Label_Show:SetText(L["Readable - Show"])
+							LibraryUIFrame.Content.Sidebar.Label_Show:SetText(L["Readable - Library - Show"])
 
 							--------------------------------
 
@@ -205,7 +205,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.Type_Letter = CreateCheckbox(Click, L["Readable - Letters"], "$parent.Letters")
+							LibraryUIFrame.Content.Sidebar.Type_Letter = CreateCheckbox(Click, L["Readable - Library - Letters"], "$parent.Letters")
 						end
 
 						do -- CHECKBOX (BOOKS)
@@ -215,7 +215,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.Type_Book = CreateCheckbox(Click, L["Readable - Books"], "$parent.Type_Book")
+							LibraryUIFrame.Content.Sidebar.Type_Book = CreateCheckbox(Click, L["Readable - Library - Books"], "$parent.Type_Book")
 						end
 
 						do -- CHECKBOX (SLATES)
@@ -225,7 +225,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.Type_Slate = CreateCheckbox(Click, L["Readable - Slates"], "$parent.Type_Slate")
+							LibraryUIFrame.Content.Sidebar.Type_Slate = CreateCheckbox(Click, L["Readable - Library - Slates"], "$parent.Type_Slate")
 						end
 
 						do -- CHECKBOX (IN-WORLD)
@@ -235,7 +235,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.Type_InWorld = CreateCheckbox(Click, L["Readable - Show only World"], "$parent.Type_InWorld")
+							LibraryUIFrame.Content.Sidebar.Type_InWorld = CreateCheckbox(Click, L["Readable - Library - Show only World"], "$parent.Type_InWorld")
 						end
 					end
 
@@ -252,7 +252,9 @@ function NS.LibraryUI.Elements:Load()
 								customHighlightColor = { r = 1, g = 1, b = 1, a = .25 },
 								customActiveColor = nil,
 								customTextColor = { r = 1, g = 1, b = 1, a = .5 },
-								customTextHighlightColor = { r = 1, g = 1, b = 1, a = .5 }
+								customTextHighlightColor = { r = 1, g = 1, b = 1, a = .5 },
+								disableMouseDown = true,
+								disableMouseUp = true,
 							}, name)
 							Button:SetText(text)
 
@@ -267,11 +269,11 @@ function NS.LibraryUI.Elements:Load()
 
 						--------------------------------
 
-						LibraryUIFrame.Content.Sidebar.Button_Export = CreateButton(function() NS.LibraryUI.Script:Export() end, "Export", "$parent.Button_Export")
+						LibraryUIFrame.Content.Sidebar.Button_Export = CreateButton(function() NS.LibraryUI.Script:Export() end, L["Readable - Library - Export Button"], "$parent.Button_Export")
 						LibraryUIFrame.Content.Sidebar.Button_Export:SetPoint("BOTTOM", LibraryUIFrame.Content.Sidebar, 0, 35 + 15)
 						addon.SoundEffects:SetButton(LibraryUIFrame.Content.Sidebar.Button_Export, addon.SoundEffects.Readable_Button_Enter, addon.SoundEffects.Readable_Button_Leave, addon.SoundEffects.Readable_Button_MouseDown, addon.SoundEffects.Readable_Button_MouseUp)
 
-						LibraryUIFrame.Content.Sidebar.Button_Import = CreateButton(function() NS.LibraryUI.Script:ImportPrompt() end, "Import", "$parent.Button_Import")
+						LibraryUIFrame.Content.Sidebar.Button_Import = CreateButton(function() NS.LibraryUI.Script:ImportPrompt() end, L["Readable - Library - Import Button"], "$parent.Button_Import")
 						LibraryUIFrame.Content.Sidebar.Button_Import:SetPoint("BOTTOM", LibraryUIFrame.Content.Sidebar, 0, 0)
 						addon.SoundEffects:SetButton(LibraryUIFrame.Content.Sidebar.Button_Import, addon.SoundEffects.Readable_Button_Enter, addon.SoundEffects.Readable_Button_Leave, addon.SoundEffects.Readable_Button_MouseDown, addon.SoundEffects.Readable_Button_MouseUp)
 					end
@@ -351,6 +353,8 @@ function NS.LibraryUI.Elements:Load()
 										customColor = { r = 1, g = 1, b = 1, a = .125 },
 										customHighlightColor = { r = 1, g = 1, b = 1, a = .25 },
 										customActiveColor = nil,
+										disableMouseDown = true,
+										disableMouseUp = true,
 									}, "$parent.Button_PreviousPage")
 									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage:SetPoint("LEFT", LibraryUIFrame.Content.ContentFrame.Index.Content, 0, 0)
 									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage:SetFrameStrata("FULLSCREEN")
@@ -402,6 +406,8 @@ function NS.LibraryUI.Elements:Load()
 										customColor = { r = 1, g = 1, b = 1, a = .125 },
 										customHighlightColor = { r = 1, g = 1, b = 1, a = .25 },
 										customActiveColor = nil,
+										disableMouseDown = true,
+										disableMouseUp = true,
 									}, "$parent.Button_NextPage")
 									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage:SetPoint("RIGHT", LibraryUIFrame.Content.ContentFrame.Index.Content, 0, 0)
 									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage:SetFrameStrata("FULLSCREEN")

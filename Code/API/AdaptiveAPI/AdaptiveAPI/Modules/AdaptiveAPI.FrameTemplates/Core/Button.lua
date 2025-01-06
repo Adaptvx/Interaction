@@ -41,7 +41,8 @@ do
 	----
 	-- theme, defaultTexture, highlightTexture, edgeSize, scale,
 	-- playAnimation, customColor, customHighlightColor, customActiveColor,
-	-- customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight
+	-- customTextColor, customTextHighlightColor, customFont, customFontSize,
+	-- disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp
 	---@param parent any
 	---@param sizeX number
 	---@param sizeY number
@@ -378,12 +379,13 @@ do
 		----
 		-- theme, defaultTexture, highlightTexture, edgeSize, scale,
 		-- playAnimation, customColor, customHighlightColor, customActiveColor,
-		-- customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight
+		-- customTextColor, customTextHighlightColor, customFont, customFontSize,
+		-- disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp
 		---@param frame any
 		---@param data table
 		function NS.Styles:Button(frame, data)
-			local theme, defaultTexture, highlightTexture, edgeSize, scale, playAnimation, customColor, customHighlightColor, customActiveColor, customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight =
-				data.theme, data.defaultTexture, data.highlightTexture, data.edgeSize, data.scale, data.playAnimation, data.customColor, data.customHighlightColor, data.customActiveColor, data.customTextColor, data.customTextHighlightColor, data.customFont, data.customFontSize, data.disableHighlight, data.disableMouseHighlight
+			local theme, defaultTexture, highlightTexture, edgeSize, scale, playAnimation, customColor, customHighlightColor, customActiveColor, customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp =
+				data.theme, data.defaultTexture, data.highlightTexture, data.edgeSize, data.scale, data.playAnimation, data.customColor, data.customHighlightColor, data.customActiveColor, data.customTextColor, data.customTextHighlightColor, data.customFont, data.customFontSize, data.disableHighlight, data.disableMouseHighlight, data.disableMouseDown, data.disableMouseUp
 
 			--------------------------------
 
@@ -586,7 +588,7 @@ do
 				end
 
 				frame.MouseDown = function()
-					if frame.IsEnabled and frame:IsEnabled() then
+					if frame.IsEnabled and frame:IsEnabled() and not disableMouseDown then
 						if playAnimation or playAnimation == nil then
 							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .25)
 						else
@@ -604,7 +606,7 @@ do
 				end
 
 				frame.MouseUp = function()
-					if frame.IsEnabled and frame:IsEnabled() then
+					if frame.IsEnabled and frame:IsEnabled() and not disableMouseUp then
 						if playAnimation or playAnimation == nil then
 							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .5)
 						else

@@ -57,7 +57,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 	Frame.Enter = function(skipAnimation)
 		if background then
-			if not InteractionSettingsFrame.PreventMouse then
+			if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
 				if skipAnimation then
 					Frame.Background:SetAlpha(1)
 				else
@@ -68,7 +68,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 		if tooltipText then
 			if Frame:IsVisible() and addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
-				if not InteractionSettingsFrame.PreventMouse then
+				if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
 					NS.Script:ShowTooltip(Frame, tooltipText, tooltipImage, tooltipImageSize, skipAnimation)
 				end
 			end
@@ -159,9 +159,11 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	end
 
 	do -- TEXT
+		local Padding = 10
+
 		Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-		Frame.Text:SetSize(Frame.Container:GetWidth() - 10, Frame.Container:GetHeight() - 10)
-		Frame.Text:SetPoint("CENTER", Frame.Container, 0, 0)
+		Frame.Text:SetSize(Frame.Container:GetWidth() - 150 - Padding, Frame.Container:GetHeight())
+		Frame.Text:SetPoint("LEFT", Frame.Container, Padding / 2, 0)
 		Frame.Text:SetAlpha(.75)
 
 		if subcategory and subcategory >= 1 then

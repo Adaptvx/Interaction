@@ -11,8 +11,8 @@ NS.Variables = {}
 -- VARIABLES
 --------------------------------
 
-do                                        -- MAIN
-	do                                    -- INPUT DEVICE
+do -- MAIN
+	do -- INPUT DEVICE
 		NS.Variables.SimulateController = false -- DEBUG
 		NS.Variables.IsController = nil
 		NS.Variables.IsPC = nil
@@ -57,7 +57,7 @@ do                                        -- MAIN
 
 		function NS.Variables:UpdateKeybinds()
 			do -- MAIN
-				NS.Variables.Key_Close = { [1] = INTDB.profile.INT_KEY_CLOSE, [2] = "PAD1" }
+				NS.Variables.Key_Close = { [1] = INTDB.profile.INT_KEY_CLOSE, [2] = "PAD2" }
 				NS.Variables.Key_Next = { [1] = INTDB.profile.INT_KEY_NEXT, [2] = "PADRTRIGGER" }
 				NS.Variables.Key_Previous = { [1] = INTDB.profile.INT_KEY_PREVIOUS, [2] = "PADLTRIGGER" }
 				NS.Variables.Key_Prompt_Accept = { [1] = INTDB.profile.INT_KEY_PROMPT_ACCEPT, [2] = "PADLSHOULDER" }
@@ -69,8 +69,8 @@ do                                        -- MAIN
 					NS.Variables.Key_Skip = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
 					NS.Variables.Key_Progress = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
 				else
-					NS.Variables.Key_Skip = { [1] = INTDB.profile.INT_KEY_PROGRESS, [2] = "PAD3" }
-					NS.Variables.Key_Progress = { [1] = INTDB.profile.INT_KEY_PROGRESS, [2] = "PAD3" }
+					NS.Variables.Key_Skip = { [1] = INTDB.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
+					NS.Variables.Key_Progress = { [1] = INTDB.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
 				end
 			end
 		end

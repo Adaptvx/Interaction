@@ -34,6 +34,7 @@ do -- CONSTANTS
 		NameplateOtherTopInset = -1,
 		NameplateOtherBottomInset = -1,
 		NameplateMotion = 0,
+		InstantQuestText = 1,
 	}
 
 	NS.Variables.CVARS_CINEMATIC = {

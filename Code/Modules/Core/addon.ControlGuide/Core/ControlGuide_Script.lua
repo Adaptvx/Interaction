@@ -43,6 +43,9 @@ function NS.Script:Load()
 				local isGossip = (not InteractionGossipFrame.hidden)
 				local isQuest = (not InteractionQuestFrame.hidden)
 
+				local isController = (addon.Input.Variables.IsControllerEnabled)
+				local isGossipOption = (#InteractionGossipFrame.GetButtons() > 0)
+
 				--------------------------------
 
 				local data = {}
@@ -63,10 +66,15 @@ function NS.Script:Load()
 							text = L["ControlGuide - Skip"],
 							keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress)
 						}
+						local interact = {
+							text = L["ControlGuide - Gossip Option Interact"],
+							keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Interact)
+						}
 
 						table.insert(data, back)
 						if nextAvailable then if next.text then table.insert(data, next) end end
-						if nextAvailable and not isQuest then if skip.text then table.insert(data, skip) end end
+						if ((isController and (not isGossip or not isGossipOption)) or (not isController)) and nextAvailable and not isQuest then if skip.text then table.insert(data, skip) end end
+						if isController and isGossip and isGossipOption then table.insert(data, interact) end
 					end
 
 					if isQuest then
