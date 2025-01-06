@@ -298,7 +298,7 @@ local function Load()
 		L["InteractionQuestFrame - Accept - Auto Accept"] = "Автоматически принято"
 		L["InteractionQuestFrame - Accept"] = "Принять"
 		L["InteractionQuestFrame - Decline"] = "Отклонить"
-		L["InteractionQuestFrame - Goodbye"] = "Прощание"
+		L["InteractionQuestFrame - Goodbye"] = "Попрощаться"
 		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Понятно"
 		L["InteractionQuestFrame - Continue"] = "Продолжить"
 		L["InteractionQuestFrame - In Progress"] = "В ходе выполнения"
@@ -318,7 +318,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionGossipFrame - Close"] = "Прощание"
+		L["InteractionGossipFrame - Close"] = "Попрощаться"
 	end
 
 	--------------------------------
