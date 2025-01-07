@@ -270,7 +270,7 @@ local function Load()
 		L["Readable - Library - Show only World"] = "Только Мир"
 
 		-- TITLE
-		L["Readable - Library - Name Text Append"] = "Библиотека"
+		L["Readable - Library - Name Text Append"] = " Библиотека"
 		L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
 		L["Readable - Library - Showing Status Text - Subtext 2"] = " Предметы"
 
