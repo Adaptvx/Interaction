@@ -127,7 +127,7 @@ local function Load()
 		L["Checkbox - Dynamic Camera / Focus / X - Tooltip"] = "Запретить фокусировку по оси X."
 		L["Checkbox - Dynamic Camera / Focus / Y"] = "Игнорировать ось Y"
 		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Запретить фокусировку по оси Y."
-		L["Checkbox - Vignette"] = "Vignette"
+		L["Checkbox - Vignette"] = "Виньетка"
 		L["Checkbox - Vignette - Tooltip"] = "Уменьшает яркость краев."
 
 
@@ -260,17 +260,17 @@ local function Load()
 		L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
 
 		-- SIDEBAR
-		L["Readable - Library - Search Input Placeholder"] = "Search"
-		L["Readable - Library - Export Button"] = "Export"
-		L["Readable - Library - Import Button"] = "Import"
+		L["Readable - Library - Search Input Placeholder"] = "Поиск"
+		L["Readable - Library - Export Button"] = "Экспорт"
+		L["Readable - Library - Import Button"] = "Импорт"
 		L["Readable - Library - Show"] = "Показать"
 		L["Readable - Library - Letters"] = "Письма"
 		L["Readable - Library - Books"] = "Книги"
-		L["Readable - Library - Slates"] = "Доски"
+		L["Readable - Library - Slates"] = "Скрижали"
 		L["Readable - Library - Show only World"] = "Только Мир"
 
 		-- TITLE
-		L["Readable - Library - Name Text Append"] = "'s Library"
+		L["Readable - Library - Name Text Append"] = "Библиотека"
 		L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
 		L["Readable - Library - Showing Status Text - Subtext 2"] = " Предметы"
 
@@ -333,9 +333,9 @@ local function Load()
 		L["ControlGuide - Continue"] = "Продолжить"
 		L["ControlGuide - Complete"] = "Завершенно"
 		L["ControlGuide - Decline"] = "Отклонить"
-		L["ControlGuide - Goodbye"] = "Прощание"
+		L["ControlGuide - Goodbye"] = "Попрощаться"
 		L["ControlGuide - Got it"] = "Понятно"
-		L["ControlGuide - Gossip Option Interact"] = "Select Option"
+		L["ControlGuide - Gossip Option Interact"] = "Выбор настроек"
 	end
 
 	--------------------------------
