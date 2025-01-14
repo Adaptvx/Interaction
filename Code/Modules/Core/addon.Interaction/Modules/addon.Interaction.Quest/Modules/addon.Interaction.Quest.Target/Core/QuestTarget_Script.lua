@@ -23,14 +23,14 @@ function NS.Script:Load()
 
     do
         Frame.UpdateLayout = function()
-            local TotalHeight = 0
+            local totalHeight = 0
 
-            if not Frame.Model.hidden then TotalHeight = TotalHeight + Frame.Art:GetHeight() end
-            TotalHeight = TotalHeight + NS.Variables.PADDING + Frame.Label:GetHeight()
-            TotalHeight = TotalHeight + NS.Variables.PADDING + Frame.Description:GetHeight()
-            TotalHeight = TotalHeight + NS.Variables.CONTENT_PADDING * 2
+            if not Frame.Model.hidden then totalHeight = totalHeight + Frame.Art:GetHeight() end
+            totalHeight = totalHeight + NS.Variables.PADDING + Frame.Label:GetHeight()
+            totalHeight = totalHeight + NS.Variables.PADDING + Frame.Description:GetHeight()
+            totalHeight = totalHeight + NS.Variables.CONTENT_PADDING * 2
 
-            Frame:SetHeight(TotalHeight)
+            Frame:SetHeight(totalHeight)
 
             --------------------------------
 
@@ -90,10 +90,6 @@ function NS.Script:Load()
 
                 AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
                 AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 100, 75, "y")
-
-                --------------------------------
-
-                -- addon.SoundEffects:PlaySoundFile(addon.SoundEffects.PATH .. "QuestTargetFrame/flyer-animate-in.mp3")
             end
         end
 
@@ -127,7 +123,7 @@ function NS.Script:Load()
                 --------------------------------
 
                 if skipAnimation then
-                    local point, relativeTo, relativePoint, offsetX, offsetY = Frame:GetPoint()
+                    local _, relativeTo, _, _, offsetY = Frame:GetPoint()
 
                     Frame:SetAlpha(0)
                     Frame:SetPoint("LEFT", relativeTo, 125, offsetY)
@@ -135,10 +131,6 @@ function NS.Script:Load()
                     AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
                     AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 75, 100, "y")
                 end
-
-                --------------------------------
-
-                -- addon.SoundEffects:PlaySoundFile(addon.SoundEffects.PATH .. "QuestTargetFrame/flyer-animate-out.mp3")
             end
         end
     end
@@ -182,14 +174,17 @@ function NS.Script:Load()
                             Frame.Model:SetPortraitZoom(.975)
                             Frame.Model:FreezeAnimation(0, 0, 0)
                             Frame.Model:SetModelAlpha(0)
+
+							--------------------------------
+
+							Frame.UpdateLayout()
                         end)
+
+						--------------------------------
+
+						Frame.UpdateLayout()
                     end
                 end
-            end)
-
-            local _ = CreateFrame("Frame", "UpdateFrame/QuestTarget_Script.lua -- UpdateSize", Frame)
-            _:SetScript("OnUpdate", function()
-                Frame.UpdateLayout()
             end)
 
             CallbackRegistry:Add("START_QUEST", function()

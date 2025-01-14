@@ -220,35 +220,40 @@ function NS.Script:Load()
 	ResponseFrame:RegisterEvent("LFG_ROLE_CHECK_SHOW")
 	ResponseFrame:RegisterEvent("LFG_PROPOSAL_SHOW")
 	ResponseFrame:RegisterEvent("LFG_PROPOSAL_UPDATE")
+	ResponseFrame:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
 	ResponseFrame:SetScript("OnEvent", function(self, event, ...)
-		local InCombatLockdown = (InCombatLockdown())
-		local CanShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
+		local inCombatLockdown = (InCombatLockdown())
+		local canShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
 
-		local IsInInstance = (IsInInstance())
-		local IsInCinematicScene = (IsInCinematicScene())
-		local IsHideUIActive = (NS.Variables.Active)
-		local IsVisibleUI = (UIParent:GetAlpha() >= .99)
+		local isInInstance = (IsInInstance())
+		local isInCinematicScene = (IsInCinematicScene())
+		local isHideUIActive = (NS.Variables.Active)
+		local isVisibleUI = (UIParent:GetAlpha() >= .99)
 
-		if event == "PLAYER_REGEN_DISABLED" or event == "PARTY_INVITE_REQUEST" or event == "LFG_ROLE_CHECK_SHOW" or event == "LFG_PROPOSAL_SHOW" or event == "LFG_PROPOSAL_UPDATE" then
-			if not InCombatLockdown and CanShowUIAndHideElements and IsHideUIActive then
-				UIParent:Show()
-			end
+		if not inCombatLockdown and canShowUIAndHideElements and isHideUIActive then
+			UIParent:Show()
 		end
 	end)
 
-	local UpdateFrame = CreateFrame("Frame")
-	UpdateFrame:SetScript("OnUpdate", function()
-		local InCombatLockdown = (InCombatLockdown())
-		local CanShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
+	local PriorityResponseFrame = CreateFrame("Frame")
+	PriorityResponseFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
+	PriorityResponseFrame:RegisterEvent("ZONE_CHANGED")
+	PriorityResponseFrame:RegisterEvent("CINEMATIC_START")
+	PriorityResponseFrame:RegisterEvent("CINEMATIC_STOP")
+	PriorityResponseFrame:RegisterEvent("PLAY_MOVIE")
+	PriorityResponseFrame:RegisterEvent("STOP_MOVIE")
+	PriorityResponseFrame:SetScript("OnEvent", function(self, event, ...)
+		local inCombatLockdown = (InCombatLockdown())
+		local canShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
 
-		local IsInInstance = (IsInInstance())
-		local IsInCinematicScene = (IsInCinematicScene())
-		local IsHideUIActive = (NS.Variables.Active)
-		local IsVisibleUI = (UIParent:GetAlpha() >= .99)
+		local isInInstance = (IsInInstance())
+		local isInCinematicScene = (IsInCinematicScene())
+		local isHideUIActive = (NS.Variables.Active)
+		local isVisibleUI = (UIParent:GetAlpha() >= .99)
 
-		if IsInInstance then
-			if IsHideUIActive and not IsVisibleUI then
-				if not InCombatLockdown and CanShowUIAndHideElements then
+		if isInInstance then
+			if isHideUIActive and not isVisibleUI then
+				if not inCombatLockdown and canShowUIAndHideElements then
 					UIParent:Show()
 				end
 
@@ -261,7 +266,7 @@ function NS.Script:Load()
 			end
 		end
 
-		if IsHideUIActive and IsInCinematicScene and not InCombatLockdown then
+		if isHideUIActive and isInCinematicScene and not inCombatLockdown then
 			UIParent:Hide()
 		end
 	end)

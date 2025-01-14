@@ -11,5 +11,4 @@
 	<Include file="Modules/addon.Interaction.Dialog/Load.xml"/>
 	<Include file="Modules/addon.Interaction.Gossip/Load.xml"/>
 	<Include file="Modules/addon.Interaction.Quest/Load.xml"/>
-	<Include file="Modules/addon.Interaction.Effects/Load.xml"/>
 </Ui>

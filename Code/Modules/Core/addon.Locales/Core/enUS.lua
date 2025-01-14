@@ -37,12 +37,13 @@ local function Load()
 		-- APPEARANCE
 		L["Title - Theme"] = "Theme"
 		L["Range - Main Theme"] = "Main Theme"
-		L["Range - Main Theme - Tooltip"] = "Sets the overall UI theme.\n\nDefault: Day."
+		L["Range - Main Theme - Tooltip"] = "Sets the overall UI theme.\n\nDefault: Day.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Dynamic" .. addon.Theme.Settings.Tooltip_Text_Note .. " option sets the main theme according to in-game day/night cycle.|r"
 		L["Range - Main Theme - Day"] = "DAY"
 		L["Range - Main Theme - Night"] = "NIGHT"
+		L["Range - Main Theme - Dynamic"] = "DYNAMIC"
 		L["Range - Dialog Theme"] = "Dialog Theme"
-		L["Range - Dialog Theme - Tooltip"] = "Sets the NPC dialog UI theme.\n\nDefault: Auto."
-		L["Range - Dialog Theme - Auto"] = "AUTO"
+		L["Range - Dialog Theme - Tooltip"] = "Sets the NPC dialog UI theme.\n\nDefault: Match.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Match" .. addon.Theme.Settings.Tooltip_Text_Note .. " option sets the dialog theme to match the main theme.|r"
+		L["Range - Dialog Theme - Auto"] = "MATCH"
 		L["Range - Dialog Theme - Day"] = "DAY"
 		L["Range - Dialog Theme - Night"] = "NIGHT"
 		L["Range - Dialog Theme - Rustic"] = "RUSTIC"
@@ -59,7 +60,7 @@ local function Load()
 		L["Checkbox - UIDirection / Dialog / Mirror"] = "Mirror"
 		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Mirrors the UI direction."
 		L["Range - Quest Frame Size"] = "Quest Frame Size"
-		L["Range - Quest Frame Size - Tooltip"] = "Adjust quest frame size.\n\nDefault: LARGE."
+		L["Range - Quest Frame Size - Tooltip"] = "Adjust quest frame size.\n\nDefault: Large."
 		L["Range - Quest Frame Size - Small"] = "SMALL"
 		L["Range - Quest Frame Size - Medium"] = "MEDIUM"
 		L["Range - Quest Frame Size - Large"] = "LARGE"
@@ -120,6 +121,8 @@ local function Load()
 		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Prevent Y axis focus."
 		L["Checkbox - Vignette"] = "Vignette"
 		L["Checkbox - Vignette - Tooltip"] = "Reduces edge brightness."
+		L["Checkbox - Vignette / Gradient"] = "Gradient"
+		L["Checkbox - Vignette / Gradient - Tooltip"] = "Reduce brightness behind gossip and quest interface elements."
 
 		-- PLAYBACK
 		L["Title - Pace"] = "Pace"
@@ -186,14 +189,17 @@ local function Load()
 		L["Keybind - PC / Keybind / Next"] = "Next"
 		L["Keybind - PC / Keybind / Next - Tooltip"] = "Next dialog keybind.\n\nDefault: E."
 		L["Keybind - PC / Keybind / Progress"] = "Progress"
-		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Keybind to progress the current session.\n\nDefault: SPACE."
+		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Keybind for:\n- Skip\n- Accept\n- Continue\n- Complete\n\nDefault: SPACE."
+		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Use Interact Key" .. addon.Theme.Settings.Tooltip_Text_Warning .. " option must be disabled to adjust this keybind.|r"
+		L["Keybind - PC / Keybind / Quest Next Reward"] = "Next Reward"
+		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Keybind to select the next quest reward.\n\nDefault: TAB."
 		L["Title - Controller"] = "Controller"
 		L["Title - Controller / Controller"] = "Controller"
 
 		-- GAMEPLAY
 		L["Title - Waypoint"] = "Waypoint"
 		L["Checkbox - Waypoint"] = "Enable"
-		L["Checkbox - Waypoint - Tooltip"] = "Waypoint replacement for Blizzard's in-game navigation.\n\n|cffBB0000This option will enable the Blizzard setting: 'In-game Navigation'.\n\nThis option will increase memory usage.|r\n\nDefault: Off."
+		L["Checkbox - Waypoint - Tooltip"] = "Waypoint replacement for Blizzard's in-game navigation.\n\nDefault: On."
 		L["Checkbox - Waypoint / Audio"] = "Audio"
 		L["Checkbox - Waypoint / Audio - Tooltip"] = "Sound effects when Waypoint state changes.\n\nDefault: On."
 		L["Title - Readable"] = "Readable Items"
@@ -274,6 +280,9 @@ local function Load()
 		do -- READABLE
 			-- NOTIFICATIONS
 			L["Readable - Notification - Saved To Library"] = "Saved to Library"
+
+			-- TOOLTIP
+			L["Readable - Tooltip - Change Page"] = "Scroll to change pages."
 		end
 	end
 
@@ -328,10 +337,11 @@ local function Load()
 		L["ControlGuide - Goodbye"] = "Goodbye"
 		L["ControlGuide - Got it"] = "Got it"
 		L["ControlGuide - Gossip Option Interact"] = "Select Option"
+		L["ControlGuide - Quest Next Reward"] = "Next Reward"
 	end
 
 	--------------------------------
-	-- ALERT NOTIFiCATION
+	-- ALERT NOTIFICATION
 	--------------------------------
 
 	do
@@ -364,7 +374,6 @@ local function Load()
 		L["PlayerStatusBar - TooltipLine3"] = "Level "
 	end
 
-
 	--------------------------------
 	-- MINIMAP ICON
 	--------------------------------
@@ -392,10 +401,29 @@ local function Load()
 	end
 
 	--------------------------------
+	-- DIALOG DATA
+	--------------------------------
+
+	do
+		-- Characters used for 'Dynamic Playback' pausing. Only supports single characters.
+		L["DialogData - PauseCharDB"] = {
+			"…",
+			"!",
+			"?",
+			".",
+			",",
+        }
+
+		-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.
+		L["DialogData - PlaybackSpeedModifier"] = 1
+	end
+
+	--------------------------------
 	-- GOSSIP DATA
 	--------------------------------
 
 	do
+		-- Need to match Blizzard's special gossip option prefix text.
 		L["GossipData - Trigger - Quest"] = "%(Quest%)"
 		L["GossipData - Trigger - Movie 1"] = "%(Play%)"
 		L["GossipData - Trigger - Movie 2"] = "%(Play Movie%)"

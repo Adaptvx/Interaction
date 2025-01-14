@@ -80,7 +80,9 @@ function NS.Script:Load()
 			QuestFrame:SetParent(InteractionFrame)
 
 			StaticPopup1:SetIgnoreParentAlpha(true)
-			if not addon.Variables.IS_CLASSIC_ERA then LFDRoleCheckPopup:SetIgnoreParentAlpha(true) end
+			if not addon.Variables.IS_CLASSIC then LFDRoleCheckPopup:SetIgnoreParentAlpha(true) end
+			if not addon.Variables.IS_CLASSIC then PVPReadyDialog:SetIgnoreParentAlpha(true) end
+			if not addon.Variables.IS_CLASSIC then PVPReadyPopup:SetIgnoreParentAlpha(true) end
 
 			--------------------------------
 
@@ -111,19 +113,6 @@ function NS.Script:Load()
 			_:SetScript("OnEvent", function(_, event)
 				Update()
 			end)
-
-			-- local _ = CreateFrame("Frame", "UpdateFrame/BlizzardFrames.lua -- SetupFrameVisibility", nil)
-			-- _:SetScript("OnUpdate", function()
-			-- 	if INTDB.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
-			-- 		if not NS.Variables.SetElementsActive then
-			-- 			addon.BlizzardFrames.Script:SetElements()
-			-- 		end
-			-- 	else
-			-- 		if NS.Variables.SetElementsActive then
-			-- 			addon.BlizzardFrames.Script:RemoveElements()
-			-- 		end
-			-- 	end
-			-- end)
 		end
 
 		function Callback:SetElementToInteractionPriorityFrame(frame, strata)

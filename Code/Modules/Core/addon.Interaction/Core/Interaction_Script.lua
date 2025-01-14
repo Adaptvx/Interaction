@@ -469,7 +469,7 @@ function NS.Script:Load()
 				_:RegisterEvent("PLAYER_REGEN_DISABLED")
 				_:SetScript("OnEvent", function(self, event, arg1, arg2)
 					if event == "PLAYER_REGEN_DISABLED" then
-						if NS.Variables.Active and addon.Cinematic.Variables.Active and not Combat_AlertShowForSession then
+						if addon.HideUI.Variables.Active and not Combat_AlertShowForSession then
 							Combat_AlertShowForSession = true
 
 							--------------------------------

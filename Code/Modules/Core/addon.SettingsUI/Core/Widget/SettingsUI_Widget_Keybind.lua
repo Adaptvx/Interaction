@@ -6,12 +6,12 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a keybind button. Child Frames: KeybindButton
-function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, subcategory, tooltipText, tooltipImage, tooltipImageType, hidden, locked)
+function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
 	local OffsetX = 0
 
 	--------------------------------
 
-	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipImage, tooltipImageType, hidden, locked)
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
 
 	--------------------------------
 
@@ -30,7 +30,7 @@ function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, su
 			local COLOR_Default
 
 			if addon.Theme.IsDarkTheme then
-				COLOR_Default = addon.Theme.Settings.Element_Default_DarkTheme
+				COLOR_Default = { r = addon.Theme.Settings.Element_Default_DarkTheme.r, g = addon.Theme.Settings.Element_Default_DarkTheme.g, b = addon.Theme.Settings.Element_Default_DarkTheme.b, a = .75}
 			else
 				COLOR_Default = addon.Theme.Settings.Element_Default_LightTheme
 			end

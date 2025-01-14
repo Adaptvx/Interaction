@@ -81,7 +81,7 @@ function NS.Script:Load()
 				end
 
 				AdaptiveAPI.Animation:Fade(Frame.Disc, .25, 0, .5, nil)
-				AdaptiveAPI.Animation:Scale(Frame.Disc, .5, .875, RingScale, nil, AdaptiveAPI.Animation.EaseExpo, nil)
+				AdaptiveAPI.Animation:Scale(Frame.Disc, 1, RingScale + .125, RingScale, nil, nil, nil)
 				AdaptiveAPI.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, AdaptiveAPI.Animation.EaseExpo, nil)
 			end, .25)
 
@@ -98,16 +98,6 @@ function NS.Script:Load()
 					addon.Cinematic.Script:StartCinematicMode(true, true)
 				end
 			end
-
-			--------------------------------
-
-			Frame.LibraryUIFrame.Content.Sidebar.Search:SetText("")
-			Frame.LibraryUIFrame.Content.Sidebar.Search:SetFocus(false)
-
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Book.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.SetChecked(false)
 
 			--------------------------------
 
@@ -247,15 +237,6 @@ function NS.Script:Load()
 			--------------------------------
 
 			Frame.ShowWithAnimation("Library")
-
-			--------------------------------
-
-		end
-
-		-- TEMP SHORTCUT
-		-- Run this as Library doesn't have a shortcut to open from anywhere
-		function InteractionOpenLibrary()
-			Frame.ShowLibrary()
 		end
 	end
 

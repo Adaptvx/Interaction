@@ -70,6 +70,14 @@ function NS.Script:Load()
 		Frame.ButtonContainer.GoodbyeButton:SetScript("OnClick", function()
 			Frame.HideWithAnimation(true)
 		end)
+
+		Frame.TitleHeader.MouseResponder:SetScript("OnEnter", function()
+			Frame.TitleHeader:SetAlpha(.75)
+		end)
+
+		Frame.TitleHeader.MouseResponder:SetScript("OnLeave", function()
+			Frame.TitleHeader:SetAlpha(1)
+		end)
 	end
 
 	--------------------------------
@@ -130,10 +138,14 @@ function NS.Script:Load()
 
 			--------------------------------
 
+			Frame.TitleHeader:SetAlpha(1)
+
 			if WarbandCompleted then
-				AdaptiveAPI:AddTooltip(Frame.TitleHeader, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, -35, true)
+				Frame.TitleHeader.MouseResponder:EnableMouse(true)
+				AdaptiveAPI:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0, true)
 			else
-				AdaptiveAPI:RemoveTooltip(Frame.TitleHeader)
+				Frame.TitleHeader.MouseResponder:EnableMouse(false)
+				AdaptiveAPI:RemoveTooltip(Frame.TitleHeader.MouseResponder)
 			end
 
 			--------------------------------
@@ -162,7 +174,7 @@ function NS.Script:Load()
 
 			if Frame.Storyline:IsShown() then
 				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
-				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (70 / NS.Variables.ScaleModifier) - TitleHeight)
+				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (75 / NS.Variables.ScaleModifier) - TitleHeight)
 			else
 				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
 				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (52.5 / NS.Variables.ScaleModifier) - TitleHeight)
@@ -190,8 +202,8 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.SetChoiceSelected = function(frame)
-			NS.Variables.ChoiceSelected = frame
+		Frame.SetChoiceSelected = function()
+			NS.Variables.ChoiceSelected = true
 
 			--------------------------------
 
@@ -379,12 +391,12 @@ function NS.Script:Load()
 
 					do -- COUNT
 						if CallbackCount > 1 then
-							Buttons[i].Image.LabelFrame:Show()
-							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+							Buttons[i].Image.Text:Show()
+							Buttons[i].Image.Text.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.Text.Label:SetText(CallbackCount)
 						else
-							Buttons[i].Image.LabelFrame:Hide()
-							Buttons[i].Image.LabelFrame.Label:SetText("")
+							Buttons[i].Image.Text:Hide()
+							Buttons[i].Image.Text.Label:SetText("")
 						end
 					end
 
@@ -438,12 +450,12 @@ function NS.Script:Load()
 
 					do -- COUNT
 						if CallbackCount > 1 then
-							Buttons[i].Image.LabelFrame:Show()
-							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+							Buttons[i].Image.Text:Show()
+							Buttons[i].Image.Text.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.Text.Label:SetText(CallbackCount)
 						else
-							Buttons[i].Image.LabelFrame:Hide()
-							Buttons[i].Image.LabelFrame.Label:SetText("")
+							Buttons[i].Image.Text:Hide()
+							Buttons[i].Image.Text.Label:SetText("")
 						end
 					end
 
@@ -497,12 +509,12 @@ function NS.Script:Load()
 
 					do -- COUNT
 						if CallbackCount and CallbackCount > 1 then
-							Buttons[i].Image.LabelFrame:Show()
-							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+							Buttons[i].Image.Text:Show()
+							Buttons[i].Image.Text.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.Text.Label:SetText(CallbackCount)
 						else
-							Buttons[i].Image.LabelFrame:Hide()
-							Buttons[i].Image.LabelFrame.Label:SetText("")
+							Buttons[i].Image.Text:Hide()
+							Buttons[i].Image.Text.Label:SetText("")
 						end
 					end
 
@@ -556,12 +568,12 @@ function NS.Script:Load()
 
 					do -- COUNT
 						if CallbackCount > 1 then
-							Buttons[i].Image.LabelFrame:Show()
-							Buttons[i].Image.LabelFrame.Label:SetTextColor(CallbackCountText:GetTextColor())
-							Buttons[i].Image.LabelFrame.Label:SetText(CallbackCount)
+							Buttons[i].Image.Text:Show()
+							Buttons[i].Image.Text.Label:SetTextColor(CallbackCountText:GetTextColor())
+							Buttons[i].Image.Text.Label:SetText(CallbackCount)
 						else
-							Buttons[i].Image.LabelFrame:Hide()
-							Buttons[i].Image.LabelFrame.Label:SetText("")
+							Buttons[i].Image.Text:Hide()
+							Buttons[i].Image.Text.Label:SetText("")
 						end
 					end
 
@@ -655,7 +667,7 @@ function NS.Script:Load()
 						--------------------------------
 
 						if StorylineInfo then
-							Frame.Storyline.Text:SetText(StorylineInfo)
+							Frame.Storyline.Content.Text:SetText(StorylineInfo)
 						end
 					end
 
@@ -1120,7 +1132,7 @@ function NS.Script:Load()
 			Frame:SetAlpha(0)
 			Frame.Background:SetAlpha(0)
 			Frame.Title:SetAlpha(0)
-			Frame.Storyline.Text:SetAlpha(0)
+			Frame.Storyline:SetAlpha(0)
 			Frame.ScrollFrame:SetAlpha(0)
 			Frame.ScrollFrame:Hide()
 			Frame.ButtonContainer:SetAlpha(0)
@@ -1141,7 +1153,7 @@ function NS.Script:Load()
 					AdaptiveAPI.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.hidden end)
 
 					if Frame.Storyline:IsShown() then
-						AdaptiveAPI.Animation:Fade(Frame.Storyline.Text, .375, 0, .5, nil, function() return Frame.hidden end)
+						AdaptiveAPI.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.hidden end)
 					end
 
 					--------------------------------
@@ -1456,11 +1468,11 @@ function NS.Script:Load()
 		end)
 
 		hooksecurefunc(Frame, "Show", function()
-			Frame.ClearChoiceSelected()
+			CallbackRegistry:Trigger("START_QUEST")
 
 			--------------------------------
 
-			CallbackRegistry:Trigger("START_QUEST")
+			Frame.ClearChoiceSelected()
 		end)
 
 		hooksecurefunc(Frame, "Hide", function()
@@ -1468,6 +1480,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
+			Frame.ClearChoiceSelected()
 			InteractionQuestFrame.UpdateGameTooltip()
 		end)
 

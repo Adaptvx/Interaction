@@ -37,8 +37,8 @@ function NS.Script:Load()
 		end
 
 		do -- OPTION BUTTON
-			local IsWaitingForGossipShow = false
-			local IsTTSPlayback = { ["playback"] = false, ["button"] = nil }
+			local isWaitingForGossipShow = false
+			local isTTSPlayback = { ["playback"] = false, ["button"] = nil }
 
 			--------------------------------
 
@@ -54,11 +54,11 @@ function NS.Script:Load()
 			end
 
 			local function Finish(button)
-				local IsGossipOrQuestGreetingStillVisible = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
+				local isGossipOrQuestGreetingStillVisible = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
 
 				--------------------------------
 
-				if IsGossipOrQuestGreetingStillVisible then
+				if isGossipOrQuestGreetingStillVisible then
 					Frame.GoodbyeButton:Hide()
 					AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
 
@@ -78,8 +78,8 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				IsWaitingForGossipShow = false
-				IsTTSPlayback = { ["playback"] = false, ["button"] = nil }
+				isWaitingForGossipShow = false
+				isTTSPlayback = { ["playback"] = false, ["button"] = nil }
 			end
 
 			local function TTS(button)
@@ -107,8 +107,8 @@ function NS.Script:Load()
 			local function Click(button)
 				local PATH_GOSSIP = addon.Variables.PATH .. "Art/ContextIcons/gossip-bubble.png"
 
-				local UsePlayerVoice = (INTDB.profile.INT_TTS and INTDB.profile.INT_TTS_PLAYER)
-				local IsGossipOption = (button.texture == PATH_GOSSIP)
+				local usePlayerVoice = (INTDB.profile.INT_TTS and INTDB.profile.INT_TTS_PLAYER)
+				local isGossipOption = (button.texture == PATH_GOSSIP)
 
 				--------------------------------
 
@@ -116,28 +116,28 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				if UsePlayerVoice and IsGossipOption then
+				if usePlayerVoice and isGossipOption then
 					TTS(button)
 
 					--------------------------------
 
-					addon.Interaction.Dialog.Script:StopInteraction()
+					addon.Interaction.Script:Manager_Dialog_Stop()
 
 					--------------------------------
 
-					IsWaitingForGossipShow = false
-					IsTTSPlayback = { ["playback"] = false, ["button"] = nil }
+					isWaitingForGossipShow = false
+					isTTSPlayback = { ["playback"] = false, ["button"] = nil }
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						IsTTSPlayback = { ["playback"] = true, ["button"] = button }
+						isTTSPlayback = { ["playback"] = true, ["button"] = button }
 					end, .25)
 				else
 					button.SelectOption()
 
 					--------------------------------
 
-					IsWaitingForGossipShow = true
-					IsTTSPlayback = { ["playback"] = false, ["button"] = nil }
+					isWaitingForGossipShow = true
+					isTTSPlayback = { ["playback"] = false, ["button"] = nil }
 				end
 			end
 
@@ -148,21 +148,21 @@ function NS.Script:Load()
 			Events:RegisterEvent("VOICE_CHAT_TTS_PLAYBACK_FINISHED")
 			Events:SetScript("OnEvent", function(self, event, ...)
 				if event == "GOSSIP_SHOW" then
-					if IsWaitingForGossipShow then
+					if isWaitingForGossipShow then
 						Finish()
 					end
 				end
 
 				if event == "VOICE_CHAT_TTS_PLAYBACK_FINISHED" then
-					if IsTTSPlayback.playback then
-						if IsTTSPlayback.button then
-							IsTTSPlayback.button.SelectOption()
+					if isTTSPlayback.playback then
+						if isTTSPlayback.button then
+							isTTSPlayback.button.SelectOption()
 						end
 
 						--------------------------------
 
-						IsWaitingForGossipShow = true
-						IsTTSPlayback = { ["playback"] = true, ["button"] = nil }
+						isWaitingForGossipShow = true
+						isTTSPlayback = { ["playback"] = true, ["button"] = nil }
 					end
 				end
 			end)
@@ -176,7 +176,7 @@ function NS.Script:Load()
 			end, 0)
 
 			CallbackRegistry:Add("STOP_PROMPT", function()
-				if IsWaitingForGossipShow then
+				if isWaitingForGossipShow then
 					Finish()
 				end
 			end)
@@ -198,6 +198,32 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		local function UpdateTextColor(text)
+			local new = text
+
+			--------------------------------
+
+			do -- RED
+				local count
+				new, count = gsub(new, "|[cC][fF][fF][fF][fF]0000", "|cffFF8181")
+
+				--------------------------------
+
+				if count == 0 then
+					new, count = gsub(new, "|cnRED_FONT_COLOR:", "|cffFF8181")
+				end
+			end
+
+			do -- BLUE
+				local count
+				new, count = gsub(new, "|[cC][fF][fF]0000[fF][fF]", "|cff8DC0FF")
+			end
+
+			--------------------------------
+
+			return new
+		end
+
 		Frame.GetButtons = function()
 			if Frame.Buttons == nil then
 				return
@@ -468,10 +494,19 @@ function NS.Script:Load()
 
 						do -- TEXT
 							local text = entries[i].title or entries[i].name
-							text = (string.gsub(text, L["GossipData - Trigger - Quest"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
-							text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-							text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-							text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+
+							--------------------------------
+
+							do -- COLOR
+								text = UpdateTextColor(text)
+							end
+
+							do -- TRIGGER ICON
+								text = (string.gsub(text, L["GossipData - Trigger - Quest"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+							end
 
 							--------------------------------
 
@@ -485,6 +520,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							buttons[i].IconTexture:SetTexture(texture)
+							buttons[i].texture = texture
 						end
 
 						do -- INDEX KEYBIND
@@ -526,7 +562,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame.GoodbyeButton:SetPoint("BOTTOM", Frame, 0, -Frame.GoodbyeButton:GetHeight() - NS.Variables:RATIO(2))
+					Frame.GoodbyeButton:SetPoint("BOTTOM", Frame, 0, -Frame.GoodbyeButton:GetHeight() - NS.Variables:RATIO(3))
 				else
 					Frame:SetHeight(50)
 
@@ -758,11 +794,11 @@ function NS.Script:Load()
 						end, delay)
 					end
 				else
-                    Frame.GoodbyeButton:Show()
+					Frame.GoodbyeButton:Show()
 
 					--------------------------------
 
-                    Frame.GoodbyeButton:SetAlpha(1)
+					Frame.GoodbyeButton:SetAlpha(1)
 
 					local point, relativeTo, relativePoint, offsetX, offsetY = Frame.GoodbyeButton:GetPoint()
 					Frame.GoodbyeButton:ClearAllPoints()

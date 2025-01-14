@@ -69,7 +69,7 @@ do
 
 		local function UpdateTheme()
 			if (theme and theme == 2) or (theme == nil and AdaptiveAPI.NativeAPI:GetDarkTheme()) then -- DARK MODE
-				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/keybind-background-light.png"
+				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/keybind-background-light-outline.png"
 				Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/keybind-background-highlighted-light.png"
 				Frame._ActiveTexture = Frame._CustomActiveTexture or AdaptiveAPI.PATH .. "Elements/keybind-background-active-light.png"
 				Frame._DefaultColor = Frame._CustomDefaultColor or { r = 1, g = 1, b = 1, a = 1 }
@@ -96,13 +96,14 @@ do
 		end
 
 		do -- BACKGROUND
-			Frame.Background, Frame.BackgroundTexture = NS:CreateNineSlice(Frame, frameStrata, Frame._DefaultTexture, 64, .125, "$parent.Background")
+			Frame.Background, Frame.BackgroundTexture = NS:CreateNineSlice(Frame, frameStrata, Frame._DefaultTexture, 64, .175, "$parent.Background")
 			Frame.Background:SetAllPoints(Frame, true)
 
 			--------------------------------
 
 			AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
 				Frame.BackgroundTexture:SetVertexColor(Frame._DefaultColor.r, Frame._DefaultColor.g, Frame._DefaultColor.b, Frame._DefaultColor.a)
+				Frame.BackgroundTexture:SetTexture(Frame._DefaultTexture)
 			end, 5)
 		end
 
@@ -162,10 +163,10 @@ do
 
 				--------------------------------
 
-				local EnterCallbacks = Frame.EnterCallbacks
+				local enterCallbacks = Frame.EnterCallbacks
 
-				for callback = 1, #EnterCallbacks do
-					EnterCallbacks[callback]()
+				for callback = 1, #enterCallbacks do
+					enterCallbacks[callback]()
 				end
 			end
 
@@ -181,10 +182,10 @@ do
 
 				--------------------------------
 
-				local LeaveCallbacks = Frame.LeaveCallbacks
+				local leaveCallbacks = Frame.LeaveCallbacks
 
-				for callback = 1, #LeaveCallbacks do
-					LeaveCallbacks[callback]()
+				for callback = 1, #leaveCallbacks do
+					leaveCallbacks[callback]()
 				end
 			end
 
@@ -193,10 +194,10 @@ do
 
 				--------------------------------
 
-				local MouseUpCallbacks = Frame.MouseUpCallbacks
+				local mouseUpCallbacks = Frame.MouseUpCallbacks
 
-				for callback = 1, #MouseUpCallbacks do
-					MouseUpCallbacks[callback]()
+				for callback = 1, #mouseUpCallbacks do
+					mouseUpCallbacks[callback]()
 				end
 			end
 

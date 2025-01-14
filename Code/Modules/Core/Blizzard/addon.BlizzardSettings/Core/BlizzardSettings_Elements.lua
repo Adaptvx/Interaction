@@ -37,8 +37,8 @@ function NS.Elements:Load()
 
 			do -- BORDER
 				Frame.Border, Frame.BorderTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", NS.Variables.PATH .. "border.png")
-				Frame.Border:SetSize(1, Frame:GetHeight())
-				Frame.Border:SetPoint("LEFT", Frame, 0, 0)
+				Frame.Border:SetPoint("TOPLEFT", Frame, 0, 0)
+				Frame.Border:SetPoint("BOTTOMLEFT", Frame, 1, 0)
 				Frame.Border:SetFrameStrata("HIGH")
 				Frame.Border:SetFrameLevel(2)
 			end

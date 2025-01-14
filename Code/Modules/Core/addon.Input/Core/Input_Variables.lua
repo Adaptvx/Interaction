@@ -36,6 +36,7 @@ do -- MAIN
 		NS.Variables.Key_Progress = nil
 		NS.Variables.Key_Prompt_Accept = nil
 		NS.Variables.Key_Prompt_Decline = nil
+		NS.Variables.Key_Quest_NextReward = nil
 
 		-- Navigation
 		NS.Variables.Key_MoveUp = { [1] = "W", [2] = "PADDUP" }
@@ -62,6 +63,7 @@ do -- MAIN
 				NS.Variables.Key_Previous = { [1] = INTDB.profile.INT_KEY_PREVIOUS, [2] = "PADLTRIGGER" }
 				NS.Variables.Key_Prompt_Accept = { [1] = INTDB.profile.INT_KEY_PROMPT_ACCEPT, [2] = "PADLSHOULDER" }
 				NS.Variables.Key_Prompt_Decline = { [1] = INTDB.profile.INT_KEY_PROMPT_DECLINE, [2] = "PADRSHOULDER" }
+				NS.Variables.Key_Quest_NextReward = { [1] = INTDB.profile.INT_KEY_QUEST_NEXTREWARD, [2] = "" }
 			end
 
 			do -- INTERACT KEY

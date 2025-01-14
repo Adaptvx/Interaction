@@ -40,7 +40,8 @@ do
 	-- Data Table
 	----
 	-- theme, defaultTexture, highlightTexture, edgeSize, scale,
-	-- playAnimation, customColor, customHighlightColor, customActiveColor,
+	-- texturePadding, playAnimation,
+	-- customColor, customHighlightColor, customActiveColor,
 	-- customTextColor, customTextHighlightColor, customFont, customFontSize,
 	-- disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp
 	---@param parent any
@@ -188,14 +189,9 @@ do
 
 					if not buttonType or (buttonType == 0) then
 						frame.backdrop = AdaptiveAPI.FrameTemplates:CreateBackdrop(frame, "HIGH", { r = .325, g = .325, b = .325, a = 1 }, { r = .5, g = .5, b = .5, a = 1 })
-						frame.backdrop:SetSize(frame:GetWidth(), frame:GetHeight())
-						frame.backdrop:SetPoint("CENTER", frame)
+						frame.backdrop:SetAllPoints(frame, true)
 						frame.backdrop:SetFrameStrata(frame:GetFrameStrata())
 						frame.backdrop:SetFrameLevel(frame:GetFrameLevel())
-
-						frame.backdrop:SetScript("OnUpdate", function()
-							frame.backdrop:SetSize(frame:GetWidth(), frame:GetHeight())
-						end)
 
 						hooksecurefunc(frame, "SetWidth", function()
 							frame.backdrop:SetWidth(frame:GetWidth())
@@ -378,46 +374,47 @@ do
 		-- Data Table
 		----
 		-- theme, defaultTexture, highlightTexture, edgeSize, scale,
-		-- playAnimation, customColor, customHighlightColor, customActiveColor,
+		-- texturePadding, playAnimation,
+		-- customColor, customHighlightColor, customActiveColor,
 		-- customTextColor, customTextHighlightColor, customFont, customFontSize,
 		-- disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp
 		---@param frame any
 		---@param data table
 		function NS.Styles:Button(frame, data)
-			local theme, defaultTexture, highlightTexture, edgeSize, scale, playAnimation, customColor, customHighlightColor, customActiveColor, customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp =
-				data.theme, data.defaultTexture, data.highlightTexture, data.edgeSize, data.scale, data.playAnimation, data.customColor, data.customHighlightColor, data.customActiveColor, data.customTextColor, data.customTextHighlightColor, data.customFont, data.customFontSize, data.disableHighlight, data.disableMouseHighlight, data.disableMouseDown, data.disableMouseUp
+			if not frame or frame.StyledButton then
+				return
+			end
+			frame.StyledButton = true
 
 			--------------------------------
 
-			if not frame or frame.stylised then
-				return
-			end
-			frame.stylised = true
+			local theme, defaultTexture, highlightTexture, edgeSize, scale, texturePadding, playAnimation, customColor, customHighlightColor, customActiveColor, customTextColor, customTextHighlightColor, customFont, customFontSize, disableHighlight, disableMouseHighlight, disableMouseDown, disableMouseUp =
+				data.theme, data.defaultTexture, data.highlightTexture, data.edgeSize, data.scale, data.texturePadding, data.playAnimation, data.customColor, data.customHighlightColor, data.customActiveColor, data.customTextColor, data.customTextHighlightColor, data.customFont, data.customFontSize, data.disableHighlight, data.disableMouseHighlight, data.disableMouseDown, data.disableMouseUp
 
 			--------------------------------
 
 			frame.IsActive = false
 			frame.IsHighlight = false
 
-			frame._defaultTexture = nil
-			frame._highlightTexture = nil
-			frame._textColor = nil
-			frame._textHighlightColor = nil
-			frame._color = nil
-			frame._highlightColor = nil
-			frame._activeColor = nil
-			frame._font = AdaptiveAPI.Fonts.Content_Light or GameFontNormal:GetFont()
-			frame._fontSize = 12.5
+			frame._DefaultTexture = nil
+			frame._HighlightTexture = nil
+			frame._TextColor = nil
+			frame._TextHighlightColor = nil
+			frame._Color = nil
+			frame._HighlightColor = nil
+			frame._ActiveColor = nil
+			frame._Font = AdaptiveAPI.Fonts.Content_Light or GameFontNormal:GetFont()
+			frame._FontSize = 12.5
 
-			frame.customDefaultTexture = defaultTexture
-			frame.customHighlightTexture = highlightTexture
-			frame.customColor = customColor
-			frame.customHighlightColor = customHighlightColor
-			frame.customTextColor = customTextColor
-			frame.customTextHighlightColor = customTextHighlightColor
-			frame.customActiveColor = customActiveColor
-			frame.customFont = customFont
-			frame.customFontSize = customFontSize
+			frame._CustomDefaultTexture = defaultTexture
+			frame._CustomHighlightTexture = highlightTexture
+			frame._CustomColor = customColor
+			frame._CustomHighlightColor = customHighlightColor
+			frame._CustomTextColor = customTextColor
+			frame._CustomTextHighlightColor = customTextHighlightColor
+			frame._CustomActiveColor = customActiveColor
+			frame._CustomFont = customFont
+			frame._CustomFontSize = customFontSize
 
 			frame.EnterCallbacks = {}
 			frame.LeaveCallbacks = {}
@@ -428,86 +425,84 @@ do
 
 			do -- THEME
 				local function UpdateTheme()
+					frame._Font = frame._CustomFont or frame._Font
+					frame._FontSize = frame._CustomFontSize or frame._FontSize
+
 					if (theme and theme == 2) or (not theme and AdaptiveAPI.IsDarkTheme) then
-						frame._defaultTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BORDER
-						frame._highlightTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-						frame._textColor = { r = 1, g = 1, b = 1, a = 1 }
-						frame._textHighlightColor = { r = 1, g = 1, b = 1, a = 1 }
-						frame._color = { r = .5, g = .5, b = .5, a = .5 }
-						frame._highlightColor = { r = .5, g = .5, b = .5, a = .5 }
-						frame._activeColor = { r = .5, g = .5, b = .5, a = .5 }
+						frame._DefaultTexture = frame._CustomDefaultTexture or AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BORDER
+						frame._HighlightTexture = frame._CustomHighlightTexture or AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+						frame._TextColor = frame._CustomTextColor or { r = 1, g = 1, b = 1, a = 1 }
+						frame._TextHighlightColor = frame._CustomTextHighlightColor or { r = 1, g = 1, b = 1, a = 1 }
+						frame._Color = frame._CustomColor or { r = .5, g = .5, b = .5, a = .5 }
+						frame._HighlightColor = frame._CustomHighlightColor or { r = .5, g = .5, b = .5, a = .5 }
+						frame._ActiveColor = frame._CustomActiveColor or { r = .5, g = .5, b = .5, a = .5 }
 					elseif (theme and theme == 1) or (not theme and not AdaptiveAPI.IsDarkTheme) then
-						frame._defaultTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BORDER
-						frame._highlightTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-						frame._textColor = { r = .1, g = .1, b = .1, a = 1 }
-						frame._textHighlightColor = { r = 1, g = 1, b = 1, a = 1 }
-						frame._color = { r = 0, g = 0, b = 0, a = .5 }
-						frame._highlightColor = { r = 0, g = 0, b = 0, a = .5 }
-						frame._activeColor = { r = 0, g = 0, b = 0, a = .5 }
+						frame._DefaultTexture = frame._CustomDefaultTexture or AdaptiveAPI.Presets.NINESLICE_INSCRIBED_BORDER
+						frame._HighlightTexture = frame._CustomHighlightTexture or AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+						frame._TextColor = frame._CustomTextColor or { r = .1, g = .1, b = .1, a = 1 }
+						frame._TextHighlightColor = frame._CustomTextHighlightColor or { r = 1, g = 1, b = 1, a = 1 }
+						frame._Color = frame._CustomColor or { r = 0, g = 0, b = 0, a = .5 }
+						frame._HighlightColor = frame._CustomHighlightColor or { r = 0, g = 0, b = 0, a = .5 }
+						frame._ActiveColor = frame._CustomActiveColor or { r = 0, g = 0, b = 0, a = .5 }
 					end
-
-					--------------------------------
-
-					frame._defaultTexture = frame.customDefaultTexture or frame._defaultTexture
-					frame._highlightTexture = frame.customHighlightTexture or frame._highlightTexture
-					frame._textColor = frame.customTextColor or frame._textColor
-					frame._textHighlightColor = frame.customTextHIghlightColor or frame._textHighlightColor
-					frame._color = frame.customColor or frame._color
-					frame._highlightColor = frame.customHighlightColor or frame._highlightColor
-					frame._activeColor = frame.customActiveColor or frame._activeColor
-					frame._font = frame.customFont or frame._font
-					frame._fontSize = frame.customFontSize or frame._fontSize
 				end
 
 				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(UpdateTheme, 4)
 			end
 
-			do -- TEXT
-				frame.text = frame.Text
-				if _G[frame:GetDebugName() .. "Text"] then
-					frame.text = _G[frame:GetDebugName() .. "Text"]
+			do -- ELEMENTS
+				do -- TEXT
+					frame.Text = frame.Text
+					if _G[frame:GetDebugName() .. "Text"] then
+						frame.Text = _G[frame:GetDebugName() .. "Text"]
+					end
+
+					--------------------------------
+
+					frame.Text:SetFont(frame._Font, frame._FontSize, "")
+					frame.Text:SetTextColor(frame._TextColor.r, frame._TextColor.g, frame._TextColor.b, frame._TextColor.a or 1)
+					frame.Text:SetShadowOffset(0, 0)
 				end
 
-				--------------------------------
+				do -- BACKGROUND
+					local padding = texturePadding or 0
 
-				frame.text:SetFont(frame._font, frame._fontSize, "")
-				frame.text:SetTextColor(frame._textColor.r, frame._textColor.g, frame._textColor.b, frame._textColor.a or 1)
-				frame.text:SetShadowOffset(0, 0)
-			end
+					--------------------------------
 
-			do -- BACKGROUND
-				frame.backdrop, frame.backdropTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, "LOW", nil, edgeSize or 25, scale or .5)
-				frame.backdrop:SetAllPoints(frame, true)
-				frame.backdrop:SetFrameStrata(frame:GetFrameStrata())
-				frame.backdrop:SetFrameLevel(frame:GetFrameLevel())
+					frame.Background, frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, "LOW", nil, edgeSize or 25, scale or .5)
+					frame.Background:SetPoint("TOPLEFT", frame, -padding, padding)
+					frame.Background:SetPoint("BOTTOMRIGHT", frame, padding, -padding)
+					frame.Background:SetFrameStrata(frame:GetFrameStrata())
+					frame.Background:SetFrameLevel(frame:GetFrameLevel())
 
-				--------------------------------
+					--------------------------------
 
-				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
-					frame.backdropTexture:SetTexture(frame._defaultTexture)
-				end, 5)
+					AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+						frame.BackgroundTexture:SetTexture(frame._DefaultTexture)
+					end, 5)
 
-				--------------------------------
+					--------------------------------
 
-				if playAnimation or playAnimation == nil then
-					frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, frame._highlightColor.a or .75)
-				else
-					frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, frame._highlightColor.a or .75)
+					if playAnimation or playAnimation == nil then
+						frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, frame._HighlightColor.a or .75)
+					else
+						frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, frame._HighlightColor.a or .75)
+					end
+
+					--------------------------------
+
+					hooksecurefunc(frame, "SetWidth", function()
+						frame.Background:SetWidth(frame:GetWidth())
+					end)
+
+					hooksecurefunc(frame, "SetHeight", function()
+						frame.Background:SetHeight(frame:GetHeight())
+					end)
+
+					hooksecurefunc(frame, "SetSize", function()
+						frame.Background:SetSize(frame:GetWidth(), frame:GetHeight())
+					end)
 				end
-
-				--------------------------------
-
-				hooksecurefunc(frame, "SetWidth", function()
-					frame.backdrop:SetWidth(frame:GetWidth())
-				end)
-
-				hooksecurefunc(frame, "SetHeight", function()
-					frame.backdrop:SetHeight(frame:GetHeight())
-				end)
-
-				hooksecurefunc(frame, "SetSize", function()
-					frame.backdrop:SetSize(frame:GetWidth(), frame:GetHeight())
-				end)
 			end
 
 			--------------------------------
@@ -521,30 +516,30 @@ do
 
 						--------------------------------
 
-						if frame._highlightColor.a and frame._highlightColor.a < .5 then
-							frame.text:SetTextColor(frame._textColor.r, frame._textColor.g, frame._textColor.b, frame._textColor.a or 1)
+						if frame._HighlightColor.a and frame._HighlightColor.a < .5 then
+							frame.Text:SetTextColor(frame._TextColor.r, frame._TextColor.g, frame._TextColor.b, frame._TextColor.a or 1)
 						else
-							frame.text:SetTextColor(frame._textHighlightColor.r, frame._textHighlightColor.g, frame._textHighlightColor.b, frame._textHighlightColor.a or 1)
+							frame.Text:SetTextColor(frame._TextHighlightColor.r, frame._TextHighlightColor.g, frame._TextHighlightColor.b, frame._TextHighlightColor.a or 1)
 						end
 
 						--------------------------------
 
-						frame.backdropTexture:SetTexture(frame._highlightTexture)
-						frame.backdropTexture:SetVertexColor(frame._highlightColor.r, frame._highlightColor.g, frame._highlightColor.b, frame._highlightColor.a or .5)
+						frame.BackgroundTexture:SetTexture(frame._HighlightTexture)
+						frame.BackgroundTexture:SetVertexColor(frame._HighlightColor.r, frame._HighlightColor.g, frame._HighlightColor.b, frame._HighlightColor.a or .5)
 
 						--------------------------------
 
 						if playAnimation or playAnimation == nil then
-							AdaptiveAPI.Animation:PreciseMove(frame.text, 1, frame, "CENTER", 0, 0, 0, 2.5)
-							AdaptiveAPI.Animation:PreciseMove(frame.backdrop, 1, frame, "CENTER", 0, 0, 0, 2.5)
+							AdaptiveAPI.Animation:PreciseMove(frame.Text, 1, frame, "CENTER", 0, 0, 0, 2.5)
+							AdaptiveAPI.Animation:PreciseMove(frame.Background, 1, frame, "CENTER", 0, 0, 0, 2.5)
 						end
 
 						--------------------------------
 
-						local EnterCallbacks = frame.EnterCallbacks
+						local enterCallbacks = frame.EnterCallbacks
 
-						for callback = 1, #EnterCallbacks do
-							EnterCallbacks[callback]()
+						for callback = 1, #enterCallbacks do
+							enterCallbacks[callback]()
 						end
 					end
 
@@ -558,27 +553,27 @@ do
 
 					--------------------------------
 
-					frame.text:SetTextColor(frame._textColor.r, frame._textColor.g, frame._textColor.b, frame._textColor.a or 1)
+					frame.Text:SetTextColor(frame._TextColor.r, frame._TextColor.g, frame._TextColor.b, frame._TextColor.a or 1)
 
 					--------------------------------
 
-					frame.backdropTexture:SetTexture(frame._defaultTexture)
-					frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, frame._highlightColor.a or .75)
+					frame.BackgroundTexture:SetTexture(frame._DefaultTexture)
+					frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, frame._HighlightColor.a or .75)
 
 					--------------------------------
 
 					if frame.IsEnabled and frame:IsEnabled() and not disableHighlight then
 						if playAnimation or playAnimation == nil then
-							AdaptiveAPI.Animation:PreciseMove(frame.text, 1, frame, "CENTER", 0, 2.5, 0, 0)
-							AdaptiveAPI.Animation:PreciseMove(frame.backdrop, 1, frame, "CENTER", 0, 2.5, 0, 0)
+							AdaptiveAPI.Animation:PreciseMove(frame.Text, 1, frame, "CENTER", 0, 2.5, 0, 0)
+							AdaptiveAPI.Animation:PreciseMove(frame.Background, 1, frame, "CENTER", 0, 2.5, 0, 0)
 						end
 
 						--------------------------------
 
-						local LeaveCallbacks = frame.LeaveCallbacks
+						local leaveCallbacks = frame.LeaveCallbacks
 
-						for callback = 1, #LeaveCallbacks do
-							LeaveCallbacks[callback]()
+						for callback = 1, #leaveCallbacks do
+							leaveCallbacks[callback]()
 						end
 					end
 
@@ -590,17 +585,17 @@ do
 				frame.MouseDown = function()
 					if frame.IsEnabled and frame:IsEnabled() and not disableMouseDown then
 						if playAnimation or playAnimation == nil then
-							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .25)
+							frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .25)
 						else
-							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .25)
+							frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .25)
 						end
 
 						--------------------------------
 
-						local MouseDownCallbacks = frame.MouseDownCallbacks
+						local mouseDownCallbacks = frame.MouseDownCallbacks
 
-						for callback = 1, #MouseDownCallbacks do
-							MouseDownCallbacks[callback]()
+						for callback = 1, #mouseDownCallbacks do
+							mouseDownCallbacks[callback]()
 						end
 					end
 				end
@@ -608,17 +603,17 @@ do
 				frame.MouseUp = function()
 					if frame.IsEnabled and frame:IsEnabled() and not disableMouseUp then
 						if playAnimation or playAnimation == nil then
-							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .5)
+							frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .5)
 						else
-							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, .5)
+							frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .5)
 						end
 
 						--------------------------------
 
-						local MouseUpCallbacks = frame.MouseUpCallbacks
+						local mouseUpCallbacks = frame.MouseUpCallbacks
 
-						for callback = 1, #MouseUpCallbacks do
-							MouseUpCallbacks[callback]()
+						for callback = 1, #mouseUpCallbacks do
+							mouseUpCallbacks[callback]()
 						end
 					end
 				end
@@ -665,23 +660,23 @@ do
 
 				frame.UpdateActive = function()
 					if frame.IsActive then
-						if frame._highlightColor.a and frame._highlightColor.a < .5 then
+						if frame._HighlightColor.a and frame._HighlightColor.a < .5 then
 							if (theme and theme == 2) or (not theme and AdaptiveAPI.IsDarkTheme) then
-								frame.text:SetTextColor(frame._textHighlightColor.r, frame._textHighlightColor.g, frame._textHighlightColor.b, frame._textHighlightColor.a or 1)
+								frame.Text:SetTextColor(frame._TextHighlightColor.r, frame._TextHighlightColor.g, frame._TextHighlightColor.b, frame._TextHighlightColor.a or 1)
 							else
-								frame.text:SetTextColor(frame._textColor.r, frame._textColor.g, frame._textColor.b, frame._textColor.a or 1)
+								frame.Text:SetTextColor(frame._TextColor.r, frame._TextColor.g, frame._TextColor.b, frame._TextColor.a or 1)
 							end
 						else
-							frame.text:SetTextColor(frame._textHighlightColor.r, frame._textHighlightColor.g, frame._textHighlightColor.b, frame._textHighlightColor.a or 1)
+							frame.Text:SetTextColor(frame._TextHighlightColor.r, frame._TextHighlightColor.g, frame._TextHighlightColor.b, frame._TextHighlightColor.a or 1)
 						end
 
-						frame.backdropTexture:SetTexture(frame._highlightTexture)
-						frame.backdropTexture:SetVertexColor(frame._activeColor.r, frame._activeColor.g, frame._activeColor.b, frame._activeColor.a or .5)
+						frame.BackgroundTexture:SetTexture(frame._HighlightTexture)
+						frame.BackgroundTexture:SetVertexColor(frame._ActiveColor.r, frame._ActiveColor.g, frame._ActiveColor.b, frame._ActiveColor.a or .5)
 					else
 						if not frame.IsHighlight then
-							frame.text:SetTextColor(frame._textColor.r, frame._textColor.g, frame._textColor.b, frame._textColor.a or 1)
-							frame.backdropTexture:SetTexture(frame._defaultTexture)
-							frame.backdropTexture:SetVertexColor(frame._color.r, frame._color.g, frame._color.b, frame._color.a or .75)
+							frame.Text:SetTextColor(frame._TextColor.r, frame._TextColor.g, frame._TextColor.b, frame._TextColor.a or 1)
+							frame.BackgroundTexture:SetTexture(frame._DefaultTexture)
+							frame.BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, frame._Color.a or .75)
 						end
 					end
 				end
@@ -698,6 +693,16 @@ do
 				--------------------------------
 
 				hooksecurefunc(frame, "SetEnabled", frame.UpdateEnabled)
+			end
+
+			do -- EVENTS
+				local Events = CreateFrame("Frame", "$parent.Events", frame)
+				Events:RegisterEvent("GAME_PAD_ACTIVE_CHANGED")
+				Events:SetScript("OnEvent", function(self, event, ...)
+					if event == "GAME_PAD_ACTIVE_CHANGED" then
+						frame.Leave()
+					end
+				end)
 			end
 
 			--------------------------------
@@ -723,16 +728,6 @@ do
 					frame:GetHighlightTexture():SetVertexColor(1, 1, 1, 0)
 				end
 			end
-
-			--------------------------------
-
-			local Events = CreateFrame("Frame", "$parent.Events", frame)
-			Events:RegisterEvent("GAME_PAD_ACTIVE_CHANGED")
-			Events:SetScript("OnEvent", function(self, event, ...)
-				if event == "GAME_PAD_ACTIVE_CHANGED" then
-					frame.Leave()
-				end
-			end)
 		end
 
 		-- Update a stylised button theme.
@@ -747,13 +742,13 @@ do
 
 			--------------------------------
 
-			if customDefaultTexture then frame.customDefaultTexture = customDefaultTexture end
-			if customHighlightTexture then frame.customHighlightTexture = customHighlightTexture end
-			if customColor then frame.customColor = customColor end
-			if customHighlightColor then frame.customHighlightColor = customHighlightColor end
-			if customActiveColor then frame.customActiveColor = customActiveColor end
-			if customTextColor then frame.customTextColor = customTextColor end
-			if customTextHighlightColor then frame.customTextHighlightColor = customTextHighlightColor end
+			if customDefaultTexture then frame._CustomDefaultTexture = customDefaultTexture end
+			if customHighlightTexture then frame._CustomHighlightTexture = customHighlightTexture end
+			if customColor then frame._CustomColor = customColor end
+			if customHighlightColor then frame._CustomHighlightColor = customHighlightColor end
+			if customActiveColor then frame._CustomActiveColor = customActiveColor end
+			if customTextColor then frame._CustomTextColor = customTextColor end
+			if customTextHighlightColor then frame._CustomTextHighlightColor = customTextHighlightColor end
 		end
 	end
 end

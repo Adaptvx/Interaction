@@ -73,18 +73,19 @@ function NS.Data:Load()
 	do -- CONTENT
 		do -- <- Before you get started
 			-- Button = {
-			--     name = "Default",
-			--     tooltipImage = "",
-			--     tooltipText = "Placeholder",
-			--     tooltipImageType = "Small",
-			--     type = "Button",
-			--     order = 1,
-			--     hidden = function() return false end,
-			--     locked = function() return false end,
-			--     subcategory = 0,
-			--     category = Default,
-			--	   setCriteria = function() return true end,
-			--     set = function() print("Click") end,
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = "Placeholder",
+			-- 	tooltipTextDynamic = nil,
+			-- 	tooltipImageType = "Small",
+			-- 	type = "Button",
+			-- 	order = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	subcategory = 0,
+			-- 	category = Default,
+			-- 		setCriteria = function() return true end,
+			-- 	set = function() print("Click") end,
 			-- }
 
 			-- Title = {
@@ -97,27 +98,29 @@ function NS.Data:Load()
 			-- }
 
 			-- Checkbox = {
-			--     name = "Default",
-			--     tooltipImage = "",
-			--     tooltipText = "Placeholder",
-			--     tooltipImageType = "Small",
-			--     type = "Checkbox",
-			--     order = 1,
-			--     hidden = function() return false end,
-			--     locked = function() return false end,
-			--     subcategory = 0,
-			--     category = Default,
-			--     get = function() return variable end,
-			--     setCriteria = function() return true end,
-			--     set = function(_, val)
-			--         variable = val
-			--     end,
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = "Placeholder",
+			-- 	tooltipTextDynamic = nil,
+			-- 	tooltipImageType = "Small",
+			-- 	type = "Checkbox",
+			-- 	order = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	subcategory = 0,
+			-- 	category = Default,
+			-- 	get = function() return variable end,
+			-- 	setCriteria = function() return true end,
+			-- 	set = function(_, val)
+			-- 		variable = val
+			-- 	end,
 			-- }
 
 			-- Range = {
 			-- 	name = "Default",
 			-- 	tooltipImage = "",
 			-- 	tooltipText = "Placeholder",
+			-- 	tooltipTextDynamic = nil,
 			-- 	tooltipImageType = "Small",
 			-- 	type = "Range",
 			-- 	min = 0,
@@ -136,36 +139,38 @@ function NS.Data:Load()
 			-- }
 
 			-- Dropdown = {
-			--     name = "Default",
-			--     tooltipImage = "",
-			--     tooltipText = "Placeholder",
-			--     tooltipImageType = "Small",
-			--     type = "Dropdown",
-			--     values = {
-			--         [1] = {
-			--             name = "Value1"
-			--         },
-			--         [2] = {
-			--             name = "Value2"
-			--         }
-			--     },
-			--     order = 1,
-			--     hidden = function() return false end,
-			--     locked = function() return false end,
-			--     subcategory = 0,
-			--     category = Default,
-			--     get = function() return variable end,
-			--     setCriteria = function() return true end,
-			--     set = function(_, val) variable = val end,
-			--     open = function() print("List Opened") end,
-			--     close = function() print("List Closed") end,
-			--     autoCloseList = true
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = "Placeholder",
+			-- 	tooltipTextDynamic = nil,
+			-- 	tooltipImageType = "Small",
+			-- 	type = "Dropdown",
+			-- 	values = {
+			-- 		[1] = {
+			-- 			name = "Value1"
+			-- 		},
+			-- 		[2] = {
+			-- 			name = "Value2"
+			-- 		}
+			-- 	},
+			-- 	order = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	subcategory = 0,
+			-- 	category = Default,
+			-- 	get = function() return variable end,
+			-- 	setCriteria = function() return true end,
+			-- 	set = function(_, val) variable = val end,
+			-- 	open = function() print("List Opened") end,
+			-- 	close = function() print("List Closed") end,
+			-- 	autoCloseList = true
 			-- }
 
 			-- Keybind = {
 			-- 	name = "Default",
 			-- 	tooltipImage = "",
 			-- 	tooltipText = "Placeholder",
+			-- 	tooltipTextDynamic = nil,
 			-- 	tooltipImageType = "Small",
 			-- 	type = "Keybind",
 			-- 	order = 1,
@@ -222,10 +227,11 @@ function NS.Data:Load()
 					name = L["Range - Main Theme"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "Theme.png",
 					tooltipText = L["Range - Main Theme - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
-					max = 2,
+					max = 3,
 					step = 1,
 					order = 3,
 					hidden = function() return false end,
@@ -236,6 +242,8 @@ function NS.Data:Load()
 							return L["Range - Main Theme - Day"]
 						elseif val == 2 then
 							return L["Range - Main Theme - Night"]
+						elseif val == 3 then
+							return L["Range - Main Theme - Dynamic"]
 						end
 					end,
 					get = function() return INTDB.profile.INT_MAIN_THEME end,
@@ -248,12 +256,6 @@ function NS.Data:Load()
 					end,
 					set = function(_, val)
 						if val ~= INTDB.profile.INT_MAIN_THEME then
-							-- CallbackRegistry:Trigger("THEME_UPDATE_ANIMATION")
-
-							-- addon.Libraries.AceTimer:ScheduleTimer(function()
-							-- 	CallbackRegistry:Trigger("THEME_UPDATE")
-							-- end, 0)
-
 							addon.Libraries.AceTimer:ScheduleTimer(function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
 							end, .125)
@@ -266,6 +268,7 @@ function NS.Data:Load()
 					name = L["Range - Dialog Theme"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "Theme-Dialog.png",
 					tooltipText = L["Range - Dialog Theme - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
@@ -297,12 +300,6 @@ function NS.Data:Load()
 					end,
 					set = function(_, val)
 						if val ~= INTDB.profile.INT_DIALOG_THEME then
-							-- CallbackRegistry:Trigger("THEME_UPDATE_DIALOG_ANIMATION")
-
-							-- addon.Libraries.AceTimer:ScheduleTimer(function()
-							-- 	CallbackRegistry:Trigger("THEME_UPDATE")
-							-- end, .25)
-
 							addon.Libraries.AceTimer:ScheduleTimer(function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
 							end, 0)
@@ -322,6 +319,7 @@ function NS.Data:Load()
 					name = L["Range - UIDirection"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection.png",
 					tooltipText = L["Range - UIDirection - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
@@ -349,6 +347,7 @@ function NS.Data:Load()
 					name = L["Range - UIDirection / Dialog"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection-Dialog.png",
 					tooltipText = L["Range - UIDirection / Dialog - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
@@ -378,6 +377,7 @@ function NS.Data:Load()
 					name = L["Checkbox - UIDirection / Dialog / Mirror"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "UIDirection-Dialog-Mirror.png",
 					tooltipText = L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Checkbox",
 					order = 8,
@@ -395,6 +395,7 @@ function NS.Data:Load()
 					name = L["Range - Quest Frame Size"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "QuestFrameSize.png",
 					tooltipText = L["Range - Quest Frame Size - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Range",
 					min = 1,
@@ -428,6 +429,7 @@ function NS.Data:Load()
 					name = L["Range - Text Size"],
 					tooltipImage = "",
 					tooltipText = L["Range - Text Size - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Range",
 					min = 10,
@@ -458,6 +460,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Dialog / Title / Progress Bar"],
 					tooltipImage = NS.Variables.TOOLTIP_PATH .. "Title-ProgressBar.png",
 					tooltipText = L["Checkbox - Dialog / Title / Progress Bar - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Large",
 					type = "Checkbox",
 					order = 12,
@@ -476,6 +479,7 @@ function NS.Data:Load()
 					name = L["Range - Dialog / Title / Text Alpha"],
 					tooltipImage = "",
 					tooltipText = L["Range - Dialog / Title / Text Alpha - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Range",
 					min = 0,
@@ -500,6 +504,7 @@ function NS.Data:Load()
 					name = L["Range - Dialog / Content Preview Alpha"],
 					tooltipImage = "",
 					tooltipText = L["Range - Dialog / Content Preview Alpha - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Range",
 					min = 0,
@@ -528,6 +533,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Always Show Quest Frame"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Always Show Quest Frame - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 16,
@@ -570,6 +576,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Hide UI"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Hide UI - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 4,
@@ -586,6 +593,7 @@ function NS.Data:Load()
 					name = L["Range - Cinematic"],
 					tooltipImage = "",
 					tooltipText = L["Range - Cinematic - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Range",
 					min = 1,
@@ -627,6 +635,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Zoom"],
 							tooltipImage = "",
 							tooltipText = "",
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 7,
@@ -643,6 +652,7 @@ function NS.Data:Load()
 							name = L["Range - Zoom / Min Distance"],
 							tooltipImage = "",
 							tooltipText = L["Range - Zoom / Min Distance - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 1,
@@ -663,6 +673,7 @@ function NS.Data:Load()
 							name = L["Range - Zoom / Max Distance"],
 							tooltipImage = "",
 							tooltipText = L["Range - Zoom / Max Distance - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 1,
@@ -683,6 +694,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Zoom / Pitch"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Zoom Pitch - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 10,
@@ -699,6 +711,7 @@ function NS.Data:Load()
 							name = L["Range - Zoom / Pitch / Level"],
 							tooltipImage = "",
 							tooltipText = L["Range - Zoom Pitch / Level - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 1,
@@ -719,6 +732,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Zoom / Field Of View"],
 							tooltipImage = "",
 							tooltipText = "",
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 12,
@@ -735,6 +749,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Pan"],
 							tooltipImage = "",
 							tooltipText = "",
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 13,
@@ -751,6 +766,7 @@ function NS.Data:Load()
 							name = L["Range - Pan / Speed"],
 							tooltipImage = "",
 							tooltipText = L["Range - Pan / Speed - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -771,6 +787,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 15,
@@ -787,6 +804,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera / Side View"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera / Side View - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 16,
@@ -803,6 +821,7 @@ function NS.Data:Load()
 							name = L["Range - Dynamic Camera / Side View / Strength"],
 							tooltipImage = "",
 							tooltipText = L["Range - Dynamic Camera / Side View / Strength - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -823,6 +842,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera / Offset"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera / Offset - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 18,
@@ -839,6 +859,7 @@ function NS.Data:Load()
 							name = L["Range - Dynamic Camera / Offset / Strength"],
 							tooltipImage = "",
 							tooltipText = L["Range - Dynamic Camera / Offset / Strength - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -859,6 +880,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera / Focus"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera / Focus - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 20,
@@ -875,6 +897,7 @@ function NS.Data:Load()
 							name = L["Range - Dynamic Camera / Focus / Strength"],
 							tooltipImage = "",
 							tooltipText = L["Range - Dynamic Camera / Focus / Strength - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -895,6 +918,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera / Focus / X"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera / Focus / X - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 22,
@@ -911,6 +935,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Dynamic Camera / Focus / Y"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 23,
@@ -927,6 +952,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Vignette"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Vignette - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 24,
@@ -937,6 +963,23 @@ function NS.Data:Load()
 							get = function() return INTDB.profile.INT_CINEMATIC_VIGNETTE end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_VIGNETTE", val)
+							end,
+						},
+						Checkbox_Vignette_Gradient = {
+							name = L["Checkbox - Vignette / Gradient"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Vignette / Gradient - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 25,
+							hidden = function() return not INTDB.profile.INT_CINEMATIC_VIGNETTE end,
+							locked = function() return addon.Interaction.Variables.Active end,
+							subcategory = 2,
+							category = Effects,
+							get = function() return INTDB.profile.INT_CINEMATIC_VIGNETTE_GRADIENT end,
+							set = function(_, val)
+								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_VIGNETTE_GRADIENT", val)
 							end,
 						},
 					}
@@ -961,6 +1004,7 @@ function NS.Data:Load()
 					name = L["Range - Playback Speed"],
 					tooltipImage = "",
 					tooltipText = L["Range - Playback Speed - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Range",
 					min = .1,
@@ -980,6 +1024,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Dynamic Playback"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Dynamic Playback - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 4,
@@ -1000,6 +1045,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Auto Progress"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Auto Progress - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 6,
@@ -1022,6 +1068,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Auto Close Dialog"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Auto Close Dialog - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 8,
@@ -1037,6 +1084,7 @@ function NS.Data:Load()
 							name = L["Range - Auto Progress / Delay"],
 							tooltipImage = "",
 							tooltipText = L["Range - Auto Progress / Delay - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -1064,6 +1112,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Text To Speech"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Text To Speech - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 11,
@@ -1096,6 +1145,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Text To Speech / Quest"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Text To Speech / Quest - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 14,
@@ -1112,6 +1162,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Text To Speech / Gossip"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Text To Speech / Gossip - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 15,
@@ -1128,6 +1179,7 @@ function NS.Data:Load()
 							name = L["Range - Text To Speech / Rate"],
 							tooltipImage = "",
 							tooltipText = L["Range - Text To Speech / Rate - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = -10,
@@ -1148,6 +1200,7 @@ function NS.Data:Load()
 							name = L["Range - Text To Speech / Volume"],
 							tooltipImage = "",
 							tooltipText = L["Range - Text To Speech / Volume - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 0,
@@ -1177,6 +1230,7 @@ function NS.Data:Load()
 							name = L["Dropdown - Text To Speech / Voice / Neutral"],
 							tooltipImage = "",
 							tooltipText = L["Dropdown - Text To Speech / Voice / Neutral - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Dropdown",
 							values = function()
@@ -1205,6 +1259,7 @@ function NS.Data:Load()
 							name = L["Dropdown - Text To Speech / Voice / Male"],
 							tooltipImage = "",
 							tooltipText = L["Dropdown - Text To Speech / Voice / Male - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Dropdown",
 							values = function()
@@ -1233,6 +1288,7 @@ function NS.Data:Load()
 							name = L["Dropdown - Text To Speech / Voice / Female"],
 							tooltipImage = "",
 							tooltipText = L["Dropdown - Text To Speech / Voice / Female - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Dropdown",
 							values = function()
@@ -1261,6 +1317,7 @@ function NS.Data:Load()
 							name = L["Dropdown - Text To Speech / Voice / Emote"],
 							tooltipImage = "",
 							tooltipText = L["Dropdown - Text To Speech / Voice / Emote - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Dropdown",
 							values = function()
@@ -1289,6 +1346,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Text To Speech / Player / Voice"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Text To Speech / Player / Voice - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 23,
@@ -1304,6 +1362,7 @@ function NS.Data:Load()
 							name = L["Dropdown - Text To Speech / Player / Voice / Voice"],
 							tooltipImage = "",
 							tooltipText = L["Dropdown - Text To Speech / Player / Voice / Voice - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Dropdown",
 							values = function()
@@ -1350,6 +1409,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Mute Dialog"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Mute Dialog - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 27,
@@ -1400,6 +1460,7 @@ function NS.Data:Load()
 							name = L["Checkbox - UI / Control Guide"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - UI / Control Guide - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 6,
@@ -1436,6 +1497,7 @@ function NS.Data:Load()
 							name = L["Range - Platform"],
 							tooltipImage = "",
 							tooltipText = L["Range - Platform - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Range",
 							min = 1,
@@ -1501,6 +1563,7 @@ function NS.Data:Load()
 											name = L["Checkbox - PC / Keyboard / Use Interact Key"],
 											tooltipImage = "",
 											tooltipText = L["Checkbox - PC / Keyboard / Use Interact Key - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 13,
@@ -1543,6 +1606,7 @@ function NS.Data:Load()
 											name = L["Checkbox - PC / Mouse / Flip Mouse Controls"],
 											tooltipImage = "",
 											tooltipText = L["Checkbox - PC / Mouse / Flip Mouse Controls - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 16,
@@ -1579,6 +1643,7 @@ function NS.Data:Load()
 											name = L["Keybind - PC / Keybind / Previous"],
 											tooltipImage = "",
 											tooltipText = L["Keybind - PC / Keybind / Previous - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Keybind",
 											order = 19,
@@ -1604,6 +1669,7 @@ function NS.Data:Load()
 											name = L["Keybind - PC / Keybind / Next"],
 											tooltipImage = "",
 											tooltipText = L["Keybind - PC / Keybind / Next - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Keybind",
 											order = 20,
@@ -1629,10 +1695,11 @@ function NS.Data:Load()
 											name = L["Keybind - PC / Keybind / Progress"],
 											tooltipImage = "",
 											tooltipText = L["Keybind - PC / Keybind / Progress - Tooltip"],
+											tooltipTextDynamic = function() if INTDB.profile.INT_USEINTERACTKEY then return L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] else return nil end end,
 											tooltipImageType = "Small",
 											type = "Keybind",
 											order = 21,
-											hidden = function() return INTDB.profile.INT_USEINTERACTKEY end,
+											hidden = function() return false end,
 											locked = function() return INTDB.profile.INT_USEINTERACTKEY or addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
@@ -1649,6 +1716,32 @@ function NS.Data:Load()
 													INTDB.profile.INT_KEY_PROGRESS = val
 												end
 											end
+										},
+										Keybind_Quest_Progress = {
+											name = L["Keybind - PC / Keybind / Quest Next Reward"],
+											tooltipImage = "",
+											tooltipText = L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"],
+											tooltipTextDynamic = nil,
+											tooltipImageType = "Small",
+											type = "Keybind",
+											order = 22,
+											hidden = function() return false end,
+											locked = function() return false end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return INTDB.profile.INT_KEY_QUEST_NEXTREWARD end,
+											setCriteria = function()
+												if not addon.Interaction.Variables.Active then
+													return true
+												else
+													return false
+												end
+											end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													INTDB.profile.INT_KEY_QUEST_NEXTREWARD = val
+												end
+											end
 										}
 									}
 								},
@@ -1657,21 +1750,21 @@ function NS.Data:Load()
 						Group_Controller = {
 							name = L["Title - Controller"],
 							type = "Group",
-							order = 22,
+							order = 23,
 							hidden = function() return INTDB.profile.INT_PLATFORM == 1 end,
 							category = Controls,
 							args = {
 								-- Group_Controller_Controller = {
 								-- 	name = L["Title - Controller / Controller"],
 								-- 	type = "Group",
-								-- 	order = 23,
+								-- 	order = 24,
 								-- 	hidden = function() return false end,
 								-- 	category = Controls,
 								-- 	args = {
 								-- 		Title_Controller = {
 								-- 			name = L["Title - Controller / Controller"],
 								-- 			type = "Title",
-								-- 			order = 18,
+								-- 			order = 25,
 								-- 			hidden = function() return false end,
 								-- 			locked = function() return addon.Interaction.Variables.Active end,
 								-- 			subcategory = 1,
@@ -1712,6 +1805,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Waypoint"],
 							tooltipImage = NS.Variables.TOOLTIP_PATH .. "Waypoint.png",
 							tooltipText = L["Checkbox - Waypoint - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Large",
 							type = "Checkbox",
 							order = 4,
@@ -1730,6 +1824,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Waypoint / Audio"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Waypoint / Audio - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 5,
@@ -1770,6 +1865,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Readable"],
 							tooltipImage = NS.Variables.TOOLTIP_PATH .. "Readable.png",
 							tooltipText = L["Checkbox - Readable - Tooltip"],
+							tooltipTextDynamic = nil,
 							tooltipImageType = "Large",
 							type = "Checkbox",
 							order = 9,
@@ -1817,6 +1913,7 @@ function NS.Data:Load()
 											name = L["Checkbox - Readable / Display / Always Show Item"],
 											tooltipImage = "",
 											tooltipText = L["Checkbox - Readable / Display / Always Show Item - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 13,
@@ -1854,6 +1951,7 @@ function NS.Data:Load()
 											name = L["Checkbox - Readable / Viewport"],
 											tooltipImage = "",
 											tooltipText = L["Checkbox - Readable / Viewport - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 16,
@@ -1891,6 +1989,7 @@ function NS.Data:Load()
 											name = L["Checkbox - Readable / Shortcuts / Minimap Icon"],
 											tooltipImage = NS.Variables.TOOLTIP_PATH .. "Minimap.png",
 											tooltipText = L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"],
+											tooltipTextDynamic = nil,
 											tooltipImageType = "Large",
 											type = "Checkbox",
 											order = 19,
@@ -1934,6 +2033,7 @@ function NS.Data:Load()
 								-- 			name = L["Range - Readable / Audiobook - Rate"],
 								-- 			tooltipImage = "",
 								-- 			tooltipText = L["Range - Readable / Audiobook - Rate - Tooltip"],
+								-- 			tooltipTextDynamic = nil,
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Range",
 								-- 			min = -10,
@@ -1958,6 +2058,7 @@ function NS.Data:Load()
 								-- 			name = L["Range - Readable / Audiobook - Volume"],
 								-- 			tooltipImage = "",
 								-- 			tooltipText = L["Range - Readable / Audiobook - Volume - Tooltip"],
+								-- 			tooltipTextDynamic = nil,
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Range",
 								-- 			min = 0,
@@ -1982,6 +2083,7 @@ function NS.Data:Load()
 								-- 			name = L["Dropdown - Readable / Audiobook - Voice"],
 								-- 			tooltipImage = "",
 								-- 			tooltipText = L["Dropdown - Readable / Audiobook - Voice - Tooltip"],
+								-- 			tooltipTextDynamic = nil,
 								-- 			tooltipImageType = "Small",
 								-- 			type = "Dropdown",
 								-- 			values = function()
@@ -2042,6 +2144,7 @@ function NS.Data:Load()
 							name = L["Checkbox - Gameplay / Auto Select Option"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Gameplay / Auto Select Option - Tooltip"],
+							tooltipTextDynamic = nil,
 							type = "Checkbox",
 							order = 22,
 							hidden = function() return false end,
@@ -2073,6 +2176,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Audio"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Audio - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
 					order = 3,
@@ -2097,6 +2201,7 @@ function NS.Data:Load()
 					name = L["Checkbox - Settings / Reset Settings"],
 					tooltipImage = "",
 					tooltipText = L["Checkbox - Settings / Reset Settings - Tooltip"],
+					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Button",
 					order = 5,
@@ -2183,6 +2288,7 @@ function NS.Data:Load()
 							local Subcategory = CurrentElement.subcategory
 
 							local TooltipText = CurrentElement.tooltipText
+							local TooltipTextDynamic = CurrentElement.tooltipTextDynamic
 							local TooltipImage = CurrentElement.tooltipImage
 							local TooltipImageType = CurrentElement.tooltipImageType
 							local Hidden = CurrentElement.hidden
@@ -2280,6 +2386,7 @@ function NS.Data:Load()
 									end,
 									Subcategory,
 									TooltipText,
+									TooltipTextDynamic,
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
@@ -2315,6 +2422,7 @@ function NS.Data:Load()
 									Get,
 									Subcategory,
 									TooltipText,
+									TooltipTextDynamic,
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
@@ -2354,6 +2462,7 @@ function NS.Data:Load()
 									Get,
 									Subcategory,
 									TooltipText,
+									TooltipTextDynamic,
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
@@ -2393,6 +2502,7 @@ function NS.Data:Load()
 									Get,
 									Subcategory,
 									TooltipText,
+									TooltipTextDynamic,
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
@@ -2435,6 +2545,7 @@ function NS.Data:Load()
 									end,
 									Subcategory,
 									TooltipText,
+									TooltipTextDynamic,
 									TooltipImage,
 									TooltipImageType,
 									Hidden,

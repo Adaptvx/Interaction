@@ -51,7 +51,7 @@ do  -- MAIN
 		NS.Variables.Num_Spell = 0
 		NS.Variables.State = ""
 
-		NS.Variables.ChoiceSelected = nil
+		NS.Variables.ChoiceSelected = false
 	end
 
 	do -- SCALE

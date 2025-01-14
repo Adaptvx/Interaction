@@ -67,7 +67,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				function Script:Input_Global(_, key)
-					local Result = true
+					local result = true
 
 					--------------------------------
 
@@ -76,11 +76,11 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- Prompt
-						if (Checks.IsPrompt) and (Result) then
+						if (Checks.IsPrompt) and (result) then
 							do -- Accept/Decline
 								if GetMatchingKey(key, NS.Variables.Key_Prompt_Accept) then
 									PreventInput()
-									Result = false
+									result = false
 
 									--------------------------------
 
@@ -89,7 +89,7 @@ function NS.Script:Load()
 
 								if GetMatchingKey(key, NS.Variables.Key_Prompt_Decline) then
 									PreventInput()
-									Result = false
+									result = false
 
 									--------------------------------
 
@@ -100,7 +100,7 @@ function NS.Script:Load()
 							do -- Close
 								if GetMatchingKey(key, NS.Variables.Key_Close) then
 									PreventInput()
-									Result = false
+									result = false
 
 									--------------------------------
 
@@ -115,22 +115,22 @@ function NS.Script:Load()
 					end
 
 					do -- Settings
-						if Result then
+						if result then
 							if InteractionSettingsFrame then
 								do -- Toggle
-									local IsReadableUI = InteractionReadableUIFrame:IsVisible()
-									local IsInteraction = addon.Interaction.Variables.Active
-									local IsSettings = InteractionSettingsFrame:IsVisible()
+									local isReadableUI = InteractionReadableUIFrame:IsVisible()
+									local isInteraction = addon.Interaction.Variables.Active
+									local isSettings = InteractionSettingsFrame:IsVisible()
 
 									--------------------------------
 
-									if (IsSettings and key == "ESCAPE") or (not IsSettings and key == "ESCAPE" and IsShiftKeyDown()) then
+									if (isSettings and key == "ESCAPE") or (not isSettings and key == "ESCAPE" and IsShiftKeyDown()) then
 										PreventInput()
-										Result = false
+										result = false
 
 										--------------------------------
 
-										if IsSettings then
+										if isSettings then
 											addon.SettingsUI.Script:HideSettingsUI()
 										else
 											addon.SettingsUI.Script:ShowSettingsUI()
@@ -142,17 +142,17 @@ function NS.Script:Load()
 					end
 
 					do -- Quest
-						if (Checks.IsQuest) and (Result) then
+						if (Checks.IsQuest) and (result) then
 							do -- Progress
 								if GetMatchingKey(key, NS.Variables.Key_Progress) then
-									local IsAutoAccept = addon.API:IsAutoAccept()
+									local isAutoAccept = addon.API:IsAutoAccept()
 
 									--------------------------------
 
-									if IsAutoAccept then
+									if isAutoAccept then
 										if InteractionQuestFrame.ButtonContainer.GoodbyeButton:IsVisible() and InteractionQuestFrame.ButtonContainer.GoodbyeButton:IsEnabled() then
 											PreventInput()
-											Result = false
+											result = false
 
 											--------------------------------
 
@@ -161,7 +161,7 @@ function NS.Script:Load()
 									else
 										if InteractionQuestFrame.ButtonContainer.AcceptButton:IsVisible() and InteractionQuestFrame.ButtonContainer.AcceptButton:IsEnabled() then
 											PreventInput()
-											Result = false
+											result = false
 
 											--------------------------------
 
@@ -171,7 +171,7 @@ function NS.Script:Load()
 
 									if InteractionQuestFrame.ButtonContainer.ContinueButton:IsVisible() and InteractionQuestFrame.ButtonContainer.ContinueButton:IsEnabled() then
 										PreventInput()
-										Result = false
+										result = false
 
 										--------------------------------
 
@@ -180,7 +180,7 @@ function NS.Script:Load()
 
 									if InteractionQuestFrame.ButtonContainer.CompleteButton:IsVisible() and InteractionQuestFrame.ButtonContainer.CompleteButton:IsEnabled() then
 										PreventInput()
-										Result = false
+										result = false
 
 										--------------------------------
 
@@ -188,11 +188,48 @@ function NS.Script:Load()
 									end
 								end
 							end
+
+							do -- SELECT REWARD
+								if GetMatchingKey(key, NS.Variables.Key_Quest_NextReward) then
+									local isRewardSelection = (addon.Interaction.Quest.Variables.Num_Choice >= 1)
+									local choiceNum = (addon.Interaction.Quest.Variables.Num_Choice)
+									local choiceSelected = (QuestInfoFrame.itemChoice)
+									local choiceButtons = (addon.Interaction.Quest.Variables.Buttons_Choice)
+
+									--------------------------------
+
+									if isRewardSelection then
+										if choiceSelected < choiceNum then
+											PreventInput()
+											result = false
+
+											--------------------------------
+
+											choiceSelected = choiceSelected + 1
+
+											--------------------------------
+
+											choiceButtons[choiceSelected].Click()
+										else
+											PreventInput()
+											result = false
+
+											--------------------------------
+
+											choiceSelected = 1
+
+											--------------------------------
+
+											choiceButtons[choiceSelected].Click()
+										end
+									end
+								end
+							end
 						end
 					end
 
 					do -- Dialog
-						if Result then
+						if result then
 							if addon.Interaction.Variables.Active then
 								do -- Skip
 									if GetMatchingKey(key, NS.Variables.Key_Skip) then
@@ -209,7 +246,7 @@ function NS.Script:Load()
 										if not BlockOnQuestFrame and not BlockOnGossipFrame then
 											if InteractionDialogFrame:IsVisible() then
 												PreventInput()
-												Result = false
+												result = false
 
 												--------------------------------
 
@@ -227,7 +264,7 @@ function NS.Script:Load()
 									if Checks.IsDialog or Checks.IsGossip or Checks.IsQuest then
 										if GetMatchingKey(key, NS.Variables.Key_Next) and Checks.IsDialog then
 											PreventInput()
-											Result = false
+											result = false
 
 											--------------------------------
 
@@ -241,7 +278,7 @@ function NS.Script:Load()
 
 										if GetMatchingKey(key, NS.Variables.Key_Previous) then
 											PreventInput()
-											Result = false
+											result = false
 
 											--------------------------------
 
@@ -258,12 +295,12 @@ function NS.Script:Load()
 					end
 
 					do -- Interaction
-						if Result then
+						if result then
 							if addon.Interaction.Variables.Active then
 								do -- Close
 									if GetMatchingKey(key, NS.Variables.Key_Close) then
 										PreventInput()
-										Result = false
+										result = false
 
 										--------------------------------
 
@@ -296,13 +333,13 @@ function NS.Script:Load()
 					end
 
 					do -- Library
-						if Result then
+						if result then
 							if InteractionReadableUIFrame then
 								do -- Close
 									if InteractionReadableUIFrame:IsVisible() then
 										if GetMatchingKey(key, NS.Variables.Key_Close) then
 											PreventInput()
-											Result = false
+											result = false
 
 											--------------------------------
 
@@ -316,7 +353,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					return Result
+					return result
 				end
 
 				function Script:Input_Keyboard(_, key)

@@ -64,226 +64,219 @@ do
 
 		--------------------------------
 
-		local function UpdateTheme()
-			if (theme and theme == 2) or (not theme and AdaptiveAPI.IsDarkTheme) then
-				frame._DefaultTexture = frame._CustomDefaultTexture or (AdaptiveAPI.PATH .. "Elements/slider-background.png")
-				frame._HighlightTexture = frame._CustomHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-background-highlighted.png")
-				frame._ThumbTexture = frame._CustomThumbTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb.png")
-				frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb-highlighted.png")
+		do -- THEME
+			local function UpdateTheme()
+				if (theme and theme == 2) or (not theme and AdaptiveAPI.IsDarkTheme) then
+					frame._DefaultTexture = frame._CustomDefaultTexture or (AdaptiveAPI.PATH .. "Elements/slider-background.png")
+					frame._HighlightTexture = frame._CustomHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-background-highlighted.png")
+					frame._ThumbTexture = frame._CustomThumbTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb.png")
+					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb-highlighted.png")
 
-				frame._BackgroundColor = frame._CustomColor or AdaptiveAPI.RGB_WHITE
-				frame._ThumbColor = frame._CustomThumbColor or { r = 1, g = 1, b = 1 }
-			elseif (theme and theme == 1) or (not theme and not AdaptiveAPI.IsDarkTheme) then
-				frame._DefaultTexture = frame._CustomDefaultTexture or (AdaptiveAPI.PATH .. "Elements/slider-background.png")
-				frame._HighlightTexture = frame._CustomHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-background-highlighted.png")
-				frame._ThumbTexture = frame._CustomThumbTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb.png")
-				frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb-highlighted.png")
+					frame._BackgroundColor = frame._CustomColor or AdaptiveAPI.RGB_WHITE
+					frame._ThumbColor = frame._CustomThumbColor or { r = 1, g = 1, b = 1 }
+				elseif (theme and theme == 1) or (not theme and not AdaptiveAPI.IsDarkTheme) then
+					frame._DefaultTexture = frame._CustomDefaultTexture or (AdaptiveAPI.PATH .. "Elements/slider-background.png")
+					frame._HighlightTexture = frame._CustomHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-background-highlighted.png")
+					frame._ThumbTexture = frame._CustomThumbTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb.png")
+					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (AdaptiveAPI.PATH .. "Elements/slider-thumb-highlighted.png")
 
-				frame._BackgroundColor = frame._CustomColor or AdaptiveAPI.RGB_BLACK
-				frame._ThumbColor = frame._CustomThumbColor or { r = .1, g = .1, b = .1 }
+					frame._BackgroundColor = frame._CustomColor or AdaptiveAPI.RGB_BLACK
+					frame._ThumbColor = frame._CustomThumbColor or { r = .1, g = .1, b = .1 }
+				end
 			end
+
+			AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(UpdateTheme, 4)
 		end
 
-		AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(UpdateTheme, 4)
+		do -- ELEMENTS
+			do -- BACKGROUND
+				frame.Background, frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, 1, "$parent.Background")
+				frame.Background:SetPoint("BOTTOM", frame, 0, 5)
+				frame.Background:SetFrameLevel(frame:GetFrameLevel() - 2)
+				frame.BackgroundTexture:SetAlpha(.125)
 
-		--------------------------------
+				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+					frame.BackgroundTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
+				end, 5)
+			end
 
-		local function Background()
-			frame.Background, frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, 1, "$parent.Background")
-			frame.Background:SetPoint("BOTTOM", frame, 0, 5)
-			frame.Background:SetFrameLevel(frame:GetFrameLevel() - 2)
-			frame.BackgroundTexture:SetAlpha(.125)
-			AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
-				frame.BackgroundTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
-			end, 5)
-		end
+			do -- THUMB
+				frame.ThumbNew, frame.ThumbNewTexture = AdaptiveAPI.FrameTemplates:CreateTexture(frame, frame:GetFrameStrata(), frame._CustomThumbTexture or frame._ThumbTexture, "$parent.ThumbNew")
+				frame.ThumbNew:SetFrameLevel(frame:GetFrameLevel() - 1)
+				frame.ThumbNewTexture:SetAlpha(1)
 
-		local function Thumb()
-			frame.ThumbNew, frame.ThumbNewTexture = AdaptiveAPI.FrameTemplates:CreateTexture(frame, frame:GetFrameStrata(), frame._CustomThumbTexture or frame._ThumbTexture, "$parent.ThumbNew")
-			frame.ThumbNew:SetFrameLevel(frame:GetFrameLevel() - 1)
-			frame.ThumbNewTexture:SetAlpha(1)
-			AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
-				frame.ThumbNewTexture:SetVertexColor(frame._ThumbColor.r, frame._ThumbColor.g, frame._ThumbColor.b, frame._ThumbColor.a)
-			end, 5)
-		end
+				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+					frame.ThumbNewTexture:SetVertexColor(frame._ThumbColor.r, frame._ThumbColor.g, frame._ThumbColor.b, frame._ThumbColor.a)
+				end, 5)
+			end
 
-		local function Grids()
-			if grid then
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					local function CreateGrid()
-						local Grid, GridTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, .5)
-
-						Grid:SetSize(2.5, 2.5)
-						Grid:SetFrameLevel(frame:GetFrameLevel() - 2)
-						GridTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
-						GridTexture:SetAlpha(.125)
-
-						--------------------------------
-
-						AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+			do -- GRIDS
+				if grid then
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						local function CreateGrid()
+							local Grid, GridTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, .5)
+							Grid:SetSize(2.5, 2.5)
+							Grid:SetFrameLevel(frame:GetFrameLevel() - 2)
 							GridTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
-						end, 5)
+							GridTexture:SetAlpha(.125)
+
+							AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+								GridTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
+							end, 5)
+
+							--------------------------------
+
+							return Grid, GridTexture
+						end
 
 						--------------------------------
 
-						return Grid, GridTexture
-					end
+						local min, max = frame:GetMinMaxValues()
+						local stepSize = frame:GetValueStep()
+						local numSteps = (max / stepSize) + 1
+						local numGrids = numSteps + 1
 
-					--------------------------------
+						--------------------------------
 
-					local Min, Max = frame:GetMinMaxValues()
-					local Step = frame:GetValueStep()
-					local NumSteps = (Max / Step) + 1
-					local NumGrids = NumSteps + 1
+						local grids = {}
 
-					--------------------------------
+						for i = 1, numGrids do
+							local Grid, GridTexture = CreateGrid()
 
-					local Grids = {}
+							--------------------------------
 
-					for i = 1, NumGrids do
-						local Grid, GridTexture = CreateGrid()
+							table.insert(grids, Grid)
+						end
 
-						table.insert(Grids, Grid)
-					end
-
-					frame.Grids = Grids
-				end, 1)
+						frame.Grids = grids
+					end, 1)
+				end
 			end
+		end
+
+		do -- CLICK EVENTS
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				frame:HookScript("OnValueChanged", function(self, new, userInput)
+					frame.Background:SetSize(frame:GetWidth(), 2.5)
+
+					--------------------------------
+
+					local value = frame:GetValue()
+					local min, max = frame:GetMinMaxValues()
+					local stepSize = frame:GetValueStep()
+					local numSteps = (max / stepSize) + 1
+
+					local thumbWidth = (frame:GetWidth()) / (numSteps - 1)
+					if thumbWidth < 20 then
+						thumbWidth = 20
+					end
+					local thumbPosition
+					if value > min then
+						thumbPosition = (frame:GetWidth() - thumbWidth) / ((max - min) / (value - min))
+					else
+						thumbPosition = 0
+					end
+
+					frame.ThumbNew:SetSize(thumbWidth, 5)
+					frame.ThumbNew:SetPoint("BOTTOMLEFT", thumbPosition, 5)
+
+					--------------------------------
+
+					if frame.Grids then
+						for i = 1, #frame.Grids do
+							local CurrentGrid = frame.Grids[i]
+
+							CurrentGrid:Hide()
+						end
+
+						for i = 1, numSteps + 1 do
+							local CurrentGrid = frame.Grids[i]
+
+							CurrentGrid:Show()
+							CurrentGrid:ClearAllPoints()
+							CurrentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - CurrentGrid:GetHeight()) / (numSteps - 1)) * (i - 1), 7.5)
+						end
+					end
+
+					--------------------------------
+
+					if userInput then
+						local valueChangedCallbacks = frame.ValueChangedCallbacks
+
+						for i = 1, #valueChangedCallbacks do
+							valueChangedCallbacks[i]()
+						end
+					end
+				end)
+			end, .1)
+
+			frame.Enter = function()
+				frame.ThumbNewTexture:SetTexture(frame._ThumbHighlightTexture)
+
+				--------------------------------
+
+				local enterCallbacks = frame.EnterCallbacks
+
+				for callback = 1, #enterCallbacks do
+					enterCallbacks[callback]()
+				end
+			end
+
+			frame.Leave = function()
+				frame.ThumbNewTexture:SetTexture(frame._ThumbTexture)
+
+				--------------------------------
+
+				local leaveCallbacks = frame.LeaveCallbacks
+
+				for callback = 1, #leaveCallbacks do
+					leaveCallbacks[callback]()
+				end
+			end
+
+			frame.MouseDown = function()
+				local mouseDownCallbacks = frame.MouseDownCallbacks
+
+				for callback = 1, #mouseDownCallbacks do
+					mouseDownCallbacks[callback]()
+				end
+			end
+
+			frame.MouseUp = function()
+				local mouseUpCallbacks = frame.MouseUpCallbacks
+
+				for callback = 1, #mouseUpCallbacks do
+					mouseUpCallbacks[callback]()
+				end
+			end
+
+			AdaptiveAPI.FrameTemplates:CreateMouseResponder(frame, frame.Enter, frame.Leave)
+
+			frame.ThumbNew:SetScript("OnEnter", function()
+				frame.ThumbNew:SetAlpha(.75)
+			end)
+
+			frame.ThumbNew:SetScript("OnLeave", function()
+				frame.ThumbNew:SetAlpha(1)
+			end)
+
+			frame:SetScript("OnMouseDown", function()
+				frame.MouseDown()
+			end)
+
+			frame:SetScript("OnMouseUp", function()
+				frame.MouseUp()
+			end)
 		end
 
 		--------------------------------
 
-		Background()
-		Thumb()
-		Grids()
-
-		--------------------------------
-
-		local function HideDefaultTextures()
+		do -- BLIZZARD
 			frame.Left:Hide()
 			frame.Middle:Hide()
 			frame.Right:Hide()
 			frame.Thumb:SetAlpha(0)
 		end
-
-		--------------------------------
-
-		HideDefaultTextures()
-
-		--------------------------------
-
-		addon.Libraries.AceTimer:ScheduleTimer(function()
-			frame:HookScript("OnValueChanged", function(self, new, userInput)
-				frame.Background:SetSize(frame:GetWidth(), 2.5)
-
-				--------------------------------
-
-				local Value = frame:GetValue()
-				local Min, Max = frame:GetMinMaxValues()
-				local Step = frame:GetValueStep()
-				local NumSteps = (Max / Step) + 1
-
-				local ThumbWidth = (frame:GetWidth()) / (NumSteps - 1)
-				if ThumbWidth < 20 then
-					ThumbWidth = 20
-				end
-				local ThumbPosition
-				if Value > Min then
-					ThumbPosition = (frame:GetWidth() - ThumbWidth) / ((Max - Min) / (Value - Min))
-				else
-					ThumbPosition = 0
-				end
-
-				frame.ThumbNew:SetSize(ThumbWidth, 5)
-				frame.ThumbNew:SetPoint("BOTTOMLEFT", ThumbPosition, 5)
-
-				--------------------------------
-
-				if frame.Grids then
-					for i = 1, #frame.Grids do
-						local CurrentGrid = frame.Grids[i]
-
-						CurrentGrid:Hide()
-					end
-
-					for i = 1, NumSteps + 1 do
-						local CurrentGrid = frame.Grids[i]
-
-						CurrentGrid:Show()
-						CurrentGrid:ClearAllPoints()
-						CurrentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - CurrentGrid:GetHeight()) / (NumSteps - 1)) * (i - 1), 7.5)
-					end
-				end
-
-				--------------------------------
-
-				if userInput then
-					local ValueChangedCallbacks = frame.ValueChangedCallbacks
-
-					for callback = 1, #ValueChangedCallbacks do
-						ValueChangedCallbacks[callback]()
-					end
-				end
-			end)
-		end, .1)
-
-		frame.Enter = function()
-			frame.ThumbNewTexture:SetTexture(frame._ThumbHighlightTexture)
-
-			--------------------------------
-
-			local EnterCallbacks = frame.EnterCallbacks
-
-			for callback = 1, #EnterCallbacks do
-				EnterCallbacks[callback]()
-			end
-		end
-
-		frame.Leave = function()
-			frame.ThumbNewTexture:SetTexture(frame._ThumbTexture)
-
-			--------------------------------
-
-			local LeaveCallbacks = frame.LeaveCallbacks
-
-			for callback = 1, #LeaveCallbacks do
-				LeaveCallbacks[callback]()
-			end
-		end
-
-		frame.MouseDown = function()
-			local MouseDownCallbacks = frame.MouseDownCallbacks
-
-			for callback = 1, #MouseDownCallbacks do
-				MouseDownCallbacks[callback]()
-			end
-		end
-
-		frame.MouseUp = function()
-			local MouseUpCallbacks = frame.MouseUpCallbacks
-
-			for callback = 1, #MouseUpCallbacks do
-				MouseUpCallbacks[callback]()
-			end
-		end
-
-		AdaptiveAPI.FrameTemplates:CreateMouseResponder(frame, frame.Enter, frame.Leave)
-
-		frame.ThumbNew:SetScript("OnEnter", function()
-			frame.ThumbNew:SetAlpha(.75)
-		end)
-
-		frame.ThumbNew:SetScript("OnLeave", function()
-			frame.ThumbNew:SetAlpha(1)
-		end)
-
-		frame:SetScript("OnMouseDown", function()
-			frame.MouseDown()
-		end)
-
-		frame:SetScript("OnMouseUp", function()
-			frame.MouseUp()
-		end)
 	end
 
 	-- Update a slider theme.

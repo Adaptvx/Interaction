@@ -8,4 +8,7 @@
 	<Script file="Core/Cinematic_Script.lua"/>
 	<Script file="Core/Cinematic_Util.lua"/>
 	<Script file="Core/Cinematic_Variables.lua"/>
+
+	<!-- Modules -->
+	<Include file="Modules/addon.Cinematic.Effects/Load.xml"/>
 </Ui>

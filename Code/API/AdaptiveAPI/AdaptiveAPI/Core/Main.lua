@@ -50,6 +50,22 @@ end
 
 do
 	do -- STRING
+		-- Returns if the given string is found in the string.
+		---@param string string
+		---@param stringToSearch string
+		---@return success boolean
+		function AdaptiveAPI:FindString(string, stringToSearch)
+			if string and stringToSearch then
+				if string.match(string, stringToSearch) then
+					return true
+				else
+					return false
+				end
+			else
+				return false
+			end
+		end
+
 		--- Returns the starting index of the character at the given index in the given UTF-8 encoded string.
 		---@param str string
 		---@param index number
@@ -471,282 +487,6 @@ do
 end
 
 --------------------------------
--- SKINS
---------------------------------
-
-do
-	do -- BUTTON
-		-- Sets a Blizzard button texture.
-		---@param button button
-		---@param normalTexture string
-		---@param pushedTexture string
-		---@param checkTexture string
-		---@param disabledTexture string
-		---@param disabledCheckedTexture string
-		function AdaptiveAPI:SetButtonTexture(button, normalTexture, pushedTexture, checkTexture, disabledTexture, disabledCheckedTexture)
-			if not button then
-				return
-			end
-
-			--------------------------------
-
-			if button.SetNormalTexture then button:SetNormalTexture(normalTexture) end
-			if button.SetPushedTexture then button:SetPushedTexture(pushedTexture) end
-			if button.SetCheckedTexture then button:SetCheckedTexture(checkTexture) end
-			if button.SetDisabledTexture then button:SetDisabledTexture(disabledTexture) end
-			if button.SetDisabledCheckedTexture then button:SetDisabledCheckedTexture(disabledCheckedTexture) end
-
-			--------------------------------
-
-			if button.SetHighlightTexture then
-				button:SetHighlightTexture(nil)
-				button:GetHighlightTexture():SetVertexColor(0, 0, 0)
-			end
-		end
-
-		-- Sets a Blizzard button texture color.
-		---@param button button
-		---@param modifier number
-		---@param textModifier number
-		function AdaptiveAPI:SetButtonTextureColor(button, modifier, textModifier)
-			if not button then
-				return
-			end
-
-			--------------------------------
-
-			if button.SetNormalTexture then button:GetNormalTexture():SetVertexColor(modifier, modifier, modifier) end
-			if button.SetPushedTexture then button:GetPushedTexture():SetVertexColor(modifier, modifier, modifier) end
-			if button.SetCheckedTexture then button:GetCheckedTexture():SetVertexColor(modifier, modifier, modifier) end
-			if button.SetDisabledTexture then button:GetDisabledTexture():SetVertexColor(modifier, modifier, modifier) end
-			if button.SetDisabledCheckedTexture then button:GetDisabledCheckedTexture():SetVertexColor(modifier, modifier, modifier) end
-
-			--------------------------------
-
-			if textModifier then
-				local Regions = button:GetRegions()
-				for i = 1, #Regions do
-					local CurrentRegion = Regions[i]
-
-					--------------------------------
-
-					if CurrentRegion.GetObjectType and CurrentRegion:GetObjectType() == "FontString" then
-						CurrentRegion:SetTextColor(textModifier, textModifier, textModifier, 1)
-						CurrentRegion:SetShadowOffset(0, 0)
-					end
-				end
-			end
-		end
-	end
-
-	do -- COLOR
-		--- Sets the vertex color of a frame to a single color based on the modifier.
-		--- @param frame any
-		--- @param modifier number
-		--- @param desaturate? number
-		--- @param override? boolean: Set the vertex color even if it will make the frame darker.
-		function AdaptiveAPI:SetColorScale(frame, modifier, desaturate, override)
-			if not frame then
-				return
-			end
-
-			--------------------------------
-
-			local Color
-
-			--------------------------------
-
-			if frame.GetVertexColor then
-				Color = frame:GetVertexColor()
-
-				--------------------------------
-
-				if (Color > modifier) or (override) then
-					if frame.SetVertexColor then
-						if desaturate and desaturate > 0 then
-							frame:SetDesaturated(desaturate)
-						end
-
-						--------------------------------
-
-						frame:SetVertexColor(modifier, modifier, modifier)
-					end
-				end
-			end
-		end
-
-		-- Sets the vertex color of all frames iterating from the given frame.
-		--- @param frame any
-		--- @param modifier number
-		--- @param desaturate? number
-		--- @param override? boolean: Set the vertex color even if it will make the frame darker.
-		--- @param onlyApplyTo? string
-		--- @param onlyApplyToType? string
-		function AdaptiveAPI:SetColorScaleAll(frame, modifier, desaturate, override, onlyApplyTo, onlyApplyToType)
-			if not frame then
-				return
-			end
-
-			--------------------------------
-
-			if frame.IsVisible then
-				function Enumerate(_frame, _modifier, _desaturate, _override, moveToChildren)
-					if not moveToChildren then
-						if _frame.GetNumRegions and _frame:GetNumRegions() > 0 then
-							for i = 1, _frame:GetNumRegions() do
-								local Region = select(i, _frame:GetRegions())
-
-								local Valid = true
-								local ValidFilter = true
-								local ValidObjectType = true
-
-								--------------------------------
-
-								if onlyApplyTo ~= nil and onlyApplyToType ~= nil then
-									if onlyApplyToType == "DebugName" then
-										ValidFilter = AdaptiveAPI:FindString(tostring(Region:GetDebugName()), onlyApplyTo)
-									end
-
-									if onlyApplyToType == "TextureID" and Region.GetTexture then
-										ValidFilter = tostring(Region:GetTexture()) == onlyApplyTo
-									end
-								end
-
-								if Region.IsObjectType and Region:IsObjectType("Texture") then
-									ValidObjectType = true
-								else
-									ValidObjectType = false
-								end
-
-								if Valid and ValidFilter and ValidObjectType then
-									AdaptiveAPI:SetColorScale(Region, _modifier, _desaturate, _override)
-								else
-									Enumerate(_frame, _modifier, _desaturate, _override, true)
-								end
-							end
-						else
-							local Valid = true
-							local ValidFilter = true
-							local ValidObjectType = true
-
-							--------------------------------
-
-							if onlyApplyTo ~= nil and onlyApplyToType ~= nil then
-								if onlyApplyToType == "DebugName" then
-									ValidFilter = AdaptiveAPI:FindString(_frame:GetDebugName(), onlyApplyTo)
-								end
-
-								if onlyApplyToType == "TextureID" and _frame.GetTexture then
-									ValidFilter = tostring(_frame:GetTexture()) == onlyApplyTo
-								end
-							end
-
-							if _frame.IsObjectType and _frame:IsObjectType("Texture") then
-								ValidObjectType = true
-							else
-								ValidObjectType = false
-							end
-
-							if Valid and ValidFilter and ValidObjectType then
-								AdaptiveAPI:SetColorScale(_frame, _modifier, _desaturate, _override)
-							end
-
-							--------------------------------
-
-							Enumerate(_frame, _modifier, _desaturate, _override, true)
-						end
-					end
-
-					if moveToChildren then
-						if _frame.GetNumChildren then
-							for i = 1, _frame:GetNumChildren() do
-								local Children = select(i, _frame:GetChildren())
-
-								--------------------------------
-
-								Enumerate(Children, _modifier, _desaturate, _override, false)
-							end
-						end
-					end
-				end
-
-				--------------------------------
-
-				Enumerate(frame, modifier, desaturate, override, false)
-			end
-		end
-
-		-- Sets the text color of all FontStrings iterating from the given frame.
-		--- @param frame any
-		--- @param r number
-		--- @param g number
-		--- @param b number
-		function AdaptiveAPI:SetTextColorScaleAll(frame, r, g, b, hookFunc)
-			if not frame then
-				return
-			end
-
-			--------------------------------
-
-			if frame.IsVisible then
-				local cr = r
-				local cg = g
-				local cb = b
-				function Enumerate(_frame, _r, _g, _b, moveToChildren)
-					if not moveToChildren then
-						if _frame.GetNumRegions and _frame:GetNumRegions() > 0 then
-							for i = 1, _frame:GetNumRegions() do
-								local Region = select(i, _frame:GetRegions())
-
-								--------------------------------
-
-								if Region and Region.IsObjectType and Region:IsObjectType("FontString") then
-									if hookFunc then
-										AdaptiveAPI:HookSetTextColor(Region)
-									else
-										Region:SetTextColor(cr, cg, cb)
-									end
-								else
-									Enumerate(_frame, r, g, b, true)
-								end
-							end
-						else
-							if _frame.SetTextColor and _frame.IsObjectType and _frame:IsObjectType("FontString") then
-								if hookFunc then
-									AdaptiveAPI:HookSetTextColor(_frame)
-								else
-									_frame:SetTextColor(cr, cg, cb)
-								end
-							end
-
-							--------------------------------
-
-							Enumerate(_frame, r, g, b, true)
-						end
-					end
-
-					if moveToChildren then
-						if _frame.GetNumChildren then
-							for i = 1, _frame:GetNumChildren() do
-								local Children = select(i, _frame:GetChildren())
-
-								--------------------------------
-
-								Enumerate(Children, r, g, b, false)
-							end
-						end
-					end
-				end
-
-				--------------------------------
-
-				Enumerate(frame, r, g, b, false)
-			end
-		end
-	end
-end
-
---------------------------------
 -- UTILITIES
 --------------------------------
 
@@ -789,27 +529,40 @@ do
 		--- @param locationX? number
 		--- @param locationY? number
 		--- @param customTooltip? boolean
-		function AdaptiveAPI:AddTooltip(frame, text, location, locationX, locationY, customTooltip)
+		function AdaptiveAPI:AddTooltip(frame, text, location, locationX, locationY, customTooltip, bypassMouseResponder)
 			frame.showTooltip = true
 			frame.tooltipText = text
+			frame.tooltipActive = false
 
 			if frame.hookedFunc == nil then
 				frame.hookedFunc = true
 
 				--------------------------------
 
-				local function ShowTooltip()
+				frame.AdaptiveAPI_ShowTooltip = function()
+					frame.tooltipActive = true
+
+					--------------------------------
+
 					GameTooltip:SetOwner(frame, location, locationX, locationY)
 					GameTooltip:SetText(frame.tooltipText, 1, 1, 1, 1, true)
 					GameTooltip:Show()
+
+					--------------------------------
 
 					if customTooltip and addon.BlizzardGameTooltip then
 						addon.BlizzardGameTooltip.Script:StartCustom()
 					end
 				end
 
-				local function HideTooltip()
+				frame.AdaptiveAPI_HideTooltip = function()
+					frame.tooltipActive = false
+
+					--------------------------------
+
 					GameTooltip:Hide()
+
+					--------------------------------
 
 					if customTooltip and addon.BlizzardGameTooltip then
 						addon.BlizzardGameTooltip.Script:StopCustom()
@@ -818,23 +571,39 @@ do
 
 				--------------------------------
 
-				AdaptiveAPI.FrameTemplates:CreateMouseResponder(frame, function()
+				local function Enter()
 					if frame.showTooltip then
-						ShowTooltip()
+						frame.AdaptiveAPI_ShowTooltip()
 					else
-						HideTooltip()
+						frame.AdaptiveAPI_HideTooltip()
 					end
-				end, function()
-					HideTooltip()
-				end)
+				end
+
+				local function Leave()
+					frame.AdaptiveAPI_HideTooltip()
+				end
+
+				if bypassMouseResponder then
+					frame:HookScript("OnEnter", Enter)
+					frame:HookScript("OnLeave", Leave)
+				else
+					AdaptiveAPI.FrameTemplates:CreateMouseResponder(frame, Enter, Leave)
+				end
 			end
 		end
 
 		-- Disables the tooltip for the specified frame.
 		---@param frame any
 		function AdaptiveAPI:RemoveTooltip(frame)
-			frame.ShowTooltip = false
-			frame.TooltipText = ""
+			frame.showTooltip = false
+			frame.tooltipText = ""
+			if frame.tooltipActive then
+				frame.tooltipActive = false
+
+				--------------------------------
+
+				frame.AdaptiveAPI_HideTooltip()
+			end
 		end
 
 		-- Extracts item stats from a tooltip.
@@ -1092,6 +861,36 @@ do
 	end
 
 	do -- SEARCH
+		-- Returns if the an item name is found in the player's bag.
+		---@param itemName string
+		---@return itemID any
+		---@return itemLink any
+		function AdaptiveAPI:FindItemInInventory(itemName)
+			if not itemName then
+				return nil, nil
+			end
+
+			--------------------------------
+
+			for bag = 0, 4 do
+				for slot = 1, C_Container.GetContainerNumSlots(bag) do
+					local itemID = C_Container.GetContainerItemID(bag, slot) or nil
+					local itemLink = C_Container.GetContainerItemLink(bag, slot) or nil
+
+					if itemLink then
+						local itemNameInBag = C_Item.GetItemInfo(itemLink)
+						if itemNameInBag and itemNameInBag:lower() == itemName:lower() then
+							return itemID, itemLink
+						end
+					end
+				end
+			end
+
+			--------------------------------
+
+			return nil
+		end
+
 		-- Finds the index of a value in a table.
 		--- @param table table
 		--- @param indexValue any
@@ -1152,52 +951,6 @@ do
 
 				if CurrentEntry[searchVariable] == indexValue then
 					return i
-				end
-			end
-
-			--------------------------------
-
-			return nil
-		end
-
-		-- Returns if the given string is found in the string.
-		---@param string string
-		---@param stringToSearch string
-		---@return success boolean
-		function AdaptiveAPI:FindString(string, stringToSearch)
-			if string and stringToSearch then
-				if string.match(string, stringToSearch) then
-					return true
-				else
-					return false
-				end
-			else
-				return false
-			end
-		end
-
-		-- Returns if the an item name is found in the player's bag.
-		---@param itemName string
-		---@return itemID any
-		---@return itemLink any
-		function AdaptiveAPI:FindItemInInventory(itemName)
-			if not itemName then
-				return nil, nil
-			end
-
-			--------------------------------
-
-			for bag = 0, 4 do
-				for slot = 1, C_Container.GetContainerNumSlots(bag) do
-					local itemID = C_Container.GetContainerItemID(bag, slot) or nil
-					local itemLink = C_Container.GetContainerItemLink(bag, slot) or nil
-
-					if itemLink then
-						local itemNameInBag = C_Item.GetItemInfo(itemLink)
-						if itemNameInBag and itemNameInBag:lower() == itemName:lower() then
-							return itemID, itemLink
-						end
-					end
 				end
 			end
 

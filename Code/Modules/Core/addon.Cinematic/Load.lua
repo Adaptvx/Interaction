@@ -17,6 +17,10 @@ function NS:Load()
 		NS.Script:Load()
 	end
 
+	local function Submodules()
+		NS.Effects:Load()
+	end
+
 	local function Misc()
 		UIParent:UnregisterEvent("EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED")
 
@@ -39,4 +43,8 @@ function NS:Load()
 
 	Modules()
 	Misc()
+
+	addon.Libraries.AceTimer:ScheduleTimer(function()
+		Submodules()
+	end, 0)
 end

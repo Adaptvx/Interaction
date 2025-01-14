@@ -19,8 +19,8 @@ end
 do -- CONSTANTS
 	NS.PATH = "Interface/AddOns/Interaction/"
 
-	NS.VERSION_STRING = "0.0.2"
-	NS.VERSION_NUMBER = 000002 -- XX.XX.XX
+	NS.VERSION_STRING = "0.0.3"
+	NS.VERSION_NUMBER = 000003 -- XX.XX.XX
 	NS.IS_CLASSIC = select(4, GetBuildInfo()) < 110000
 	NS.IS_CLASSIC_ERA = select(4, GetBuildInfo()) < 20000
 

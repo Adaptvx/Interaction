@@ -24,23 +24,6 @@ function NS.Elements:Load()
 
 			--------------------------------
 
-			InteractionPromptFrame:SetScript("OnUpdate", function()
-				InteractionPromptFrame.Content.TextArea.Text:SetHeight(1000)
-
-				local TEXT_HEIGHT = InteractionPromptFrame.Content.TextArea.Text:GetStringHeight()
-				local BUTTON_AREA_HEIGHT = NS.Variables.BUTTON_HEIGHT
-
-				InteractionPromptFrame:SetHeight(NS.Variables.PADDING + TEXT_HEIGHT + BUTTON_AREA_HEIGHT + NS.Variables.PADDING)
-				InteractionPromptFrame.Background:SetSize(InteractionPromptFrame:GetWidth() + NS.Variables:RATIO(4), InteractionPromptFrame:GetHeight() + NS.Variables:RATIO(4))
-
-				InteractionPromptFrame.Content:SetSize(InteractionPromptFrame:GetSize())
-				InteractionPromptFrame.Content.TextArea:SetSize(InteractionPromptFrame.Content:GetWidth(), TEXT_HEIGHT)
-				InteractionPromptFrame.Content.ButtonArea:SetSize(InteractionPromptFrame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
-				InteractionPromptFrame.Content.TextArea.Text:SetSize(InteractionPromptFrame.Content.TextArea:GetWidth(), InteractionPromptFrame.Content.TextArea:GetHeight())
-			end)
-
-			--------------------------------
-
 			do -- BACKDROP
 				InteractionPromptFrame.Backdrop, InteractionPromptFrame.BackdropTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionPromptFrame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
 				InteractionPromptFrame.Backdrop:SetSize(500, 500)
@@ -122,6 +105,27 @@ function NS.Elements:Load()
 						addon.SoundEffects:SetButton(InteractionPromptFrame.Content.ButtonArea.Button2, addon.SoundEffects.Prompt_Button_Enter, addon.SoundEffects.Prompt_Button_Leave, addon.SoundEffects.Prompt_Button_MouseDown, addon.SoundEffects.Prompt_Button_MouseUp)
 					end
 				end
+			end
+
+			--------------------------------
+
+			do -- EVENTS
+				local function UpdateLayout()
+					InteractionPromptFrame.Content.TextArea.Text:SetHeight(1000)
+
+					local textHeight = InteractionPromptFrame.Content.TextArea.Text:GetStringHeight()
+					local buttonAreaHeight = NS.Variables.BUTTON_HEIGHT
+
+					InteractionPromptFrame:SetHeight(NS.Variables.PADDING + textHeight + buttonAreaHeight + NS.Variables.PADDING)
+					InteractionPromptFrame.Background:SetSize(InteractionPromptFrame:GetWidth() + NS.Variables:RATIO(4), InteractionPromptFrame:GetHeight() + NS.Variables:RATIO(4))
+
+					InteractionPromptFrame.Content:SetSize(InteractionPromptFrame:GetSize())
+					InteractionPromptFrame.Content.TextArea:SetSize(InteractionPromptFrame.Content:GetWidth(), textHeight)
+					InteractionPromptFrame.Content.ButtonArea:SetSize(InteractionPromptFrame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
+					InteractionPromptFrame.Content.TextArea.Text:SetSize(InteractionPromptFrame.Content.TextArea:GetWidth(), InteractionPromptFrame.Content.TextArea:GetHeight())
+				end
+
+				CallbackRegistry:Add("START_PROMPT", UpdateLayout, 0)
 			end
 		end
 	end

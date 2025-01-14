@@ -59,164 +59,162 @@ do
 		Frame.MouseDownCallbacks = {}
 		Frame.MouseUpCallbacks = {}
 
-		local function UpdateTheme()
-			if (theme and theme == 2) or (theme == nil and AdaptiveAPI.NativeAPI:GetDarkTheme()) then
-				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
-				Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
-				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
-				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
-				Frame._Color = Frame._CustomColor or { r = 1, g = 1, b = 1 }
-			elseif (theme and theme == 1) or (theme == nil and not AdaptiveAPI.NativeAPI:GetDarkTheme()) then
-				Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
-				Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
-				Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
-				Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-light.png"
-				Frame._Color = Frame._CustomColor or { r = .1, g = .1, b = .1 }
-			end
-		end
-
-		AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(UpdateTheme, 4)
-
 		--------------------------------
 
-		Frame.Checkbox = CreateFrame("Frame", "$parent.Checkbox", Frame)
-		Frame.Checkbox:SetPoint("LEFT", Frame)
-		Frame.Checkbox:SetFrameStrata(frameStrata)
-
-		--------------------------------
-
-		Frame.Checkbox.Background, Frame.Checkbox.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Checkbox, frameStrata, Frame._DefaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
-		Frame.Checkbox.Background:SetPoint("CENTER", Frame.Checkbox)
-		Frame.Checkbox.Background:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 1)
-		Frame.Checkbox.Background:SetAlpha(1)
-
-		AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
-			Frame.Checkbox.BackgroundTexture:SetVertexColor(Frame._Color.r, Frame._Color.g, Frame._Color.b, Frame._Color.a or 1)
-		end, 5)
-
-		--------------------------------
-
-		Frame.Checkbox.Icon, Frame.Checkbox.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Checkbox, frameStrata, Frame._CheckTexture, "$parent.Icon")
-		Frame.Checkbox.Icon:SetPoint("CENTER", Frame.Checkbox)
-		Frame.Checkbox.Icon:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 2)
-
-		AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
-			Frame.Checkbox.IconTexture:SetTexture(Frame._CheckTexture)
-		end, 5)
-
-		--------------------------------
-
-		Frame.UpdateChecked = function()
-			Frame.Checkbox.Icon:SetShown(Frame.Checked)
-		end
-
-		Frame.SetChecked = function(value)
-			Frame.Checked = value
-
-			--------------------------------
-
-			Frame.UpdateChecked()
-		end
-
-		--------------------------------
-
-		Frame.Enter = function()
-			Frame.Checkbox.BackgroundTexture:SetTexture(Frame._HighlightTexture)
-			Frame.Checkbox.IconTexture:SetTexture(Frame._HighlightCheckTexture)
-
-			--------------------------------
-
-			AdaptiveAPI.Animation:Fade(Frame.Checkbox.Background, .125, Frame.Checkbox.Background:GetAlpha(), 1, nil,
-				function()
-					return not Frame.Checkbox.BackgroundTexture:GetTexture() == Frame._HighlightTexture
+		do -- THEME
+			local function UpdateTheme()
+				if (theme and theme == 2) or (theme == nil and AdaptiveAPI.NativeAPI:GetDarkTheme()) then
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
+					Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
+					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
+					Frame._Color = Frame._CustomColor or { r = 1, g = 1, b = 1 }
+				elseif (theme and theme == 1) or (theme == nil and not AdaptiveAPI.NativeAPI:GetDarkTheme()) then
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or AdaptiveAPI.PATH .. "Elements/check-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-background-highlighted.png"
+					Frame._CheckTexture = Frame._CustomCheckTexture or AdaptiveAPI.PATH .. "Elements/check-dark.png"
+					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or AdaptiveAPI.PATH .. "Elements/check-light.png"
+					Frame._Color = Frame._CustomColor or { r = .1, g = .1, b = .1 }
 				end
-			)
+			end
+
+			AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(UpdateTheme, 4)
+		end
+
+		do -- ELEMENTS
+			Frame.Checkbox = CreateFrame("Frame", "$parent.Checkbox", Frame)
+			Frame.Checkbox:SetPoint("LEFT", Frame)
+			Frame.Checkbox:SetFrameStrata(frameStrata)
 
 			--------------------------------
 
-			local EnterCallbacks = Frame.EnterCallbacks
+			do -- BACKGROUND
+				Frame.Checkbox.Background, Frame.Checkbox.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Checkbox, frameStrata, Frame._DefaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
+				Frame.Checkbox.Background:SetPoint("CENTER", Frame.Checkbox)
+				Frame.Checkbox.Background:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 1)
+				Frame.Checkbox.Background:SetAlpha(1)
 
-			--------------------------------
+				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+					Frame.Checkbox.BackgroundTexture:SetVertexColor(Frame._Color.r, Frame._Color.g, Frame._Color.b, Frame._Color.a or 1)
+				end, 5)
+			end
 
-			for callback = 1, #EnterCallbacks do
-				EnterCallbacks[callback]()
+			do -- ICON
+				Frame.Checkbox.Icon, Frame.Checkbox.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Checkbox, frameStrata, Frame._CheckTexture, "$parent.Icon")
+				Frame.Checkbox.Icon:SetPoint("CENTER", Frame.Checkbox)
+				Frame.Checkbox.Icon:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 2)
+
+				AdaptiveAPI:RegisterThemeUpdateWithNativeAPI(function()
+					Frame.Checkbox.IconTexture:SetTexture(Frame._CheckTexture)
+				end, 5)
 			end
 		end
 
-		Frame.Leave = function()
-			Frame.Checkbox.BackgroundTexture:SetTexture(Frame._DefaultTexture)
-			Frame.Checkbox.IconTexture:SetTexture(Frame._CheckTexture)
+		--------------------------------
 
-			--------------------------------
+		do -- STATE UPDATES
+			Frame.UpdateChecked = function()
+				Frame.Checkbox.Icon:SetShown(Frame.Checked)
+			end
 
-			AdaptiveAPI.Animation:Fade(Frame.Checkbox.Background, .125, Frame.Checkbox.Background:GetAlpha(), 1, nil,
-				function()
-					return not Frame.Checkbox.BackgroundTexture:GetTexture() == Frame._HighlightTexture
+			Frame.SetChecked = function(value)
+				Frame.Checked = value
+
+				--------------------------------
+
+				Frame.UpdateChecked()
+			end
+		end
+
+		do -- CLICK EVENTS
+			Frame.Enter = function()
+				Frame.Checkbox.BackgroundTexture:SetTexture(Frame._HighlightTexture)
+				Frame.Checkbox.IconTexture:SetTexture(Frame._HighlightCheckTexture)
+
+				--------------------------------
+
+				AdaptiveAPI.Animation:Fade(Frame.Checkbox.Background, .125, Frame.Checkbox.Background:GetAlpha(), 1, nil,
+					function()
+						return not Frame.Checkbox.BackgroundTexture:GetTexture() == Frame._HighlightTexture
+					end
+				)
+
+				--------------------------------
+
+				local enterCallbacks = Frame.EnterCallbacks
+
+				--------------------------------
+
+				for callback = 1, #enterCallbacks do
+					enterCallbacks[callback]()
 				end
-			)
+			end
+
+			Frame.Leave = function()
+				Frame.Checkbox.BackgroundTexture:SetTexture(Frame._DefaultTexture)
+				Frame.Checkbox.IconTexture:SetTexture(Frame._CheckTexture)
+
+				--------------------------------
+
+				AdaptiveAPI.Animation:Fade(Frame.Checkbox.Background, .125, Frame.Checkbox.Background:GetAlpha(), 1, nil,
+					function()
+						return not Frame.Checkbox.BackgroundTexture:GetTexture() == Frame._HighlightTexture
+					end
+				)
+
+				--------------------------------
+
+				local leaveCallbacks = Frame.LeaveCallbacks
+
+				for callback = 1, #leaveCallbacks do
+					leaveCallbacks[callback]()
+				end
+			end
+
+			Frame.MouseDown = function()
+				local mouseDownCallbacks = Frame.MouseDownCallbacks
+
+				for callback = 1, #mouseDownCallbacks do
+					mouseDownCallbacks[callback]()
+				end
+			end
+
+			Frame.Click = function()
+				Frame.SetChecked(not Frame.Checked)
+
+				--------------------------------
+
+				callbackFunction(Frame, Frame.Checked)
+
+				--------------------------------
+
+				local mouseUpCallbacks = Frame.MouseUpCallbacks
+
+				for callback = 1, #mouseUpCallbacks do
+					mouseUpCallbacks[callback]()
+				end
+			end
 
 			--------------------------------
 
-			local LeaveCallbacks = Frame.LeaveCallbacks
+			Frame:SetScript("OnEnter", Frame.Enter)
+			Frame:SetScript("OnLeave", Frame.Leave)
+			Frame:SetScript("OnMouseDown", Frame.MouseDown)
+			Frame:SetScript("OnMouseUp", Frame.Click)
+		end
 
-			for callback = 1, #LeaveCallbacks do
-				LeaveCallbacks[callback]()
+		do -- EVENTS
+			local function UpdateSize()
+				Frame.Checkbox:SetSize(Frame:GetHeight(), Frame:GetHeight())
+				Frame.Checkbox.Background:SetSize(Frame.Checkbox:GetSize())
+				Frame.Checkbox.Icon:SetSize(Frame.Checkbox:GetWidth() - 10, Frame.Checkbox:GetHeight() - 10)
 			end
+			UpdateSize()
+
+			hooksecurefunc(Frame, "SetWidth", UpdateSize)
+			hooksecurefunc(Frame, "SetHeight", UpdateSize)
+			hooksecurefunc(Frame, "SetSize", UpdateSize)
 		end
-
-		Frame.MouseDown = function()
-			local MouseDownCallbacks = Frame.MouseDownCallbacks
-
-			for callback = 1, #MouseDownCallbacks do
-				MouseDownCallbacks[callback]()
-			end
-		end
-
-		Frame.Click = function()
-			Frame.SetChecked(not Frame.Checked)
-
-			--------------------------------
-
-			callbackFunction(Frame, Frame.Checked)
-
-			--------------------------------
-
-			local MouseUpCallbacks = Frame.MouseUpCallbacks
-
-			for callback = 1, #MouseUpCallbacks do
-				MouseUpCallbacks[callback]()
-			end
-		end
-
-		--------------------------------
-
-		Frame:SetScript("OnEnter", function()
-			Frame.Enter()
-		end)
-
-		Frame:SetScript("OnLeave", function()
-			Frame.Leave()
-		end)
-
-		Frame:SetScript("OnMouseDown", function()
-			Frame.MouseDown()
-		end)
-
-		Frame:SetScript("OnMouseUp", function()
-			Frame.Click()
-		end)
-
-		--------------------------------
-
-		local function UpdateSize()
-			Frame.Checkbox:SetSize(Frame:GetHeight(), Frame:GetHeight())
-			Frame.Checkbox.Background:SetSize(Frame.Checkbox:GetSize())
-			Frame.Checkbox.Icon:SetSize(Frame.Checkbox:GetWidth() - 10, Frame.Checkbox:GetHeight() - 10)
-		end
-
-		hooksecurefunc(Frame, "SetWidth", UpdateSize)
-		hooksecurefunc(Frame, "SetHeight", UpdateSize)
-		hooksecurefunc(Frame, "SetSize", UpdateSize)
 
 		--------------------------------
 
@@ -280,140 +278,124 @@ do
 
 		--------------------------------
 
-		local function Checkbox()
-			Frame.Checkbox = CreateFrame("Frame", "$parent.Checkbox", Frame)
-			Frame.Checkbox:SetPoint("LEFT", Frame)
-			Frame.Checkbox:SetFrameStrata(frameStrata)
+		do -- ELEMENTS
+			do -- CHECKBOX
+				Frame.Checkbox = CreateFrame("Frame", "$parent.Checkbox", Frame)
+				Frame.Checkbox:SetPoint("LEFT", Frame)
+				Frame.Checkbox:SetFrameStrata(frameStrata)
 
-			--------------------------------
+				--------------------------------
 
-			local function Background()
-				Frame.Checkbox.Background, Frame.Checkbox.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Checkbox, frameStrata, defaultTexture or DefaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
-				Frame.Checkbox.Background:SetPoint("CENTER", Frame.Checkbox)
-				Frame.Checkbox.Background:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 1)
+				do -- BACKGROUND
+					Frame.Checkbox.Background, Frame.Checkbox.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Checkbox, frameStrata, defaultTexture or DefaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
+					Frame.Checkbox.Background:SetPoint("CENTER", Frame.Checkbox)
+					Frame.Checkbox.Background:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 1)
+					Frame.Checkbox.Background:SetAlpha(.5)
+				end
+
+				do -- ICON
+					Frame.Checkbox.Icon, Frame.Checkbox.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Checkbox, frameStrata, checkTexture or CheckTexture, "$parent.Icon")
+					Frame.Checkbox.Icon:SetPoint("CENTER", Frame.Checkbox)
+					Frame.Checkbox.Icon:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 2)
+				end
+			end
+
+			do -- LABEL
+				Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame, { r = textColor.r, g = textColor.g, b = textColor.b }, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+				Frame.Label:SetText(labelText)
+			end
+		end
+
+		--------------------------------
+
+		do -- STATE UPDATES
+			Frame.UpdateChecked = function()
+				Frame.Checkbox.Icon:SetShown(Frame.Checked)
+			end
+
+			Frame.SetChecked = function(value)
+				Frame.Checked = value
+
+				--------------------------------
+
+				Frame.UpdateChecked()
+			end
+		end
+
+		do -- CLICK EVENTS
+			Frame.Enter = function()
+				Frame.Checkbox.Background:SetAlpha(1)
+				Frame.Checkbox.BackgroundTexture:SetTexture(highlightTexture or HighlightTexture)
+
+				--------------------------------
+
+				local enterCallbacks = Frame.EnterCallbacks
+
+				for callback = 1, #enterCallbacks do
+					enterCallbacks[callback]()
+				end
+			end
+
+			Frame.Leave = function()
 				Frame.Checkbox.Background:SetAlpha(.5)
+				Frame.Checkbox.BackgroundTexture:SetTexture(defaultTexture or DefaultTexture)
+
+				--------------------------------
+
+				local leaveCallbacks = Frame.LeaveCallbacks
+
+				for callback = 1, #leaveCallbacks do
+					leaveCallbacks[callback]()
+				end
 			end
 
-			local function Icon()
-				Frame.Checkbox.Icon, Frame.Checkbox.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Checkbox, frameStrata, checkTexture or CheckTexture, "$parent.Icon")
-				Frame.Checkbox.Icon:SetPoint("CENTER", Frame.Checkbox)
-				Frame.Checkbox.Icon:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 2)
+			Frame.MouseDown = function()
+				local mouseDownCallbacks = Frame.MouseDownCallbacks
+
+				for callback = 1, #mouseDownCallbacks do
+					mouseDownCallbacks[callback]()
+				end
+			end
+
+			Frame.Click = function()
+				Frame.SetChecked(not Frame.Checked)
+
+				--------------------------------
+
+				callbackFunction(Frame, Frame.Checked)
+
+				--------------------------------
+
+				local mouseUpCallbacks = Frame.MouseUpCallbacks
+
+				for callback = 1, #mouseUpCallbacks do
+					mouseUpCallbacks[callback]()
+				end
 			end
 
 			--------------------------------
 
-			Background()
-			Icon()
+			Frame:SetScript("OnEnter", Frame.Enter)
+			Frame:SetScript("OnLeave", Frame.Leave)
+			Frame:SetScript("OnMouseDown", Frame.MouseDown)
+			Frame:SetScript("OnMouseUp", Frame.Click)
 		end
 
-		local function Label()
-			Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame, { r = textColor.r, g = textColor.g, b = textColor.b }, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-			Frame.Label:SetText(labelText)
-		end
+		do -- EVENTS
+			local function UpdateSize()
+				Frame.Checkbox:SetSize(Frame:GetHeight(), Frame:GetHeight())
+				Frame.Checkbox.Background:SetSize(Frame.Checkbox:GetSize())
+				Frame.Checkbox.Icon:SetSize(Frame.Checkbox:GetWidth() - 10, Frame.Checkbox:GetHeight() - 10)
 
-		--------------------------------
-
-		Checkbox()
-		Label()
-
-		--------------------------------
-
-		Frame.UpdateChecked = function()
-			Frame.Checkbox.Icon:SetShown(Frame.Checked)
-		end
-
-		Frame.SetChecked = function(value)
-			Frame.Checked = value
-
-			--------------------------------
-
-			Frame.UpdateChecked()
-		end
-
-		--------------------------------
-
-		Frame.Enter = function()
-			Frame.Checkbox.Background:SetAlpha(1)
-			Frame.Checkbox.BackgroundTexture:SetTexture(highlightTexture or HighlightTexture)
-
-			--------------------------------
-
-			local EnterCallbacks = Frame.EnterCallbacks
-
-			for callback = 1, #EnterCallbacks do
-				EnterCallbacks[callback]()
+				Frame.Label:SetSize(Frame:GetWidth() - 5 - Frame.Checkbox:GetWidth() - 5, Frame:GetHeight())
+				Frame.Label:SetPoint("LEFT", Frame, 5 + Frame.Checkbox:GetWidth() + 5, 0)
 			end
+			UpdateSize()
+
+			hooksecurefunc(Frame, "SetWidth", UpdateSize)
+			hooksecurefunc(Frame, "SetHeight", UpdateSize)
+			hooksecurefunc(Frame, "SetSize", UpdateSize)
 		end
-
-		Frame.Leave = function()
-			Frame.Checkbox.Background:SetAlpha(.5)
-			Frame.Checkbox.BackgroundTexture:SetTexture(defaultTexture or DefaultTexture)
-
-			--------------------------------
-
-			local LeaveCallbacks = Frame.LeaveCallbacks
-
-			for callback = 1, #LeaveCallbacks do
-				LeaveCallbacks[callback]()
-			end
-		end
-
-		Frame.MouseDown = function()
-			local MouseDownCallbacks = Frame.MouseDownCallbacks
-
-			for callback = 1, #MouseDownCallbacks do
-				MouseDownCallbacks[callback]()
-			end
-		end
-
-		Frame.Click = function()
-			Frame.SetChecked(not Frame.Checked)
-
-			--------------------------------
-
-			callbackFunction(Frame, Frame.Checked)
-
-			--------------------------------
-
-			local MouseUpCallbacks = Frame.MouseUpCallbacks
-
-			for callback = 1, #MouseUpCallbacks do
-				MouseUpCallbacks[callback]()
-			end
-		end
-
-		--------------------------------
-
-		Frame:SetScript("OnEnter", function()
-			Frame.Enter()
-		end)
-
-		Frame:SetScript("OnLeave", function()
-			Frame.Leave()
-		end)
-
-		Frame:SetScript("OnMouseDown", function()
-			Frame.MouseDown()
-		end)
-
-		Frame:SetScript("OnMouseUp", function()
-			Frame.Click()
-		end)
-
-		--------------------------------
-
-		local function UpdateSize()
-			Frame.Checkbox:SetSize(Frame:GetHeight(), Frame:GetHeight())
-			Frame.Checkbox.Background:SetSize(Frame.Checkbox:GetSize())
-			Frame.Checkbox.Icon:SetSize(Frame.Checkbox:GetWidth() - 10, Frame.Checkbox:GetHeight() - 10)
-
-			Frame.Label:SetSize(Frame:GetWidth() - 5 - Frame.Checkbox:GetWidth() - 5, Frame:GetHeight())
-			Frame.Label:SetPoint("LEFT", Frame, 5 + Frame.Checkbox:GetWidth() + 5, 0)
-		end
-
-		hooksecurefunc(Frame, "SetWidth", UpdateSize)
-		hooksecurefunc(Frame, "SetHeight", UpdateSize)
-		hooksecurefunc(Frame, "SetSize", UpdateSize)
 
 		--------------------------------
 

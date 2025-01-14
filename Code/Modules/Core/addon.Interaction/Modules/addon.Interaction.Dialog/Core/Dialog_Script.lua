@@ -66,10 +66,8 @@ function NS.Script:Load()
 		end
 
 		Frame.UpdateStyle = function()
-			local IsDialogStylisedTheme = INTDB.profile.INT_DIALOG_THEME == 4
-			local InteractTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
-			local InteractTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-			local InteractTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+			local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
+			local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
 
 			--------------------------------
 
@@ -188,7 +186,7 @@ function NS.Script:Load()
 				Frame.DialogBackgroundTexture:SetAlpha(1)
 				Frame.DialogBackground.TailTexture:SetAlpha(1)
 
-				if not InteractTargetNameplate or InteractTargetIsSelf then
+				if not interactTargetNameplate or interactTargetIsSelf then
 					Frame.DialogBackground.Tail:SetAlpha(0)
 				else
 					if Frame.DialogBackground.Tail:GetAlpha() == 0 then
@@ -227,15 +225,13 @@ function NS.Script:Load()
 		end
 
 		Frame.UpdateScrollDialog = function()
-			local IsDialogStylisedTheme = INTDB.profile.INT_DIALOG_THEME == 4
-			local InteractTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
-			local InteractTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-			local InteractTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
-			local IsItem = (AdaptiveAPI:FindItemInInventory(UnitName("npc") or "Empty Result") or AdaptiveAPI:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
+			local interactTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
+			local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+			local isItem = (AdaptiveAPI:FindItemInInventory(UnitName("npc") or "Empty Result") or AdaptiveAPI:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
 
 			--------------------------------
 
-			if InteractTargetIsGameObject or InteractTargetIsSelf or IsItem then
+			if interactTargetIsGameObject or interactTargetIsSelf or isItem then
 				return true
 			else
 				return false
@@ -248,6 +244,25 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		local function SplitString(string, pattern)
+			local start, iterator = 1, string.gmatch(string, "()(" .. pattern .. ")")
+
+			--------------------------------
+
+			local function GetNextSegment(segments, separators, separator, capture1, ...)
+				start = separator and separators + #separator
+				return string.sub(string, segments, separators or -1), capture1 or separator, ...
+			end
+
+			--------------------------------
+
+			return function()
+				if start then
+					return GetNextSegment(start, iterator())
+				end
+			end
+		end
+
 		local function SplitText(string)
 			if not string then
 				return
@@ -257,27 +272,7 @@ function NS.Script:Load()
 
 			local separatorPattern = "[\\.|>|<|!|?|\n]%s+"
 			string = string:gsub(" %s+", " "):gsub("|cffFFFFFF", ""):gsub("|r", "")
-
-			--------------------------------
-
-			local function SplitString(string, pattern)
-				local start, iterator = 1, string.gmatch(string, "()(" .. pattern .. ")")
-
-				--------------------------------
-
-				local function GetNextSegment(segments, separators, separator, capture1, ...)
-					start = separator and separators + #separator
-					return string.sub(string, segments, separators or -1), capture1 or separator, ...
-				end
-
-				--------------------------------
-
-				return function()
-					if start then
-						return GetNextSegment(start, iterator())
-					end
-				end
-			end
+			string = string:gsub("%.%.%.", "…")
 
 			--------------------------------
 
@@ -296,35 +291,43 @@ function NS.Script:Load()
 			return lines
 		end
 
-		function NS.Script:GetString()
-			local RewardQuestText = GetRewardText()
-			local ProgressQuestText = GetProgressText()
-			local GreetingQuestText = GetGreetingText()
-			local InfoQuestText = GetQuestText()
-			local GossipText = C_GossipInfo.GetText()
+		local function RemoveAngledBrackets(str)
+			return str:gsub("[<>]", "")
+		end
+
+		local function DoesCurrentIndexAppearIn(table)
+			return (AdaptiveAPI:FindIndexInTableByValue(table, tostring(NS.Variables.Temp_CurrentIndex)))
+		end
+
+		function Callback:GetString()
+			local rewardQuestText = GetRewardText()
+			local progressQuestText = GetProgressText()
+			local greetingQuestText = GetGreetingText()
+			local infoQuestText = GetQuestText()
+			local gossipText = C_GossipInfo.GetText()
 
 			if NS.Variables.Temp_FrameType == "quest-reward" then
-				NS.Variables.Temp_DialogStringList = SplitText(RewardQuestText)
+				NS.Variables.Temp_DialogStringList = SplitText(rewardQuestText)
 			elseif NS.Variables.Temp_FrameType == "quest-progress" then
-				NS.Variables.Temp_DialogStringList = SplitText(ProgressQuestText)
+				NS.Variables.Temp_DialogStringList = SplitText(progressQuestText)
 			elseif NS.Variables.Temp_FrameType == "gossip" then
-				NS.Variables.Temp_DialogStringList = SplitText(GossipText)
+				NS.Variables.Temp_DialogStringList = SplitText(gossipText)
 			elseif NS.Variables.Temp_FrameType == "quest-greeting" then
-				NS.Variables.Temp_DialogStringList = SplitText(GreetingQuestText)
+				NS.Variables.Temp_DialogStringList = SplitText(greetingQuestText)
 			elseif NS.Variables.Temp_FrameType == "quest-detail" then
-				NS.Variables.Temp_DialogStringList = SplitText(InfoQuestText)
+				NS.Variables.Temp_DialogStringList = SplitText(infoQuestText)
 			end
 		end
 
-		function NS.Script:UpdateString(animate, transition)
-			local CallbackID = GetTime()
+		function Callback:UpdateString(animate)
+			local callbackID = GetTime()
 
 			--------------------------------
 
-			local IsGossip = (NS.Variables.Temp_FrameType == "gossip")
-			local IsQuestFrameGreeting = (NS.Variables.Temp_FrameType == "quest-greeting")
-			local IsQuestFrameProgress = (NS.Variables.Temp_FrameType == "quest-progress")
-			local IsQuestFrameDetail = (NS.Variables.Temp_FrameType == "quest-detail")
+			local isGossip = (NS.Variables.Temp_FrameType == "gossip")
+			local isQuestFrameGreeting = (NS.Variables.Temp_FrameType == "quest-greeting")
+			local isQuestFrameProgress = (NS.Variables.Temp_FrameType == "quest-progress")
+			local isQuestFrameDetail = (NS.Variables.Temp_FrameType == "quest-detail")
 
 			--------------------------------
 
@@ -363,21 +366,21 @@ function NS.Script:Load()
 						end
 
 						do -- QUEST TITLE
-							local InfoTitle
-							local ProgressTitle
+							local infoTitle
+							local progressTitle
 
 							if not addon.Variables.IS_CLASSIC then
-								InfoTitle = QuestInfoTitleHeader
-								ProgressTitle = QuestProgressTitleText
+								infoTitle = QuestInfoTitleHeader
+								progressTitle = QuestProgressTitleText
 							else
-								InfoTitle = QuestInfoTitleHeader
-								ProgressTitle = QuestProgressTitleText
+								infoTitle = QuestInfoTitleHeader
+								progressTitle = QuestProgressTitleText
 							end
 
-							if InfoTitle:IsVisible() then
-								NS.Variables.QuestTitleText = InfoTitle:GetText()
-							elseif ProgressTitle:IsVisible() then
-								NS.Variables.QuestTitleText = ProgressTitle:GetText()
+							if infoTitle:IsVisible() then
+								NS.Variables.QuestTitleText = infoTitle:GetText()
+							elseif progressTitle:IsVisible() then
+								NS.Variables.QuestTitleText = progressTitle:GetText()
 							else
 								NS.Variables.QuestTitleText = ""
 							end
@@ -389,9 +392,9 @@ function NS.Script:Load()
 					end
 
 					do -- SET
-						if IsQuestFrameProgress then
+						if isQuestFrameProgress then
 							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. AdaptiveAPI:RemoveAtlasMarkup(QuestProgressTitleText:GetText()) .. "|r")
-						elseif IsGossip or IsQuestFrameGreeting then
+						elseif isGossip or isQuestFrameGreeting then
 							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. (UnitName("npc") or UnitName("questnpc") or "nil"))
 						else
 							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. AdaptiveAPI:RemoveAtlasMarkup(QuestInfoTitleHeader:GetText()) .. "|r")
@@ -400,35 +403,25 @@ function NS.Script:Load()
 				end
 
 				do -- SPECIAL DIALOG
-					local IsEmoteStart = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], "<"))
-					local IsEmoteEnd = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], ">"))
-					local IsLastIndexEmoteEnd = (NS.Variables.Temp_CurrentIndex - 1 > 0 and AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex - 1], ">"))
+					local isEmoteStart = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], "<"))
+					local isEmoteEnd = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], ">"))
+					local isLastIndexEmoteEnd = (NS.Variables.Temp_CurrentIndex - 1 > 0 and AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex - 1], ">"))
 
 					--------------------------------
 
-					local function RemoveAngledBrackets(str)
-						return str:gsub("[<>]", "")
-					end
-
-					local function DoesCurrentIndexAppearIn(table)
-						return (AdaptiveAPI:FindIndexInTableByValue(table, tostring(NS.Variables.Temp_CurrentIndex)))
-					end
-
-					--------------------------------
-
-					if IsEmoteStart then
+					if isEmoteStart then
 						NS.Variables.Temp_Temp_IsEmoteDialog = true
 
 						--------------------------------
 
 						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
-					elseif IsEmoteEnd then
+					elseif isEmoteEnd then
 						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
 					else
 						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
 					end
 
-					if IsLastIndexEmoteEnd then
+					if isLastIndexEmoteEnd then
 						NS.Variables.Temp_Temp_IsEmoteDialog = false
 					end
 
@@ -480,21 +473,21 @@ function NS.Script:Load()
 
 				if animate then
 					do -- PLAY ANIMATION
-						local SkipAnimation = false
-						local AnimationSpeed = .05 / INTDB.profile.INT_PLAYBACK_SPEED
+						local skipAnimation = false
+						local animationSpeed = .05 / (INTDB.profile.INT_PLAYBACK_SPEED * L["DialogData - PlaybackSpeedModifier"])
 
-						local AutoPlayEnabled = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS
-						local AutoPlayDynamicPausingEnabled = INTDB.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
-						local AutoCloseEnabled = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
+						local autoPlayEnabled = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS
+						local autoPlayDynamicPausingEnabled = INTDB.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
+						local autoCloseEnabled = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
 
-						local AutoPlayDelay = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
+						local autoPlayDelay = INTDB.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
 
 						--------------------------------
 
 						Frame.StopTextPlayback(Frame.Content.Label)
-						Frame.StartTextPlayback(Frame.Content.Label, AnimationSpeed, function()
-							NS.Script:AutoProgress(CallbackID, AutoPlayEnabled, AutoCloseEnabled)
-						end, AutoPlayDelay, SkipAnimation, AutoPlayDynamicPausingEnabled)
+						Frame.StartTextPlayback(Frame.Content.Label, animationSpeed, function()
+							Callback:AutoProgress(callbackID, autoPlayEnabled, autoCloseEnabled)
+						end, autoPlayDelay, skipAnimation, autoPlayDynamicPausingEnabled)
 					end
 				else
 					Frame.StopTextPlayback(Frame.Content.Label)
@@ -538,25 +531,25 @@ function NS.Script:Load()
 			end
 		end
 
-		function NS.Script:AutoProgress(callbackID, autoPlayEnabled, autoCloseEnabled)
-			local SavedInteractionID = tostring(callbackID)
-			local SavedString = NS.Variables.Temp_CurrentString
+		function Callback:AutoProgress(callbackID, autoPlayEnabled, autoCloseEnabled)
+			local savedInteractionID = tostring(callbackID)
+			local savedString = NS.Variables.Temp_CurrentString
 
-			local IsInDialog = (Frame:IsVisible())
-			local IsInGossip = (InteractionGossipFrame:IsVisible())
-			local IsSameID = (tostring(callbackID) == SavedInteractionID)
-			local IsSameText = (Frame.Content.Label.currentText == SavedString)
+			local isInDialog = (Frame:IsVisible())
+			local isInGossip = (InteractionGossipFrame:IsVisible())
+			local isSameID = (tostring(callbackID) == savedInteractionID)
+			local isSameText = (Frame.Content.Label.currentText == savedString)
 
 			--------------------------------
 
-			if IsInDialog and IsSameID and IsSameText then
+			if isInDialog and isSameID and isSameText then
 				if autoPlayEnabled and NS.Variables.AllowAutoProgress then
 					if NS.Variables.Temp_CurrentIndex < #NS.Variables.Temp_DialogStringList then
 						NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex + 1
 
 						--------------------------------
 
-						NS.Script:UpdateString(true)
+						Callback:UpdateString(true)
 
 						--------------------------------
 
@@ -564,12 +557,12 @@ function NS.Script:Load()
 							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Next)
 						end
 					else
-						if autoCloseEnabled and IsInGossip then
-							local NumButtons = #InteractionGossipFrame.GetButtons()
+						if autoCloseEnabled and isInGossip then
+							local numButtons = #InteractionGossipFrame.GetButtons()
 
 							--------------------------------
 
-							if NumButtons == 0 then
+							if numButtons == 0 then
 								InteractionGossipFrame.HideWithAnimation()
 
 								--------------------------------
@@ -597,25 +590,15 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local IsDialogStylisedTheme = INTDB.profile.INT_DIALOG_THEME == 4
-			local InteractTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
-			local InteractTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-			local InteractTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+			local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
 
 			--------------------------------
 
-			if InteractTargetNameplate then -- ANCHORED
+			if interactTargetNameplate then -- ANCHORED
 				Frame.HideWithAnimation()
 			else                   -- SCROLL DIALOG
 				Frame.HideWithAnimation()
 			end
-
-			--------------------------------
-
-			GossipFrame:EnableMouse(false)
-			QuestFrame:EnableMouse(false)
-			QuestFrameProgressPanel:EnableMouse(false)
-			QuestFrameGreetingPanel:EnableMouse(false)
 
 			--------------------------------
 
@@ -626,19 +609,19 @@ function NS.Script:Load()
 			CallbackRegistry:Trigger("STOP_DIALOG")
 		end
 
-		Frame.StartDialog = function(DisplayKeybind, IsReturnToPreviousDialog)
+		Frame.StartDialog = function(isReturnToPreviousDialog)
 			NS.Variables.Finished = false
 
 			--------------------------------
 
 			if NS.Variables.Temp_FrameType == "gossip" then
-				local GossipInteractMessage = select(1, select(1, GossipFrame.GreetingPanel.ScrollBox.ScrollTarget:GetChildren()):GetRegions()):GetText()
+				local gossipInteractMessage = select(1, select(1, GossipFrame.GreetingPanel.ScrollBox.ScrollTarget:GetChildren()):GetRegions()):GetText()
 
 				--------------------------------
 
-				if not IsReturnToPreviousDialog then
+				if not isReturnToPreviousDialog then
 					if addon.Interaction.Variables.GossipLastNPC ~= UnitName("npc") then
-						addon.Interaction.GossipFirstInteractMessage = GossipInteractMessage
+						addon.Interaction.GossipFirstInteractMessage = gossipInteractMessage
 						addon.Interaction.Variables.GossipLastNPC = UnitName("npc")
 					end
 
@@ -658,13 +641,13 @@ function NS.Script:Load()
 		end
 
 		Frame.UpdatePosition = function()
-			local Nameplate = C_NamePlate.GetNamePlateForUnit("npc")
-			local PlayerNameplate = C_NamePlate.GetNamePlateForUnit("player")
+			local nameplate = C_NamePlate.GetNamePlateForUnit("npc")
+			local playerNameplate = C_NamePlate.GetNamePlateForUnit("player")
 
 			--------------------------------
 
 			do -- STATE
-				local IsValidNameplate = (Nameplate and Nameplate ~= PlayerNameplate and (not UnitIsGameObject("npc") and not UnitIsGameObject("questnpc")))
+				local IsValidNameplate = (nameplate and nameplate ~= playerNameplate and (not UnitIsGameObject("npc") and not UnitIsGameObject("questnpc")))
 
 				--------------------------------
 
@@ -674,10 +657,10 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						local HeightModifier = 25
+						local heightModifier = 25
 
 						Frame:ClearAllPoints()
-						Frame:SetPoint("BOTTOM", Nameplate, 0, HeightModifier)
+						Frame:SetPoint("BOTTOM", nameplate, 0, heightModifier)
 
 						--------------------------------
 
@@ -766,7 +749,7 @@ function NS.Script:Load()
 
 			if NS.Variables.Temp_DialogStringList and NS.Variables.Temp_CurrentIndex < #NS.Variables.Temp_DialogStringList then
 				NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex + 1
-				NS.Script:UpdateString(true)
+				Callback:UpdateString(true)
 
 				--------------------------------
 
@@ -788,12 +771,12 @@ function NS.Script:Load()
 			if Frame:IsVisible() then
 				if NS.Variables.Temp_CurrentIndex > 1 then
 					NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex - 1
-					NS.Script:UpdateString(false)
+					Callback:UpdateString(false)
 
 					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Previous)
 				else
 					Frame.InvalidDialogAnimation()
-					NS.Script:UpdateString(false, false)
+					Callback:UpdateString(false)
 
 					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Invalid)
 				end
@@ -813,8 +796,8 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.StartDialog(false, true)
-			NS.Script:UpdateString(false)
+			Frame.StartDialog(true)
+			Callback:UpdateString(false)
 
 			--------------------------------
 
@@ -844,84 +827,11 @@ function NS.Script:Load()
 				local paused = false
 				local pauseTimer = 0
 
-				local pauseCharsDB = {
-					"!",
-					"?",
-					".",
-					",",
-					"--"
-				}
+				local pauseCharDB = L["DialogData - PauseCharDB"]
 
 				--------------------------------
 
 				frame.TextAnimationFrame = frame.TextAnimationFrame or CreateFrame("Frame", "$parent.TextAnimationFrame", nil)
-
-				--------------------------------
-
-				local function GetTextColor()
-					local color
-
-					--------------------------------
-
-					if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-						color = { r = 1, g = 1, b = 1 }
-					elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-						if addon.Theme.IsRusticTheme_Dialog then
-							color = { r = 1, g = .87, b = .67 }
-						elseif addon.Theme.IsDarkTheme_Dialog then
-							color = { r = 1, g = 1, b = 1 }
-						end
-					elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-						color = { r = .1, g = .1, b = .1 }
-					elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-						if addon.Theme.IsRusticTheme_Dialog then
-							color = { r = 1, g = .87, b = .67 }
-						elseif not addon.Theme.IsDarkTheme_Dialog then
-							color = { r = 1, g = .87, b = .67 }
-						end
-					end
-
-					--------------------------------
-
-					return color
-				end
-
-				local function GetColor(textColor, isMouseOver)
-					local color
-
-					--------------------------------
-
-					if INTDB.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
-						if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-							color = isMouseOver and "101010" or "101010"
-						elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-							if addon.Theme.IsRusticTheme_Dialog then
-								color = "101010"
-							elseif addon.Theme.IsDarkTheme_Dialog then
-								color = isMouseOver and "0D0A0B" or "070504"
-							end
-						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-							color = "CEAA82"
-						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-							if addon.Theme.IsRusticTheme_Dialog then
-								color = "101010"
-							elseif not addon.Theme.IsDarkTheme_Dialog then
-								color = isMouseOver and "232323" or "191919"
-							end
-						end
-					else
-						local modifier = .2 + (INTDB.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
-						if not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-							return AdaptiveAPI:SetHexColorFromModifierWithBase(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
-						else
-							return AdaptiveAPI:SetHexColorFromModifier(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
-						end
-					end
-
-					--------------------------------
-
-					return color
-				end
 
 				--------------------------------
 
@@ -950,10 +860,63 @@ function NS.Script:Load()
 					local remaining = AdaptiveAPI:GetSubstring(text, numCharsToShow + 1, textLength)
 					local new
 
-					local textColor = GetTextColor()
-					local color = GetColor(textColor, frame.mouseOver)
-
 					--------------------------------
+
+					local textColor
+					local color
+
+					do -- TEXT COLOR
+						if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+							textColor = { r = 1, g = 1, b = 1 }
+						elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
+							if addon.Theme.IsRusticTheme_Dialog then
+								textColor = { r = 1, g = .87, b = .67 }
+							elseif addon.Theme.IsDarkTheme_Dialog then
+								textColor = { r = 1, g = 1, b = 1 }
+							end
+						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+							textColor = { r = .1, g = .1, b = .1 }
+						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
+							if addon.Theme.IsRusticTheme_Dialog then
+								textColor = { r = 1, g = .87, b = .67 }
+							elseif not addon.Theme.IsDarkTheme_Dialog then
+								textColor = { r = 1, g = .87, b = .67 }
+							end
+						end
+					end
+
+					do -- COLOR
+						local isMouseOver = frame.mouseOver
+
+						--------------------------------
+
+						if INTDB.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
+							if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+								color = isMouseOver and "101010" or "101010"
+							elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
+								if addon.Theme.IsRusticTheme_Dialog then
+									color = "101010"
+								elseif addon.Theme.IsDarkTheme_Dialog then
+									color = isMouseOver and "0D0A0B" or "070504"
+								end
+							elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+								color = "CEAA82"
+							elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
+								if addon.Theme.IsRusticTheme_Dialog then
+									color = "101010"
+								elseif not addon.Theme.IsDarkTheme_Dialog then
+									color = isMouseOver and "232323" or "191919"
+								end
+							end
+						else
+							local modifier = .2 + (INTDB.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
+							if not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+								color = AdaptiveAPI:SetHexColorFromModifierWithBase(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
+							else
+								color = AdaptiveAPI:SetHexColorFromModifier(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
+							end
+						end
+					end
 
 					do -- PAUSE
 						if usePausing then
@@ -961,18 +924,16 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							for char = 1, #pauseCharsDB do
-								if AdaptiveAPI:FindString(pauseCharsDB[char], lastChar) then
+							for char = 1, #pauseCharDB do
+								if AdaptiveAPI:FindString(pauseCharDB[char], lastChar) then
 									paused = true
 									break
-								else
-									paused = false
 								end
 							end
 						end
 					end
 
-					do -- SET TEXT
+					do -- TEXT
 						if strlenutf8(remaining) > 0 and not frame.freezePlayback then
 							new = current .. "|cff" .. color .. remaining .. "|r"
 						else
@@ -1023,29 +984,29 @@ function NS.Script:Load()
 		end
 
 		do -- FRAME
-			local IsTransition
-			local IsInvalidDialogTransition
-			local SavedDialogText
+			local isTransition
+			local isInvalidDialogTransition
+			local savedDialogText
 
 			Frame.NewDialogAnimation = function()
-				if IsTransition or IsInvalidDialogTransition then
+				if isTransition or isInvalidDialogTransition then
 					return
 				end
 
 				--------------------------------
 
-				if SavedDialogText == Frame.Content.Measurement:GetText() then
+				if savedDialogText == Frame.Content.Measurement:GetText() then
 					return
 				end
-				SavedDialogText = Frame.Content.Measurement:GetText()
+				savedDialogText = Frame.Content.Measurement:GetText()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= SavedDialogText end)
+				AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
 
 				if not NS.Variables.Temp_IsEmoteDialog and not NS.Variables.Temp_IsScrollDialog then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= SavedDialogText end)
-					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, .75, .75, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Content.Measurement:GetText() ~= SavedDialogText or IsInvalidDialogTransition end)
+					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
+					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, .75, .75, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Content.Measurement:GetText() ~= savedDialogText or isInvalidDialogTransition end)
 				end
 			end
 
@@ -1054,13 +1015,13 @@ function NS.Script:Load()
 			end
 
 			Frame.InvalidDialogAnimation = function()
-				if IsTransition or IsInvalidDialogTransition then
+				if isTransition or isInvalidDialogTransition then
 					return
 				end
-				IsInvalidDialogTransition = true
+				isInvalidDialogTransition = true
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if IsInvalidDialogTransition then
-						IsInvalidDialogTransition = false
+					if isInvalidDialogTransition then
+						isInvalidDialogTransition = false
 					end
 				end, .25)
 
@@ -1079,11 +1040,11 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				IsTransition = true
-				SavedDialogText = nil
+				isTransition = true
+				savedDialogText = nil
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					if not Frame.hidden then
-						IsTransition = false
+						isTransition = false
 					end
 				end, .25)
 
@@ -1110,12 +1071,12 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Fade(Frame.Content.Label, .75, 0, 1)
+					AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1)
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, 1, .4375, 1)
-					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, 1, .4375, 1)
+					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, 1, .25, 1)
+					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, 1, .25, 1)
 				end
 			end
 
@@ -1201,6 +1162,10 @@ function NS.Script:Load()
 		local function Settings_ThemeUpdate()
 			if Frame:IsVisible() then
 				Frame.UpdateDialog()
+
+				--------------------------------
+
+				Callback:UpdateString(true)
 			end
 		end
 

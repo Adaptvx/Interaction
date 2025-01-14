@@ -66,14 +66,6 @@ function NS.Script:Load()
 
 			Frame.ShowWithAnimation()
 		end
-
-		--------------------------------
-
-		local function UpdateSize()
-			Frame.Border:SetSize(1, Frame:GetHeight())
-		end
-
-		Frame:SetScript("OnSizeChanged", UpdateSize)
 	end
 
 	--------------------------------

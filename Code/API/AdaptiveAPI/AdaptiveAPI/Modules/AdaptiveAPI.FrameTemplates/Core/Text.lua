@@ -52,21 +52,37 @@ do
 
 		Label = Frame:CreateFontString(name or nil, "OVERLAY")
 		if createHtml then
-			HTML = CreateFrame("SimpleHTML", (name and name .. "HTML") or nil, Frame)
+			local _, fontHeight, _ = Label:GetFont()
+			if fontHeight <= 0 then
+				fontHeight = INTDB.profile.INT_CONTENT_SIZE
+			end
 
-			HTML:SetFont("P", QuestFont:GetFont(), INTDB.profile.INT_CONTENT_SIZE, "")
+			--------------------------------
+
+			HTML = CreateFrame("SimpleHTML", (name and name .. "HTML") or nil, Frame)
+			HTML:SetFont("P", QuestFont:GetFont(), fontHeight, "")
 			HTML:SetFont("H1", AdaptiveAPI.Fonts.Title_Medium, 48, "")
-			HTML:SetFont("H2", Game20Font:GetFont(), INTDB.profile.INT_CONTENT_SIZE, "")
+			HTML:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
 			HTML:SetFont("H3", AdaptiveAPI.Fonts.Title_Medium, 28, "")
 			HTML:SetTextColor("P", textColor.r, textColor.g, textColor.b)
 			HTML:SetTextColor("H1", textColor.r, textColor.g, textColor.b)
 			HTML:SetTextColor("H2", textColor.r, textColor.g, textColor.b)
 			HTML:SetTextColor("H3", textColor.r, textColor.g, textColor.b)
 
-			local _ = CreateFrame("Frame", "UpdateFrame/AdaptiveAPI-Main.lua -- CreateText.html -- Update", Frame)
-			_:SetScript("OnUpdate", function()
-				HTML:SetFont("P", QuestFont:GetFont(), INTDB.profile.INT_CONTENT_SIZE, "")
-				HTML:SetFont("H2", Game20Font:GetFont(), INTDB.profile.INT_CONTENT_SIZE, "")
+			--------------------------------
+
+			local function UpdateFormatting()
+				local _, fontHeight, _ = Label:GetFont()
+				if fontHeight <= 0 then
+					fontHeight = INTDB.profile.INT_CONTENT_SIZE
+				end
+
+				--------------------------------
+
+				HTML:SetFont("P", QuestFont:GetFont(), fontHeight, "")
+				HTML:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
+
+				--------------------------------
 
 				if AdaptiveAPI:FindString(Label:GetText(), "<HTML>") then
 					HTML:SetSize(Label:GetWidth() * 1.5, Label:GetStringHeight())
@@ -84,7 +100,10 @@ do
 					HTML:SetAlpha(0)
 					Label:SetAlpha(1)
 				end
-			end)
+			end
+
+			hooksecurefunc(Label, "SetText", UpdateFormatting)
+			hooksecurefunc(Label, "SetFont", UpdateFormatting)
 		end
 
 		--------------------------------

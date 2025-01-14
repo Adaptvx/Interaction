@@ -339,7 +339,7 @@ function NS.Elements:Load()
 								else
 									COLOR_Default = addon.Theme.Settings.Secondary_LightTheme
 									COLOR_Highlight = addon.Theme.Settings.Secondary_LightTheme
-									COLOR_Default_Thumb = addon.Theme.Settings.Primary_LightTheme
+									COLOR_Default_Thumb = addon.Theme.Settings.Element_Default_LightTheme
 									COLOR_Highlight_Thumb = addon.Theme.Settings.Element_Default_LightTheme
 								end
 

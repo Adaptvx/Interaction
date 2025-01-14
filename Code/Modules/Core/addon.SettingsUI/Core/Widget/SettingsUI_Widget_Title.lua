@@ -10,7 +10,7 @@ function NS.Widgets:CreateTitle(parent, iconPath, textSize, subcategory, hidden,
 
     --------------------------------
 
-    local Frame = NS.Widgets:CreateContainer(parent, subcategory, false, 45, nil, nil, nil, hidden, locked)
+    local Frame = NS.Widgets:CreateContainer(parent, subcategory, false, 45, nil, nil, nil, nil, hidden, locked)
 
     --------------------------------
 

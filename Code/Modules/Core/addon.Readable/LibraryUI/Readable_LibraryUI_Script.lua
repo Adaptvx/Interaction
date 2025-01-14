@@ -64,6 +64,16 @@ function NS.LibraryUI.Script:Load()
 			end
 		end
 
+		LibraryUI.Content.Sidebar.ResetToDefaults = function()
+			Frame.LibraryUIFrame.Content.Sidebar.Search:SetText("")
+			Frame.LibraryUIFrame.Content.Sidebar.Search:SetFocus(false)
+
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Book.SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.SetChecked(false)
+		end
+
 		LibraryUI.Content.ContentFrame.ScrollFrame.RefreshLayout = function()
 			local CurrentOffset = 0
 			local Padding = NS.Variables:RATIO(9)
@@ -550,9 +560,9 @@ function NS.LibraryUI.Script:Load()
 					--------------------------------
 
 					if playAnimation or playAnimation == nil then
-						AdaptiveAPI.Animation:Fade(Buttons[i], .25, 0, 1, nil, function() return not Buttons[i]:IsVisible() end)
+						AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.125 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
 					else
-						Buttons[i]:SetAlpha(1)
+						Buttons[i]:SetAlpha(.75)
 					end
 
 					--------------------------------
@@ -577,13 +587,13 @@ function NS.LibraryUI.Script:Load()
 					local ImageTexCoords = { 0, 1, 0, 1 }
 
 					local ItemParchmentTexture; if addon.Theme.IsDarkTheme then
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-dark.png"
+						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-dark.png"
 					else
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png"
+						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-light.png"
 					end
-					local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Slate/Slate.png"
-					local ItemBookTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover.png"
-					local ItemBookLargeTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover-large.png"
+					local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-slate.png"
+					local ItemBookTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book.png"
+					local ItemBookLargeTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book-large.png"
 
 					if Type == "Parchment" or Type == "ParchmentLarge" or not Type then
 						if NumPages > 1 then
@@ -601,9 +611,10 @@ function NS.LibraryUI.Script:Load()
 						ImageTexture = ItemStoneTexture
 					end
 
-					if ItemID then
-						local ItemInfo = C_Item.GetItemInfo(ItemLink)
-                        local ItemIcon = ItemInfo and C_Item.GetItemIconByID(ItemInfo)
+					if ItemLink then
+                        local ItemIcon = C_Item.GetItemIconByID(ItemLink)
+
+						--------------------------------
 
 						if ItemIcon then
 							ImageTexture = ItemIcon
@@ -625,19 +636,19 @@ function NS.LibraryUI.Script:Load()
 
 					if not IsItemInInventory then
 						if Position then
-							DetailText = DetailText .. " " .. AdaptiveAPI:InlineIcon(NS.Variables.READABLE_UI_PATH .. "Library/divider-content-text.png", 2, 25, 0, -7.5) .. " " .. "X: " .. string.format("%.0f", (Position.x * 100)) .. " " .. "Y: " .. string.format("%.0f", (Position.y * 100))
+							DetailText = DetailText .. " " .. "(" .. "X: " .. string.format("%.0f", (Position.x * 100)) .. " " .. "Y: " .. string.format("%.0f", (Position.y * 100)) .. ")"
 						end
 					else
-						DetailText = DetailText .. " " .. AdaptiveAPI:InlineIcon(NS.Variables.READABLE_UI_PATH .. "Library/divider-content-text.png", 2, 25, 0, -7.5) .. " " .. "Added from Bags"
+						DetailText = DetailText .. " " .. "(" .. "Added from Bags" .. ")"
 					end
 
 					--------------------------------
 
-					Buttons[i].Title:SetText(TitleText)
-					Buttons[i].Detail:SetText(DetailText)
+					Buttons[i].Content.Text.Title:SetText(TitleText)
+					Buttons[i].Content.Text.Detail:SetText(DetailText)
 
-					Buttons[i].ImageTexture:SetTexture(ImageTexture)
-					Buttons[i].ImageTexture:SetTexCoord(unpack(ImageTexCoords))
+					Buttons[i].Content.ImageTexture:SetTexture(ImageTexture)
+					Buttons[i].Content.ImageTexture:SetTexCoord(unpack(ImageTexCoords))
 
 					--------------------------------
 
@@ -740,7 +751,7 @@ function NS.LibraryUI.Script:Load()
 
 				if not INTLIB.profile.READABLE[ID] then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						InteractionAlertNotificationFrame.ShowWithText(L["Readable - Library - Notification - Saved To Library"])
+						addon.AlertNotification.Script:ShowWithText(L["Readable - Notification - Saved To Library"])
 					end, .1)
 				end
 
@@ -840,7 +851,6 @@ function NS.LibraryUI.Script:Load()
 
 		do -- BUTTONS
 			function LibraryCallback:UpdateButtons()
-				local Entries = LibraryCallback:GetAllEntries()
 				local Buttons = LibraryCallback:GetButtons()
 
 				for i = 1, #Buttons do
@@ -864,6 +874,10 @@ function NS.LibraryUI.Script:Load()
 
 	do
 		CallbackRegistry:Add("START_LIBRARY", function()
+			LibraryUI.Content.Sidebar.ResetToDefaults()
+
+			--------------------------------
+
 			LibraryCallback:SetPageButtons()
 		end, 0)
 

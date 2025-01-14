@@ -4,8 +4,8 @@ local L = addon.Locales
 
 --------------------------------
 
-addon.Interaction.Effects = {}
-local NS = addon.Interaction.Effects
+addon.Cinematic.Effects = {}
+local NS = addon.Cinematic.Effects
 
 --------------------------------
 

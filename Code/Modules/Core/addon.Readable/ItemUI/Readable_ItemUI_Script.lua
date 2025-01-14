@@ -137,40 +137,39 @@ function NS.ItemUI.Script:Load()
 		end
 
 		function NS.ItemUI.Script:Update()
-			local Type = NS.ItemUI.Variables.Type
+			local type = NS.ItemUI.Variables.Type
 
 			--------------------------------
 
-			local ItemParchmentTexture; if addon.Theme.IsDarkTheme then
-				ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-dark.png"
-			else
-				ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png"
-			end
-			local ItemParchmentLargeTexture = ItemParchmentTexture
-			local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Slate/Slate.png"
+			local item_parchmentTexture = addon.Theme.IsDarkTheme and NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-dark.png" or NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png"
+			local item_parchmentLargeTexture = item_parchmentTexture
+			local item_parchmentGradientTexture = addon.Theme.IsDarkTheme and NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-dark.png" or NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-light.png"
 
-			local BookCoverTexture
-			local BookContentTexture
-			if Type == "Parchment" or Type == nil then
-				BookCoverTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover.png"
-				BookContentTexture = NS.Variables.READABLE_UI_PATH .. "Book/book.png"
+			local item_stoneTexture = NS.Variables.READABLE_UI_PATH .. "Slate/Slate.png"
+			local item_stoneGradientTexture = NS.Variables.READABLE_UI_PATH .. "Slate/slate-content-gradient.png"
+
+			local book_coverTexture
+			local book_contentTexture
+			if type == "Parchment" or type == nil then
+				book_coverTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover.png"
+				book_contentTexture = NS.Variables.READABLE_UI_PATH .. "Book/book.png"
 			else
-				BookCoverTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover-large.png"
-				BookContentTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-large.png"
+				book_coverTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-cover-large.png"
+				book_contentTexture = NS.Variables.READABLE_UI_PATH .. "Book/book-large.png"
 			end
 
 			--------------------------------
 
 			do -- STATE
-				if Type == "Parchment" or Type == "ParchmentLarge" or not Type then
+				if type == "Parchment" or type == "ParchmentLarge" or not type then
 					if NS.ItemUI.Variables.NumPages > 1 then
 						ReadableUI_ItemUI:Hide()
 						ReadableUI_BookUI:Show()
 
-						ReadableUI_BookUI.FrontPage.BackgroundTexture:SetTexture(BookCoverTexture)
-						ReadableUI_BookUI.Content.BackgroundTexture:SetTexture(BookContentTexture)
+						ReadableUI_BookUI.FrontPage.BackgroundTexture:SetTexture(book_coverTexture)
+						ReadableUI_BookUI.Content.BackgroundTexture:SetTexture(book_contentTexture)
 
-						if Type == "ParchmentLarge" then
+						if type == "ParchmentLarge" then
 							ReadableUI_BookUI.Content.Background.Spritesheet.Texture.texture:SetVertexColor(1, .91, .75)
 						else
 							ReadableUI_BookUI.Content.Background.Spritesheet.Texture.texture:SetVertexColor(1, 1, 1)
@@ -179,37 +178,39 @@ function NS.ItemUI.Script:Load()
 						ReadableUI_ItemUI:Show()
 						ReadableUI_BookUI:Hide()
 
-						ReadableUI_ItemUI.BackgroundTexture:SetTexture(ItemParchmentTexture)
+						ReadableUI_ItemUI.BackgroundTexture:SetTexture(item_parchmentTexture)
+						ReadableUI_ItemUI.ScrollFrame.GradientTexture:SetTexture(item_parchmentGradientTexture)
 					end
 				end
 
-				if Type == "Stone" or Type == "Bronze" then
+				if type == "Stone" or type == "Bronze" then
 					ReadableUI_ItemUI:Show()
 					ReadableUI_BookUI:Hide()
 
-					ReadableUI_ItemUI.BackgroundTexture:SetTexture(ItemStoneTexture)
+					ReadableUI_ItemUI.BackgroundTexture:SetTexture(item_stoneTexture)
+					ReadableUI_ItemUI.ScrollFrame.GradientTexture:SetTexture(item_stoneGradientTexture)
 				end
 			end
 
 			do -- TEXT
-				local CurrentPage = NS.ItemUI.Variables.CurrentPage
-				local Title = NS.ItemUI.Variables.Title
+				local currentPage = NS.ItemUI.Variables.CurrentPage
+				local title = NS.ItemUI.Variables.Title
 
 				--------------------------------
 
 				do -- TITLE
-					Frame.ReadableUIFrame.Title.Text:SetText(Title)
+					Frame.ReadableUIFrame.Title.Text:SetText(title)
 				end
 
 				do -- TITLE (CURRENT PAGE)
 					if ReadableUI_BookUI:IsVisible() then
 						if ReadableUI_BookUI.Content:IsVisible() then
-							Frame.ReadableUIFrame.Title.CurrentPageText:SetText(string.format("%.0f", math.floor(CurrentPage / 2 + .5)) .. "/" .. string.format("%.0f", math.floor(#NS.ItemUI.Variables.Content / 2 + .5)))
+							Frame.ReadableUIFrame.Title.CurrentPageText:SetText(string.format("%.0f", math.floor(currentPage / 2 + .5)) .. "/" .. string.format("%.0f", math.floor(#NS.ItemUI.Variables.Content / 2 + .5)))
 						else
 							Frame.ReadableUIFrame.Title.CurrentPageText:SetText("0" .. "/" .. string.format("%.0f", math.floor(#NS.ItemUI.Variables.Content / 2 + .5)))
 						end
 					else
-						Frame.ReadableUIFrame.Title.CurrentPageText:SetText(CurrentPage .. "/" .. #NS.ItemUI.Variables.Content)
+						Frame.ReadableUIFrame.Title.CurrentPageText:SetText(currentPage .. "/" .. #NS.ItemUI.Variables.Content)
 					end
 				end
 
@@ -227,11 +228,11 @@ function NS.ItemUI.Script:Load()
 						end
 						ReadableUI_BookUI:SetScale(scale)
 
-						if CurrentPage <= 1 then
+						if currentPage <= 1 then
 							ReadableUI_BookUI.FrontPage:Show()
 							ReadableUI_BookUI.Content:Hide()
 
-							ReadableUI_BookUI.FrontPage.Text:SetText(Title)
+							ReadableUI_BookUI.FrontPage.Text.Title:SetText(title)
 						else
 							ReadableUI_BookUI.FrontPage:Hide()
 							ReadableUI_BookUI.Content:Show()
@@ -256,21 +257,31 @@ function NS.ItemUI.Script:Load()
 			end
 
 			do -- TEXT COLOR
-				local TextColor
+				local textColor
 
-				if Type == "Parchment" or Type == "ParchmentLarge" or not Type then
+				if type == "Parchment" or type == "ParchmentLarge" or not type then
 					if addon.Theme.IsDarkTheme then
-						TextColor = { r = 1, g = 1, b = 1, a = 1 }
+						textColor = { r = 1, g = 1, b = 1, a = 1 }
 					else
-						TextColor = { r = .1, g = .1, b = .1, a = 1 }
+						textColor = { r = .1, g = .1, b = .1, a = 1 }
 					end
 				end
 
-				if Type == "Stone" or Type == "Bronze" then
-					TextColor = { r = .75, g = .75, b = .75, a = 1 }
+				if type == "Stone" or type == "Bronze" then
+					textColor = { r = .75, g = .75, b = .75, a = 1 }
 				end
 
-				ReadableUI_ItemUI.ScrollFrame.Text:SetTextColor(TextColor.r, TextColor.g, TextColor.b, TextColor.a)
+				ReadableUI_ItemUI.ScrollFrame.Text:SetTextColor(textColor.r, textColor.g, textColor.b, textColor.a)
+			end
+
+			do -- TOOLTIP
+				local tooltipText = L["Readable - Tooltip - Change Page"]
+
+				if NS.ItemUI.Variables.NumPages > 1 then
+					AdaptiveAPI:AddTooltip(Frame.ReadableUIFrame.TooltipFrame, tooltipText, "ANCHOR_BOTTOM", 0, 50, true, true)
+				else
+					AdaptiveAPI:RemoveTooltip(Frame.ReadableUIFrame.TooltipFrame)
+				end
 			end
 
 			--------------------------------
@@ -347,6 +358,7 @@ function NS.ItemUI.Script:Load()
 			--------------------------------
 
 			ReadableUI_ItemUI:SetAlpha(1)
+			ReadableUI_ItemUI.ScrollFrame:SetAlpha(0)
 			ReadableUI_BookUI:SetAlpha(1)
 			ReadableUI_BookUI.FrontPage.Text:SetAlpha(1)
 			ReadableUI_BookUI.Content.Left:SetAlpha(1)
@@ -358,13 +370,19 @@ function NS.ItemUI.Script:Load()
 			AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", -100, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 			AdaptiveAPI.Animation:Move(ReadableUI_BookUI, 1, "CENTER", -100, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 
-			AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI.ScrollFrame, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI.ScrollFrame, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
+			end, .25)
 		end
 
 		ReadableUI.HideWithAnimation = function()
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				ReadableUI:Hide()
 			end, .5)
+
+			--------------------------------
+
+			AdaptiveAPI:RemoveTooltip(Frame.ReadableUIFrame.TooltipFrame)
 
 			--------------------------------
 
@@ -486,7 +504,7 @@ function NS.ItemUI.Script:Load()
 						end, .5)
 					end, .25)
 				elseif (ReadableUI_BookUI.Content:IsVisible() and ReadableUI_BookUI.Content.Left:GetAlpha() > .99 and ReadableUI_BookUI.Content.Right:GetAlpha() > .99) then
-					local function Text()
+					do -- TEXT
 						if isReverse then
 							ReadableUI_BookUI.Content.Left:SetAlpha(0)
 							ReadableUI_BookUI.Content.Right:SetAlpha(0)
@@ -508,7 +526,7 @@ function NS.ItemUI.Script:Load()
 						end, .25)
 					end
 
-					local function Flip()
+					do -- FLIP
 						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, 0, 1)
 
 						--------------------------------
@@ -530,11 +548,6 @@ function NS.ItemUI.Script:Load()
 
 					--------------------------------
 
-					Text()
-					Flip()
-
-					--------------------------------
-
 					NS.ItemUI.Script:Update()
 				end
 			end
@@ -547,15 +560,19 @@ function NS.ItemUI.Script:Load()
 
 	do
 		local function Settings_ContentSize()
-			local ItemTextSize = INTDB.profile.INT_CONTENT_SIZE * 1
-			local BookTextSize = INTDB.profile.INT_CONTENT_SIZE * .75
+			local item_textSize = INTDB.profile.INT_CONTENT_SIZE * 1
+			local book_textSize = INTDB.profile.INT_CONTENT_SIZE * .75
 
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText, ItemTextSize)
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.ItemFrame.ScrollFrame.Text, ItemTextSize)
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Left.MeasurementText, BookTextSize)
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Left.Text, BookTextSize)
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Right.MeasurementText, BookTextSize)
-			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Right.Text, BookTextSize)
+			--------------------------------
+
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText, item_textSize)
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.ItemFrame.ScrollFrame.Text, item_textSize)
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Left.MeasurementText, book_textSize)
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Left.Text, book_textSize)
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Right.MeasurementText, book_textSize)
+			AdaptiveAPI:SetFontSize(Frame.ReadableUIFrame.BookFrame.Content.Right.Text, book_textSize)
+
+			--------------------------------
 
 			if ReadableUI_ItemUI:IsVisible() or ReadableUI_BookUI:IsVisible() then
 				NS.ItemUI.Script:Update()

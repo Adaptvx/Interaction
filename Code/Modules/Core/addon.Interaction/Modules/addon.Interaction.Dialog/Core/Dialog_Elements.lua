@@ -178,24 +178,27 @@ function NS.Elements:Load()
 			end
 
 			do -- CONTENT
-				InteractionDialogFrame.Content = CreateFrame("Frame", "$parent.Content", InteractionDialogFrame)
+                InteractionDialogFrame.Content = CreateFrame("Frame", "$parent.Content", InteractionDialogFrame)
+                InteractionDialogFrame.Content:SetPoint("TOPLEFT", InteractionDialogFrame.DialogBackground, 5, -5)
+				InteractionDialogFrame.Content:SetPoint("BOTTOMRIGHT", InteractionDialogFrame.DialogBackground, -5, 5)
+				InteractionDialogFrame.Content:SetClipsChildren(true)
 
 				--------------------------------
 
 				do -- TEXT
-					local TextSize = INTDB.profile.INT_CONTENT_SIZE
+					local TEXT_SIZE = INTDB.profile.INT_CONTENT_SIZE
 
 					--------------------------------
 
 					do -- MEASUREMENT
-						InteractionDialogFrame.Content.Measurement = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame, { r = 1, g = 1, b = 1 }, TextSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+						InteractionDialogFrame.Content.Measurement = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 						InteractionDialogFrame.Content.Measurement:SetPoint("CENTER", InteractionDialogFrame.DialogBackground, 0, 0)
 						InteractionDialogFrame.Content.Measurement:SetSize(InteractionDialogFrame:GetWidth(), 500)
 						InteractionDialogFrame.Content.Measurement:SetAlpha(0)
 					end
 
 					do -- LABEL
-						InteractionDialogFrame.Content.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame, { r = 1, g = 1, b = 1 }, TextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+						InteractionDialogFrame.Content.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
 						InteractionDialogFrame.Content.Label:SetPoint("CENTER", InteractionDialogFrame.DialogBackground, 0, 0)
 						InteractionDialogFrame.Content.Label:SetSize(InteractionDialogFrame:GetWidth(), 75)
 						InteractionDialogFrame.Content.Label:SetShadowOffset(0, 0)

@@ -75,6 +75,7 @@ do
 				if event == "PLAYER_REGEN_ENABLED" then
 					if Frame.WaitingForInitalization then
 						Frame.WaitingForInitalization = false
+						Frame:UnregisterEvent("PLAYER_REGEN_ENABLED")
 
 						--------------------------------
 
@@ -164,6 +165,7 @@ do
 				if event == "PLAYER_REGEN_ENABLED" then
 					if Frame.WaitingForInitalization then
 						Frame.WaitingForInitalization = false
+						Frame:UnregisterEvent("PLAYER_REGEN_ENABLED")
 
 						--------------------------------
 

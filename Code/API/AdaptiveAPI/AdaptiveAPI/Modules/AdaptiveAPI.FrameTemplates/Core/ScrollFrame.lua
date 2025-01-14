@@ -29,39 +29,33 @@ do
 
 		--------------------------------
 
-		ScrollChildFrame:SetPoint("TOP", Frame)
+		do -- ELEMENTS
+			do -- SCROLL CHILD
+				ScrollChildFrame:SetPoint("TOP", Frame)
+				Frame:SetScrollChild(ScrollChildFrame)
+			end
 
-		--------------------------------
-
-		if orientation == "horizontal" then
-			ScrollBar:Hide()
-		end
-
-		--------------------------------
-
-		if orientation == "horizontal" then
-			ScrollChildFrame:SetHeight(Frame:GetHeight())
-		else
-			ScrollChildFrame:SetWidth(Frame:GetWidth())
-		end
-
-		--------------------------------
-
-		local function UpdateSize()
-			if orientation == "horizontal" then
-				ScrollChildFrame:SetHeight(Frame:GetHeight())
-			else
-				ScrollChildFrame:SetWidth(Frame:GetWidth())
+			do -- SCROLL BAR
+				if orientation == "horizontal" then
+					ScrollBar:Hide()
+				end
 			end
 		end
 
-		hooksecurefunc(Frame, "SetSize", UpdateSize)
-		hooksecurefunc(Frame, "SetWidth", UpdateSize)
-		hooksecurefunc(Frame, "SetHeight", UpdateSize)
+		do -- EVENTS
+			local function UpdateSize()
+				if orientation == "horizontal" then
+					ScrollChildFrame:SetHeight(Frame:GetHeight())
+				else
+					ScrollChildFrame:SetWidth(Frame:GetWidth())
+				end
+			end
+			UpdateSize()
 
-		--------------------------------
-
-		Frame:SetScrollChild(ScrollChildFrame)
+			hooksecurefunc(Frame, "SetSize", UpdateSize)
+			hooksecurefunc(Frame, "SetWidth", UpdateSize)
+			hooksecurefunc(Frame, "SetHeight", UpdateSize)
+		end
 
 		--------------------------------
 

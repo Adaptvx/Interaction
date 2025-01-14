@@ -10,6 +10,7 @@ addon.Theme = {}
 local NS = addon.Theme
 
 do -- MAIN
+	NS.Theme = nil
 	NS.IsDarkTheme = nil
 	NS.IsDarkTheme_Dialog = nil
 	NS.IsRusticTheme_Dialog = nil
@@ -386,6 +387,20 @@ do -- SETTINGS
 
 	--------------------------------
 
+	do -- TOOLTIP TEXT
+		do -- NOTE
+			NS.Settings.Tooltip_Text_Note = "|cff55565C"
+			NS.Settings.Tooltip_Text_Note_Highlight = "|cff4F5A87"
+		end
+
+		do -- WARNING
+			NS.Settings.Tooltip_Text_Warning = "|cff7F411E"
+			NS.Settings.Tooltip_Text_Warning_Highlight = "|cffBF6038"
+		end
+	end
+
+	--------------------------------
+
 	C_Timer.After(0, function()
 		do -- HEADER
 			do -- BACKGROUND
@@ -645,15 +660,73 @@ function NS:Load()
 	--------------------------------
 
 	do
-		function NS:UpdateThemeReferences()
-			local Theme = INTDB.profile.INT_MAIN_THEME
-			local Theme_Dialog = INTDB.profile.INT_DIALOG_THEME
+		function NS:UpdateAll()
+			NS:UpdateThemeReferences()
+			NS:UpdateTextColorReferences()
+		end
+
+		function NS:UpdateSchedule()
+			do -- DYNAMIC MAIN THEME
+				if NS.IsDynamicTheme then
+					local _, isNewTheme = NS:GetDynamicMainTheme()
+
+					--------------------------------
+
+					if isNewTheme then
+						CallbackRegistry:Trigger("THEME_UPDATE")
+					end
+				end
+			end
+		end
+
+		function NS:GetDynamicMainTheme()
+			local result
+			local isNewTheme = false
+
+			local time = C_DateAndTime.GetCurrentCalendarTime()
+			local hour = time.hour
+
+			-- Sunrise is at 5:30 AM and sunset at 9:00 PM.
+			local dayTime = INTDB.profile.INT_TIME_DAY
+			local nightTime = INTDB.profile.INT_TIME_NIGHT
 
 			--------------------------------
 
-			NS.IsDarkTheme = (Theme == 2)
-			NS.IsDarkTheme_Dialog = (Theme_Dialog == 1 and Theme == 2) or (Theme_Dialog == 3)
-			NS.IsRusticTheme_Dialog = (Theme_Dialog == 4)
+			local currentTheme = NS.Theme
+			local isDay = (hour >= dayTime and hour < nightTime)
+			local isNight = (hour >= nightTime or hour < dayTime)
+
+			if isDay then
+				result = 1
+			elseif isNight then
+				result = 2
+			end
+
+			if currentTheme ~= result then
+				isNewTheme = true
+			end
+
+			--------------------------------
+
+			return result, isNewTheme
+		end
+
+		function NS:UpdateThemeReferences()
+			-- 1 -> DAY
+			-- 2 -> NIGHT
+			-- 3 -> DYNAMIC
+
+			local rawTheme = INTDB.profile.INT_MAIN_THEME
+			local theme = rawTheme == 3 and select(1, NS:GetDynamicMainTheme()) or rawTheme
+			local theme_dialog = INTDB.profile.INT_DIALOG_THEME
+
+			--------------------------------
+
+			NS.Theme = theme
+			NS.IsDarkTheme = (theme == 2)
+			NS.IsDynamicTheme = (rawTheme == 3)
+			NS.IsDarkTheme_Dialog = (theme_dialog == 1 and theme == 2) or (theme_dialog == 3)
+			NS.IsRusticTheme_Dialog = (theme_dialog == 4)
 		end
 
 		function NS:UpdateTextColorReferences()
@@ -670,21 +743,16 @@ function NS:Load()
 	--------------------------------
 
 	do
-		NS:UpdateThemeReferences()
-		NS:UpdateTextColorReferences()
+		NS:UpdateAll()
 
 		--------------------------------
 
 		CallbackRegistry:Add("THEME_UPDATE", function()
-			NS:UpdateThemeReferences()
-			NS:UpdateTextColorReferences()
+			NS:UpdateAll()
 		end, -2)
 
 		--------------------------------
 
-		-- local _ = CreateFrame("Frame", "UpdateFrame/Theme.lua", nil)
-		-- _:SetScript("OnUpdate", function()
-		-- 	NS:UpdateThemeReferences()
-		-- end)
+		addon.Libraries.AceTimer:ScheduleRepeatingTimer(NS.UpdateSchedule, 5)
 	end
 end

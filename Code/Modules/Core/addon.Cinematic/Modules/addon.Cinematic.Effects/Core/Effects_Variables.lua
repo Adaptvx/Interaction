@@ -1,7 +1,7 @@
 local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Effects
+local NS = addon.Cinematic.Effects
 
 --------------------------------
 

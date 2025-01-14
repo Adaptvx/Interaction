@@ -15,7 +15,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		local function CreateElements()
+		do -- CREATE ELEMENTS
 			InteractionQuestFrame.Target = CreateFrame("Frame", "$parent.Target", InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetParent(InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetSize(NS.Variables:RATIO(3), NS.Variables:RATIO(3))
@@ -29,9 +29,10 @@ function NS.Elements:Load()
 
 			--------------------------------
 
-			local function Background()
+			do -- BACKGROUND
 				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", nil, 128, .75)
-				Frame.Background:SetPoint("CENTER", Frame)
+				Frame.Background:SetPoint("TOPLEFT", Frame, -37.5, 37.5)
+				Frame.Background:SetPoint("BOTTOMRIGHT", Frame, 37.5, -37.5)
 				Frame.Background:SetFrameStrata("FULLSCREEN")
 				Frame.Background:SetFrameLevel(48)
 				Frame.BackgroundTexture:SetAllPoints(Frame.Background, true)
@@ -50,19 +51,9 @@ function NS.Elements:Load()
 
 					Frame.BackgroundTexture:SetTexture(BackgroundTexture)
 				end, 5)
-
-				--------------------------------
-
-				local function UpdateSize()
-					Frame.Background:SetSize(Frame:GetWidth() + 75, Frame:GetHeight() + 75)
-				end
-
-				hooksecurefunc(Frame, "SetWidth", UpdateSize)
-				hooksecurefunc(Frame, "SetHeight", UpdateSize)
-				hooksecurefunc(Frame, "SetSize", UpdateSize)
 			end
 
-			local function Art()
+			do -- ART
 				Frame.Art, Frame.ArtTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", nil)
 				Frame.Art:SetSize(Frame:GetWidth() - NS.Variables.CONTENT_PADDING, Frame:GetWidth() - NS.Variables.CONTENT_PADDING)
 				Frame.Art:SetPoint("TOP", Frame, 0, -NS.Variables.CONTENT_PADDING / 2)
@@ -86,7 +77,7 @@ function NS.Elements:Load()
 				end, 5)
 			end
 
-			local function Text()
+			do -- TEXT
 				local function SetAutoTextHeight(frame, positionCalculation)
 					local function Update()
 						frame:SetHeight(1000)
@@ -108,7 +99,7 @@ function NS.Elements:Load()
 					hooksecurefunc(frame, "SetText", Update)
 				end
 
-				local function Label()
+				do -- LABEL
 					Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 15, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Bold)
 					Frame.Label:SetSize(Frame.Art:GetWidth() - NS.Variables.CONTENT_PADDING, 25)
 
@@ -117,7 +108,7 @@ function NS.Elements:Load()
 					SetAutoTextHeight(Frame.Label)
 				end
 
-				local function Description()
+				do -- DESCRIPTION
 					Frame.Description = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 					Frame.Description:SetSize(Frame.Art:GetWidth() - NS.Variables.CONTENT_PADDING, 135)
 					Frame.Description:SetAlpha(.5)
@@ -126,14 +117,9 @@ function NS.Elements:Load()
 
 					SetAutoTextHeight(Frame.Description)
 				end
-
-				--------------------------------
-
-				Label()
-				Description()
 			end
 
-			local function Model()
+			do -- MODEL
 				Frame.Model = CreateFrame("PlayerModel", "$parent.Model", Frame.Art)
 				Frame.Model:SetParent(Frame.Art)
 				Frame.Model:SetSize(Frame.Art:GetWidth() - (NS.Variables.PADDING * 3), Frame.Art:GetWidth() - (NS.Variables.PADDING * 3))
@@ -141,16 +127,7 @@ function NS.Elements:Load()
 				Frame.Model:SetFrameStrata("FULLSCREEN")
 				Frame.Model:SetFrameLevel(50)
 			end
-
-			--------------------------------
-
-			Background()
-			Art()
-			Text()
-			Model()
 		end
-
-		CreateElements()
 	end
 
 	--------------------------------

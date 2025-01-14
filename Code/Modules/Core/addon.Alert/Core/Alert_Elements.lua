@@ -29,57 +29,48 @@ function NS.Elements:Load()
 
 			--------------------------------
 
-			local function UpdateSize()
-				Frame.Image:SetSize(Frame:GetHeight() * 1.75, Frame:GetHeight() * 1.75)
-				Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
-				Frame.Title:SetSize(Frame:GetWidth(), Frame:GetHeight())
-			end
+			do -- ELEMENTS
+				do -- IMAGE
+					Frame.Image, Frame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
+					Frame.Image:SetPoint("CENTER", Frame)
+					Frame.Image:SetFrameStrata("FULLSCREEN_DIALOG")
+					Frame.Image:SetFrameLevel(49)
+				end
 
-			hooksecurefunc(Frame, "SetWidth", function()
-				UpdateSize()
-			end)
+				do -- BACKGROUND
+					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "background.png", "$parent.Background")
+					Frame.Background:SetPoint("CENTER", Frame)
+					Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
+					Frame.Background:SetFrameLevel(50)
+				end
 
-			hooksecurefunc(Frame, "SetHeight", function()
-				UpdateSize()
-			end)
+				do -- TITLE
+					Frame.Title = CreateFrame("Frame", "$parent.Title", Frame)
+					Frame.Title:SetPoint("CENTER", Frame)
+					Frame.Title:SetFrameStrata("FULLSCREEN_DIALOG")
+					Frame.Title:SetFrameLevel(51)
 
-			hooksecurefunc(Frame, "SetSize", function()
-				UpdateSize()
-			end)
+					--------------------------------
 
-			--------------------------------
-
-			do -- IMAGE
-				Frame.Image, Frame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
-				Frame.Image:SetPoint("CENTER", Frame)
-				Frame.Image:SetFrameStrata("FULLSCREEN_DIALOG")
-				Frame.Image:SetFrameLevel(49)
-			end
-
-			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "background.png", "$parent.Background")
-				Frame.Background:SetPoint("CENTER", Frame)
-				Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
-				Frame.Background:SetFrameLevel(50)
-			end
-
-			do -- TITLE
-				Frame.Title = CreateFrame("Frame", "$parent.Title", Frame)
-				Frame.Title:SetPoint("CENTER", Frame)
-				Frame.Title:SetFrameStrata("FULLSCREEN_DIALOG")
-				Frame.Title:SetFrameLevel(51)
-
-				--------------------------------
-
-				do -- TEXT
-					Frame.Title.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
-					Frame.Title.Text:SetAllPoints(Frame.Title, true)
+					do -- TEXT
+						Frame.Title.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
+						Frame.Title.Text:SetAllPoints(Frame.Title, true)
+					end
 				end
 			end
 
-			--------------------------------
+			do -- EVENTS
+				local function UpdateSize()
+					Frame.Image:SetSize(Frame:GetHeight() * 1.75, Frame:GetHeight() * 1.75)
+					Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
+					Frame.Title:SetSize(Frame:GetWidth(), Frame:GetHeight())
+				end
+				UpdateSize()
 
-			UpdateSize()
+				hooksecurefunc(Frame, "SetWidth", UpdateSize)
+				hooksecurefunc(Frame, "SetHeight", UpdateSize)
+				hooksecurefunc(Frame, "SetSize", UpdateSize)
+			end
 		end
 	end
 

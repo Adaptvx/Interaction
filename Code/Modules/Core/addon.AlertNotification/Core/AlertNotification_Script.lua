@@ -30,7 +30,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithText = function(text)
+		function Callback:ShowWithText(text)
 			Frame.Text:SetText(text)
 
 			--------------------------------
@@ -165,11 +165,11 @@ function NS.Script:Load()
 				--------------------------------
 
 				if event == "QUEST_ACCEPTED" then
-					Frame.ShowWithText(L["Alert Notification - Accept"])
+					Callback:ShowWithText(L["Alert Notification - Accept"])
 				end
 
 				if event == "QUEST_TURNED_IN" then
-					Frame.ShowWithText(L["Alert Notification - Complete"])
+					Callback:ShowWithText(L["Alert Notification - Complete"])
 				end
 			end
 		end)

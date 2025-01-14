@@ -6,7 +6,7 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a container. Child Frames: Icon (if applicable), Container
-function NS.Widgets:CreateContainer(parent, subcategory, background, height, tooltipText, tooltipImage, tooltipImageSize, hidden, locked)
+function NS.Widgets:CreateContainer(parent, subcategory, background, height, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageSize, hidden, locked)
 	local OffsetX = 0
 	local IndentationOffsetX = 0
 
@@ -19,18 +19,6 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	Frame:SetParent(parent)
 	Frame:SetSize(parent:GetWidth(), height or NS.Variables:RATIO(5))
 	Frame:SetPoint("TOP", parent)
-
-	--------------------------------
-
-	Frame.Var_Parent = parent
-	Frame.Var_Subcategory = subcategory
-	Frame.Var_Background = background
-	Frame.Var_Height = height
-	Frame.Var_TooltipText = tooltipText
-	Frame.Var_TooltipImage = tooltipImage
-	Frame.Var_TooltipImageSize = tooltipImageSize
-	Frame.Var_Hidden = hidden
-	Frame.Var_Locked = locked
 
 	--------------------------------
 
@@ -69,7 +57,14 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		if tooltipText then
 			if Frame:IsVisible() and addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
 				if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
-					NS.Script:ShowTooltip(Frame, tooltipText, tooltipImage, tooltipImageSize, skipAnimation)
+					local text = tooltipText
+					if tooltipTextDynamic and tooltipTextDynamic() then
+						text = tooltipTextDynamic()
+					end
+
+					--------------------------------
+
+					NS.Script:ShowTooltip(Frame, text, tooltipImage, tooltipImageSize, skipAnimation)
 				end
 			end
 		end
@@ -122,7 +117,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			-- FRAME
 			for x = 1, subcategory do
 				Frame["Icon" .. x], Frame["IconTexture" .. x] = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, Frame:GetFrameStrata(), Frame.TEXTURE_Subcategory)
-				Frame["Icon" .. x]:SetSize(height or 45, height or 45)
+				Frame["Icon" .. x]:SetSize(height or 45, height or 52.5)
 				Frame["Icon" .. x]:SetPoint("LEFT", Frame, 7.5 + (IndentationOffset) * (x - 1), 0)
 
 				-- THEME
@@ -220,9 +215,21 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			if locked then
 				Frame.Container:SetAlpha(.25)
 				Frame:EnableMouse(false)
+
+				--------------------------------
+
+				if Frame.KeybindButton then
+					Frame.KeybindButton:EnableMouse(false)
+				end
 			else
 				Frame.Container:SetAlpha(1)
 				Frame:EnableMouse(true)
+
+				--------------------------------
+
+				if Frame.KeybindButton then
+					Frame.KeybindButton:EnableMouse(true)
+				end
 			end
 		end
 	end

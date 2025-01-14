@@ -1,7 +1,7 @@
 local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Effects
+local NS = addon.Cinematic.Effects
 
 --------------------------------
 
@@ -14,7 +14,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionEffectFrame
+	local Frame = InteractionCinematicEffectsFrame
 	local Callback = NS.Script
 
 	--------------------------------
@@ -22,6 +22,38 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		do -- MAIN
+			function Callback:UpdateVisibility()
+				local isCinematicMode = (INTDB.profile.INT_CINEMATIC)
+				if not isCinematicMode then
+					return
+				end
+
+				--------------------------------
+
+				local isGradient = (addon.Database.VAR_CINEMATIC_VIGNETTE and addon.Database.VAR_CINEMATIC_VIGNETTE_GRADIENT)
+
+				--------------------------------
+
+				if isGradient then
+					local isInteraction = (addon.Interaction.Variables.Active)
+					local isDialog = (not InteractionDialogFrame.hidden)
+					local isGossip = (not InteractionGossipFrame.hidden)
+					local isQuest = (not InteractionQuestFrame.hidden)
+
+					--------------------------------
+
+					if isInteraction and (isGossip or isQuest) then
+						Frame.Gradient.ShowWithAnimation()
+					else
+						Frame.Gradient.HideWithAnimation()
+					end
+				else
+					Frame.Gradient.HideWithAnimation()
+				end
+			end
+		end
+
 		do -- GRADIENT
 			Frame.Gradient.UpdateSize = function()
 				Frame.MouseResponders.Left:SetSize(750, UIParent:GetHeight())
@@ -29,25 +61,6 @@ function NS.Script:Load()
 
 				Frame.MouseResponders.Right:SetSize(750, UIParent:GetHeight())
 				Frame.MouseResponders.Right:SetPoint("RIGHT", Frame.MouseResponders)
-			end
-
-			Frame.Gradient.UpdateVisibility = function()
-				local isInteraction = (addon.Interaction.Variables.Active)
-				local isDialog = (not InteractionDialogFrame.hidden)
-				local isGossip = (not InteractionGossipFrame.hidden)
-				local isQuest = (not InteractionQuestFrame.hidden)
-
-				--------------------------------
-
-				if isInteraction and (isGossip or isQuest) then
-					Frame.Gradient.ShowWithAnimation()
-				else
-					Frame.Gradient.HideWithAnimation()
-				end
-
-				--------------------------------
-
-				-- Frame.Gradient.UpdateFocus()
 			end
 		end
 	end
@@ -170,14 +183,14 @@ function NS.Script:Load()
 
 	do
 		do -- GRADIENT
-			CallbackRegistry:Add("START_INTERACTION", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("STOP_INTERACTION", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("START_DIALOG", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("STOP_DIALOG", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("START_GOSSIP", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("STOP_GOSSIP", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("START_QUEST", Frame.Gradient.UpdateVisibility, 5)
-			CallbackRegistry:Add("STOP_QUEST", Frame.Gradient.UpdateVisibility, 5)
+			CallbackRegistry:Add("START_INTERACTION", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("STOP_INTERACTION", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("START_DIALOG", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("STOP_DIALOG", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("START_GOSSIP", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("STOP_GOSSIP", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("START_QUEST", Callback.UpdateVisibility, 5)
+			CallbackRegistry:Add("STOP_QUEST", Callback.UpdateVisibility, 5)
 		end
 	end
 end

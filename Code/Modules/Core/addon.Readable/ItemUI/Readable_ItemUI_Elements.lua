@@ -29,13 +29,21 @@ function NS.ItemUI.Elements:Load()
 
 			--------------------------------
 
-			local ItemTextSize = INTDB.profile.INT_CONTENT_SIZE * 1
-			local BookTextSize = INTDB.profile.INT_CONTENT_SIZE * .75
+			local TEXT_SIZE_ITEM = INTDB.profile.INT_CONTENT_SIZE * 1
+			local TEXT_SIZE_BOOK = INTDB.profile.INT_CONTENT_SIZE * .75
+
+			do -- TOOLTIP FRAME
+				ReadableUIFrame.TooltipFrame = CreateFrame("Frame", "$parent.TooltipFrame", ReadableUIFrame)
+				ReadableUIFrame.TooltipFrame:SetPoint("TOPLEFT", ReadableUIFrame, 100, -100)
+				ReadableUIFrame.TooltipFrame:SetPoint("BOTTOMRIGHT", ReadableUIFrame, -100, 100)
+				ReadableUIFrame.TooltipFrame:SetFrameStrata("FULLSCREEN")
+				ReadableUIFrame.TooltipFrame:SetFrameLevel(5)
+			end
 
 			do -- TITLE
 				ReadableUIFrame.Title = CreateFrame("Frame", "$parent.Title", ReadableUIFrame)
 				ReadableUIFrame.Title:SetSize(500, 50)
-				ReadableUIFrame.Title:SetPoint("TOP", ReadableUIFrame, 0, -NS.Variables.SCREEN_HEIGHT * .1)
+				ReadableUIFrame.Title:SetPoint("TOP", ReadableUIFrame, 0, -NS.Variables.SCREEN_HEIGHT * .125)
 				ReadableUIFrame.Title:SetFrameStrata("FULLSCREEN")
 				ReadableUIFrame.Title:SetFrameLevel(1)
 				ReadableUIFrame.Title:SetAlpha(.5)
@@ -68,6 +76,8 @@ function NS.ItemUI.Elements:Load()
 				ReadableUIFrame.NavigationFrame:SetSize(ReadableUIFrame:GetWidth() / 2, 35)
 				ReadableUIFrame.NavigationFrame:SetPoint("BOTTOM", ReadableUIFrame, 0, NS.Variables.SCREEN_HEIGHT * .15)
 				ReadableUIFrame.NavigationFrame:SetAlpha(1)
+				ReadableUIFrame.NavigationFrame:SetFrameStrata("FULLSCREEN")
+				ReadableUIFrame.NavigationFrame:SetFrameLevel(50)
 
 				--------------------------------
 
@@ -157,13 +167,13 @@ function NS.ItemUI.Elements:Load()
 				ReadableUIFrame.ItemParent:SetSize(NS.Variables.SCREEN_HEIGHT * .35, NS.Variables.SCREEN_HEIGHT * .45)
 				ReadableUIFrame.ItemParent:SetPoint("CENTER", ReadableUIFrame, 0, NS.Variables.SCREEN_HEIGHT * .025)
 				ReadableUIFrame.ItemParent:SetFrameStrata("FULLSCREEN")
-				ReadableUIFrame.ItemParent:SetFrameLevel(3)
+				ReadableUIFrame.ItemParent:SetFrameLevel(6)
 
 				ReadableUIFrame.ItemFrame = CreateFrame("Frame", "$parent.ItemFrame", ReadableUIFrame.ItemParent)
 				ReadableUIFrame.ItemFrame:SetSize(ReadableUIFrame.ItemParent:GetWidth(), ReadableUIFrame.ItemParent:GetHeight())
 				ReadableUIFrame.ItemFrame:SetPoint("CENTER", ReadableUIFrame.ItemParent)
 				ReadableUIFrame.ItemFrame:SetFrameStrata("FULLSCREEN")
-				ReadableUIFrame.ItemFrame:SetFrameLevel(3)
+				ReadableUIFrame.ItemFrame:SetFrameLevel(6)
 
 				--------------------------------
 
@@ -190,7 +200,7 @@ function NS.ItemUI.Elements:Load()
 					ReadableUIFrame.ItemFrame.Background:SetSize(ReadableUIFrame.ItemFrame:GetHeight() + 275, ReadableUIFrame.ItemFrame:GetHeight() + 225)
 					ReadableUIFrame.ItemFrame.Background:SetPoint("CENTER", ReadableUIFrame.ItemFrame)
 					ReadableUIFrame.ItemFrame.Background:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.ItemFrame.Background:SetFrameLevel(2)
+					ReadableUIFrame.ItemFrame.Background:SetFrameLevel(4)
 				end
 
 				do -- TEXT
@@ -198,7 +208,7 @@ function NS.ItemUI.Elements:Load()
 					ReadableUIFrame.ItemFrame.ScrollFrame:SetSize(ReadableUIFrame.ItemFrame:GetWidth(), ReadableUIFrame.ItemFrame:GetHeight())
 					ReadableUIFrame.ItemFrame.ScrollFrame:SetPoint("CENTER", ReadableUIFrame.ItemFrame)
 					ReadableUIFrame.ItemFrame.ScrollFrame:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.ItemFrame.ScrollFrame:SetFrameLevel(5)
+					ReadableUIFrame.ItemFrame.ScrollFrame:SetFrameLevel(7)
 					ReadableUIFrame.ItemFrame.ScrollFrame.ScrollBar:Hide()
 
 					--------------------------------
@@ -225,7 +235,7 @@ function NS.ItemUI.Elements:Load()
 
 					do -- TEXT
 						do -- MEASUREMENT
-							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollFrame, addon.Theme.RGB_BLACK, ItemTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
+							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollFrame, addon.Theme.RGB_BLACK, TEXT_SIZE_ITEM, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
 							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetWidth(ReadableUIFrame.ItemFrame.ScrollFrame:GetWidth())
 							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetAlpha(0)
 						end
@@ -270,17 +280,7 @@ function NS.ItemUI.Elements:Load()
 						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetSize(ReadableUIFrame.ItemFrame.ScrollFrame:GetWidth(), 50)
 						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetPoint("BOTTOM", ReadableUIFrame.ItemFrame.ScrollFrame, 0, -1)
 						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetFrameStrata("FULLSCREEN")
-						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetFrameLevel(6)
-
-						--------------------------------
-
-						addon.API:RegisterThemeUpdate(function()
-							if addon.Theme.IsDarkTheme then
-								ReadableUIFrame.ItemFrame.ScrollFrame.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-dark.png")
-							else
-								ReadableUIFrame.ItemFrame.ScrollFrame.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-content-gradient-light.png")
-							end
-						end, 5)
+						ReadableUIFrame.ItemFrame.ScrollFrame.Gradient:SetFrameLevel(49)
 					end
 				end
 			end
@@ -290,13 +290,13 @@ function NS.ItemUI.Elements:Load()
 				ReadableUIFrame.BookParent:SetSize(NS.Variables.SCREEN_HEIGHT * .28, NS.Variables.SCREEN_HEIGHT * .375)
 				ReadableUIFrame.BookParent:SetPoint("CENTER", ReadableUIFrame, 0, 0)
 				ReadableUIFrame.BookParent:SetFrameStrata("FULLSCREEN")
-				ReadableUIFrame.BookParent:SetFrameLevel(3)
+				ReadableUIFrame.BookParent:SetFrameLevel(4)
 
 				ReadableUIFrame.BookFrame = CreateFrame("Frame", "$parent.BookFrame", ReadableUIFrame)
 				ReadableUIFrame.BookFrame:SetSize(ReadableUIFrame.BookParent:GetWidth(), ReadableUIFrame.BookParent:GetHeight())
 				ReadableUIFrame.BookFrame:SetPoint("CENTER", ReadableUIFrame.BookParent)
 				ReadableUIFrame.BookFrame:SetFrameStrata("FULLSCREEN")
-				ReadableUIFrame.BookFrame:SetFrameLevel(3)
+				ReadableUIFrame.BookFrame:SetFrameLevel(4)
 
 				--------------------------------
 
@@ -305,13 +305,13 @@ function NS.ItemUI.Elements:Load()
 					ReadableUIFrame.BookFrame.FrontPageParent:SetSize(ReadableUIFrame.BookFrame:GetHeight(), ReadableUIFrame.BookFrame:GetHeight())
 					ReadableUIFrame.BookFrame.FrontPageParent:SetPoint("CENTER", ReadableUIFrame.BookFrame, 0, 0)
 					ReadableUIFrame.BookFrame.FrontPageParent:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.BookFrame.FrontPageParent:SetFrameLevel(5)
+					ReadableUIFrame.BookFrame.FrontPageParent:SetFrameLevel(4)
 
 					ReadableUIFrame.BookFrame.FrontPage = CreateFrame("Frame", "$parent.FrontPage", ReadableUIFrame.BookFrame.FrontPageParent)
 					ReadableUIFrame.BookFrame.FrontPage:SetSize(ReadableUIFrame.BookFrame.FrontPageParent:GetHeight(), ReadableUIFrame.BookFrame.FrontPageParent:GetHeight())
 					ReadableUIFrame.BookFrame.FrontPage:SetPoint("CENTER", ReadableUIFrame.BookFrame.FrontPageParent, 0, 0)
 					ReadableUIFrame.BookFrame.FrontPage:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.BookFrame.FrontPage:SetFrameLevel(5)
+					ReadableUIFrame.BookFrame.FrontPage:SetFrameLevel(4)
 
 					--------------------------------
 
@@ -337,13 +337,21 @@ function NS.ItemUI.Elements:Load()
 						ReadableUIFrame.BookFrame.FrontPage.Background:SetScale(2)
 						ReadableUIFrame.BookFrame.FrontPage.Background:SetPoint("CENTER", ReadableUIFrame.BookFrame.FrontPage)
 						ReadableUIFrame.BookFrame.FrontPage.Background:SetFrameStrata("FULLSCREEN")
-						ReadableUIFrame.BookFrame.FrontPage.Background:SetFrameLevel(4)
+						ReadableUIFrame.BookFrame.FrontPage.Background:SetFrameLevel(3)
 					end
 
 					do -- TEXT
-						ReadableUIFrame.BookFrame.FrontPage.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.FrontPage, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
-						ReadableUIFrame.BookFrame.FrontPage.Text:SetSize(ReadableUIFrame.BookFrame.FrontPage:GetWidth() * .7, 150)
-						ReadableUIFrame.BookFrame.FrontPage.Text:SetPoint("TOP", ReadableUIFrame.BookFrame.FrontPage, -NS.Variables.SCREEN_HEIGHT * .05)
+						ReadableUIFrame.BookFrame.FrontPage.Text = CreateFrame("Frame", "$parent.Text", ReadableUIFrame.BookFrame.FrontPage)
+						ReadableUIFrame.BookFrame.FrontPage.Text:SetFrameStrata("FULLSCREEN")
+						ReadableUIFrame.BookFrame.FrontPage.Text:SetFrameLevel(4)
+
+						--------------------------------
+
+						do -- TITLE
+							ReadableUIFrame.BookFrame.FrontPage.Text.Title = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.FrontPage.Text, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
+							ReadableUIFrame.BookFrame.FrontPage.Text.Title:SetSize(ReadableUIFrame.BookFrame.FrontPage:GetWidth() * .7, 150)
+							ReadableUIFrame.BookFrame.FrontPage.Text.Title:SetPoint("TOP", ReadableUIFrame.BookFrame.FrontPage, -NS.Variables.SCREEN_HEIGHT * .05)
+						end
 					end
 				end
 
@@ -352,13 +360,13 @@ function NS.ItemUI.Elements:Load()
 					ReadableUIFrame.BookFrame.ContentParent:SetSize(ReadableUIFrame.BookFrame:GetHeight() * 1.5, ReadableUIFrame.BookFrame:GetHeight())
 					ReadableUIFrame.BookFrame.ContentParent:SetPoint("CENTER", ReadableUIFrame.BookFrame, 0, 0)
 					ReadableUIFrame.BookFrame.ContentParent:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.BookFrame.ContentParent:SetFrameLevel(5)
+					ReadableUIFrame.BookFrame.ContentParent:SetFrameLevel(4)
 
 					ReadableUIFrame.BookFrame.Content = CreateFrame("Frame", "$parent.Content", ReadableUIFrame.BookFrame.ContentParent)
 					ReadableUIFrame.BookFrame.Content:SetSize(ReadableUIFrame.BookFrame.ContentParent:GetWidth(), ReadableUIFrame.BookFrame.ContentParent:GetHeight())
 					ReadableUIFrame.BookFrame.Content:SetPoint("CENTER", ReadableUIFrame.BookFrame.ContentParent, 0, 0)
 					ReadableUIFrame.BookFrame.Content:SetFrameStrata("FULLSCREEN")
-					ReadableUIFrame.BookFrame.Content:SetFrameLevel(5)
+					ReadableUIFrame.BookFrame.Content:SetFrameLevel(4)
 
 					--------------------------------
 
@@ -388,7 +396,7 @@ function NS.ItemUI.Elements:Load()
 							ReadableUIFrame.BookFrame.Content.Background:SetFrameLevel(4)
 						end
 
-						do -- Spritesheet
+						do -- SPRITESHEET
 							ReadableUIFrame.BookFrame.Content.Background.Spritesheet = CreateFrame("Frame", "$parent.Spritesheet", ReadableUIFrame.BookFrame.Content.Background)
 							ReadableUIFrame.BookFrame.Content.Background.Spritesheet:SetSize(ReadableUIFrame.BookFrame.Content.Background:GetWidth(), ReadableUIFrame.BookFrame.Content.Background:GetHeight())
 							ReadableUIFrame.BookFrame.Content.Background.Spritesheet:SetPoint("CENTER", ReadableUIFrame.BookFrame.Content.Background, 0, 0)
@@ -397,7 +405,7 @@ function NS.ItemUI.Elements:Load()
 
 							--------------------------------
 
-							do -- Texture
+							do -- TEXTURE
 								ReadableUIFrame.BookFrame.Content.Background.Spritesheet.Texture = AdaptiveAPI.Animation:CreateSpriteSheet(ReadableUIFrame.BookFrame.Content.Background.Spritesheet, NS.Variables.READABLE_UI_PATH .. "Book/Flipbook/flipbook.png", 3, 9, .01, false)
 								ReadableUIFrame.BookFrame.Content.Background.Spritesheet.Texture:SetSize(ReadableUIFrame.BookFrame.Content.Background.Spritesheet:GetWidth(), ReadableUIFrame.BookFrame.Content.Background.Spritesheet:GetHeight())
 								ReadableUIFrame.BookFrame.Content.Background.Spritesheet.Texture:SetPoint("CENTER", ReadableUIFrame.BookFrame.Content.Background.Spritesheet, 0, 0)
@@ -412,11 +420,15 @@ function NS.ItemUI.Elements:Load()
 						ReadableUIFrame.BookFrame.Content.Left, ReadableUIFrame.BookFrame.Content.LeftScrollChild = AdaptiveAPI.FrameTemplates:CreateScrollFrame(ReadableUIFrame.BookFrame.Content)
 						ReadableUIFrame.BookFrame.Content.Left:SetSize(ReadableUIFrame.BookFrame.Content:GetWidth() / 2 - ReadableUIFrame.BookFrame.Content:GetWidth() * .075, ReadableUIFrame.BookFrame.Content:GetHeight() * .9125)
 						ReadableUIFrame.BookFrame.Content.Left:SetPoint("LEFT", ReadableUIFrame.BookFrame.Content, 0, ReadableUIFrame.BookFrame.Content:GetHeight() * .0375)
+						ReadableUIFrame.BookFrame.Content.Left:SetFrameStrata("FULLSCREEN")
+						ReadableUIFrame.BookFrame.Content.Left:SetFrameLevel(7)
 						ReadableUIFrame.BookFrame.Content.Left.ScrollBar:Hide()
 
 						ReadableUIFrame.BookFrame.Content.Right, ReadableUIFrame.BookFrame.Content.RightScrollChild = AdaptiveAPI.FrameTemplates:CreateScrollFrame(ReadableUIFrame.BookFrame.Content)
 						ReadableUIFrame.BookFrame.Content.Right:SetSize(ReadableUIFrame.BookFrame.Content:GetWidth() / 2 - ReadableUIFrame.BookFrame.Content:GetWidth() * .075, ReadableUIFrame.BookFrame.Content:GetHeight() * .9125)
 						ReadableUIFrame.BookFrame.Content.Right:SetPoint("RIGHT", ReadableUIFrame.BookFrame.Content, 0, ReadableUIFrame.BookFrame.Content:GetHeight() * .0325)
+						ReadableUIFrame.BookFrame.Content.Right:SetFrameStrata("FULLSCREEN")
+						ReadableUIFrame.BookFrame.Content.Right:SetFrameLevel(7)
 						ReadableUIFrame.BookFrame.Content.Right.ScrollBar:Hide()
 
 						--------------------------------
@@ -458,13 +470,13 @@ function NS.ItemUI.Elements:Load()
 
 							do -- TEXT
 								do -- MEASUREMENT
-									ReadableUIFrame.BookFrame.Content.Left.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, BookTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
+									ReadableUIFrame.BookFrame.Content.Left.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
 									ReadableUIFrame.BookFrame.Content.Left.MeasurementText:SetWidth(ReadableUIFrame.BookFrame.Content.Left:GetWidth())
 									ReadableUIFrame.BookFrame.Content.Left.MeasurementText:SetAlpha(0)
 								end
 
 								do -- TEXT
-									ReadableUIFrame.BookFrame.Content.Left.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.LeftScrollChild, addon.Theme.RGB_BLACK, BookTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text", true)
+									ReadableUIFrame.BookFrame.Content.Left.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.LeftScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text", true)
 									ReadableUIFrame.BookFrame.Content.Left.Text:SetSize(ReadableUIFrame.BookFrame.Content.LeftScrollChild:GetWidth(), ReadableUIFrame.BookFrame.Content.LeftScrollChild:GetHeight())
 									ReadableUIFrame.BookFrame.Content.Left.Text:SetPoint("TOP", ReadableUIFrame.BookFrame.Content.LeftScrollChild)
 
@@ -547,13 +559,13 @@ function NS.ItemUI.Elements:Load()
 
 							do -- TEXT
 								do -- MEASUREMENT
-									ReadableUIFrame.BookFrame.Content.Right.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, BookTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
+									ReadableUIFrame.BookFrame.Content.Right.MeasurementText = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.MeasurementText", true)
 									ReadableUIFrame.BookFrame.Content.Right.MeasurementText:SetWidth(ReadableUIFrame.BookFrame.Content.Right:GetWidth())
 									ReadableUIFrame.BookFrame.Content.Right.MeasurementText:SetAlpha(0)
 								end
 
 								do -- TEXT
-									ReadableUIFrame.BookFrame.Content.Right.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.RightScrollChild, addon.Theme.RGB_BLACK, BookTextSize, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text", true)
+									ReadableUIFrame.BookFrame.Content.Right.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.RightScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text", true)
 									ReadableUIFrame.BookFrame.Content.Right.Text:SetSize(ReadableUIFrame.BookFrame.Content.Right:GetWidth(), ReadableUIFrame.BookFrame.Content.Right:GetHeight())
 									ReadableUIFrame.BookFrame.Content.Right.Text:SetPoint("TOP", ReadableUIFrame.BookFrame.Content.RightScrollChild)
 

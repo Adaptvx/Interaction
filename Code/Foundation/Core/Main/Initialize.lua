@@ -46,13 +46,13 @@ function NS:Load()
 			--------------------------------
 
 			CallbackRegistry:Trigger("THEME_UPDATE")
-			C_Timer.After(2.5, function()
+			C_Timer.After(1.5, function()
 				CallbackRegistry:Trigger("THEME_UPDATE")
 			end)
 
 			--------------------------------
 
-			C_Timer.After(1.5, function()
+			C_Timer.After(1.75, function()
 				NS.Ready = true
 			end)
 		end

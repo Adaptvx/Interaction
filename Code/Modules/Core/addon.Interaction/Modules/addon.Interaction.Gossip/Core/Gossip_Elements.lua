@@ -82,6 +82,7 @@ function NS.Elements:Load()
 							Frame.GoodbyeButton:SetSize(Frame:GetWidth() - 125, 27.5)
 							Frame.GoodbyeButton.Background:SetSize(Frame.GoodbyeButton:GetWidth() + 125, Frame.GoodbyeButton:GetHeight() + 50)
 						end
+						UpdateSize()
 
 						local function UpdateBackground()
 							if NS.Variables.NumCurrentButtons < 1 then
@@ -90,8 +91,6 @@ function NS.Elements:Load()
 								Frame.GoodbyeButton.Background:Hide()
 							end
 						end
-
-						UpdateSize()
 						UpdateBackground()
 
 						hooksecurefunc(Frame, "SetWidth", UpdateSize)
@@ -116,7 +115,7 @@ function NS.Elements:Load()
 			do -- CONTENT
 				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
 				Frame.Content:SetSize(Frame:GetWidth() - 20, 500)
-				Frame.Content:SetPoint("TOP", Frame, 0, -NS.Variables.PADDING)
+				Frame.Content:SetPoint("TOP", Frame)
 			end
 
 			do -- OPTIONS
@@ -263,13 +262,13 @@ function NS.Elements:Load()
 
 								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
 									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-dark.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-dark.png"
+									TEXTURE_Highlighted = NS.Variables.PATH .. "background-highlighted-nineslice-dark.png"
 
 									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-dark.png"
 									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
 								else
 									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-light.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-nineslice-highlighted-light.png"
+									TEXTURE_Highlighted = NS.Variables.PATH .. "background-highlighted-nineslice-light.png"
 
 									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-light.png"
 									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
@@ -286,15 +285,6 @@ function NS.Elements:Load()
 								end
 							end
 						end
-
-						-- do -- GRADIENT
-						-- 	button.Standalone.Gradient, button.Standalone.GradientTexture = AdaptiveAPI.FrameTemplates:CreateTexture(button.Standalone, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/gradient-horizontal.png")
-						-- 	button.Standalone.Gradient:SetWidth(button.Standalone:GetWidth() + 100)
-						-- 	button.Standalone.Gradient:SetPoint("CENTER", button.Standalone)
-						-- 	button.Standalone.Gradient:SetFrameStrata("FULLSCREEN")
-						-- 	button.Standalone.Gradient:SetFrameLevel(0)
-						-- 	button.Standalone.Gradient:SetAlpha(1)
-						-- end
 					end
 
 					do -- KEYBIND
@@ -332,32 +322,6 @@ function NS.Elements:Load()
 							button.Keybind.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 							button.Keybind.Label:SetSize(30, 30)
 							button.Keybind.Label:SetPoint("CENTER", button.Keybind)
-						end
-					end
-
-					do -- KEYBIND (CONTROLLER)
-						button.Keybind_Controller = CreateFrame("Frame")
-						button.Keybind_Controller:SetSize(30, 30)
-						button.Keybind_Controller:SetPoint("LEFT", button, -19.5, 0)
-						button.Keybind_Controller:SetFrameStrata("FULLSCREEN")
-						button.Keybind_Controller:SetFrameLevel(3)
-
-						--------------------------------
-
-						do -- LABEL
-							button.Keybind_Controller.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind_Controller, { r = 1, g = 1, b = 1 }, 16, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-							button.Keybind_Controller.Label:SetSize(button.Keybind_Controller:GetWidth(), button.Keybind_Controller:GetHeight())
-							button.Keybind_Controller.Label:SetPoint("CENTER", button.Keybind_Controller)
-
-							--------------------------------
-
-							if addon.Variables.Platform == 1 then
-								button.Keybind_Controller:Hide()
-							elseif addon.Variables.Platform == 2 then
-								button.Keybind_Controller.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PS-3", 16, 16, 0, 0))
-							elseif addon.Variables.Platform == 3 then
-								button.Keybind_Controller.Label:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2", 16, 16, 0, 0))
-							end
 						end
 					end
 
@@ -485,10 +449,6 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								-- do -- TEXT
-								-- 	AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset, 0, button.Label.Offset + 7.5, 0, AdaptiveAPI.Animation.EaseExpo, function() return not button.selected end)
-								-- end
-
 								do -- BUTTON
 									AdaptiveAPI.Animation:Fade(button, .05, .75, 1, nil, function() return not button.selected end)
 								end
@@ -505,10 +465,6 @@ function NS.Elements:Load()
 									end, 1)
 								end
 							else
-								-- do -- TEXT
-								-- 	button.Label:SetPoint("LEFT", button, button.Label.Offset + 7.5, 0)
-								-- end
-
 								do -- BUTTON
 									button:SetAlpha(1)
 								end
@@ -546,10 +502,6 @@ function NS.Elements:Load()
 
 								--------------------------------
 
-								-- do -- TEXT
-								-- 	AdaptiveAPI.Animation:PreciseMove(button.Label, 1, button, "LEFT", button.Label.Offset + 7.5, 0, button.Label.Offset, 0, AdaptiveAPI.Animation.EaseExpo, function() return button.selected end)
-								-- end
-
 								do -- BUTTON
 									AdaptiveAPI.Animation:Fade(button, .05, 1, 1, nil, function() return button.selected end)
 								end
@@ -566,10 +518,6 @@ function NS.Elements:Load()
 									end, 1)
 								end
 							else
-								-- do -- TEXT
-								-- 	button.Label:SetPoint("LEFT", button, button.Label.Offset, 0)
-								-- end
-
 								do -- BUTTON
 									button:SetAlpha(1)
 								end
@@ -613,30 +561,6 @@ function NS.Elements:Load()
 
 						button.selected = false
 						button:SetAlpha(1)
-					end
-
-					do -- EVENTS
-						local function UpdateControllerKeybind()
-							if button.selected and button:IsVisible() then
-								if addon.Input.Variables.IsController then
-									if button.Keybind_Controller:GetAlpha() == 0 then
-										AdaptiveAPI.Animation:Fade(button.Keybind_Controller, .25, 0, 1)
-										AdaptiveAPI.Animation:Scale(button.Keybind_Controller, .5, .5, 1)
-									end
-								else
-									button.Keybind_Controller:SetAlpha(0)
-								end
-							else
-								button.Keybind_Controller:SetAlpha(0)
-							end
-						end
-
-						UpdateControllerKeybind()
-
-						--------------------------------
-
-						CallbackRegistry:Add("GOSSIP_BUTTON_ENTER", UpdateControllerKeybind)
-						CallbackRegistry:Add("GOSSIP_BUTTON_LEAVE", UpdateControllerKeybind)
 					end
 
 					--------------------------------

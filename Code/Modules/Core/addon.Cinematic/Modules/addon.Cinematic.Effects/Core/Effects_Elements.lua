@@ -1,7 +1,7 @@
 local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Effects
+local NS = addon.Cinematic.Effects
 
 --------------------------------
 
@@ -16,14 +16,14 @@ function NS.Elements:Load()
 
 	do
 		do -- CREATE ELEMENTS
-			InteractionEffectFrame = CreateFrame("Frame", "InteractionEffectFrame", InteractionFrame)
-			InteractionEffectFrame:SetAllPoints(UIParent, true)
-			InteractionEffectFrame:SetFrameStrata("HIGH")
-			InteractionEffectFrame:SetFrameLevel(0)
+			InteractionCinematicEffectsFrame = CreateFrame("Frame", "InteractionCinematicEffectsFrame", InteractionFrame)
+			InteractionCinematicEffectsFrame:SetAllPoints(UIParent, true)
+			InteractionCinematicEffectsFrame:SetFrameStrata("HIGH")
+			InteractionCinematicEffectsFrame:SetFrameLevel(0)
 
 			--------------------------------
 
-			local Frame = InteractionEffectFrame
+			local Frame = InteractionCinematicEffectsFrame
 
 			--------------------------------
 
@@ -67,7 +67,7 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionEffectFrame
+	local Frame = InteractionCinematicEffectsFrame
 	local Callback = NS.Script
 
 	--------------------------------

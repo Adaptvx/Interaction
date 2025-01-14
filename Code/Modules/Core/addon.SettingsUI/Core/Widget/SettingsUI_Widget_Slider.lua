@@ -6,12 +6,12 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a clickable Slider. Child Frames: Slider, Slider Label, Label
-function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFunc, finishFunc, setFunc, getFunc, subcategory, tooltipText, tooltipImage, tooltipImageType, hidden, locked)
+function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFunc, finishFunc, setFunc, getFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
 	local OffsetX = 0
 
 	--------------------------------
 
-	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipImage, tooltipImageType, hidden, locked)
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
 
 	--------------------------------
 
@@ -64,9 +64,10 @@ function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFun
 		end
 
 		do -- TEXT
-			Frame.SliderFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+			Frame.SliderFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 14, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
 			Frame.SliderFrame.Text:SetSize(Frame.SliderFrame:GetWidth(), Frame.Container:GetHeight())
-			Frame.SliderFrame.Text:SetPoint("CENTER", Frame.SliderFrame, 0, 5)
+			Frame.SliderFrame.Text:SetPoint("CENTER", Frame.SliderFrame, 0, 7.5)
+			Frame.SliderFrame.Text:SetAlpha(.75)
 		end
 
 		do -- EVENTS
