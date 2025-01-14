@@ -46,13 +46,13 @@ local function Load()
 		-- APPEARANCE
 		L["Title - Theme"] = "Тема"
 		L["Range - Main Theme"] = "Основная тема"
-		L["Range - Main Theme - Tooltip"] = "Устанавливает общую тему пользовательского интерфейса.\n\nПо умолчанию: День.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Dynamic" .. addon.Theme.Settings.Tooltip_Text_Note .. " option sets the main theme according to in-game day/night cycle.|r"
+		L["Range - Main Theme - Tooltip"] = "Устанавливает общую тему пользовательского интерфейса.\n\nПо умолчанию: День.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Динамичная" .. addon.Theme.Settings.Tooltip_Text_Note .. " настройка устанавливает основную тему в соответствии с игровым циклом день/ночь.|r"
 		L["Range - Main Theme - Day"] = "ДЕНЬ"
 		L["Range - Main Theme - Night"] = "НОЧЬ"
-		L["Range - Main Theme - Dynamic"] = "DYNAMIC"
+		L["Range - Main Theme - Dynamic"] = "ДИНАМИЧНАЯ"
 		L["Range - Dialog Theme"] = "Тема диалога"
-		L["Range - Dialog Theme - Tooltip"] = "Устанавливает тему пользовательского интерфейса диалогового окна НПС.\n\nDefault: Match.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Match" .. addon.Theme.Settings.Tooltip_Text_Note .. " option sets the dialog theme to match the main theme.|r"
-		L["Range - Dialog Theme - Auto"] = "MATCH"
+		L["Range - Dialog Theme - Tooltip"] = "Устанавливает тему пользовательского интерфейса диалогового окна НПС.\n\nПо умолчанию: Соответствие.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Соответствие" .. addon.Theme.Settings.Tooltip_Text_Note .. " настройка задает тему диалога в соответствии с основной темой.|r"
+		L["Range - Dialog Theme - Auto"] = "СООТВЕТСТВИЕ"
 		L["Range - Dialog Theme - Day"] = "ДЕНЬ"
 		L["Range - Dialog Theme - Night"] = "НОЧЬ"
 		L["Range - Dialog Theme - Rustic"] = "ПРОСТОЙ"
@@ -100,10 +100,10 @@ local function Load()
 		L["Range - Cinematic - Balanced"] = "СБАЛАНСИРОВАННЫЙ"
 		L["Range - Cinematic - Custom"] = "ПОЛЬЗОВАТЕЛЬСКИЙ"
 		L["Checkbox - Zoom"] = "Увеличение"
-		L["Range - Zoom / Min Distance"] = "Min Distance"
-		L["Range - Zoom / Min Distance - Tooltip"] = "If the current zoom is under this threshold, the camera will zoom to this level."
-		L["Range - Zoom / Max Distance"] = "Max Distance"
-		L["Range - Zoom / Max Distance - Tooltip"] = "If the current zoom is above this threshold, the camera will zoom to this level."
+		L["Range - Zoom / Min Distance"] = "Минимальное расстояние"
+		L["Range - Zoom / Min Distance - Tooltip"] = "Если текущий зум ниже этого порога, камера будет увеличивать изображение до этого уровня."
+		L["Range - Zoom / Max Distance"] = "Макс. расстояние"
+		L["Range - Zoom / Max Distance - Tooltip"] = "Если текущий зум превышает этот порог, камера будет увеличивать изображение до этого уровня."
 		L["Checkbox - Zoom / Pitch"] = "Отрегулируйте вертикальный угол"
 		L["Checkbox - Zoom / Pitch - Tooltip"] = "Включить регулировку угла наклона камеры по вертикали."
 		L["Range - Zoom / Pitch / Level"] = "Макс. угол"
@@ -132,8 +132,8 @@ local function Load()
 		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Запретить фокусировку по оси Y."
 		L["Checkbox - Vignette"] = "Виньетка"
 		L["Checkbox - Vignette - Tooltip"] = "Уменьшает яркость краев."
-		L["Checkbox - Vignette / Gradient"] = "Gradient"
-		L["Checkbox - Vignette / Gradient - Tooltip"] = "Reduce brightness behind gossip and quest interface elements."
+		L["Checkbox - Vignette / Gradient"] = "Градиент"
+		L["Checkbox - Vignette / Gradient - Tooltip"] = "Уменьшить яркость элементов интерфейса сплетен и заданий."
 
 		-- PLAYBACK
 		L["Title - Pace"] = "Шаг"
@@ -200,10 +200,10 @@ local function Load()
 		L["Keybind - PC / Keybind / Next"] = "Следующий"
 		L["Keybind - PC / Keybind / Next - Tooltip"] = "Следующая комбинация клавиш диалога.\n\nПо умолчанию: E."
 		L["Keybind - PC / Keybind / Progress"] = "Прогресс"
-		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Keybind for:\n- Skip\n- Accept\n- Continue\n- Complete\n\nDefault: SPACE."
-		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Use Interact Key" .. addon.Theme.Settings.Tooltip_Text_Warning .. " option must be disabled to adjust this keybind.|r"
-		L["Keybind - PC / Keybind / Quest Next Reward"] = "Next Reward"
-		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Keybind to select the next quest reward.\n\nDefault: TAB."
+		L["Keybind - PC / Keybind / Progress - Tooltip"] = "Сочетание клавиш для:\n- Пропуск\n- Принять\n- Продолжить\n- Завершить\n\nПо умолчанию: ПРОБЕЛ."
+		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Использовать сочетание клавиш" .. addon.Theme.Settings.Tooltip_Text_Warning .. " для настройки этой привязки клавиш необходимо отключить эту опцию.|r"
+		L["Keybind - PC / Keybind / Quest Next Reward"] = "Следующая награда"
+		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Сочетание клавиш для выбора следующей награды за задание.\n\nПо умолчанию: TAB."
 		L["Title - Controller"] = "Контроллер"
 		L["Title - Controller / Controller"] = "Контроллер"
 
@@ -292,7 +292,7 @@ local function Load()
 		L["Readable - Library - Notification - Saved To Library"] = "Сохранено в библиотеке"
 
 		-- TOOLTIP
-		L["Readable - Tooltip - Change Page"] = "Scroll to change pages."
+		L["Readable - Tooltip - Change Page"] = "Прокрутите, чтобы сменить страницу."
 	end
 
 	--------------------------------
@@ -308,7 +308,7 @@ local function Load()
 		L["InteractionQuestFrame - Accept - Auto Accept"] = "Автоматически принято"
 		L["InteractionQuestFrame - Accept"] = "Принять"
 		L["InteractionQuestFrame - Decline"] = "Отклонить"
-		L["InteractionQuestFrame - Goodbye"] = "Попрощаться"
+		L["InteractionQuestFrame - Goodbye"] = "До встречи"
 		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Понятно"
 		L["InteractionQuestFrame - Continue"] = "Продолжить"
 		L["InteractionQuestFrame - In Progress"] = "В ходе выполнения"
@@ -328,7 +328,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionGossipFrame - Close"] = "Попрощаться"
+		L["InteractionGossipFrame - Close"] = "До встречи"
 	end
 
 	--------------------------------
@@ -343,10 +343,10 @@ local function Load()
 		L["ControlGuide - Continue"] = "Продолжить"
 		L["ControlGuide - Complete"] = "Завершенно"
 		L["ControlGuide - Decline"] = "Отклонить"
-		L["ControlGuide - Goodbye"] = "Попрощаться"
+		L["ControlGuide - Goodbye"] = "До встречи"
 		L["ControlGuide - Got it"] = "Понятно"
 		L["ControlGuide - Gossip Option Interact"] = "Выбор настроек"
-		L["ControlGuide - Quest Next Reward"] = "Next Reward"
+		L["ControlGuide - Quest Next Reward"] = "Следующая награда"
 	end
 
 	--------------------------------
