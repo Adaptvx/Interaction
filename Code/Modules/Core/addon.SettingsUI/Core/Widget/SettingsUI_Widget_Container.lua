@@ -6,12 +6,12 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a container. Child Frames: Icon (if applicable), Container
-function NS.Widgets:CreateContainer(parent, subcategory, background, height, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageSize, hidden, locked)
-	local OffsetX = 0
-	local IndentationOffsetX = 0
+function NS.Widgets:CreateContainer(parent, subcategory, background, height, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageSize, hidden, locked, opacity)
+	local INDENTATION = height or NS.Variables:RATIO(5)
+	local PADDING = math.ceil(NS.Variables:RATIO(7))
 
-	local IndentationOffset = height or NS.Variables:RATIO(5)
-	local Padding = math.ceil(NS.Variables:RATIO(7))
+	local offsetX = 0
+	local offsetX_Indentation = 0
 
 	--------------------------------
 
@@ -19,6 +19,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	Frame:SetParent(parent)
 	Frame:SetSize(parent:GetWidth(), height or NS.Variables:RATIO(5))
 	Frame:SetPoint("TOP", parent)
+	Frame:SetAlpha(opacity or 1)
 
 	--------------------------------
 
@@ -26,223 +27,227 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	Frame.TEXTURE_Background = nil
 	Frame.COLOR_Background = nil
 
-	local function UpdateTheme()
-		if addon.Theme.IsDarkTheme then
-			Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark.png"
-			Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-			Frame.COLOR_Background = addon.Theme.Settings.Tertiary_DarkTheme
-		else
-			Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory.png"
-			Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-			Frame.COLOR_Background = addon.Theme.Settings.Tertiary_LightTheme
-		end
-	end
-
-	UpdateTheme()
-	addon.API:RegisterThemeUpdate(UpdateTheme, 0)
-
 	--------------------------------
 
-	Frame.Enter = function(skipAnimation)
-		if background then
-			if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
-				if skipAnimation then
-					Frame.Background:SetAlpha(1)
-				else
-					Frame.Background:SetAlpha(1)
-				end
-			end
-		end
-
-		if tooltipText then
-			if Frame:IsVisible() and addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
-				if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
-					local text = tooltipText
-					if tooltipTextDynamic and tooltipTextDynamic() then
-						text = tooltipTextDynamic()
-					end
-
-					--------------------------------
-
-					NS.Script:ShowTooltip(Frame, text, tooltipImage, tooltipImageSize, skipAnimation)
-				end
-			end
-		end
-
-		if Frame.Button then
-			Frame.Button.Enter()
-		end
-	end
-
-	Frame.Leave = function(skipAnimation, keepTooltip)
-		if background then
-			if skipAnimation then
-				Frame.Background:SetAlpha(0)
+	do -- THEME
+		local function UpdateTheme()
+			if addon.Theme.IsDarkTheme then
+				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark.png"
+				Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_DarkTheme
 			else
-				Frame.Background:SetAlpha(0)
+				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory.png"
+				Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_LightTheme
 			end
 		end
 
-		if tooltipText then
-			if Frame:IsVisible() then
-				if not keepTooltip then
-					NS.Script:HideTooltip()
+		UpdateTheme()
+		addon.API:RegisterThemeUpdate(UpdateTheme, 0)
+	end
+
+	do -- TOOLTIP
+		Frame.Enter = function(skipAnimation)
+			if background then
+				if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
+					if skipAnimation then
+						Frame.Background:SetAlpha(1)
+					else
+						Frame.Background:SetAlpha(1)
+					end
 				end
 			end
-		end
 
-		if Frame.Button then
-			Frame.Button.Leave()
-		end
-	end
+			if tooltipText then
+				if Frame:IsVisible() and addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
+					if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
+						local text = tooltipText
+						if tooltipTextDynamic and tooltipTextDynamic() then
+							text = tooltipTextDynamic()
+						end
 
-	if background or tooltipText then
-		Frame.hoverFrame = AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame,
-			function()
-				Frame.Enter()
-			end,
-			function()
-				Frame.Leave()
+						--------------------------------
+
+						NS.Script:ShowTooltip(Frame, text, tooltipImage, tooltipImageSize, skipAnimation)
+					end
+				end
 			end
-		, nil, nil)
+
+			if Frame.Button then
+				Frame.Button.Enter()
+			end
+		end
+
+		Frame.Leave = function(skipAnimation, keepTooltip)
+			if background then
+				if skipAnimation then
+					Frame.Background:SetAlpha(0)
+				else
+					Frame.Background:SetAlpha(0)
+				end
+			end
+
+			if tooltipText then
+				if Frame:IsVisible() then
+					if not keepTooltip then
+						NS.Script:HideTooltip()
+					end
+				end
+			end
+
+			if Frame.Button then
+				Frame.Button.Leave()
+			end
+		end
+
+		if background or tooltipText then
+			Frame.hoverFrame = AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame,
+				function()
+					Frame.Enter()
+				end,
+				function()
+					Frame.Leave()
+				end
+				, nil, nil)
+		end
 	end
 
-	--------------------------------
+	do -- ELEMENTS
+		do -- ICON
+			if subcategory and subcategory >= 1 then
+				-- INDENTATION
+				offsetX_Indentation = (INDENTATION) * (subcategory - 1)
 
-	do -- ICON
-		if subcategory and subcategory >= 1 then
-			-- INDENTATION
-			IndentationOffsetX = (IndentationOffset) * (subcategory - 1)
+				-- FRAME
+				for x = 1, subcategory do
+					Frame["Icon" .. x], Frame["IconTexture" .. x] = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, Frame:GetFrameStrata(), Frame.TEXTURE_Subcategory)
+					Frame["Icon" .. x]:SetSize(height or 45, height or 52.5)
+					Frame["Icon" .. x]:SetPoint("LEFT", Frame, 7.5 + (INDENTATION) * (x - 1), 0)
 
-			-- FRAME
-			for x = 1, subcategory do
-				Frame["Icon" .. x], Frame["IconTexture" .. x] = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, Frame:GetFrameStrata(), Frame.TEXTURE_Subcategory)
-				Frame["Icon" .. x]:SetSize(height or 45, height or 52.5)
-				Frame["Icon" .. x]:SetPoint("LEFT", Frame, 7.5 + (IndentationOffset) * (x - 1), 0)
+					-- THEME
+					addon.API:RegisterThemeUpdate(function()
+						Frame["IconTexture" .. x]:SetTexture(Frame.TEXTURE_Subcategory)
+					end, 5)
+				end
+
+				-- OFFSET
+				offsetX = Frame["Icon1"]:GetWidth() + 5 + offsetX_Indentation
+			end
+		end
+
+		do -- CONTAINER
+			Frame.Container = CreateFrame("Frame")
+			Frame.Container:SetParent(Frame)
+			Frame.Container:SetSize(Frame:GetWidth() - offsetX - PADDING, Frame:GetHeight() - PADDING)
+			Frame.Container:SetPoint("CENTER", Frame, offsetX / 2, 0)
+		end
+
+		do -- BACKGROUND
+			if background then
+				Frame.Background, Frame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
+				Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
+				Frame.Background:SetPoint("CENTER", Frame)
+				Frame.Background:SetFrameLevel(0)
+				Frame.Background:SetAlpha(0)
 
 				-- THEME
 				addon.API:RegisterThemeUpdate(function()
-					Frame["IconTexture" .. x]:SetTexture(Frame.TEXTURE_Subcategory)
+					Frame.backgroundTexture:SetVertexColor(Frame.COLOR_Background.r, Frame.COLOR_Background.g, Frame.COLOR_Background.b, Frame.COLOR_Background.a)
 				end, 5)
 			end
-
-			-- OFFSET
-			OffsetX = Frame["Icon1"]:GetWidth() + 5 + IndentationOffsetX
 		end
-	end
 
-	do -- CONTAINER
-		Frame.Container = CreateFrame("Frame")
-		Frame.Container:SetParent(Frame)
-		Frame.Container:SetSize(Frame:GetWidth() - OffsetX - Padding, Frame:GetHeight() - Padding)
-		Frame.Container:SetPoint("CENTER", Frame, OffsetX / 2, 0)
-	end
+		do -- TEXT
+			local Padding = 10
 
-	do -- BACKGROUND
-		if background then
-			Frame.Background, Frame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
-			Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
-			Frame.Background:SetPoint("CENTER", Frame)
-			Frame.Background:SetFrameLevel(0)
-			Frame.Background:SetAlpha(0)
-
-			-- THEME
-			addon.API:RegisterThemeUpdate(function()
-				Frame.backgroundTexture:SetVertexColor(Frame.COLOR_Background.r, Frame.COLOR_Background.g, Frame.COLOR_Background.b, Frame.COLOR_Background.a)
-			end, 5)
-		end
-	end
-
-	do -- TEXT
-		local Padding = 10
-
-		Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
-		Frame.Text:SetSize(Frame.Container:GetWidth() - 150 - Padding, Frame.Container:GetHeight())
-		Frame.Text:SetPoint("LEFT", Frame.Container, Padding / 2, 0)
-		Frame.Text:SetAlpha(.75)
-
-		if subcategory and subcategory >= 1 then
+			Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+			Frame.Text:SetSize(Frame.Container:GetWidth() - 150 - Padding, Frame.Container:GetHeight())
+			Frame.Text:SetPoint("LEFT", Frame.Container, Padding / 2, 0)
 			Frame.Text:SetAlpha(.75)
+
+			if subcategory and subcategory >= 1 then
+				Frame.Text:SetAlpha(.75)
+			end
 		end
 	end
 
-	--------------------------------
-
-	local function UpdateState(PreventRepeat)
-		if hidden then
-			if not InteractionSettingsFrame:IsVisible() then
-				return
-			end
-
-			--------------------------------
-
-			local SavedHidden = Frame.hidden
-			local Hidden = hidden()
-
-			if Hidden then
-				Frame.hidden = true
+	do -- STATE
+		local function UpdateState(PreventRepeat)
+			if hidden then
+				if not InteractionSettingsFrame:IsVisible() then
+					return
+				end
 
 				--------------------------------
 
-				Frame:SetAlpha(0)
-				Frame:Hide()
-			else
-				Frame.hidden = false
+				local SavedHidden = Frame.hidden
+				local Hidden = hidden()
+
+				if Hidden then
+					Frame.hidden = true
+
+					--------------------------------
+
+					Frame:SetAlpha(0)
+					Frame:Hide()
+				else
+					Frame.hidden = false
+
+					--------------------------------
+
+					Frame:SetAlpha(0)
+					Frame:Show()
+				end
 
 				--------------------------------
 
-				Frame:SetAlpha(0)
-				Frame:Show()
-			end
-
-			--------------------------------
-
-			InteractionSettingsFrame.Content.ScrollFrame.Update(PreventRepeat)
-			addon.Libraries.AceTimer:ScheduleTimer(function()
 				InteractionSettingsFrame.Content.ScrollFrame.Update(PreventRepeat)
-			end, .25)
-		end
-
-		if locked then
-			if not InteractionSettingsFrame:IsVisible() then
-				return
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					InteractionSettingsFrame.Content.ScrollFrame.Update(PreventRepeat)
+				end, .25)
 			end
-
-			--------------------------------
-
-			local locked = locked()
 
 			if locked then
-				Frame.Container:SetAlpha(.25)
-				Frame:EnableMouse(false)
-
-				--------------------------------
-
-				if Frame.KeybindButton then
-					Frame.KeybindButton:EnableMouse(false)
+				if not InteractionSettingsFrame:IsVisible() then
+					return
 				end
-			else
-				Frame.Container:SetAlpha(1)
-				Frame:EnableMouse(true)
 
 				--------------------------------
 
-				if Frame.KeybindButton then
-					Frame.KeybindButton:EnableMouse(true)
+				local locked = locked()
+
+				if locked then
+					Frame.Container:SetAlpha(.25)
+					Frame:EnableMouse(false)
+
+					--------------------------------
+
+					if Frame.KeybindButton then
+						Frame.KeybindButton:EnableMouse(false)
+					end
+				else
+					Frame.Container:SetAlpha(1)
+					Frame:EnableMouse(true)
+
+					--------------------------------
+
+					if Frame.KeybindButton then
+						Frame.KeybindButton:EnableMouse(true)
+					end
 				end
 			end
 		end
-	end
 
-	CallbackRegistry:Add("START_SETTING", function() UpdateState(true) end, 0)
-	CallbackRegistry:Add("SETTING_CHANGED", function()
-		if InteractionSettingsFrame:GetAlpha() > .5 then
-			UpdateState()
-		end
-	end, 0)
-	CallbackRegistry:Add("SETTING_TAB_CHANGED", function() UpdateState() end, 0)
-	CallbackRegistry:Add("START_INTERACTION", function() UpdateState() end, 2)
-	CallbackRegistry:Add("STOP_INTERACTION", function() UpdateState() end, 2)
+		CallbackRegistry:Add("START_SETTING", function() UpdateState(true) end, 0)
+		CallbackRegistry:Add("SETTING_CHANGED", function()
+			if InteractionSettingsFrame:GetAlpha() > .5 then
+				UpdateState()
+			end
+		end, 0)
+		CallbackRegistry:Add("SETTING_TAB_CHANGED", function() UpdateState() end, 0)
+		CallbackRegistry:Add("START_INTERACTION", function() UpdateState() end, 2)
+		CallbackRegistry:Add("STOP_INTERACTION", function() UpdateState() end, 2)
+	end
 
 	--------------------------------
 

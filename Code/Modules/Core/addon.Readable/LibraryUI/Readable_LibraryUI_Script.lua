@@ -560,7 +560,7 @@ function NS.LibraryUI.Script:Load()
 					--------------------------------
 
 					if playAnimation or playAnimation == nil then
-						AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.125 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
+						AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.075 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
 					else
 						Buttons[i]:SetAlpha(.75)
 					end

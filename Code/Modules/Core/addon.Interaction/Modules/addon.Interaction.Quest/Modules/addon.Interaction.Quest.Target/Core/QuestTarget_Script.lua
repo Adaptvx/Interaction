@@ -89,7 +89,7 @@ function NS.Script:Load()
                 --------------------------------
 
                 AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
-                AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 100, 75, "y")
+                AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -100, -75, "y")
             end
         end
 
@@ -123,13 +123,13 @@ function NS.Script:Load()
                 --------------------------------
 
                 if skipAnimation then
-                    local _, relativeTo, _, _, offsetY = Frame:GetPoint()
+                    local point, relativeTo, relativePoint, offsetX, offsetY = Frame:GetPoint()
 
                     Frame:SetAlpha(0)
-                    Frame:SetPoint("LEFT", relativeTo, 125, offsetY)
+                    Frame:SetPoint(point, relativeTo, offsetX, offsetY)
                 else
                     AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
-                    AdaptiveAPI.Animation:Move(Frame, 1, "LEFT", 75, 100, "y")
+                    AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -75, -100, "y")
                 end
             end
         end

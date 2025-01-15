@@ -20,13 +20,7 @@ function NS.Data:Load()
 
 			--------------------------------
 
-			local function Header()
-				local Title = NS.Widgets:CreateTitle(InteractionSettingsFrame.Sidebar.LegendScrollChildFrame, addon.Variables.PATH .. "Art/icon.png", 20)
-				table.insert(Widgets, Title)
-				Title.label:SetText("Interaction")
-			end
-
-			local function Options()
+			do -- OPTIONS
 				local function CreateOption(name, index)
 					local frame = NS.Widgets:CreateTabButton(InteractionSettingsFrame.Sidebar.LegendScrollChildFrame,
 						function(button)
@@ -40,12 +34,16 @@ function NS.Data:Load()
 					return frame
 				end
 
+				--------------------------------
+
 				CreateOption(L["Tab - Appearance"], 1)
 				CreateOption(L["Tab - Effects"], 2)
 				CreateOption(L["Tab - Playback"], 3)
 				CreateOption(L["Tab - Controls"], 4)
 				CreateOption(L["Tab - Gameplay"], 5)
 				CreateOption(L["Tab - More"], 6)
+
+				--------------------------------
 
 				InteractionSettingsFrame.Tab_Appearance = InteractionSettingsFrame.Content.ScrollFrame.CreateTab(1)
 				InteractionSettingsFrame.Tab_Effects = InteractionSettingsFrame.Content.ScrollFrame.CreateTab(2)
@@ -54,11 +52,6 @@ function NS.Data:Load()
 				InteractionSettingsFrame.Tab_Gameplay = InteractionSettingsFrame.Content.ScrollFrame.CreateTab(5)
 				InteractionSettingsFrame.Tab_More = InteractionSettingsFrame.Content.ScrollFrame.CreateTab(6)
 			end
-
-			--------------------------------
-
-			-- Header()
-			Options()
 
 			--------------------------------
 
@@ -89,12 +82,27 @@ function NS.Data:Load()
 			-- }
 
 			-- Title = {
-			--     name = "Default",
-			--     type = "Title",
-			--     order = 1,
-			--     hidden = function() return false end,
-			--     locked = function() return false end,
-			--     category = Default,
+			-- 	name = "Default",
+			-- 	tooltipImage = "",
+			-- 	tooltipText = nil,
+			-- 	tooltipTextDynamic = nil,
+			-- 	tooltipImageSize = nil,
+			-- 	type = "Title",
+			-- 	order = 1,
+			-- 	isSubtitle = false,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	category = Default,
+			-- }
+
+			-- Spacer = {
+			-- 	name = "Default",
+			-- 	type = "Spacer",
+			-- 	order = 1,
+			-- 	spacing = 1,
+			-- 	hidden = function() return false end,
+			-- 	locked = function() return false end,
+			-- 	category = Default,
 			-- }
 
 			-- Checkbox = {
@@ -2164,60 +2172,131 @@ function NS.Data:Load()
 			order = 1,
 			category = More,
 			args = {
-				Title_Audio = {
+				Group_Audio = {
 					name = L["Title - Audio"],
-					type = "Title",
+					type = "Group",
 					order = 2,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = More,
+					args = {
+						Title_Audio = {
+							name = L["Title - Audio"],
+							type = "Title",
+							order = 3,
+							hidden = function() return false end,
+							locked = function() return false end,
+							category = More,
+						},
+						Checkbox_Audio = {
+							name = L["Checkbox - Audio"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Audio - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 4,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 0,
+							category = More,
+							get = function() return INTDB.profile.INT_AUDIO end,
+							set = function(_, val)
+								INTDB.profile.INT_AUDIO = val
+							end,
+						},
+					}
 				},
-				Checkbox_Audio = {
-					name = L["Checkbox - Audio"],
-					tooltipImage = "",
-					tooltipText = L["Checkbox - Audio - Tooltip"],
-					tooltipTextDynamic = nil,
-					tooltipImageType = "Small",
-					type = "Checkbox",
-					order = 3,
-					hidden = function() return false end,
-					locked = function() return false end,
-					subcategory = 0,
-					category = More,
-					get = function() return INTDB.profile.INT_AUDIO end,
-					set = function(_, val)
-						INTDB.profile.INT_AUDIO = val
-					end,
-				},
-				Title_Settings = {
+				Group_Settings = {
 					name = L["Title - Settings"],
-					type = "Title",
-					order = 4,
-					hidden = function() return false end,
-					locked = function() return false end,
-					category = More,
-				},
-				Button_ResetSettings = {
-					name = L["Checkbox - Settings / Reset Settings"],
-					tooltipImage = "",
-					tooltipText = L["Checkbox - Settings / Reset Settings - Tooltip"],
-					tooltipTextDynamic = nil,
-					tooltipImageType = "Small",
-					type = "Button",
+					type = "Group",
 					order = 5,
 					hidden = function() return false end,
 					locked = function() return false end,
-					subcategory = 0,
 					category = More,
-					set = function()
-						NS.Utils.ConfirmationPrompt(L["Prompt - Reset Settings"], L["Prompt - Reset Settings Button 1"], L["Prompt - Reset Settings Button 2"], function()
-							addon.Database:ResetSettings()
+					args = {
+						Title_Settings = {
+							name = L["Title - Settings"],
+							type = "Title",
+							order = 6,
+							hidden = function() return false end,
+							locked = function() return false end,
+							category = More,
+						},
+						Button_ResetSettings = {
+							name = L["Checkbox - Settings / Reset Settings"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Settings / Reset Settings - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Small",
+							type = "Button",
+							order = 7,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 0,
+							category = More,
+							set = function()
+								NS.Utils.ConfirmationPrompt(L["Prompt - Reset Settings"], L["Prompt - Reset Settings Button 1"], L["Prompt - Reset Settings Button 2"], function()
+									addon.Database:ResetSettings()
 
-							--------------------------------
+									--------------------------------
 
-							ReloadUI()
-						end)
-					end,
+									ReloadUI()
+								end)
+							end,
+						}
+					}
+				},
+				Group_Credits = {
+					name = L["Title - Credits"],
+					type = "Group",
+					order = 8,
+					opacity = .5,
+					hidden = function() return false end,
+					locked = function() return false end,
+					category = More,
+					args = {
+						Spacer_Credits_Header = {
+							name = L["Title - Credits"],
+							type = "Spacer",
+							order = 9,
+							spacing = 2,
+							hidden = function() return false end,
+							locked = function() return false end,
+							category = More,
+						},
+						Title_Credits = {
+							name = L["Title - Credits"],
+							type = "Title",
+							order = 10,
+							hidden = function() return false end,
+							locked = function() return false end,
+							category = More,
+						},
+						Title_Credits_ZamestoTV = {
+							name = L["Title - Credits / ZamestoTV"],
+							tooltipImage = NS.Variables.TOOLTIP_PATH .. "Acknowledgement.png",
+							tooltipText = L["Title - Credits / ZamestoTV - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Large",
+							type = "Title",
+							order = 11,
+							isSubtitle = true,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 0,
+							category = More,
+						},
+						Spacer_Credits_Footer = {
+							name = L["Title - Credits"],
+							type = "Spacer",
+							order = 12,
+							spacing = 1,
+							hidden = function() return false end,
+							locked = function() return false end,
+							category = More,
+						}
+					}
 				}
 			}
 		}
@@ -2293,6 +2372,7 @@ function NS.Data:Load()
 							local TooltipImageType = CurrentElement.tooltipImageType
 							local Hidden = CurrentElement.hidden
 							local Locked = CurrentElement.locked
+							local Opacity = CurrentElement.opacity
 
 							-- VALUES
 							local SetCriteria = CurrentElement.setCriteria
@@ -2301,7 +2381,10 @@ function NS.Data:Load()
 							local Get = CurrentElement.get
 
 							-- TITLE
-							local Icon = CurrentElement.icon
+							local IsSubtitle = CurrentElement.isSubtitle
+
+							-- SPACER
+							local Spacing = CurrentElement.spacing
 
 							-- RANGE
 							local Min = CurrentElement.min
@@ -2325,8 +2408,15 @@ function NS.Data:Load()
 								end
 							end
 
-							local function SetType(frame)
+							local function SetInfo(frame)
 								frame.Type = Type
+
+								frame.TooltipText = TooltipText
+								frame.TooltipTextDynamic = TooltipTextDynamic
+								frame.TooltipImage = TooltipImage
+								frame.TooltipImageType = TooltipImageType
+
+								frame.Opacity = Opacity or 1
 							end
 
 							local function SetWidget(frame)
@@ -2342,11 +2432,12 @@ function NS.Data:Load()
 								frame = NS.Widgets:CreateGroup(
 									Category,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2354,16 +2445,34 @@ function NS.Data:Load()
 								local frame
 								frame = NS.Widgets:CreateTitle(
 									Category,
-									Icon,
-									17.5,
+									IsSubtitle,
+									IsSubtitle and 15 or 17.5,
 									Subcategory,
+									TooltipText,
+									TooltipTextDynamic,
+									TooltipImage,
+									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Label:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
+								SetWidget(frame)
+							end
+
+							if Type == "Spacer" then
+								local frame
+								frame = NS.Widgets:CreateSpacer(
+									Category,
+									Spacing,
+									Subcategory
+								)
+
+								SetToParent(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2390,12 +2499,13 @@ function NS.Data:Load()
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Button:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2426,12 +2536,13 @@ function NS.Data:Load()
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Text:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2466,12 +2577,13 @@ function NS.Data:Load()
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Text:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2506,12 +2618,13 @@ function NS.Data:Load()
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Text:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 
@@ -2549,12 +2662,13 @@ function NS.Data:Load()
 									TooltipImage,
 									TooltipImageType,
 									Hidden,
-									Locked
+									Locked,
+									Opacity
 								)
 								frame.Text:SetText(Name)
 
 								SetToParent(frame)
-								SetType(frame)
+								SetInfo(frame)
 								SetWidget(frame)
 							end
 						end

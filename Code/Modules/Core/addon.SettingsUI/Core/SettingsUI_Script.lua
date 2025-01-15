@@ -125,8 +125,8 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				local function TabButton()
-					local function ResetAll()
+				do -- TAB BUTTON
+					do -- RESET ALL
 						local widgetPool = Frame.Sidebar.Legend.widgetPool
 
 						--------------------------------
@@ -139,18 +139,13 @@ function NS.Script:Load()
 						end
 					end
 
-					local function SetCurrent()
+					do -- SET
 						tabButton.SetActive(true)
 					end
-
-					--------------------------------
-
-					ResetAll()
-					SetCurrent()
 				end
 
-				local function Tab()
-					local function HideAll()
+				do -- TAB
+					do -- HIDE ALL
 						for i = 1, #tabPool do
 							local currentTab = tabPool[i]
 							local elements = currentTab.widgetPool
@@ -167,25 +162,18 @@ function NS.Script:Load()
 						end
 					end
 
-					local function ShowCurrent()
+					do -- SHOW
 						tab:Show()
+
+						--------------------------------
+
 						AdaptiveAPI.Animation:Fade(tab, .25, 0, 1)
 					end
 
 					--------------------------------
 
-					HideAll()
-					ShowCurrent()
-
-					--------------------------------
-
 					Frame.Content.ScrollFrame.tabIndex = tabIndex
 				end
-
-				--------------------------------
-
-				TabButton()
-				Tab()
 
 				--------------------------------
 
@@ -216,16 +204,14 @@ function NS.Script:Load()
 						Frame.ShowWithAnimation()
 					end
 
-					--------------------------------
-
-					Callback:SelectTab(Frame.Sidebar.Legend.widgetPool[1].Button, 1)
-
-					--------------------------------
-
 					if focus then
 						addon.HideUI.Variables.Lock = true
 						addon.HideUI.Script:HideUI(true)
 					end
+
+					--------------------------------
+
+					Callback:SelectTab(Frame.Sidebar.Legend.widgetPool[1].Button, 1)
 
 					--------------------------------
 
@@ -248,8 +234,6 @@ function NS.Script:Load()
 					else
 						Frame.HideWithAnimation()
 					end
-
-					--------------------------------
 
 					if focus or addon.HideUI.Variables.Lock then
 						addon.HideUI.Variables.Lock = false
@@ -294,89 +278,91 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				local WidgetPool = Frame.Content.ScrollFrame.tabPool[Frame.Content.ScrollFrame.tabIndex].widgetPool
+				local widgetPool = Frame.Content.ScrollFrame.tabPool[Frame.Content.ScrollFrame.tabIndex].widgetPool
 
-				if not WidgetPool then
+				if not widgetPool then
 					return
 				end
 
 				--------------------------------
 
-				local TotalHeight = 0
-				local Spacing = 0
-				for i = 1, #WidgetPool do
-					local Widget = WidgetPool[i]
-					local Widget_Type = Widget.Type
-					local Widget_Height = Widget:GetHeight()
-					local Widget_Visible = Widget:IsVisible()
+				local totalHeight = 0
+				local spacing = 0
+
+				for i = 1, #widgetPool do
+					local widget = widgetPool[i]
+					local widget_type = widget.Type
+					local widget_opacity = widget.Opacity
+					local widget_height = widget:GetHeight()
+					local widget_visible = widget:IsVisible()
 
 					--------------------------------
 
-					if Widget_Visible then
-						Widget:SetAlpha(1)
+					if widget_visible then
+						widget:SetAlpha(widget_opacity)
 
 						--------------------------------
 
-						Widget:ClearAllPoints()
-						Widget:SetPoint("TOP", Frame.Content.ScrollChildFrame, 0, -TotalHeight)
+						widget:ClearAllPoints()
+						widget:SetPoint("TOP", Frame.Content.ScrollChildFrame, 0, -totalHeight)
 
 						--------------------------------
 
-						if Widget_Type ~= "Group" then
-							TotalHeight = TotalHeight + Widget_Height + Spacing
+						if widget_type ~= "Group" then
+							totalHeight = totalHeight + widget_height + spacing
 						end
 					else
-						Widget:SetAlpha(0)
+						widget:SetAlpha(0)
 					end
 				end
 
 				--------------------------------
 
-				Frame.Content.ScrollChildFrame:SetHeight(TotalHeight)
+				Frame.Content.ScrollChildFrame:SetHeight(totalHeight)
 			end
 
 			Frame.Sidebar.Legend.Update = function()
-				local WidgetPool = Frame.Sidebar.Legend.widgetPool
+				local widgetPool = Frame.Sidebar.Legend.widgetPool
 
-				if WidgetPool == nil then
+				if not widgetPool then
 					return
 				end
 
 				--------------------------------
 
-				local TotalHeight = 0
-				local Spacing = .5
+				local totalHeight = 0
+				local spacing = .5
 
-				for i = 1, #WidgetPool do
-					local Widget = WidgetPool[i]
-					local Widget_Height = Widget:GetHeight()
-					local Widget_Visible = Widget:GetAlpha() > 0
+				for i = 1, #widgetPool do
+					local widget = widgetPool[i]
+					local widget_height = widget:GetHeight()
+					local widget_visible = widget:GetAlpha() > 0
 
-					if Widget_Visible then
-						Widget:Show()
-
-						--------------------------------
-
-						Widget:ClearAllPoints()
-						Widget:SetPoint("TOP", Frame.Sidebar.LegendScrollChildFrame, 0, -TotalHeight)
+					if widget_visible then
+						widget:Show()
 
 						--------------------------------
 
-						TotalHeight = TotalHeight + Widget_Height + Spacing
+						widget:ClearAllPoints()
+						widget:SetPoint("TOP", Frame.Sidebar.LegendScrollChildFrame, 0, -totalHeight)
+
+						--------------------------------
+
+						totalHeight = totalHeight + widget_height + spacing
 					end
 				end
 
 				--------------------------------
 
-				Frame.Sidebar.LegendScrollChildFrame:SetHeight(TotalHeight)
+				Frame.Sidebar.LegendScrollChildFrame:SetHeight(totalHeight)
 
 				--------------------------------
 
-				local IsController = (addon.Input.Variables.IsController or addon.Input.Variables.SimulateController)
+				local isController = (addon.Input.Variables.IsController or addon.Input.Variables.SimulateController)
 
-				Frame.Sidebar.Legend.GamePad:SetShown(IsController)
-				if IsController then
-					Frame.Sidebar.Legend:SetHeight(TotalHeight)
+				Frame.Sidebar.Legend.GamePad:SetShown(isController)
+				if isController then
+					Frame.Sidebar.Legend:SetHeight(totalHeight)
 				end
 			end
 		end
@@ -481,5 +467,7 @@ function NS.Script:Load()
 	-- SETUP
 	--------------------------------
 
-	Callback:HideSettingsUI(true)
+	do
+		Callback:HideSettingsUI(true)
+	end
 end

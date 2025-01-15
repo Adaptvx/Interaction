@@ -6,12 +6,12 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a keybind button. Child Frames: KeybindButton
-function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
+function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 	local OffsetX = 0
 
 	--------------------------------
 
-	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 
 	--------------------------------
 

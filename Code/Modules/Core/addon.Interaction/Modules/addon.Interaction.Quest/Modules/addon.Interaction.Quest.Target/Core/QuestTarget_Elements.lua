@@ -19,7 +19,7 @@ function NS.Elements:Load()
 			InteractionQuestFrame.Target = CreateFrame("Frame", "$parent.Target", InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetParent(InteractionQuestFrame)
 			InteractionQuestFrame.Target:SetSize(NS.Variables:RATIO(3), NS.Variables:RATIO(3))
-			InteractionQuestFrame.Target:SetPoint("LEFT", InteractionQuestFrame, -(InteractionQuestFrame.Target:GetWidth() / 2 + NS.Variables:RATIO(4)), 75)
+			InteractionQuestFrame.Target:SetPoint("TOPLEFT", InteractionQuestFrame, -(InteractionQuestFrame.Target:GetWidth() / 2 + NS.Variables:RATIO(4)), -75)
 			InteractionQuestFrame.Target:SetFrameStrata("FULLSCREEN")
 			InteractionQuestFrame.Target:SetFrameLevel(999)
 

@@ -243,6 +243,10 @@ local function Load()
 		L["Title - Settings"] = "Настройки"
 		L["Checkbox - Settings / Reset Settings"] = "Сбросить все настройки"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Сбрасывает настройки до значений по умолчанию.\n\nПо умолчанию: Выкл."
+
+		L["Title - Credits"] = "Acknowledgements"
+		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Translator - Russian"
+		L["Title - Credits / ZamestoTV - Tooltip"] = "Special thanks to ZamestoTV for the Russian translations!"
 	end
 
 	--------------------------------

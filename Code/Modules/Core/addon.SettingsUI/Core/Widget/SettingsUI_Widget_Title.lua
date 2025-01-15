@@ -5,38 +5,27 @@ local NS = addon.SettingsUI
 
 --------------------------------
 
--- Creates a Title Container. Child Frames: Icon, IconTexture, Label, Divider, Divider Texture
-function NS.Widgets:CreateTitle(parent, iconPath, textSize, subcategory, hidden, locked)
+-- Creates a Title Container. Child Frames: Label, Divider, Divider Texture
+function NS.Widgets:CreateTitle(parent, isSubtitle, textSize, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageSize, hidden, locked, opacity)
+	--------------------------------
 
-    --------------------------------
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, tooltipText and true or false, isSubtitle and 35 or 45, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageSize, hidden, locked, opacity)
 
-    local Frame = NS.Widgets:CreateContainer(parent, subcategory, false, 45, nil, nil, nil, nil, hidden, locked)
-
-    --------------------------------
-
-	do -- ICON
-        Frame.Icon, Frame.iconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", iconPath)
-        Frame.Icon:SetSize(Frame:GetHeight() - 10, Frame:GetHeight() - 10)
-        Frame.Icon:SetPoint("LEFT", Frame, 5, 0)
-    end
+	--------------------------------
 
 	do -- LABEL
-        Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+		local width = isSubtitle and Frame.Container:GetWidth() or Frame:GetWidth() - 10
+        local height = isSubtitle and Frame.Container:GetHeight() or Frame:GetHeight()
+        local offsetX = isSubtitle and 12.5 or 0
+        local offsetY = 0
 
-		--------------------------------
+		Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+		Frame.Label:SetSize(width, height)
+		Frame.Label:SetPoint("LEFT", Frame.Container, offsetX, offsetY)
+		Frame.Label:SetAlpha(1)
+	end
 
-        if iconPath then
-            Frame.Label:SetSize(Frame:GetWidth() - Frame.Icon:GetWidth() - 5, Frame:GetHeight())
-            Frame.Label:SetPoint("LEFT", Frame.Container, Frame.Icon:GetWidth() + 5, 0)
-            Frame.Label:SetAlpha(1)
-        else
-            Frame.Label:SetSize(Frame:GetWidth() - 10, Frame:GetHeight())
-            Frame.Label:SetPoint("LEFT", Frame.Container)
-            Frame.Label:SetAlpha(1)
-        end
-    end
+	--------------------------------
 
-    --------------------------------
-
-    return Frame
+	return Frame
 end

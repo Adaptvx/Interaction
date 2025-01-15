@@ -142,8 +142,8 @@ function NS.Navigation:Load()
 
 				for i = 1, #Buttons do
 					table.insert(ChildrenFrames, Buttons[i])
-					table.insert(ChildrenFrames, Buttons[i].ButtonContainer.Button_Delete)
-					table.insert(ChildrenFrames, Buttons[i].ButtonContainer.Button_Open)
+					table.insert(ChildrenFrames, Buttons[i].Content.ButtonContainer.Button_Delete)
+					table.insert(ChildrenFrames, Buttons[i].Content.ButtonContainer.Button_Open)
 				end
 
 				--------------------------------
@@ -253,9 +253,9 @@ function NS.Navigation:Load()
 								-- BUTTON
 								Script:SetFrameRelatives({
 									["frame"] = Buttons[button],
-									["children"] = { Buttons[button].ButtonContainer.Button_Delete, Buttons[button].ButtonContainer.Button_Open },
+									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Parent.CloseButton,
 									["relativeBottom"] = Buttons[button + 1],
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
@@ -265,19 +265,19 @@ function NS.Navigation:Load()
 
 								-- BUTTON DELETE
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Delete,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Open,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["relativeTop"] = Parent.CloseButton,
 									["relativeBottom"] = Buttons[button + 1]
 								})
 
 								-- BUTTON OPEN
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Open,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
-									["relativeLeft"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Parent.CloseButton,
 									["relativeBottom"] = Buttons[button + 1]
 								})
@@ -288,9 +288,9 @@ function NS.Navigation:Load()
 								-- BUTTON
 								Script:SetFrameRelatives({
 									["frame"] = Buttons[button],
-									["children"] = { Buttons[button].ButtonContainer.Button_Delete, Buttons[button].ButtonContainer.Button_Open },
+									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage,
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
@@ -300,19 +300,19 @@ function NS.Navigation:Load()
 
 								-- BUTTON DELETE
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Delete,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Open,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage
 								})
 
 								-- BUTTON OPEN
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Open,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
-									["relativeLeft"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage
 								})
@@ -323,9 +323,9 @@ function NS.Navigation:Load()
 								-- BUTTON
 								Script:SetFrameRelatives({
 									["frame"] = Buttons[button],
-									["children"] = { Buttons[button].ButtonContainer.Button_Delete, Buttons[button].ButtonContainer.Button_Open },
+									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Buttons[button + 1],
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
@@ -335,19 +335,19 @@ function NS.Navigation:Load()
 
 								-- BUTTON DELETE
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Delete,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
-									["relativeRight"] = Buttons[button].ButtonContainer.Button_Open,
+									["relativeRight"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Buttons[button + 1],
 								})
 
 								-- BUTTON OPEN
 								Script:SetFrameRelatives({
-									["frame"] = Buttons[button].ButtonContainer.Button_Open,
+									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
-									["relativeLeft"] = Buttons[button].ButtonContainer.Button_Delete,
+									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["relativeTop"] = Buttons[button - 1],
 									["relativeBottom"] = Buttons[button + 1],
 								})
@@ -744,11 +744,14 @@ function NS.Navigation:Load()
 					local widgets = {}
 
 					for widget = 1, #widgetPool do
-						local Type = widgetPool[widget].Type
+						local type = widgetPool[widget].Type
+						local tooltipText = widgetPool[widget].TooltipText
 
 						--------------------------------
 
-						if Type == "Checkbox" or Type == "Range" or Type == "Dropdown" or Type == "Button" then
+						if type == "Checkbox" or type == "Range" or type == "Dropdown" or type == "Button" then
+							table.insert(widgets, widgetPool[widget])
+						elseif type == "Title" and tooltipText then
 							table.insert(widgets, widgetPool[widget])
 						end
 					end
@@ -757,8 +760,9 @@ function NS.Navigation:Load()
 
 					for widget = 1, #widgets do
 						local type = widgets[widget].Type
+						local isTitle = (type == "Title")
 
-						if type == "Checkbox" or type == "Range" or type == "Dropdown" or type == "Button" then
+						if type == "Checkbox" or type == "Range" or type == "Dropdown" or type == "Button" or type == "Title" then
 							index = index + 1
 
 							--------------------------------
@@ -777,7 +781,7 @@ function NS.Navigation:Load()
 									["scrollChildFrame"] = InteractionSettingsFrame.Content.ScrollChildFrame,
 									["preventManualScrolling"] = true,
 									["axis"] = "y",
-									["useSpecialInteract"] = true,
+									["useSpecialInteract"] = not isTitle and true or false,
 									["useSpecialInteractButton"] = IsSpecialInteract_Button
 								})
 							end
@@ -791,7 +795,7 @@ function NS.Navigation:Load()
 									["scrollChildFrame"] = InteractionSettingsFrame.Content.ScrollChildFrame,
 									["preventManualScrolling"] = true,
 									["axis"] = "y",
-									["useSpecialInteract"] = true,
+									["useSpecialInteract"] = not isTitle and true or false,
 									["useSpecialInteractButton"] = IsSpecialInteract_Button
 								})
 							end
@@ -806,7 +810,7 @@ function NS.Navigation:Load()
 									["scrollChildFrame"] = InteractionSettingsFrame.Content.ScrollChildFrame,
 									["preventManualScrolling"] = true,
 									["axis"] = "y",
-									["useSpecialInteract"] = true,
+									["useSpecialInteract"] = not isTitle and true or false,
 									["useSpecialInteractButton"] = IsSpecialInteract_Button
 								})
 							end

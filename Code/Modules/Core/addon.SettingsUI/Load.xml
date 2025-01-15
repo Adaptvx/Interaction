@@ -21,4 +21,5 @@
 	<Script file="Core/Widget/SettingsUI_Widget_Slider.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_TabButton.lua"/>
 	<Script file="Core/Widget/SettingsUI_Widget_Title.lua"/>
+	<Script file="Core/Widget/SettingsUI_Widget_Spacer.lua"/>
 </Ui>

@@ -6,12 +6,12 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a clickable Checkbox. Child Frames: Icon (if applicable), Container, Checkbox, Label
-function NS.Widgets:CreateCheckbox(parent, setFunc, getFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
+function NS.Widgets:CreateCheckbox(parent, setFunc, getFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 	local OffsetX = 0
 
 	--------------------------------
 
-	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, nil, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 
 	--------------------------------
 

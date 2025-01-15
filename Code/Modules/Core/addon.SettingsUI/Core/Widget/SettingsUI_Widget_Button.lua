@@ -6,8 +6,8 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a clickable Button. Child Frames: Button
-function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
-	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, NS.Variables:RATIO(4.5), tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked)
+function NS.Widgets:CreateButton(parent, click, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
+	local Frame = NS.Widgets:CreateContainer(parent, subcategory, true, NS.Variables:RATIO(4.5), tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 
 	--------------------------------
 

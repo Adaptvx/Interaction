@@ -231,7 +231,11 @@ local function Load()
 		L["Checkbox - Audio - Tooltip"] = "Enable sound effects and audio.\n\nDefault: On."
 		L["Title - Settings"] = "Settings"
 		L["Checkbox - Settings / Reset Settings"] = "Reset All Settings"
-		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Resets settings to default values.\n\nDefault: Off."
+        L["Checkbox - Settings / Reset Settings - Tooltip"] = "Resets settings to default values.\n\nDefault: Off."
+
+		L["Title - Credits"] = "Acknowledgements"
+		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Translator - Russian"
+		L["Title - Credits / ZamestoTV - Tooltip"] = "Special thanks to ZamestoTV for the Russian translations!"
 	end
 
 	--------------------------------
