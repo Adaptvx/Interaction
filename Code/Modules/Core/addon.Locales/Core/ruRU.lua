@@ -6,12 +6,6 @@ local L = addon.Locales
 
 --------------------------------
 
-local addonName, addon = ...
-local CallbackRegistry = addon.CallbackRegistry
-local L = addon.Locales
-
---------------------------------
-
 local function Load()
 	if GetLocale() ~= "ruRU" then
 		return
@@ -69,7 +63,7 @@ local function Load()
 		L["Checkbox - UIDirection / Dialog / Mirror"] = "Зеркало"
 		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Отражает направление пользовательского интерфейса."
 		L["Range - Quest Frame Size"] = "Размер окна задания"
-		L["Range - Quest Frame Size - Tooltip"] = "Отрегулируйте размер окна задания.\n\nПо умолчанию: БОЛЬШОЙ."
+		L["Range - Quest Frame Size - Tooltip"] = "Отрегулируйте размер окна задания.\n\nПо умолчанию: СРЕДНИЙ."
 		L["Range - Quest Frame Size - Small"] = "МАЛЕНЬКИЙ"
 		L["Range - Quest Frame Size - Medium"] = "СРЕДНИЙ"
 		L["Range - Quest Frame Size - Large"] = "БОЛЬШОЙ"
@@ -94,7 +88,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Скрыть пользовательский интерфейс"
 		L["Checkbox - Hide UI - Tooltip"] = "Скрывает пользовательский интерфейс во время взаимодействия с НПС.\n\nПо умолчанию: Вкл."
 		L["Range - Cinematic"] = "Эффекты камеры"
-		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: Все."
+		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: СБАЛАНСИРОВАННЫЙ."
 		L["Range - Cinematic - None"] = "НЕТ"
 		L["Range - Cinematic - Full"] = "ВСЕ"
 		L["Range - Cinematic - Balanced"] = "СБАЛАНСИРОВАННЫЙ"
@@ -232,6 +226,8 @@ local function Load()
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Громкость воспроизведения.\n\nПо умолчанию: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Рассказчик"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Воспроизведение голоса."
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Secondary Narrator"
+		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Playback voice used on special paragraphs such as those wrapped in '<>'."
 		L["Title - Gameplay"] = "Геймплей"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Автоматический выбор параметров"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Выбирает лучший вариант для определенных НПС.\n\nПо умолчанию: Выкл."
@@ -247,56 +243,70 @@ local function Load()
 		L["Title - Credits"] = "Благодарности"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Переводчик на русский язык"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Особая благодарность ZamestoTV за перевод на русский язык!"
+		L["Title - Credits / AKArenan"] = "AKArenan | Translator - Brazilian Portuguese"
+		L["Title - Credits / AKArenan - Tooltip"] = "Special thanks to AKArenan for the Brazilian Portuguese translations!"
 	end
 
 	--------------------------------
 	-- READABLE UI
 	--------------------------------
 
-	do -- LIBRARY
-		-- PROMPTS
-		L["Readable - Library - Prompt - Delete"] = "Это навсегда удалит эту запись из вашей библиотеки."
-		L["Readable - Library - Prompt - Delete Button 1"] = "Удалить"
-		L["Readable - Library - Prompt - Delete Button 2"] = "Отмена"
+	do
+		do -- LIBRARY
+			-- PROMPTS
+			L["Readable - Library - Prompt - Delete"] = "Это навсегда удалит эту запись из вашей библиотеки."
+			L["Readable - Library - Prompt - Delete Button 1"] = "Удалить"
+			L["Readable - Library - Prompt - Delete Button 2"] = "Отмена"
 
-		L["Readable - Library - Prompt - Import"] = "Импорт сохраненного состояния перезапишет вашу текущую библиотеку."
-		L["Readable - Library - Prompt - Import Button 1"] = "Импорт и перезагрузка"
-		L["Readable - Library - Prompt - Import Button 2"] = "Отмена"
+			L["Readable - Library - Prompt - Import"] = "Импорт сохраненного состояния перезапишет вашу текущую библиотеку."
+			L["Readable - Library - Prompt - Import Button 1"] = "Импорт и перезагрузка"
+			L["Readable - Library - Prompt - Import Button 2"] = "Отмена"
 
-		L["Readable - Library - TextPrompt - Import"] = "Вставить текст данных"
-		L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Введите текст данных"
-		L["Readable - Library - TextPrompt - Import Button 1"] = "Импорт"
+			L["Readable - Library - TextPrompt - Import"] = "Вставить текст данных"
+			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Введите текст данных"
+			L["Readable - Library - TextPrompt - Import Button 1"] = "Импорт"
 
-		L["Readable - Library - TextPrompt - Export"] = "Копировать данные в буфер обмена "
-		L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
+			L["Readable - Library - TextPrompt - Export"] = "Копировать данные в буфер обмена "
+			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
 
-		-- SIDEBAR
-		L["Readable - Library - Search Input Placeholder"] = "Поиск"
-		L["Readable - Library - Export Button"] = "Экспорт"
-		L["Readable - Library - Import Button"] = "Импорт"
-		L["Readable - Library - Show"] = "Показать"
-		L["Readable - Library - Letters"] = "Письма"
-		L["Readable - Library - Books"] = "Книги"
-		L["Readable - Library - Slates"] = "Скрижали"
-		L["Readable - Library - Show only World"] = "Только Мир"
+			-- SIDEBAR
+			L["Readable - Library - Search Input Placeholder"] = "Поиск"
+			L["Readable - Library - Export Button"] = "Экспорт"
+			L["Readable - Library - Import Button"] = "Импорт"
+			L["Readable - Library - Show"] = "Показать"
+			L["Readable - Library - Letters"] = "Письма"
+			L["Readable - Library - Books"] = "Книги"
+			L["Readable - Library - Slates"] = "Скрижали"
+			L["Readable - Library - Show only World"] = "Только Мир"
 
-		-- TITLE
-		L["Readable - Library - Name Text Append"] = " Библиотека"
-		L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
-		L["Readable - Library - Showing Status Text - Subtext 2"] = " Предметы"
+			-- TITLE
+			L["Readable - Library - Name Text - Global Library"] = "Warband Library"
+			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
+			L["Readable - Library - Name Text - Local Library - Subtext 2"] = " Библиотека"
+			L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
+			L["Readable - Library - Showing Status Text - Subtext 2"] = " Предметы"
 
-		-- CONTENT
-		L["Readable - Library - No Results Text - Subtext 1"] = "Нет результатов для "
-		L["Readable - Library - No Results Text - Subtext 2"] = "."
-		L["Readable - Library - Empty Library Text"] = "Пустая библиотека."
+			-- CONTENT
+			L["Readable - Library - No Results Text - Subtext 1"] = "Нет результатов для "
+			L["Readable - Library - No Results Text - Subtext 2"] = "."
+			L["Readable - Library - Empty Library Text"] = "Пустая библиотека."
+		end
+
+		do -- READABLE
+			-- NOTIFICATIONS
+			L["Readable - Notification - Saved To Library"] = "Сохранено в библиотеке"
+
+			-- TOOLTIP
+			L["Readable - Tooltip - Change Page"] = "Прокрутите, чтобы сменить страницу."
+		end
 	end
 
-	do -- READABLE
-		-- NOTIFICATIONS
-		L["Readable - Library - Notification - Saved To Library"] = "Сохранено в библиотеке"
+	--------------------------------
+	-- AUDIOBOOK
+	--------------------------------
 
-		-- TOOLTIP
-		L["Readable - Tooltip - Change Page"] = "Прокрутите, чтобы сменить страницу."
+	do
+		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
 	end
 
 	--------------------------------
@@ -392,7 +402,12 @@ local function Load()
 	--------------------------------
 
 	do
-		L["MinimapIcon - Text"] = "Открытая библиотека взаимодействия."
+		L["MinimapIcon - Tooltip - Title"] = "Interaction Library"
+		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Entries"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Entry"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "No Entries."
 	end
 
 	--------------------------------
@@ -442,6 +457,16 @@ local function Load()
 		L["GossipData - Trigger - Movie 2"] = "%(Воспроизвести ролик%)"
 		L["GossipData - Trigger - NPC Dialog"] = "%<Останься немного и послушай.%>"
 		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Останься немного и послушай."
+	end
+
+	--------------------------------
+	-- AUDIOBOOK DATA
+	--------------------------------
+
+	do
+		-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
+		-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
+		L["AudiobookData - EstimatedCharPerSecond"] = 10
 	end
 end
 

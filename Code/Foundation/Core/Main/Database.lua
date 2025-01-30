@@ -3,9 +3,6 @@ local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
 local AceDB = LibStub("AceDB-3.0")
-local AceConfig = LibStub("AceConfig-3.0")
-local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
 --------------------------------
 -- VARIABLES
@@ -15,8 +12,8 @@ addon.Database = {}
 local NS = addon.Database
 
 do -- MAIN
-	INTDB = nil
-	INTLIB = nil
+	DB_GLOBAL = nil
+	DB_LOCAL = nil
 end
 
 do -- CONSTANTS
@@ -138,25 +135,25 @@ do
 			}
 
 			local profile = {
-				INTDB.profile.INT_CINEMATIC_ZOOM,
-				INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN,
-				INTDB.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX,
-				INTDB.profile.INT_CINEMATIC_ZOOM_PITCH,
-				INTDB.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL,
-				INTDB.profile.INT_CINEMATIC_ZOOM_FOV,
-				INTDB.profile.INT_CINEMATIC_PAN,
-				INTDB.profile.INT_CINEMATIC_PAN_SPEED,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_SIDE,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_OFFSET,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X,
-				INTDB.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y,
-				INTDB.profile.INT_CINEMATIC_VIGNETTE,
-				INTDB.profile.INT_CINEMATIC_VIGNETTE_GRADIENT
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM,
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN,
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX,
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH,
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL,
+				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_FOV,
+				DB_GLOBAL.profile.INT_CINEMATIC_PAN,
+				DB_GLOBAL.profile.INT_CINEMATIC_PAN_SPEED,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X,
+				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y,
+				DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE,
+				DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE_GRADIENT
 			}
 
 			for i = 1, #variables do
@@ -204,16 +201,16 @@ do
 				return
 			end
 
-			if INTDB.profile.INT_CINEMATIC_PRESET == 4 then
-				INTDB.profile.INT_CINEMATIC = true
+			if DB_GLOBAL.profile.INT_CINEMATIC_PRESET == 4 then
+				DB_GLOBAL.profile.INT_CINEMATIC = true
 
 				NS:SetToProfileCinematicVariables()
-			elseif INTDB.profile.INT_CINEMATIC_PRESET > 1 then
-				INTDB.profile.INT_CINEMATIC = true
+			elseif DB_GLOBAL.profile.INT_CINEMATIC_PRESET > 1 then
+				DB_GLOBAL.profile.INT_CINEMATIC = true
 
-				NS:SetToPresetCinematicVariables(NS.CINEMATIC_PROFILES[INTDB.profile.INT_CINEMATIC_PRESET])
+				NS:SetToPresetCinematicVariables(NS.CINEMATIC_PROFILES[DB_GLOBAL.profile.INT_CINEMATIC_PRESET])
 			else
-				INTDB.profile.INT_CINEMATIC = false
+				DB_GLOBAL.profile.INT_CINEMATIC = false
 			end
 		end
 
@@ -222,7 +219,7 @@ do
 				return
 			end
 
-			INTDB.profile[name] = value
+			DB_GLOBAL.profile[name] = value
 		end
 	end
 end
@@ -257,6 +254,13 @@ do
 			INT_TIME_DAY = 7,
 			INT_TIME_NIGHT = 22,
 
+			-- READABLE
+			INT_GLOBAL_LIBRARY = {
+				READABLE = {
+
+				}
+			},
+
 			-- PLAYBACK
 			INT_PLAYBACK_SPEED = 1,
 			INT_PLAYBACK_AUTOPROGRESS = true,
@@ -280,16 +284,14 @@ do
 			-- APPEARANCE
 			INT_MAIN_THEME = 1,
 			INT_DIALOG_THEME = 1,
-			INT_UIDIRECTION = 2,
+			INT_UIDIRECTION = 1,
 			INT_UIDIRECTION_DIALOG = 1,
 			INT_UIDIRECTION_DIALOG_MIRROR = false,
 			INT_PROGRESS_SHOW = true,
 			INT_TITLE_ALPHA = 1,
 			INT_CONTENT_PREVIEW_ALPHA = .5,
-			INT_CONTENT_COLOR_CUSTOM = false,
-			INT_CONTENT_COLOR = { r = 1, g = .87, b = .67 },
 
-			INT_QUESTFRAME_SIZE = 3,
+			INT_QUESTFRAME_SIZE = 2,
 			INT_CONTENT_SIZE = 17.5,
 
 			-- CONTROLS
@@ -308,7 +310,7 @@ do
 
 			-- EFFECTS
 			INT_CINEMATIC = true,
-			INT_CINEMATIC_PRESET = 2,
+			INT_CINEMATIC_PRESET = 3,
 			INT_HIDEUI = true,
 
 			INT_CINEMATIC_ZOOM = false,
@@ -347,6 +349,7 @@ do
 			INT_READABLE_AUDIOBOOK_RATE = 0,
 			INT_READABLE_AUDIOBOOK_VOLUME = 100,
 			INT_READABLE_AUDIOBOOK_VOICE = 1,
+			INT_READABLE_AUDIOBOOK_VOICE_SPECIAL = 1,
 
 			-- PLATFORM
 			INT_PLATFORM = 1,
@@ -367,8 +370,8 @@ do
 	--------------------------------
 
 	function NS:OnInitialize()
-		INTDB = AceDB:New("InteractionDB", defaults, true)
-		INTLIB = AceDB:New("InteractionLibraryDB", defaults_library, true)
+		DB_GLOBAL = AceDB:New("InteractionDB", defaults, true)
+		DB_LOCAL = AceDB:New("InteractionLibraryDB", defaults_library, true)
 
 		NS:SetDynamicCinematicVariables()
 	end
@@ -395,7 +398,7 @@ do
 	end
 
 	function NS:ResetSettings()
-		INTDB = NS.CopyTable(defaults)
+		DB_GLOBAL = NS.CopyTable(defaults)
 		InteractionDB = NS.CopyTable(defaults)
 	end
 end

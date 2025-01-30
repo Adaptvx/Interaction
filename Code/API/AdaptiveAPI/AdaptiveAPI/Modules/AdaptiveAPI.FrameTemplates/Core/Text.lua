@@ -54,7 +54,7 @@ do
 		if createHtml then
 			local _, fontHeight, _ = Label:GetFont()
 			if fontHeight <= 0 then
-				fontHeight = INTDB.profile.INT_CONTENT_SIZE
+				fontHeight = DB_GLOBAL.profile.INT_CONTENT_SIZE
 			end
 
 			--------------------------------
@@ -74,7 +74,7 @@ do
 			local function UpdateFormatting()
 				local _, fontHeight, _ = Label:GetFont()
 				if fontHeight <= 0 then
-					fontHeight = INTDB.profile.INT_CONTENT_SIZE
+					fontHeight = DB_GLOBAL.profile.INT_CONTENT_SIZE
 				end
 
 				--------------------------------

@@ -171,7 +171,7 @@ function NS:Load()
 
 	do
 		function NS:PlaySoundFile(filePath)
-			if INTDB.profile.INT_AUDIO then
+			if DB_GLOBAL.profile.INT_AUDIO then
 				if filePath then
 					PlaySoundFile(filePath)
 				end
@@ -179,7 +179,7 @@ function NS:Load()
 		end
 
 		function NS:PlaySound(soundID)
-			if INTDB.profile.INT_AUDIO then
+			if DB_GLOBAL.profile.INT_AUDIO then
 				if soundID then
 					PlaySound(soundID)
 				end

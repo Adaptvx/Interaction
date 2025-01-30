@@ -42,7 +42,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local function Start(button)
+			local function Start()
 				if Frame.SelectedOptionTransition then
 					return
 				end
@@ -53,19 +53,22 @@ function NS.Script:Load()
 				AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
 			end
 
-			local function Finish(button)
+			local function Finish()
 				local isGossipOrQuestGreetingStillVisible = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
 
 				--------------------------------
 
 				if isGossipOrQuestGreetingStillVisible then
 					Frame.GoodbyeButton:Hide()
-					AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
 
 					--------------------------------
 
 					Frame:UpdateButtons()
-					Frame.StartButtonSequence()
+					Frame.ShowButtonsWithAnimation()
+
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
+					end, .125)
 				end
 
 				--------------------------------
@@ -101,18 +104,18 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.TextToSpeech.Script:PlayConfiguredTTS(INTDB.profile.INT_TTS_PLAYER_VOICE, string)
+				addon.TextToSpeech.Script:PlayConfiguredTTS(DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE, string)
 			end
 
 			local function Click(button)
 				local PATH_GOSSIP = addon.Variables.PATH .. "Art/ContextIcons/gossip-bubble.png"
 
-				local usePlayerVoice = (INTDB.profile.INT_TTS and INTDB.profile.INT_TTS_PLAYER)
+				local usePlayerVoice = (DB_GLOBAL.profile.INT_TTS and DB_GLOBAL.profile.INT_TTS_PLAYER)
 				local isGossipOption = (button.texture == PATH_GOSSIP)
 
 				--------------------------------
 
-				Start(button)
+				Start()
 
 				--------------------------------
 
@@ -170,7 +173,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			CallbackRegistry:Add("GOSSIP_BUTTON_CLICKED", function(button)
-				if INTDB.profile.INT_ALWAYS_SHOW_GOSSIP then
+				if DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP then
 					Click(button)
 				end
 			end, 0)
@@ -184,9 +187,9 @@ function NS.Script:Load()
 
 		do -- MOUSE RESPONDER
 			Frame.MouseResponder:SetScript("OnMouseUp", function(self, button)
-				if INTDB.profile.INT_FLIPMOUSE == false and button == "RightButton" then
+				if DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
 					InteractionDialogFrame.ReturnToPreviousDialog()
-				elseif INTDB.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
+				elseif DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
 					InteractionDialogFrame.ReturnToPreviousDialog()
 				end
 			end)
@@ -205,7 +208,7 @@ function NS.Script:Load()
 
 			do -- RED
 				local count
-				new, count = gsub(new, "|[cC][fF][fF][fF][fF]0000", "|cffFF8181")
+				new, count = gsub(new, "|[cC][fF][fF][fF][fF]0000", "|cffFF8181") -- cffFF0000
 
 				--------------------------------
 
@@ -215,8 +218,8 @@ function NS.Script:Load()
 			end
 
 			do -- BLUE
-				local count
-				new, count = gsub(new, "|[cC][fF][fF]0000[fF][fF]", "|cff8DC0FF")
+				new = gsub(new, "|[cC][fF][fF]0000[fF][fF]", "|cff8DC0FF") -- cff0000FF
+				new = gsub(new, "|[cC][fF][fF]0008[eE]8", "|cff8DC0FF") -- cff0008E8
 			end
 
 			--------------------------------
@@ -459,7 +462,11 @@ function NS.Script:Load()
 
 			table.sort(entries, function(a, b)
 				local flagOrder = { ["complete"] = 0, ["available"] = 1, ["active"] = 2, ["option"] = 3 }
-				return flagOrder[a.flag] < flagOrder[b.flag]
+				if a.flag == b.flag then
+					return a.optionIndex < b.optionIndex
+				else
+					return flagOrder[a.flag] < flagOrder[b.flag]
+				end
 			end)
 
 			--------------------------------
@@ -484,6 +491,7 @@ function NS.Script:Load()
 						buttons[i].OptionFrame = entries[i].optionFrame
 						buttons[i].OptionType = entries[i].optionType
 						buttons[i].OptionID = entries[i].optionID
+						buttons[i].OrderIndex = entries[i].orderIndex
 						buttons[i].OptionIndex = entries[i].optionIndex
 
 						--------------------------------
@@ -631,7 +639,7 @@ function NS.Script:Load()
 		end
 
 		Frame.UpdatePosition = function()
-			local Settings_UIDirection = INTDB.profile.INT_UIDIRECTION
+			local Settings_UIDirection = DB_GLOBAL.profile.INT_UIDIRECTION
 
 			--------------------------------
 
@@ -698,7 +706,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				Frame.UpdateButtons(true)
-				addon.Libraries.AceTimer:ScheduleTimer(Frame.StartButtonSequence, .125)
+				addon.Libraries.AceTimer:ScheduleTimer(Frame.ShowButtonsWithAnimation, .125)
 			end
 		end
 	end
@@ -708,141 +716,140 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.StartButtonSequence = function()
-			local Buttons = Frame.GetButtons()
+		do -- BUTTONS
+			local function ButtonAnimation(index, button)
+				local START_POSITION = DB_GLOBAL.profile.INT_UIDIRECTION == 1 and 6.25 or -6.25
 
-			local StartPosition
-			if INTDB.profile.INT_UIDIRECTION == 1 then
-				StartPosition = 12.5
-			else
-				StartPosition = -12.5
-			end
+				local isValid = true -- Flag to check if button was hidden
 
-			--------------------------------
+				--------------------------------
 
-			if Buttons then
-				if NS.Variables.NumCurrentButtons >= 1 then
-					local function ButtonAnimation(index, button)
-						local valid = true -- Flag to check if button was hidden
-
-						--------------------------------
-
-						button.transition = true
-						if addon.Variables.Platform == 1 then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
-								if valid then
-									button.transition = false
-								end
-							end, .325)
+				button.transition = true
+				if addon.Variables.Platform == 1 then
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						if isValid then
+							button.transition = false
 						end
+					end, .325)
+				end
 
-						--------------------------------
+				--------------------------------
 
-						button:Show()
+				button:Show()
 
-						--------------------------------
+				--------------------------------
 
-						AdaptiveAPI.Animation:Fade(button, .25, 0, 1, nil, function()
-							if not button:IsVisible() or Frame.hidden then
-								valid = false; return true
-							end
-						end)
-						AdaptiveAPI.Animation:Fade(button.Label, .25, 0, 1, nil, function()
-							if not button:IsVisible() or Frame.hidden then
-								valid = false; return true
-							end
-						end)
-						AdaptiveAPI.Animation:Move(button.Standalone.Background, .5, "CENTER", StartPosition, 0, "x", AdaptiveAPI.Animation.EaseSine, function()
-							if not button:IsVisible() or Frame.hidden then
-								valid = false; return true
-							end
-						end)
-
-						--------------------------------
-
-						if index == NS.Variables.NumCurrentButtons then
-							Frame.GoodbyeButton:Show()
-
-							--------------------------------
-
-							AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton, .25, 0, .5, nil, function()
-								if Frame.hidden then
-									valid = false; return true
-								end
-							end)
-							AdaptiveAPI.Animation:Move(Frame.GoodbyeButton.API_ButtonTextFrame, .5, "CENTER", StartPosition, 0, "x", AdaptiveAPI.Animation.EaseSine, function()
-								if Frame.hidden then
-									valid = false; return true
-								end
-							end)
-						end
+				AdaptiveAPI.Animation:Fade(button, .25, 0, 1, nil, function()
+					if not button:IsVisible() or Frame.hidden then
+						isValid = false; return true
 					end
-
-					for i = 1, NS.Variables.NumCurrentButtons do
-						local button = Buttons[i]
-						local delay = .0125 * i
-
-						--------------------------------
-
-						button:Hide()
-						button.Label:SetAlpha(0)
-
-						--------------------------------
-
-						addon.Libraries.AceTimer:ScheduleTimer(function()
-							ButtonAnimation(i, button)
-						end, delay)
+				end)
+				AdaptiveAPI.Animation:Fade(button.Label, .25, 0, 1, nil, function()
+					if not button:IsVisible() or Frame.hidden then
+						isValid = false; return true
 					end
-				else
+				end)
+				AdaptiveAPI.Animation:Move(button.Standalone.Background, .5, "CENTER", START_POSITION, 0, "y", AdaptiveAPI.Animation.EaseSine, function()
+					if not button:IsVisible() or Frame.hidden then
+						isValid = false; return true
+					end
+				end)
+
+				--------------------------------
+
+				if index == NS.Variables.NumCurrentButtons then
 					Frame.GoodbyeButton:Show()
 
 					--------------------------------
 
-					Frame.GoodbyeButton:SetAlpha(1)
+					AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton, .5, 0, .5, nil, function()
+						if Frame.hidden then
+							isValid = false; return true
+						end
+					end)
+					AdaptiveAPI.Animation:Move(Frame.GoodbyeButton.API_ButtonTextFrame, .5, "CENTER", START_POSITION, 0, "y", AdaptiveAPI.Animation.EaseSine, function()
+						if Frame.hidden then
+							isValid = false; return true
+						end
+					end)
+				end
+			end
 
-					local point, relativeTo, relativePoint, offsetX, offsetY = Frame.GoodbyeButton:GetPoint()
-					Frame.GoodbyeButton:ClearAllPoints()
-					Frame.GoodbyeButton:SetPoint("CENTER", relativeTo, 0, 0)
+			Frame.ShowButtonsWithAnimation = function()
+				local Buttons = Frame.GetButtons()
+
+				--------------------------------
+
+				if Buttons then
+					if NS.Variables.NumCurrentButtons >= 1 then
+						for i = 1, NS.Variables.NumCurrentButtons do
+							local button = Buttons[i]
+							local delay = .0125 * i
+
+							--------------------------------
+
+							button:Hide()
+							button.Label:SetAlpha(0)
+
+							--------------------------------
+
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								ButtonAnimation(i, button)
+							end, delay)
+						end
+					else
+						Frame.GoodbyeButton:Show()
+
+						--------------------------------
+
+						Frame.GoodbyeButton:SetAlpha(1)
+
+						local point, relativeTo, relativePoint, offsetX, offsetY = Frame.GoodbyeButton:GetPoint()
+						Frame.GoodbyeButton:ClearAllPoints()
+						Frame.GoodbyeButton:SetPoint("CENTER", relativeTo, 0, 0)
+					end
 				end
 			end
 		end
 
-		Frame.ShowWithAnimation = function()
-			if not Frame.hidden then
-				return
+		do -- FRAME
+			Frame.ShowWithAnimation = function()
+				if not Frame.hidden then
+					return
+				end
+				Frame.hidden = false
+				Frame:Show()
+
+				--------------------------------
+
+				NS.Variables.LastNPC = nil
+				NS.Variables.NPC = nil
+
+				--------------------------------
+
+				Frame:SetAlpha(0)
+
+				--------------------------------
+
+				Frame.UpdateStyle()
 			end
-			Frame.hidden = false
-			Frame:Show()
 
-			--------------------------------
-
-			NS.Variables.LastNPC = nil
-			NS.Variables.NPC = nil
-
-			--------------------------------
-
-			Frame:SetAlpha(0)
-
-			--------------------------------
-
-			Frame.UpdateStyle()
-		end
-
-		Frame.HideWithAnimation = function()
-			if Frame.hidden then
-				return
-			end
-			Frame.hidden = true
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			Frame.HideWithAnimation = function()
 				if Frame.hidden then
-					Frame:Hide()
+					return
 				end
-			end, .5)
+				Frame.hidden = true
 
-			--------------------------------
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.hidden then
+						Frame:Hide()
+					end
+				end, .5)
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+				--------------------------------
+
+				AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			end
 		end
 	end
 

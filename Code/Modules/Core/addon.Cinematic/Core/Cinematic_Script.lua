@@ -129,7 +129,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						NS.Variables.IsPanning_Direction = "Left"
 					else
 						NS.Variables.IsPanning_Direction = "Right"
@@ -153,7 +153,7 @@ function NS.Script:Load()
 
 			do -- SIDE VIEW
 				function NS.Script:StartSideView()
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						NS.Util:SetCameraYaw(addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH, "LEFT")
 					else
 						NS.Util:SetCameraYaw(addon.Database.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH, "RIGHT")
@@ -197,7 +197,7 @@ function NS.Script:Load()
 					local isShapeshiftForm = AdaptiveAPI:IsPlayerInShapeshiftForm()
 
 					if isMounted then
-						modifier = INTDB.profile.INT_UIDIRECTION == 1 and .25 or 3.75
+						modifier = DB_GLOBAL.profile.INT_UIDIRECTION == 1 and .25 or 3.75
 					elseif isShapeshiftForm and not isMounted then
 						modifier = .5
 					elseif isIndoors then
@@ -239,7 +239,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						if INTDB.profile.INT_UIDIRECTION == 1 then
+						if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 							NS.Util:SetShoulderOffset(-strength, 2.5)
 						else
 							NS.Util:SetShoulderOffset(strength, 2.5)
@@ -530,7 +530,7 @@ function NS.Script:Load()
 	do
 		do -- INTERACTION
 			function NS.Script:StartInteraction()
-				if not INTDB.profile.INT_CINEMATIC then
+				if not DB_GLOBAL.profile.INT_CINEMATIC then
 					return
 				end
 
@@ -551,7 +551,7 @@ function NS.Script:Load()
 			end
 
 			function NS.Script:StopInteraction(bypass)
-				if not INTDB.profile.INT_CINEMATIC then
+				if not DB_GLOBAL.profile.INT_CINEMATIC then
 					return
 				end
 
@@ -708,7 +708,7 @@ function NS.Script:Load()
 					local isShapeshiftForm = AdaptiveAPI:IsPlayerInShapeshiftForm()
 
 					if isMounted then
-						modifier = INTDB.profile.INT_UIDIRECTION == 1 and .25 or 3.75
+						modifier = DB_GLOBAL.profile.INT_UIDIRECTION == 1 and .25 or 3.75
 					elseif isShapeshiftForm and not isMounted then
 						modifier = .5
 					elseif isIndoors then
@@ -723,7 +723,7 @@ function NS.Script:Load()
 						target = (addon.Database.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH * GetCameraZoom() / 39 * modifier)
 					end
 
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						target = -target
 					end
 

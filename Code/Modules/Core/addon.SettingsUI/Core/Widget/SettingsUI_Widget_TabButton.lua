@@ -6,7 +6,7 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a clickable Tab Button. Child Frames: Button
-function NS.Widgets:CreateTabButton(parent, click)
+function NS.Widgets:CreateTabButton(parent, setFunc)
 	local Frame = CreateFrame("Frame")
 	Frame:SetParent(parent)
 	Frame:SetSize(parent:GetWidth(), InteractionSettingsFrame.Content.Header:GetHeight())
@@ -131,7 +131,7 @@ function NS.Widgets:CreateTabButton(parent, click)
 		end
 
 		Frame.Button:SetScript("OnClick", function()
-			click(Frame.Button)
+			setFunc(Frame.Button)
 		end)
 
 		--------------------------------

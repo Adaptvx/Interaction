@@ -14,6 +14,9 @@ function NS.LibraryUI.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
+	NS.Variables.LIBRARY_LOCAL = DB_LOCAL.profile.READABLE
+	NS.Variables.LIBRARY_GLOBAL = DB_GLOBAL.profile.INT_GLOBAL_LIBRARY.READABLE
+
 	local Callback = NS.Script
 	local LibraryCallback = NS.LibraryUI.Script
 
@@ -217,8 +220,8 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				for title in pairs(INTLIB.profile.READABLE) do
-					local CurrentEntry = INTLIB.profile.READABLE[title]
+				for title in pairs(NS.Variables.LibraryDB) do
+					local CurrentEntry = NS.Variables.LibraryDB[title]
 
 					--------------------------------
 
@@ -391,13 +394,13 @@ function NS.LibraryUI.Script:Load()
 				local EndIndex = StartIndex + NS.LibraryUI.Variables.MAX_ENTRIES_PER_PAGE
 				local CurrentIndex = 0
 
-				for title in pairs(INTLIB.profile.READABLE) do
+				for title in pairs(NS.Variables.LibraryDB) do
 					CurrentIndex = CurrentIndex + 1
 
 					--------------------------------
 
 					if CurrentIndex >= StartIndex and CurrentIndex <= EndIndex then
-						local CurrentEntry = INTLIB.profile.READABLE[title]
+						local CurrentEntry = NS.Variables.LibraryDB[title]
 
 						--------------------------------
 
@@ -531,180 +534,197 @@ function NS.LibraryUI.Script:Load()
 				local Entries = LibraryCallback:GetAllFilteredEntriesForCurrentPage()
 				local Buttons = LibraryCallback:GetButtons()
 
-				local SearchText = Frame.LibraryUIFrame.Content.Sidebar.Search:GetText()
+				local searchText = Frame.LibraryUIFrame.Content.Sidebar.Search:GetText()
 
 				--------------------------------
 
-				Frame.LibraryUIFrame.Content.Title.Main.Subtext:SetText(L["Readable - Library - Showing Status Text - Subtext 1"] .. #Entries .. "/" .. #AllEntries .. L["Readable - Library - Showing Status Text - Subtext 2"])
+				do -- TITLE
+					do -- TITLE TEXT
+						local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+						local playerName = UnitName("player")
 
-				--------------------------------
-
-				for i = 1, #Buttons do
-					Buttons[i]:Hide()
-				end
-
-				for i = 1, #Entries do
-					if i > #Buttons then
-						break
-					end
-
-					--------------------------------
-
-					local CurrentEntry = Entries[i]
-
-					--------------------------------
-
-					Buttons[i]:Show()
-					Buttons[i].ID = CurrentEntry.Content[1]
-
-					--------------------------------
-
-					if playAnimation or playAnimation == nil then
-						AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.075 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
-					else
-						Buttons[i]:SetAlpha(.75)
-					end
-
-					--------------------------------
-
-					local Type = CurrentEntry.Type
-					local NumPages = CurrentEntry.NumPages
-					local Title = CurrentEntry.Title
-					local Content = CurrentEntry.Content
-
-					local IsItemInInventory = CurrentEntry.IsItemInInventory
-					local ItemID = CurrentEntry.ItemID
-					local ItemLink = CurrentEntry.ItemLink
-
-					local Zone = CurrentEntry.Zone
-					local MapID = CurrentEntry.MapID
-					local Position = CurrentEntry.Position
-					local Time = CurrentEntry.Time
-
-					--------------------------------
-
-					local ImageTexture
-					local ImageTexCoords = { 0, 1, 0, 1 }
-
-					local ItemParchmentTexture; if addon.Theme.IsDarkTheme then
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-dark.png"
-					else
-						ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-light.png"
-					end
-					local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-slate.png"
-					local ItemBookTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book.png"
-					local ItemBookLargeTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book-large.png"
-
-					if Type == "Parchment" or Type == "ParchmentLarge" or not Type then
-						if NumPages > 1 then
-							if Type == "ParchmentLarge" then
-								ImageTexture = ItemBookLargeTexture
-							else
-								ImageTexture = ItemBookTexture
-							end
+						if isLocal then
+							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"])
 						else
-							ImageTexture = ItemParchmentTexture
+							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Global Library"])
 						end
 					end
 
-					if Type == "Stone" or Type == "Bronze" then
-						ImageTexture = ItemStoneTexture
+					do -- SHOWING STATUS TEXT
+						Frame.LibraryUIFrame.Content.Title.Main.Subtext:SetText(L["Readable - Library - Showing Status Text - Subtext 1"] .. #Entries .. "/" .. #AllEntries .. L["Readable - Library - Showing Status Text - Subtext 2"])
+					end
+				end
+
+				do -- BUTTONS
+					for i = 1, #Buttons do
+						Buttons[i]:Hide()
 					end
 
-					if ItemLink then
-                        local ItemIcon = C_Item.GetItemIconByID(ItemLink)
+					for i = 1, #Entries do
+						if i > #Buttons then
+							break
+						end
 
 						--------------------------------
 
-						if ItemIcon then
-							ImageTexture = ItemIcon
-							ImageTexCoords = { 0, 1, 0, 1 }
+						local CurrentEntry = Entries[i]
+
+						--------------------------------
+
+						Buttons[i]:Show()
+						Buttons[i].ID = CurrentEntry.Content[1]
+
+						--------------------------------
+
+						if playAnimation or playAnimation == nil then
+							AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.075 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
+						else
+							Buttons[i]:SetAlpha(.75)
 						end
-					end
 
-					--------------------------------
+						--------------------------------
 
-					local TitleText = Title
-					local DetailText = Zone
-					local TooltipText = Content[1]
-					if #TooltipText > 100 then
-						TooltipText = string.sub(TooltipText, 1, 100) .. "..."
-					end
-					if AdaptiveAPI:FindString(TooltipText, "<HTML>") then
-						TooltipText = nil
-					end
+						local Type = CurrentEntry.Type
+						local NumPages = CurrentEntry.NumPages
+						local Title = CurrentEntry.Title
+						local Content = CurrentEntry.Content
 
-					if not IsItemInInventory then
-						if Position then
-							DetailText = DetailText .. " " .. "(" .. "X: " .. string.format("%.0f", (Position.x * 100)) .. " " .. "Y: " .. string.format("%.0f", (Position.y * 100)) .. ")"
+						local IsItemInInventory = CurrentEntry.IsItemInInventory
+						local ItemID = CurrentEntry.ItemID
+						local ItemLink = CurrentEntry.ItemLink
+
+						local Zone = CurrentEntry.Zone
+						local MapID = CurrentEntry.MapID
+						local Position = CurrentEntry.Position
+						local Time = CurrentEntry.Time
+
+						--------------------------------
+
+						local ImageTexture
+						local ImageTexCoords = { 0, 1, 0, 1 }
+
+						local ItemParchmentTexture; if addon.Theme.IsDarkTheme then
+							ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-dark.png"
+						else
+							ItemParchmentTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-parchment-light.png"
 						end
-					else
-						DetailText = DetailText .. " " .. "(" .. "Added from Bags" .. ")"
-					end
+						local ItemStoneTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-slate.png"
+						local ItemBookTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book.png"
+						local ItemBookLargeTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-image-book-large.png"
 
-					--------------------------------
+						if Type == "Parchment" or Type == "ParchmentLarge" or not Type then
+							if NumPages > 1 then
+								if Type == "ParchmentLarge" then
+									ImageTexture = ItemBookLargeTexture
+								else
+									ImageTexture = ItemBookTexture
+								end
+							else
+								ImageTexture = ItemParchmentTexture
+							end
+						end
 
-					Buttons[i].Content.Text.Title:SetText(TitleText)
-					Buttons[i].Content.Text.Detail:SetText(DetailText)
+						if Type == "Stone" or Type == "Bronze" then
+							ImageTexture = ItemStoneTexture
+						end
 
-					Buttons[i].Content.ImageTexture:SetTexture(ImageTexture)
-					Buttons[i].Content.ImageTexture:SetTexCoord(unpack(ImageTexCoords))
+						if ItemLink then
+							local ItemIcon = C_Item.GetItemIconByID(ItemLink)
 
-					--------------------------------
+							--------------------------------
 
-					if TooltipText then
-						AdaptiveAPI:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5, true)
-					else
-						AdaptiveAPI:RemoveTooltip(Buttons[i])
+							if ItemIcon then
+								ImageTexture = ItemIcon
+								ImageTexCoords = { 0, 1, 0, 1 }
+							end
+						end
+
+						--------------------------------
+
+						local TitleText = Title
+						local DetailText = Zone
+						local TooltipText = Content[1]
+						if #TooltipText > 100 then
+							TooltipText = string.sub(TooltipText, 1, 100) .. "..."
+						end
+						if AdaptiveAPI:FindString(TooltipText, "<HTML>") then
+							TooltipText = nil
+						end
+
+						if not IsItemInInventory then
+							if Position then
+								DetailText = DetailText .. " " .. "(" .. "X: " .. string.format("%.0f", (Position.x * 100)) .. " " .. "Y: " .. string.format("%.0f", (Position.y * 100)) .. ")"
+							end
+						else
+							DetailText = DetailText .. " " .. "(" .. "Added from Bags" .. ")"
+						end
+
+						--------------------------------
+
+						Buttons[i].Content.Text.Title:SetText(TitleText)
+						Buttons[i].Content.Text.Detail:SetText(DetailText)
+
+						Buttons[i].Content.ImageTexture:SetTexture(ImageTexture)
+						Buttons[i].Content.ImageTexture:SetTexCoord(unpack(ImageTexCoords))
+
+						--------------------------------
+
+						if TooltipText then
+							AdaptiveAPI:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5, true)
+						else
+							AdaptiveAPI:RemoveTooltip(Buttons[i])
+						end
 					end
 				end
 
-				--------------------------------
+				do -- ERROR
+					local isEmpty = (#Entries == 0)
+					local isSearch = (searchText ~= "")
 
-				local IsEmpty = (#Entries == 0)
-				local IsSearch = (SearchText ~= "")
+					if isEmpty then
+						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:Show()
 
-				if IsEmpty then
-					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:Show()
+						--------------------------------
 
-					--------------------------------
-
-					if IsSearch then
-						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - No Results Text - Subtext 1"] .. "\"" .. SearchText .. "\"" .. L["Readable - Library - No Results Text - Subtext 2"])
+						if isSearch then
+							Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - No Results Text - Subtext 1"] .. "\"" .. searchText .. "\"" .. L["Readable - Library - No Results Text - Subtext 2"])
+						else
+							Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - Empty Library Text"])
+						end
 					else
-						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetText(L["Readable - Library - Empty Library Text"])
+						Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:Hide()
 					end
-				else
-					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:Hide()
 				end
 
-				--------------------------------
+				do -- SIDEBAR
+					do -- CHECKBOX FILTER DETAIL
+						local Filters = {
+							{
+								frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter,
+								detail = function() return #LibraryCallback:GetAllTypeEntries("Letter") end
+							},
+							{
+								frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Book,
+								detail = function() return #LibraryCallback:GetAllTypeEntries("Book") end
+							},
+							{
+								frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate,
+								detail = function() return #LibraryCallback:GetAllTypeEntries("Stone") end
+							},
+							{
+								frame = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld,
+								detail = function() return #LibraryCallback:GetAllTypeEntries("InWorld") end
+							},
+						}
 
-				local Filters = {
-					{
-						frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter,
-						detail = function() return #LibraryCallback:GetAllTypeEntries("Letter") end
-					},
-					{
-						frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Book,
-						detail = function() return #LibraryCallback:GetAllTypeEntries("Book") end
-					},
-					{
-						frame = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate,
-						detail = function() return #LibraryCallback:GetAllTypeEntries("Stone") end
-					},
-					{
-						frame = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld,
-						detail = function() return #LibraryCallback:GetAllTypeEntries("InWorld") end
-					},
-				}
+						for i = 1, #Filters do
+							local Frame = Filters[i].frame
 
-				for i = 1, #Filters do
-					local Frame = Filters[i].frame
+							--------------------------------
 
-					--------------------------------
-
-					Frame.Detail:SetText(tostring(Filters[i].detail()))
+							Frame.Detail:SetText(tostring(Filters[i].detail()))
+						end
+					end
 				end
 
 				--------------------------------
@@ -718,6 +738,16 @@ function NS.LibraryUI.Script:Load()
 		end
 
 		do -- DATA
+			function LibraryCallback:SetLibraryDestination(destination)
+				NS.Variables.LibraryDB = destination
+
+				--------------------------------
+
+				if LibraryUI:IsVisible() then
+					LibraryCallback:SetPageButtons(true)
+				end
+			end
+
 			function LibraryCallback:SaveToLibrary()
 				local ID = NS.ItemUI.Variables.Content[1]
 
@@ -749,22 +779,22 @@ function NS.LibraryUI.Script:Load()
 					Time = Time
 				}
 
-				if not INTLIB.profile.READABLE[ID] then
+				if not NS.Variables.LibraryDB[ID] then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						addon.AlertNotification.Script:ShowWithText(L["Readable - Notification - Saved To Library"])
 					end, .1)
 				end
 
-				INTLIB.profile.READABLE[ID] = Entry
+				NS.Variables.LibraryDB[ID] = Entry
 			end
 
 			function LibraryCallback:DeleteFromLibrary(ID)
-				local Entry = AdaptiveAPI:FindIndexInTable(INTLIB.profile.READABLE, ID)
+				local Entry = AdaptiveAPI:FindIndexInTable(NS.Variables.LibraryDB, ID)
 
 				if Entry then
 					InteractionPromptFrame.Set(L["Readable - Library - Prompt - Delete"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
 						function()
-							INTLIB.profile.READABLE[ID] = nil
+							NS.Variables.LibraryDB[ID] = nil
 							LibraryCallback:SetPageButtons(true)
 
 							InteractionPromptFrame.Clear()
@@ -776,7 +806,7 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:OpenFromLibrary(ID)
-				local Index = INTLIB.profile.READABLE[ID]
+				local Index = NS.Variables.LibraryDB[ID]
 
 				local Type = Index.Type
 				local NumPages = Index.NumPages
@@ -807,7 +837,7 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:Export()
-				local library = INTLIB.profile.READABLE
+				local library = NS.Variables.LibraryDB
 
 				local serialized = addon.Libraries.LibSerialize:SerializeEx(
 					{ errorOnUnserializableType = false },
@@ -832,7 +862,7 @@ function NS.LibraryUI.Script:Load()
 
 					if val ~= "" and success then
 						InteractionPromptFrame.Set(L["Readable - Library - Prompt - Import"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
-								INTLIB.profile.READABLE = values
+								NS.Variables.LibraryDB = values
 
 								ReloadUI()
 							end,
@@ -866,6 +896,51 @@ function NS.LibraryUI.Script:Load()
 				end
 			end
 		end
+
+		do -- GLOBAL LIBRARY
+			function LibraryCallback:SetToLocal()
+				LibraryCallback:SetLibraryDestination(NS.Variables.LIBRARY_LOCAL)
+			end
+
+			function LibraryCallback:SetToGlobal()
+				LibraryCallback:SetLibraryDestination(NS.Variables.LIBRARY_GLOBAL)
+			end
+
+			function LibraryCallback:AddCharacterToGlobal()
+				local LocalDB = NS.Variables.LIBRARY_LOCAL
+				local GlobalDB = NS.Variables.LIBRARY_GLOBAL
+
+				local missingEntries = {}
+
+				--------------------------------
+
+				do -- GET
+					for name, data in pairs(LocalDB) do
+						if not GlobalDB[name] then
+							missingEntries[name] = data
+						end
+					end
+				end
+
+				do -- SET
+					for name, data in pairs(missingEntries) do
+						GlobalDB[name] = data
+					end
+				end
+			end
+
+			function Test(type)
+				if type == "global" then
+					LibraryCallback:SetToGlobal()
+				else
+					LibraryCallback:SetToLocal()
+				end
+			end
+
+			function Test2()
+				LibraryCallback:AddCharacterToGlobal()
+			end
+		end
 	end
 
 	--------------------------------
@@ -896,6 +971,10 @@ function NS.LibraryUI.Script:Load()
 	--------------------------------
 
 	do
+		LibraryCallback:SetToLocal()
+
+		--------------------------------
+
 		LibraryUI.Content.Sidebar.UpdateLayout()
 	end
 end

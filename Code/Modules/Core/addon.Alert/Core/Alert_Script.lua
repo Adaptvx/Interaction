@@ -56,6 +56,9 @@ function NS.Script:Load()
 
 	do
 		Frame.ShowWithAnimation = function()
+			if not Frame.hidden then
+				return
+			end
 			Frame.hidden = false
 			Frame:Show()
 
@@ -96,6 +99,9 @@ function NS.Script:Load()
 		end
 
 		Frame.HideWithAnimation = function()
+			if Frame.hidden then
+				return
+			end
 			Frame.hidden = true
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if Frame.hidden then

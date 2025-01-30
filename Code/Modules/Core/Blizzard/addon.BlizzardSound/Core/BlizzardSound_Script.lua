@@ -46,7 +46,7 @@ function NS.Script:Load()
 			-- SOUND
 			--------------------------------
 
-			if INTDB.profile.INT_MUTE_DIALOG then
+			if DB_GLOBAL.profile.INT_MUTE_DIALOG then
 				NS.Script:MuteDialog()
 			end
 		end

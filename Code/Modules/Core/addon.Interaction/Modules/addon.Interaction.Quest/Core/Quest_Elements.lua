@@ -785,7 +785,11 @@ function NS.Elements:Load()
 				local function SetAutoTextHeight(frame, customWidthModifier)
 					local function UpdateSize()
 						frame:SetWidth(Frame.ScrollChildFrame:GetWidth() * (customWidthModifier or 1))
-						frame:SetHeight(100)
+
+						local fontName, fontSize, fontFlags = frame:GetFont()
+						local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
+						local _, textHeight = AdaptiveAPI:GetStringSize(frame:GetText(), fontName, fontSize, fontFlags, justifyH, justifyV, frame:GetWidth())
+						frame:SetHeight(textHeight)
 					end
 					UpdateSize()
 

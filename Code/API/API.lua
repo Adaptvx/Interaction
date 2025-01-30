@@ -402,7 +402,7 @@ do
 			if event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
 				IsInCutscene = true
 
-				if INTDB.profile.INT_HIDEUI then
+				if DB_GLOBAL.profile.INT_HIDEUI then
 					if InteractionPriorityFrame then
 						addon.BlizzardFrames.Script:RemoveElements()
 					end
@@ -412,7 +412,7 @@ do
 			if event == "STOP_MOVIE" or event == "CINEMATIC_STOP" then
 				IsInCutscene = false
 
-				if INTDB.profile.INT_HIDEUI then
+				if DB_GLOBAL.profile.INT_HIDEUI then
 					if InteractionPriorityFrame then
 						addon.BlizzardFrames.Script:SetElements()
 					end

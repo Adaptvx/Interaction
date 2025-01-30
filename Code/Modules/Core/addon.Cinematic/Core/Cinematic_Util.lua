@@ -202,7 +202,7 @@ function NS.Util:Load()
 
 				local Offset
 				if StartOffset < level then
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
 					else
 						Offset = AdaptiveAPI.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset

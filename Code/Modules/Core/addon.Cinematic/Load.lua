@@ -27,7 +27,7 @@ function NS:Load()
 		--------------------------------
 
 		local function Start()
-			local cinematicMode = INTDB.profile.INT_CINEMATIC
+			local cinematicMode = DB_GLOBAL.profile.INT_CINEMATIC
 
 			if cinematicMode then
 				SetCVar("test_cameraTargetFocusInteractEnable", addon.ConsoleVariables.Variables.Saved_cameraTargetFocusInteractEnable)

@@ -17,52 +17,111 @@ function NS.Script:Load()
 	local Icon = NS.Variables.Icon
 	local Callback = NS.Script
 
-    --------------------------------
-    -- FUNCTIONS (FRAME)
-    --------------------------------
+	--------------------------------
+	-- FUNCTIONS (FRAME)
+	--------------------------------
 
-    do
-        function NS.Script:Show()
-            Icon:Show("Interaction")
-        end
+	do
+		function NS.Script:OnTooltipShow(tooltip)
+			local numEntries_local = AdaptiveAPI:tnum(addon.Readable.Variables.LIBRARY_LOCAL)
+			local numEntries_global = AdaptiveAPI:tnum(addon.Readable.Variables.LIBRARY_GLOBAL)
 
-        function NS.Script:Hide()
-            Icon:Hide("Interaction")
-        end
-    end
+			local text_title = L["MinimapIcon - Tooltip - Title"]
+			local text_entries_local
+			local text_entries_global
 
-    --------------------------------
-    -- FUNCTIONS (ANIMATION)
-    --------------------------------
+			--------------------------------
 
-    --------------------------------
-    -- SETTINGS
-    --------------------------------
+			do -- LOCAL
+				local playerName = UnitName("player")
 
-    do
-        local function Settings_MinimapIcon()
-			local Settings_Readable = INTDB.profile.INT_READABLE
-            local Settings_MinimapIcon = INTDB.profile.INT_MINIMAP
+				--------------------------------
 
-            if Settings_Readable and Settings_MinimapIcon then
-                NS.Script:Show()
-            else
-                NS.Script:Hide()
-            end
-        end
-        Settings_MinimapIcon()
+				if numEntries_local == 1 then
+					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local info = L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] .. numEntries_local .. L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"]
 
-        --------------------------------
+					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				elseif numEntries_local > 1 then
+					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local info = L["MinimapIcon - Tooltip - Entries - Subtext 1"] .. numEntries_local .. L["MinimapIcon - Tooltip - Entries - Subtext 2"]
 
-        CallbackRegistry:Add("SETTINGS_MINIMAP_CHANGED", Settings_MinimapIcon, 2)
+					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				else
+					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local info = L["MinimapIcon - Tooltip - Entries - Empty"]
+
+					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				end
+			end
+
+			do -- GLOBAL
+				if numEntries_global == 1 then
+					local name = L["Readable - Library - Name Text - Global Library"]
+					local info = L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] .. numEntries_global .. L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"]
+
+					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				elseif numEntries_global > 1 then
+					local name = L["Readable - Library - Name Text - Global Library"]
+					local info = L["MinimapIcon - Tooltip - Entries - Subtext 1"] .. numEntries_global .. L["MinimapIcon - Tooltip - Entries - Subtext 2"]
+
+					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				else
+					local name = L["Readable - Library - Name Text - Global Library"]
+					local info = L["MinimapIcon - Tooltip - Entries - Empty"]
+
+					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
+				end
+			end
+
+			--------------------------------
+
+			tooltip:AddLine(text_title)
+			tooltip:AddLine(text_entries_local)
+			-- tooltip:AddLine(text_entries_global)
+		end
+
+		function NS.Script:Show()
+			Icon:Show("Interaction")
+		end
+
+		function NS.Script:Hide()
+			Icon:Hide("Interaction")
+		end
+	end
+
+	--------------------------------
+	-- FUNCTIONS (ANIMATION)
+	--------------------------------
+
+	--------------------------------
+	-- SETTINGS
+	--------------------------------
+
+	do
+		local function Settings_MinimapIcon()
+			local Settings_Readable = DB_GLOBAL.profile.INT_READABLE
+			local Settings_MinimapIcon = DB_GLOBAL.profile.INT_MINIMAP
+
+			if Settings_Readable and Settings_MinimapIcon then
+				NS.Script:Show()
+			else
+				NS.Script:Hide()
+			end
+		end
+		Settings_MinimapIcon()
+
+		--------------------------------
+
+		CallbackRegistry:Add("SETTINGS_MINIMAP_CHANGED", Settings_MinimapIcon, 2)
 		CallbackRegistry:Add("SETTING_CHANGED", Settings_MinimapIcon, 2)
-    end
+	end
 
-    --------------------------------
-    -- EVENTS
-    --------------------------------
+	--------------------------------
+	-- EVENTS
+	--------------------------------
 
-    --------------------------------
-    -- SETUP
-    --------------------------------
+	--------------------------------
+	-- SETUP
+	--------------------------------
 end

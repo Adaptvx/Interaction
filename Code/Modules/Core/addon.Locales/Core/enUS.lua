@@ -60,7 +60,7 @@ local function Load()
 		L["Checkbox - UIDirection / Dialog / Mirror"] = "Mirror"
 		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Mirrors the UI direction."
 		L["Range - Quest Frame Size"] = "Quest Frame Size"
-		L["Range - Quest Frame Size - Tooltip"] = "Adjust quest frame size.\n\nDefault: Large."
+		L["Range - Quest Frame Size - Tooltip"] = "Adjust quest frame size.\n\nDefault: Medium."
 		L["Range - Quest Frame Size - Small"] = "SMALL"
 		L["Range - Quest Frame Size - Medium"] = "MEDIUM"
 		L["Range - Quest Frame Size - Large"] = "LARGE"
@@ -83,7 +83,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Hide UI"
 		L["Checkbox - Hide UI - Tooltip"] = "Hides UI during NPC interaction.\n\nDefault: On."
 		L["Range - Cinematic"] = "Camera Effects"
-		L["Range - Cinematic - Tooltip"] = "Camera effects during interaction.\n\nDefault: Full."
+		L["Range - Cinematic - Tooltip"] = "Camera effects during interaction.\n\nDefault: Balanced."
 		L["Range - Cinematic - None"] = "NONE"
 		L["Range - Cinematic - Full"] = "FULL"
 		L["Range - Cinematic - Balanced"] = "BALANCED"
@@ -221,6 +221,8 @@ local function Load()
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Playback volume.\n\nDefault: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Narrator"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Playback voice."
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Secondary Narrator"
+		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Playback voice used on special paragraphs such as those wrapped in '<>'."
 		L["Title - Gameplay"] = "Gameplay"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Auto Select Options"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Selects the best option for certain NPCs.\n\nDefault: Off."
@@ -231,11 +233,13 @@ local function Load()
 		L["Checkbox - Audio - Tooltip"] = "Enable sound effects and audio.\n\nDefault: On."
 		L["Title - Settings"] = "Settings"
 		L["Checkbox - Settings / Reset Settings"] = "Reset All Settings"
-        L["Checkbox - Settings / Reset Settings - Tooltip"] = "Resets settings to default values.\n\nDefault: Off."
+		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Resets settings to default values.\n\nDefault: Off."
 
 		L["Title - Credits"] = "Acknowledgements"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Translator - Russian"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Special thanks to ZamestoTV for the Russian translations!"
+		L["Title - Credits / AKArenan"] = "AKArenan | Translator - Brazilian Portuguese"
+		L["Title - Credits / AKArenan - Tooltip"] = "Special thanks to AKArenan for the Brazilian Portuguese translations!"
 	end
 
 	--------------------------------
@@ -271,14 +275,16 @@ local function Load()
 			L["Readable - Library - Show only World"] = "Only World"
 
 			-- TITLE
-			L["Readable - Library - Name Text Append"] = "'s Library"
+			L["Readable - Library - Name Text - Global Library"] = "Warband Library"
+			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
+			L["Readable - Library - Name Text - Local Library - Subtext 2"] = "'s Library"
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Showing "
 			L["Readable - Library - Showing Status Text - Subtext 2"] = " Items"
 
 			-- CONTENT
 			L["Readable - Library - No Results Text - Subtext 1"] = "No Results for "
 			L["Readable - Library - No Results Text - Subtext 2"] = "."
-			L["Readable - Library - Empty Library Text"] = "Empty Library."
+			L["Readable - Library - Empty Library Text"] = "No Entries."
 		end
 
 		do -- READABLE
@@ -288,6 +294,14 @@ local function Load()
 			-- TOOLTIP
 			L["Readable - Tooltip - Change Page"] = "Scroll to change pages."
 		end
+	end
+
+	--------------------------------
+	-- AUDIOBOOK
+	--------------------------------
+
+	do
+		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
 	end
 
 	--------------------------------
@@ -383,7 +397,12 @@ local function Load()
 	--------------------------------
 
 	do
-		L["MinimapIcon - Text"] = "Open Interaction Library."
+		L["MinimapIcon - Tooltip - Title"] = "Interaction Library"
+		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Entries"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Entry"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "No Entries."
 	end
 
 	--------------------------------
@@ -416,7 +435,7 @@ local function Load()
 			"?",
 			".",
 			",",
-        }
+		}
 
 		-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.
 		L["DialogData - PlaybackSpeedModifier"] = 1
@@ -433,6 +452,16 @@ local function Load()
 		L["GossipData - Trigger - Movie 2"] = "%(Play Movie%)"
 		L["GossipData - Trigger - NPC Dialog"] = "%<Stay awhile and listen.%>"
 		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Stay awhile and listen."
+	end
+
+	--------------------------------
+	-- AUDIOBOOK DATA
+	--------------------------------
+
+	do
+		-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
+		-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
+		L["AudiobookData - EstimatedCharPerSecond"] = 10
 	end
 end
 

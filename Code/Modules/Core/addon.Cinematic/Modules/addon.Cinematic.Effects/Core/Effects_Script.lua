@@ -24,7 +24,7 @@ function NS.Script:Load()
 	do
 		do -- MAIN
 			function Callback:UpdateVisibility()
-				local isCinematicMode = (INTDB.profile.INT_CINEMATIC)
+				local isCinematicMode = (DB_GLOBAL.profile.INT_CINEMATIC)
 				if not isCinematicMode then
 					return
 				end
@@ -147,8 +147,8 @@ function NS.Script:Load()
 		-- 		end
 		-- 	end
 
-		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Left, function() if INTDB.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Enter() end end, function() if INTDB.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Leave() end end)
-		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Right, function() if INTDB.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Enter() end end, function() if INTDB.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Leave() end end)
+		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Left, function() if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Enter() end end, function() if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Leave() end end)
+		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Right, function() if DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Enter() end end, function() if DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Leave() end end)
 		-- end
 	end
 
@@ -159,9 +159,9 @@ function NS.Script:Load()
 	do
 		do -- GRADIENT
 			local function Settings_UIDirection()
-				if INTDB.profile.INT_UIDIRECTION == 1 then
+				if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH .. "Art/Gradient/gradient-left-fullscreen.png")
-				elseif INTDB.profile.INT_UIDIRECTION == 2 then
+				elseif DB_GLOBAL.profile.INT_UIDIRECTION == 2 then
 					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH .. "Art/Gradient/gradient-right-fullscreen.png")
 				end
 

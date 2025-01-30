@@ -105,13 +105,15 @@ function NS.Script:Load()
 			addon.BlizzardGameTooltip.Script:StartCustom()
 		end)
 
-		hooksecurefunc(GossipFrame, "Hide", function()
-			Frame.HideWithAnimation()
-		end)
-
 		local Events = CreateFrame("Frame")
 		Events:RegisterEvent("GOSSIP_SHOW")
 		Events:SetScript("OnEvent", function(self, event, ...)
+			if not addon.Initialize.Ready then
+				return
+			end
+
+			--------------------------------
+
 			if event == "GOSSIP_SHOW" then
 				if BlizzardFriendshipBar:IsVisible() then
 					Frame.ShowProgress()
@@ -120,6 +122,8 @@ function NS.Script:Load()
 				end
 			end
 		end)
+
+		CallbackRegistry:Add("STOP_INTERACTION", Frame.HideWithAnimation)
 	end
 
 	--------------------------------

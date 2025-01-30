@@ -53,7 +53,7 @@ do
 		AdaptiveAPI.Presets.EDGE_STYLISED_HIGHLIGHT = AdaptiveAPI.PATH .. "Stylised/stylised-edge-highlighted.png"
 	end
 
-	do     -- SCROLL
+	do -- SCROLL
 		do -- TOOLTIP
 			AdaptiveAPI.Presets.BG_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-center-light.png"
 			AdaptiveAPI.Presets.EDGE_STYLISED_SCROLL = AdaptiveAPI.PATH .. "Stylised/stylised-scroll-border-light.png"
@@ -144,8 +144,15 @@ end
 --------------------------------
 
 do
-	AdaptiveAPI.Presets.NINESLICE_TOOLTIP = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-light.png"
-	AdaptiveAPI.Presets.NINESLICE_TOOLTIP_02 = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-dark.png"
+	do -- TOOLTIP
+		AdaptiveAPI.Presets.NINESLICE_TOOLTIP = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-light.png"
+		AdaptiveAPI.Presets.NINESLICE_TOOLTIP_02 = AdaptiveAPI.PATH .. "Tooltip/tooltip-nineslice-dark.png"
+	end
+
+	do -- CUSTOM TOOLTIP
+        AdaptiveAPI.Presets.NINESLICE_TOOLTIP_CUSTOM = AdaptiveAPI.PATH .. "Tooltip/tooltip-custom-nineslice-light.png"
+		AdaptiveAPI.Presets.NINESLICE_TOOLTIP_CUSTOM_02 = AdaptiveAPI.PATH .. "Tooltip/tooltip-custom-nineslice-dark.png"
+	end
 end
 
 --------------------------------

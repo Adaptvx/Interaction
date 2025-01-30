@@ -304,8 +304,8 @@ do -- ANIMATIONS
 			return
 		end
 
-		if startScale <= 0 or endScale <= 0 then
-			print("Failed Animation: Scale cannot be less than .")
+		if (type(startScale) == "number" and startScale <= 0) or (type(endScale) == "number" and endScale <= 0) then
+			print("Failed Animation: Scale cannot be less than or equal to 0.")
 			return
 		end
 
@@ -331,27 +331,41 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		-- Determine which function to use based on axis
-		local setFunc
-		local initialSize
-		local finalSize
+		local setWidthFunc, setHeightFunc
+		local startWidth, startHeight
+		local endWidth, endHeight
 		if axis == "x" then
-			setFunc = frame.SetWidth
-			initialSize = startScale
-			finalSize = endScale
+			setWidthFunc = frame.SetWidth
+			setHeightFunc = nil
+			startWidth = startScale
+			endWidth = endScale
 		elseif axis == "y" then
-			setFunc = frame.SetHeight
-			initialSize = startScale
-			finalSize = endScale
+			setHeightFunc = frame.SetHeight
+			setWidthFunc = nil
+			startHeight = startScale
+			endHeight = endScale
+		elseif axis == "both" then
+			setWidthFunc = frame.SetWidth
+			setHeightFunc = frame.SetHeight
+			startWidth = startScale.x
+			startHeight = startScale.y
+			endWidth = endScale.x
+			endHeight = endScale.y
 		else
-			setFunc = frame.SetScale
-			initialSize = startScale
-			finalSize = endScale
+			setWidthFunc = frame.SetScale
+			setHeightFunc = nil
+			startWidth = startScale
+			endWidth = endScale
 		end
 
 		--------------------------------
 
-		setFunc(frame, initialSize)
+		if setWidthFunc then
+			setWidthFunc(frame, startWidth)
+		end
+		if setHeightFunc then
+			setHeightFunc(frame, startHeight)
+		end
 
 		--------------------------------
 
@@ -381,16 +395,31 @@ do -- ANIMATIONS
 			local progress = (currentTime - startTime) / duration
 
 			local easedProgress = animationFunc(progress, 0, 1, 1)
-			local currentSize = initialSize + (finalSize - initialSize) * easedProgress
 
-			--------------------------------
+			if setWidthFunc then
+				local currentWidth = startWidth + (endWidth - startWidth) * easedProgress
 
-			setFunc(frame, currentSize)
+				--------------------------------
+
+				setWidthFunc(frame, currentWidth)
+			end
+			if setHeightFunc then
+
+				--------------------------------
+
+				local currentHeight = startHeight + (endHeight - startHeight) * easedProgress
+				setHeightFunc(frame, currentHeight)
+			end
 
 			--------------------------------
 
 			if currentTime >= endTime then
-				setFunc(frame, finalSize)
+				if setWidthFunc then
+					setWidthFunc(frame, endWidth)
+				end
+				if setHeightFunc then
+					setHeightFunc(frame, endHeight)
+				end
 
 				--------------------------------
 

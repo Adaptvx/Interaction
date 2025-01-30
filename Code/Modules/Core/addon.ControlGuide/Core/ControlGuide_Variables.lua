@@ -28,7 +28,7 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.PADDING = NS.Variables:RATIO(1.5)
+		NS.Variables.PADDING = NS.Variables:RATIO(1)
 	end
 end
 

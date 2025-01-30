@@ -186,7 +186,7 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- TEXT
-					local TEXT_SIZE = INTDB.profile.INT_CONTENT_SIZE
+					local TEXT_SIZE = DB_GLOBAL.profile.INT_CONTENT_SIZE
 
 					--------------------------------
 

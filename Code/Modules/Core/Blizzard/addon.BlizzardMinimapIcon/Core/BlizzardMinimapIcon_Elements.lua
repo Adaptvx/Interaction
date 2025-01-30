@@ -16,19 +16,23 @@ function NS.Elements:Load()
 
 	do
 		do -- CREATE ELEMENTS
+			local function OnTooltipShowCallback(tooltip)
+				NS.Script:OnTooltipShow(tooltip)
+			end
+
 			local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("Interaction", {
 				type = "data source",
-				text = L["MinimapIcon - Text"],
 				icon = NS.Variables.PATH .. "library.png",
 				OnClick = function()
 					InteractionReadableUIFrame.ShowLibrary()
 				end,
+				OnTooltipShow = OnTooltipShowCallback,
 			})
 
 			--------------------------------
 
 			NS.Variables.Icon = LibStub("LibDBIcon-1.0")
-			NS.Variables.Icon:Register("Interaction", LDB, INTDB.profile.LibDBIcon)
+			NS.Variables.Icon:Register("Interaction", LDB, DB_GLOBAL.profile.LibDBIcon)
 		end
 	end
 

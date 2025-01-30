@@ -6,7 +6,7 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a clickable Dropdown. Child Frames: Dropdown
-function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeListFunc, autoCloseList, setFunc, getFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
+function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeListFunc, autoCloseList, getFunc, setFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 	local OffsetX = 0
 
 	--------------------------------
@@ -23,6 +23,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 			autoCloseList = autoCloseList,
 			getFunc = getFunc,
 			setFunc = setFunc,
+			enableFunc = enableFunc,
 		}, "$parent.Dropdown")
 		Frame.Dropdown:SetSize(225, Frame.Container:GetHeight())
 		Frame.Dropdown:SetPoint("RIGHT", Frame.Container)

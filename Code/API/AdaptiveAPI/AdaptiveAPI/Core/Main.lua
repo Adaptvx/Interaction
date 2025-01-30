@@ -50,6 +50,71 @@ end
 
 do
 	do -- STRING
+		-- Gets the width & height of the given string.
+		---@param text string
+		---@param font string
+		---@param size number
+		---@param flags string
+		---@param justifyH? string
+		---@param justifyV? string
+		---@param maxWidth? number
+		---@param maxHeight? number
+		---@return width number
+		---@return height number
+		function AdaptiveAPI:GetStringSize(text, font, size, flags, justifyH, justifyV, maxWidth, maxHeight)
+			local textFrame = AdaptiveAPI.MeasurementText
+			if not textFrame then
+				AdaptiveAPI.MeasurementText = UIParent:CreateFontString("AdaptiveAPI.MeasurementText", "OVERLAY")
+				AdaptiveAPI.MeasurementText:SetPoint("CENTER", UIParent)
+				AdaptiveAPI.MeasurementText:Hide()
+				textFrame = AdaptiveAPI.MeasurementText
+			end
+
+			--------------------------------
+
+			textFrame:SetFont(font or GameFontNormal, size > 0 and size or 12.5, flags or "")
+			textFrame:SetText(text)
+
+			if justifyH then
+				textFrame:SetJustifyH(justifyH)
+			end
+
+			if justifyV then
+				textFrame:SetJustifyV(justifyV)
+			end
+
+			if maxWidth then
+				textFrame:SetWidth(maxWidth)
+			end
+
+			if maxHeight then
+				textFrame:SetHeight(maxHeight)
+			end
+
+			--------------------------------
+
+			local width, height = textFrame:GetWrappedWidth(), textFrame:GetStringHeight()
+			return width, height
+		end
+
+		--- Gets the actual height of the text in the given font string without any color codes.
+		---@param text FontString
+		---@return number
+		function AdaptiveAPI:GetActualStringHeight(text)
+			local cleanedText = AdaptiveAPI:StripColorCodes(text:GetText())
+
+			--------------------------------
+
+			local textFrame = CreateFrame("Frame"):CreateFontString(nil, "BACKGROUND", text:GetFont())
+			textFrame:SetWidth(text:GetWidth())
+			textFrame:SetText(cleanedText)
+
+			--------------------------------
+
+			local height = textFrame:GetHeight()
+			return height
+		end
+
 		-- Returns if the given string is found in the string.
 		---@param string string
 		---@param stringToSearch string
@@ -130,37 +195,19 @@ do
 			return nil
 		end
 
-		--- Gets the actual height of the text in the given font string without any color codes.
-		---@param text FontString
-		---@return number
-		function AdaptiveAPI:GetActualStringHeight(text)
-			local CleanedText = AdaptiveAPI:StripColorCodes(text:GetText())
-
-			--------------------------------
-
-			local Temp = CreateFrame("Frame"):CreateFontString(nil, "BACKGROUND", text:GetFont())
-			Temp:SetWidth(text:GetWidth())
-			Temp:SetText(CleanedText)
-
-			--------------------------------
-
-			local Height = Temp:GetHeight()
-			return Height
-		end
-
 		--- Returns a substring of the given string from the starting index to the ending index.
 		---@param str string
 		---@param A number
 		---@param B number
 		---@return string
 		function AdaptiveAPI:GetSubstring(str, A, B)
-			local StartIndex = AdaptiveAPI:GetCharacterStartIndex(str, A)
-			local EndIndex = AdaptiveAPI:GetCharacterEndIndex(str, B)
+			local startIndex = AdaptiveAPI:GetCharacterStartIndex(str, A)
+			local endIndex = AdaptiveAPI:GetCharacterEndIndex(str, B)
 
 			--------------------------------
 
-			if StartIndex and EndIndex then
-				return str:sub(StartIndex, EndIndex)
+			if startIndex and endIndex then
+				return str:sub(startIndex, endIndex)
 			else
 				return ""
 			end
@@ -291,62 +338,6 @@ do
 			fontString:SetFont(font, size, "")
 		end
 
-		-- Sets the font for all FontStrings iterating from the given frame.
-		---@param frame any
-		---@param font string
-		---@param size number
-		function AdaptiveAPI:SetFontAll(frame, font, size)
-			if not frame then
-				return
-			end
-
-			--------------------------------
-
-			if frame.IsVisible then
-				function Enumerate(_frame, _font, _size, moveToChildren)
-					if not moveToChildren then
-						if _frame.GetNumRegions and _frame:GetNumRegions() > 0 then
-							for i = 1, _frame:GetNumRegions() do
-								local Region = select(i, _frame:GetRegions())
-
-								--------------------------------
-
-								if Region and Region.IsObjectType and Region:IsObjectType("FontString") then
-									Region:SetFont(_font, _size, "")
-								else
-									Enumerate(_frame, _font, _size, true)
-								end
-							end
-						else
-							if _frame.SetFont then
-								_frame:SetFont(_font, _size, "")
-							end
-
-							--------------------------------
-
-							Enumerate(_frame, _font, _size, true)
-						end
-					end
-
-					if moveToChildren then
-						if _frame.GetNumChildren then
-							for i = 1, _frame:GetNumChildren() do
-								local Children = select(i, _frame:GetChildren())
-
-								--------------------------------
-
-								Enumerate(Children, _font, _size, false)
-							end
-						end
-					end
-				end
-
-				--------------------------------
-
-				Enumerate(frame, font, size, false)
-			end
-		end
-
 		-- Sets the font size of a FontString
 		---@param fontString FontString
 		function AdaptiveAPI:SetFontSize(fontString, size)
@@ -394,54 +385,6 @@ do
 		function AdaptiveAPI:SetUnformattedText(fontString)
 			if fontString.IsObjectType and fontString:IsObjectType("FontString") then
 				fontString:SetText(AdaptiveAPI:GetUnformattedText(fontString:GetText()))
-			end
-		end
-
-		-- Remove inline formatting from all FontStrings iterating from the given frame.
-		---@param frame any
-		function AdaptiveAPI:SetUnformattedTextAll(frame)
-			if frame.IsVisible then
-				function Enumerate(_frame, moveToChildren)
-					if not moveToChildren then
-						if _frame.GetNumRegions and _frame:GetNumRegions() > 0 then
-							for i = 1, _frame:GetNumRegions() do
-								local Region = select(i, _frame:GetRegions())
-
-								--------------------------------
-
-								if Region and Region.IsObjectType and Region:IsObjectType("FontString") then
-									AdaptiveAPI:SetUnformattedText(Region)
-								else
-									Enumerate(_frame, true)
-								end
-							end
-						else
-							if _frame.SetFont then
-								AdaptiveAPI:SetUnformattedText(_frame)
-							end
-
-							--------------------------------
-
-							Enumerate(_frame, true)
-						end
-					end
-
-					if moveToChildren then
-						if _frame.GetNumChildren then
-							for i = 1, _frame:GetNumChildren() do
-								local Children = select(i, _frame:GetChildren())
-
-								--------------------------------
-
-								Enumerate(Children, _font, _size, false)
-							end
-						end
-					end
-				end
-
-				--------------------------------
-
-				Enumerate(frame, font, size, false)
 			end
 		end
 	end
@@ -625,11 +568,11 @@ do
 		---    - critNum: number of critical strike
 		---    - critSign: sign of critical strike
 		function AdaptiveAPI:GetItemStatsFromTooltip(tooltip, raw)
-			local Stats = {}
+			local stats = {}
 
 			--------------------------------
 
-			local Valid = false
+			local valid = false
 
 			for i = 1, tooltip:NumLines() do
 				local Line = _G[tooltip:GetName() .. "TextLeft" .. i]:GetText()
@@ -637,12 +580,12 @@ do
 				--------------------------------
 
 				if string.match(Line, "If you replace this item") or raw then
-					Valid = true
+					valid = true
 				end
 
 				--------------------------------
 
-				if Valid then
+				if valid then
 					local function MatchLine(line, stringToFind)
 						if string.match(line, stringToFind) then
 							return line
@@ -652,51 +595,51 @@ do
 					end
 
 					-- Search for specific keywords to identify stats
-					local Intellect = MatchLine(Line, "Intellect")
-					local Strength = MatchLine(Line, "Strength")
-					local Agility = MatchLine(Line, "Agility")
-					local Mastery = MatchLine(Line, "Mastery")
-					local Haste = MatchLine(Line, "Haste")
-					local Versatility = MatchLine(Line, "Versatility")
-					local Crit = MatchLine(Line, "Critical Strike")
+					local intellect = MatchLine(Line, "Intellect")
+					local strength = MatchLine(Line, "Strength")
+					local agility = MatchLine(Line, "Agility")
+					local mastery = MatchLine(Line, "Mastery")
+					local haste = MatchLine(Line, "Haste")
+					local versatility = MatchLine(Line, "Versatility")
+					local crit = MatchLine(Line, "Critical Strike")
 
-					local IntNum, IntSign = AdaptiveAPI:ParseNumberFromString(tostring(Intellect))
-					local StrNum, StrSign = AdaptiveAPI:ParseNumberFromString(tostring(Strength))
-					local AglNum, AglSign = AdaptiveAPI:ParseNumberFromString(tostring(Agility))
-					local MasteryNum, MasterySign = AdaptiveAPI:ParseNumberFromString(tostring(Mastery))
-					local HasteNum, HasteSign = AdaptiveAPI:ParseNumberFromString(tostring(Haste))
-					local VersatilityNum, VersatilitySign = AdaptiveAPI:ParseNumberFromString(tostring(Versatility))
-					local CritNum, CritSign = AdaptiveAPI:ParseNumberFromString(tostring(Crit))
+					local intNum, intSign = AdaptiveAPI:ParseNumberFromString(tostring(intellect))
+					local strNum, strSign = AdaptiveAPI:ParseNumberFromString(tostring(strength))
+					local aglNum, aglSign = AdaptiveAPI:ParseNumberFromString(tostring(agility))
+					local masteryNum, masterySign = AdaptiveAPI:ParseNumberFromString(tostring(mastery))
+					local hasteNum, hasteSign = AdaptiveAPI:ParseNumberFromString(tostring(haste))
+					local versatilityNum, versatilitySign = AdaptiveAPI:ParseNumberFromString(tostring(versatility))
+					local critNum, critSign = AdaptiveAPI:ParseNumberFromString(tostring(crit))
 
 					-- If any stat is found, add it to the table
-					if IntNum then
-						Stats.intNum = IntNum
-						Stats.intSign = IntSign
-					elseif StrNum then
-						Stats.strNum = StrNum
-						Stats.strSign = StrSign
-					elseif AglNum then
-						Stats.aglNum = AglNum
-						Stats.aglSign = AglSign
-					elseif MasteryNum then
-						Stats.masteryNum = MasteryNum
-						Stats.masterySign = MasterySign
-					elseif HasteNum then
-						Stats.hasteNum = HasteNum
-						Stats.hasteSign = HasteSign
-					elseif VersatilityNum then
-						Stats.versNum = VersatilityNum
-						Stats.versSign = VersatilitySign
-					elseif CritNum then
-						Stats.critNum = CritNum
-						Stats.critSign = CritSign
+					if intNum then
+						stats.intNum = intNum
+						stats.intSign = intSign
+					elseif strNum then
+						stats.strNum = strNum
+						stats.strSign = strSign
+					elseif aglNum then
+						stats.aglNum = aglNum
+						stats.aglSign = aglSign
+					elseif masteryNum then
+						stats.masteryNum = masteryNum
+						stats.masterySign = masterySign
+					elseif hasteNum then
+						stats.hasteNum = hasteNum
+						stats.hasteSign = hasteSign
+					elseif versatilityNum then
+						stats.versNum = versatilityNum
+						stats.versSign = versatilitySign
+					elseif critNum then
+						stats.critNum = critNum
+						stats.critSign = critSign
 					end
 				end
 			end
 
 			--------------------------------
 
-			return Stats
+			return stats
 		end
 
 		-- Extracts the total item stats from a tooltip.
@@ -711,7 +654,7 @@ do
 		---    - versNum: total number of versatility
 		---    - critNum: total number of critical strike
 		function AdaptiveAPI:GetTotalItemStatsFromTooltip(tooltip, raw)
-			local Stats = {
+			local stats = {
 				intNum = 0,
 				strNum = 0,
 				aglNum = 0,
@@ -723,7 +666,7 @@ do
 
 			--------------------------------
 
-			local Valid = false
+			local valid = false
 
 			for i = 1, tooltip:NumLines() do
 				local Line = _G[tooltip:GetName() .. "TextLeft" .. i]:GetText()
@@ -731,25 +674,25 @@ do
 				--------------------------------
 
 				if string.match(Line, "If you replace this item") or raw then
-					Valid = true
+					valid = true
 				end
 
 				--------------------------------
 
-				if Valid then
-					local FinishSearch = false
+				if valid then
+					local finishSearch = false
 
 					--------------------------------
 
 					local function MatchLine(line, stringToFind)
-						local IsEquip = AdaptiveAPI:FindString(line, "Equip")
-						local IsZoneOfFocus = AdaptiveAPI:FindString(line, "Zone of Focus")
-						local IsSet = AdaptiveAPI:FindString(line, "Set")
+						local isEquip = AdaptiveAPI:FindString(line, "Equip")
+						local isZoneOfFocus = AdaptiveAPI:FindString(line, "Zone of Focus")
+						local isSet = AdaptiveAPI:FindString(line, "Set")
 
 						--------------------------------
 
-						if (not IsEquip or IsZoneOfFocus) and not IsSet and string.match(line, stringToFind) and not FinishSearch then
-							FinishSearch = true
+						if (not isEquip or isZoneOfFocus) and not isSet and string.match(line, stringToFind) and not finishSearch then
+							finishSearch = true
 
 							--------------------------------
 
@@ -760,35 +703,35 @@ do
 					end
 
 					-- Search for specific keywords to identify stats
-					local Intellect = MatchLine(Line, "Intellect")
-					local Strength = MatchLine(Line, "Strength")
-					local Agility = MatchLine(Line, "Agility")
-					local Mastery = MatchLine(Line, "Mastery")
-					local Haste = MatchLine(Line, "Haste")
-					local Versatility = MatchLine(Line, "Versatility")
-					local Crit = MatchLine(Line, "Critical Strike")
+					local intellect = MatchLine(Line, "Intellect")
+					local strength = MatchLine(Line, "Strength")
+					local agility = MatchLine(Line, "Agility")
+					local mastery = MatchLine(Line, "Mastery")
+					local haste = MatchLine(Line, "Haste")
+					local versatility = MatchLine(Line, "Versatility")
+					local crit = MatchLine(Line, "Critical Strike")
 
 					-- Parse and accumulate values for each stat
 					local function AccumulateStat(statName, statValue)
 						if statValue then
 							local function CalculateStat(string)
-								local Num, Sign = AdaptiveAPI:ParseNumberFromString(string)
-								local StatName
+								local num, sign = AdaptiveAPI:ParseNumberFromString(string)
+								local statName
 
 								--------------------------------
 
-								if AdaptiveAPI:FindString(string, "Intellect") then StatName = "intNum" end
-								if AdaptiveAPI:FindString(string, "Strength") then StatName = "strNum" end
-								if AdaptiveAPI:FindString(string, "Agility") then StatName = "aglNum" end
-								if AdaptiveAPI:FindString(string, "Mastery") then StatName = "masteryNum" end
-								if AdaptiveAPI:FindString(string, "Haste") then StatName = "hasteNum" end
-								if AdaptiveAPI:FindString(string, "Versatility") then StatName = "versNum" end
-								if AdaptiveAPI:FindString(string, "Critical Strike") then StatName = "critNum" end
+								if AdaptiveAPI:FindString(string, "Intellect") then statName = "intNum" end
+								if AdaptiveAPI:FindString(string, "Strength") then statName = "strNum" end
+								if AdaptiveAPI:FindString(string, "Agility") then statName = "aglNum" end
+								if AdaptiveAPI:FindString(string, "Mastery") then statName = "masteryNum" end
+								if AdaptiveAPI:FindString(string, "Haste") then statName = "hasteNum" end
+								if AdaptiveAPI:FindString(string, "Versatility") then statName = "versNum" end
+								if AdaptiveAPI:FindString(string, "Critical Strike") then statName = "critNum" end
 
 								--------------------------------
 
-								if Num and StatName then
-									Stats[StatName] = Stats[StatName] + Num
+								if num and statName then
+									stats[statName] = stats[statName] + num
 								end
 							end
 
@@ -807,31 +750,31 @@ do
 						end
 					end
 
-					AccumulateStat("intNum", Intellect)
-					AccumulateStat("strNum", Strength)
-					AccumulateStat("aglNum", Agility)
-					AccumulateStat("masteryNum", Mastery)
-					AccumulateStat("hasteNum", Haste)
-					AccumulateStat("versNum", Versatility)
-					AccumulateStat("critNum", Crit)
+					AccumulateStat("intNum", intellect)
+					AccumulateStat("strNum", strength)
+					AccumulateStat("aglNum", agility)
+					AccumulateStat("masteryNum", mastery)
+					AccumulateStat("hasteNum", haste)
+					AccumulateStat("versNum", versatility)
+					AccumulateStat("critNum", crit)
 				end
 			end
 
 			--------------------------------
 
-			return Stats
+			return stats
 		end
 
 		-- Returns the item level from a tooltip.
 		---@param tooltip frame
 		---@return ItemLevel number
 		function AdaptiveAPI:GetItemLevelFromTooltip(tooltip)
-			local ItemLevel
+			local itemLevel
 
 			--------------------------------
 
 			for i = 1, tooltip:NumLines() do
-				local Line = _G[tooltip:GetName() .. "TextLeft" .. i]:GetText()
+				local line = _G[tooltip:GetName() .. "TextLeft" .. i]:GetText()
 
 				--------------------------------
 
@@ -845,18 +788,18 @@ do
 
 				--------------------------------
 
-				local ItemLevelLine = MatchLine(Line, "Item Level")
+				local itemLevelLine = MatchLine(line, "Item Level")
 
 				--------------------------------
 
-				if ItemLevelLine then
-					ItemLevel = AdaptiveAPI:ParseNumberFromString(tostring(ItemLevelLine))
+				if itemLevelLine then
+					itemLevel = AdaptiveAPI:ParseNumberFromString(tostring(itemLevelLine))
 				end
 			end
 
 			--------------------------------
 
-			return ItemLevel
+			return itemLevel
 		end
 	end
 
@@ -896,17 +839,17 @@ do
 		--- @param indexValue any
 		--- @return index any
 		function AdaptiveAPI:FindIndexInTable(table, indexValue)
-			local CurrentIndex = 0
+			local currentIndex = 0
 
 			--------------------------------
 
 			for k, v in pairs(table) do
-				CurrentIndex = CurrentIndex + 1
+				currentIndex = currentIndex + 1
 
 				--------------------------------
 
 				if k == indexValue then
-					return CurrentIndex
+					return currentIndex
 				end
 			end
 
@@ -920,17 +863,17 @@ do
 		--- @param indexValue any
 		--- @return index any
 		function AdaptiveAPI:FindIndexInTableByValue(table, indexValue)
-			local CurrentIndex = 0
+			local currentIndex = 0
 
 			--------------------------------
 
 			for k, v in pairs(table) do
-				CurrentIndex = CurrentIndex + 1
+				currentIndex = currentIndex + 1
 
 				--------------------------------
 
 				if v == indexValue then
-					return CurrentIndex
+					return currentIndex
 				end
 			end
 
@@ -945,11 +888,11 @@ do
 		--- @param searchVariable string
 		function AdaptiveAPI:FindIndexInTableByVariableValue(table, indexValue, searchVariable)
 			for i = 1, #table do
-				local CurrentEntry = table[i]
+				local currentEntry = table[i]
 
 				--------------------------------
 
-				if CurrentEntry[searchVariable] == indexValue then
+				if currentEntry[searchVariable] == indexValue then
 					return i
 				end
 			end
@@ -1006,33 +949,33 @@ do
 		---@param customCheck? function
 		---@return new table
 		function AdaptiveAPI:FilterListByVariable(list, variable, value, roughMatch, caseSensitive, customCheck)
-			local FilteredList = {}
+			local filteredList = {}
 
 			--------------------------------
 
 			for k, v in ipairs(list) do
 				if customCheck then
 					if customCheck(v) then
-						table.insert(FilteredList, v)
+						table.insert(filteredList, v)
 					end
 				elseif roughMatch then
 					if caseSensitive or caseSensitive == nil then
 						if AdaptiveAPI:FindString(tostring(v[variable]), tostring(value)) then
-							table.insert(FilteredList, v)
+							table.insert(filteredList, v)
 						end
 					else
 						if AdaptiveAPI:FindString(string.lower(tostring(v[variable])), string.lower(tostring(value))) then
-							table.insert(FilteredList, v)
+							table.insert(filteredList, v)
 						end
 					end
 				else
 					if caseSensitive or caseSensitive == nil then
 						if v[variable] == value then
-							table.insert(FilteredList, v)
+							table.insert(filteredList, v)
 						end
 					else
 						if string.lower(tostring(v[variable])) == string.lower(tostring(value)) then
-							table.insert(FilteredList, v)
+							table.insert(filteredList, v)
 						end
 					end
 				end
@@ -1040,7 +983,7 @@ do
 
 			--------------------------------
 
-			return FilteredList
+			return filteredList
 		end
 	end
 
@@ -1097,7 +1040,7 @@ do
 		-- Gets if the player is in shapeshift form by spell name.
 		---@return IsInShapeshiftForm boolean
 		function AdaptiveAPI:IsPlayerInShapeshiftForm()
-			local ShapeshiftForms = {
+			local auras = {
 				"Cat Form", -- Druid Cat Form
 				"Bear Form", -- Druid Bear Form
 				"Travel Form", -- Druid Travel Form
@@ -1109,7 +1052,7 @@ do
 
 			--------------------------------
 
-			for key, value in ipairs(ShapeshiftForms) do
+			for key, value in ipairs(auras) do
 				if AuraUtil.FindAuraByName(value, "Player") then
 					return true
 				end
@@ -1130,6 +1073,22 @@ do
 		---@return height number
 		function AdaptiveAPI:GetScreenHeight()
 			return WorldFrame:GetHeight()
+		end
+	end
+
+	do -- STANDARD FUNCTIONS
+
+		-- Returns the length of a table.
+		---@param table table
+		---@return length number
+		function AdaptiveAPI:tnum(table)
+			local length = 0
+
+			for _ in pairs(table) do
+				length = length + 1
+			end
+
+			return length
 		end
 	end
 end
@@ -1213,18 +1172,18 @@ do
 
 			--------------------------------
 
-			local MouseX, MouseY = GetCursorPosition()
-			local FrameX = originX
-			local FrameY = originY
+			local mouseX, mouseY = GetCursorPosition()
+			local frameX = originX
+			local frameY = originY
 
 			--------------------------------
 
-			local DeltaX = (MouseX - FrameX)
-			local DeltaY = (FrameY - MouseY) -- Invert Y axis because WoW's coordinate system has Y increasing upwards.
+			local deltaX = (mouseX - frameX)
+			local deltaY = (frameY - mouseY) -- Invert Y axis because WoW's coordinate system has Y increasing upwards.
 
 			--------------------------------
 
-			return DeltaX, DeltaY
+			return deltaX, deltaY
 		end
 
 		-- Sets the value of a variable to all children of a frame.

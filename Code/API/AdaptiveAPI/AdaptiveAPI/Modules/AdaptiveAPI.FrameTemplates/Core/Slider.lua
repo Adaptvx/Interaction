@@ -134,7 +134,7 @@ do
 						local min, max = frame:GetMinMaxValues()
 						local stepSize = frame:GetValueStep()
 						local numSteps = (max / stepSize) + 1
-						local numGrids = numSteps + 1
+						local numGrids = numSteps
 
 						--------------------------------
 
@@ -184,17 +184,17 @@ do
 
 					if frame.Grids then
 						for i = 1, #frame.Grids do
-							local CurrentGrid = frame.Grids[i]
+							local currentGrid = frame.Grids[i]
 
-							CurrentGrid:Hide()
+							currentGrid:Hide()
 						end
 
-						for i = 1, numSteps + 1 do
-							local CurrentGrid = frame.Grids[i]
+						for i = 1, numSteps do
+							local currentGrid = frame.Grids[i]
 
-							CurrentGrid:Show()
-							CurrentGrid:ClearAllPoints()
-							CurrentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - CurrentGrid:GetHeight()) / (numSteps - 1)) * (i - 1), 7.5)
+							currentGrid:Show()
+							currentGrid:ClearAllPoints()
+							currentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - currentGrid:GetHeight()) / (numSteps - 1)) * (i - 1), 7.5)
 						end
 					end
 

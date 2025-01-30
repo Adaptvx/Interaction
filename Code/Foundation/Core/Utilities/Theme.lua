@@ -18,8 +18,12 @@ end
 
 do -- CONSTANTS
 	NS.RGB_RECOMMENDED = {}
+
 	NS.RGB_WHITE = { r = 1, g = 1, b = 1 }
 	NS.RGB_BLACK = { r = .1, g = .1, b = .1 }
+
+	NS.RGB_CHAT_MSG_SAY = { r = 1, g = .87, b = .67 }
+	NS.RGB_CHAT_MSG_EMOTE = { r = .93, g = .52, b = .31 }
 end
 
 do -- QUEST
@@ -687,8 +691,8 @@ function NS:Load()
 			local hour = time.hour
 
 			-- Sunrise is at 5:30 AM and sunset at 9:00 PM.
-			local dayTime = INTDB.profile.INT_TIME_DAY
-			local nightTime = INTDB.profile.INT_TIME_NIGHT
+			local dayTime = DB_GLOBAL.profile.INT_TIME_DAY
+			local nightTime = DB_GLOBAL.profile.INT_TIME_NIGHT
 
 			--------------------------------
 
@@ -716,9 +720,9 @@ function NS:Load()
 			-- 2 -> NIGHT
 			-- 3 -> DYNAMIC
 
-			local rawTheme = INTDB.profile.INT_MAIN_THEME
+			local rawTheme = DB_GLOBAL.profile.INT_MAIN_THEME
 			local theme = rawTheme == 3 and select(1, NS:GetDynamicMainTheme()) or rawTheme
-			local theme_dialog = INTDB.profile.INT_DIALOG_THEME
+			local theme_dialog = DB_GLOBAL.profile.INT_DIALOG_THEME
 
 			--------------------------------
 

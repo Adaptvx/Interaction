@@ -146,7 +146,7 @@ function NS.Script:Load()
 
 	do
 		function NS.Script:StartInteraction()
-			if INTDB.profile.INT_HIDEUI then
+			if DB_GLOBAL.profile.INT_HIDEUI then
 				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
 				local isStaticNPC = ((UnitName("npc") and not UnitExists("npc")) or (UnitName("questnpc") and not UnitExists("questnpc")))
 				local inInstance = (IsInInstance())
@@ -162,7 +162,7 @@ function NS.Script:Load()
 		end
 
 		function NS.Script:StopInteraction()
-			if INTDB.profile.INT_HIDEUI then
+			if DB_GLOBAL.profile.INT_HIDEUI then
 				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
 				local isStaticNPC = ((UnitName("npc") and not UnitExists("npc")) or (UnitName("questnpc") and not UnitExists("questnpc")))
 				local inInstance = (IsInInstance())

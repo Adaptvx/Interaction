@@ -403,81 +403,27 @@ function NS.ItemUI.Script:Load()
 
 			--------------------------------
 
-			if ReadableUI_ItemUI:IsVisible() then
-				if NS.ItemUI.Variables.Type == "Stone" then
-					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Slate_ChangePage)
-				end
-
-				--------------------------------
-
-				AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI, .25, ReadableUI_ItemUI:GetAlpha(), 0)
-
-				--------------------------------
-
-				if isReverse then
-					AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 0, 100, "x", AdaptiveAPI.Animation.EaseExpo)
-				else
-					AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 0, -100, "x", AdaptiveAPI.Animation.EaseExpo)
-				end
-
-				--------------------------------
-
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					NS.ItemUI.Script:Update()
+			do -- ITEM
+				if ReadableUI_ItemUI:IsVisible() then
+					if NS.ItemUI.Variables.Type == "Stone" then
+						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Slate_ChangePage)
+					end
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI, .5, ReadableUI_ItemUI:GetAlpha(), 1)
+					ReadableUI_ItemUI:EnableMouse(false)
+
+					--------------------------------
+
+					AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI, .25, ReadableUI_ItemUI:GetAlpha(), 0)
 
 					--------------------------------
 
 					if isReverse then
-						AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", -100, 0, "x", AdaptiveAPI.Animation.EaseExpo)
+						AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 0, 100, "x", AdaptiveAPI.Animation.EaseExpo)
 					else
-						AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 100, 0, "x", AdaptiveAPI.Animation.EaseExpo)
+						AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 0, -100, "x", AdaptiveAPI.Animation.EaseExpo)
 					end
-				end, .25)
-			end
-
-			--------------------------------
-
-			if ReadableUI_BookUI:IsVisible() then
-				if (ReadableUI_BookUI.FrontPage:IsVisible()) or ((NS.ItemUI.Variables.CurrentPage - 1) == 0) then
-					if ReadableUI_BookUI.FrontPage:IsVisible() then
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Open)
-					else
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Close)
-					end
-
-					--------------------------------
-
-					local baseScale
-					if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == nil then
-						baseScale = 1.125
-					elseif NS.ItemUI.Variables.Type == "ParchmentLarge" then
-						baseScale = 1.25
-					end
-
-					local targetPage
-					local comparison
-					if ReadableUI_BookUI.FrontPage:IsVisible() then
-						targetPage = 2
-						comparison = "<"
-					elseif NS.ItemUI.Variables.CurrentPage - 1 == 0 then
-						targetPage = 1
-						comparison = ">"
-					end
-
-					--------------------------------
-
-					AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.FrontPage.Text, .125, ReadableUI_BookUI.FrontPage.Text:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-					AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .125, ReadableUI_BookUI.Content.Left:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-					AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .125, ReadableUI_BookUI.Content.Right:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-					AdaptiveAPI.Animation:Fade(ReadableUI_BookUI, .25, ReadableUI_BookUI:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						AdaptiveAPI.Animation:Scale(ReadableUI_BookUI, 1, ReadableUI_BookUI:GetScale(), baseScale + .15, nil, AdaptiveAPI.Animation.EaseExpo, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-					end, .125)
 
 					--------------------------------
 
@@ -486,69 +432,133 @@ function NS.ItemUI.Script:Load()
 
 						--------------------------------
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.FrontPage.Text, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-						end, .5)
+						AdaptiveAPI.Animation:Fade(ReadableUI_ItemUI, .5, ReadableUI_ItemUI:GetAlpha(), 1)
 
 						--------------------------------
 
-						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI, .5, ReadableUI_BookUI:GetAlpha(), 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
-						AdaptiveAPI.Animation:Scale(ReadableUI_BookUI, 1, baseScale - .15, baseScale, nil, AdaptiveAPI.Animation.EaseExpo, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+						if isReverse then
+							AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", -100, 0, "x", AdaptiveAPI.Animation.EaseExpo)
+						else
+							AdaptiveAPI.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 100, 0, "x", AdaptiveAPI.Animation.EaseExpo)
+						end
+					end, .25)
+
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						ReadableUI_ItemUI:EnableMouse(true)
+					end, 1.25)
+				end
+			end
+
+			do -- BOOK
+				if ReadableUI_BookUI:IsVisible() then
+					if (ReadableUI_BookUI.FrontPage:IsVisible()) or ((NS.ItemUI.Variables.CurrentPage - 1) == 0) then
+						if ReadableUI_BookUI.FrontPage:IsVisible() then
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Open)
+						else
+							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Close)
+						end
+
+						--------------------------------
+
+						local baseScale
+						if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == nil then
+							baseScale = 1.125
+						elseif NS.ItemUI.Variables.Type == "ParchmentLarge" then
+							baseScale = 1.25
+						end
+
+						local targetPage
+						local comparison
+						if ReadableUI_BookUI.FrontPage:IsVisible() then
+							targetPage = 2
+							comparison = "<"
+						elseif NS.ItemUI.Variables.CurrentPage - 1 == 0 then
+							targetPage = 1
+							comparison = ">"
+						end
+
+						--------------------------------
+
+						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.FrontPage.Text, .125, ReadableUI_BookUI.FrontPage.Text:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .125, ReadableUI_BookUI.Content.Left:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .125, ReadableUI_BookUI.Content.Right:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI, .25, ReadableUI_BookUI:GetAlpha(), 0, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							AdaptiveAPI.Animation:Scale(ReadableUI_BookUI, 1, ReadableUI_BookUI:GetScale(), baseScale + .15, nil, AdaptiveAPI.Animation.EaseExpo, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+						end, .125)
 
 						--------------------------------
 
 						addon.Libraries.AceTimer:ScheduleTimer(function()
 							NS.ItemUI.Script:Update()
-						end, .5)
-					end, .25)
-				elseif (ReadableUI_BookUI.Content:IsVisible() and ReadableUI_BookUI.Content.Left:GetAlpha() > .99 and ReadableUI_BookUI.Content.Right:GetAlpha() > .99) then
-					do -- TEXT
-						if isReverse then
-							ReadableUI_BookUI.Content.Left:SetAlpha(0)
-							ReadableUI_BookUI.Content.Right:SetAlpha(0)
-						else
-							ReadableUI_BookUI.Content.Left:SetAlpha(0)
-							ReadableUI_BookUI.Content.Right:SetAlpha(0)
-						end
-
-						--------------------------------
-
-						addon.Libraries.AceTimer:ScheduleTimer(function()
-							ReadableUI_BookUI.Content.Left:SetAlpha(.01)
-							ReadableUI_BookUI.Content.Right:SetAlpha(.01)
 
 							--------------------------------
 
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .25, ReadableUI_BookUI.Content.Left:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Left:GetAlpha() < .01 end)
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .25, ReadableUI_BookUI.Content.Right:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Right:GetAlpha() < .01 end)
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.FrontPage.Text, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .5, 0, 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+							end, .5)
+
+							--------------------------------
+
+							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI, .5, ReadableUI_BookUI:GetAlpha(), 1, nil, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+							AdaptiveAPI.Animation:Scale(ReadableUI_BookUI, 1, baseScale - .15, baseScale, nil, AdaptiveAPI.Animation.EaseExpo, function() if comparison == ">" then return NS.ItemUI.Variables.CurrentPage > targetPage elseif comparison == "<" then return NS.ItemUI.Variables.CurrentPage < targetPage end end)
+
+							--------------------------------
+
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								NS.ItemUI.Script:Update()
+							end, .5)
 						end, .25)
-					end
+					elseif (ReadableUI_BookUI.Content:IsVisible() and ReadableUI_BookUI.Content.Left:GetAlpha() > .99 and ReadableUI_BookUI.Content.Right:GetAlpha() > .99) then
+						do -- TEXT
+							if isReverse then
+								ReadableUI_BookUI.Content.Left:SetAlpha(0)
+								ReadableUI_BookUI.Content.Right:SetAlpha(0)
+							else
+								ReadableUI_BookUI.Content.Left:SetAlpha(0)
+								ReadableUI_BookUI.Content.Right:SetAlpha(0)
+							end
 
-					do -- FLIP
-						AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, 0, 1)
+							--------------------------------
 
-						--------------------------------
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								ReadableUI_BookUI.Content.Left:SetAlpha(.01)
+								ReadableUI_BookUI.Content.Right:SetAlpha(.01)
 
-						if isReverse then
-							ReadableUI_BookUI.Content.Background.Spritesheet.Texture.Play(true)
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_ReverseFlip)
-						else
-							ReadableUI_BookUI.Content.Background.Spritesheet.Texture.Play()
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Flip)
+								--------------------------------
+
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Left, .25, ReadableUI_BookUI.Content.Left:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Left:GetAlpha() < .01 end)
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Right, .25, ReadableUI_BookUI.Content.Right:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Right:GetAlpha() < .01 end)
+							end, .25)
+						end
+
+						do -- FLIP
+							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, 0, 1)
+
+							--------------------------------
+
+							if isReverse then
+								ReadableUI_BookUI.Content.Background.Spritesheet.Texture.Play(true)
+								addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_ReverseFlip)
+							else
+								ReadableUI_BookUI.Content.Background.Spritesheet.Texture.Play()
+								addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_ItemUI_Book_Flip)
+							end
+
+							--------------------------------
+
+							addon.Libraries.AceTimer:ScheduleTimer(function()
+								AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, ReadableUI_BookUI.Content.Background.Spritesheet:GetAlpha(), 0)
+							end, .125)
 						end
 
 						--------------------------------
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
-							AdaptiveAPI.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, ReadableUI_BookUI.Content.Background.Spritesheet:GetAlpha(), 0)
-						end, .125)
+						NS.ItemUI.Script:Update()
 					end
-
-					--------------------------------
-
-					NS.ItemUI.Script:Update()
 				end
 			end
 		end
@@ -560,8 +570,8 @@ function NS.ItemUI.Script:Load()
 
 	do
 		local function Settings_ContentSize()
-			local item_textSize = INTDB.profile.INT_CONTENT_SIZE * 1
-			local book_textSize = INTDB.profile.INT_CONTENT_SIZE * .75
+			local item_textSize = DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
+			local book_textSize = DB_GLOBAL.profile.INT_CONTENT_SIZE * .75
 
 			--------------------------------
 

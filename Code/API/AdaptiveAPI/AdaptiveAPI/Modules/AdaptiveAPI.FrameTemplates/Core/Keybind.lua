@@ -23,14 +23,14 @@ do
 	--
 	-- Data Table
 	----
-	-- setFunc, getFunc, enableFunc, theme, defaultTexture, highlightTexture, activeTexture, defaultColor, textColor, textSize
+	-- getFunc, setFunc, enableFunc, theme, defaultTexture, highlightTexture, activeTexture, defaultColor, textColor, textSize
 	---@param parent any
 	---@param frameStrata string
 	---@param data table
 	---@param name? string
 	function NS:CreateKeybindButton(parent, frameStrata, data, name)
-		local setFunc, getFunc, enableFunc, theme, defaultTexture, highlightTexture, activeTexture, defaultColor, textColor, textHighlightColor, textSize =
-			data.setFunc, data.getFunc, data.enableFunc, data.theme, data.defaultTexture, data.highlightTexture, data.activeTexture, data.defaultColor, data.textColor, data.textHighlightColor, data.textSize
+		local getFunc, setFunc, enableFunc, theme, defaultTexture, highlightTexture, activeTexture, defaultColor, textColor, textHighlightColor, textSize =
+			data.getFunc, data.setFunc, data.enableFunc, data.theme, data.defaultTexture, data.highlightTexture, data.activeTexture, data.defaultColor, data.textColor, data.textHighlightColor, data.textSize
 
 		--------------------------------
 

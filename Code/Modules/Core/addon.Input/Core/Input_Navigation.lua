@@ -14,7 +14,7 @@ function NS.Navigation:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Script = NS.Script
+	local Callback = NS.Script
 
 	--------------------------------
 	-- EVENTS
@@ -28,7 +28,7 @@ function NS.Navigation:Load()
 				local DefaultFrame = Frame.ReadableUIFrame.NavigationFrame.PreviousPage
 				local ChildrenFrames = {
 					Frame.CloseButton,
-					--Frame.TTSButton,
+					Frame.TTSButton,
 					Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
 					Frame.ReadableUIFrame.NavigationFrame.NextPage,
 					Frame.ReadableUIFrame.BookFrame.Content.Left,
@@ -38,32 +38,32 @@ function NS.Navigation:Load()
 				--------------------------------
 
 				do -- MENU BUTTONS
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						-- CLOSE BUTTON
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Frame.CloseButton,
-							--["relativeRight"] = Frame.TTSButton,
+							["relativeRight"] = Frame.TTSButton,
 							["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
 						})
 
 						-- TTS BUTTON
-						-- InputCallback:SetFrameRelatives({
-						-- 	["frame"] = Frame.TTSButton,
-						-- 	["relativeLeft"] = Frame.CloseButton,
-						-- 	["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
-						-- })
+						Callback:SetFrameRelatives({
+							["frame"] = Frame.TTSButton,
+							["relativeLeft"] = Frame.CloseButton,
+							["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
+						})
 					else
 						-- TTS BUTTON
-						-- InputCallback:SetFrameRelatives({
-						-- 	["frame"] = Frame.TTSButton,
-						-- 	["relativeRight"] = Frame.CloseButton,
-						-- 	["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
-						-- })
+						Callback:SetFrameRelatives({
+							["frame"] = Frame.TTSButton,
+							["relativeRight"] = Frame.CloseButton,
+							["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
+						})
 
 						-- CLOSE BUTTON
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Frame.CloseButton,
-							-- ["relativeLeft"] = Frame.TTSButton,
+							["relativeLeft"] = Frame.TTSButton,
 							["relativeBottom"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
 						})
 					end
@@ -71,14 +71,14 @@ function NS.Navigation:Load()
 
 				do -- CONTENT
 					-- PREVIOUS PAGE
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
 						["relativeRight"] = Frame.ReadableUIFrame.BookFrame.Content.Left,
 						["relativeTop"] = Frame.CloseButton,
 					})
 
 					-- LEFT SCROLL FRAME
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.ReadableUIFrame.BookFrame.Content.Left,
 						["relativeLeft"] = Frame.ReadableUIFrame.NavigationFrame.PreviousPage,
 						["relativeRight"] = Frame.ReadableUIFrame.BookFrame.Content.Right,
@@ -89,7 +89,7 @@ function NS.Navigation:Load()
 					})
 
 					-- RIGHT SCROLL FRAME
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.ReadableUIFrame.BookFrame.Content.Right,
 						["relativeLeft"] = Frame.ReadableUIFrame.BookFrame.Content.Left,
 						["relativeRight"] = Frame.ReadableUIFrame.NavigationFrame.NextPage,
@@ -100,7 +100,7 @@ function NS.Navigation:Load()
 					})
 
 					-- NEXT PAGE
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.ReadableUIFrame.NavigationFrame.NextPage,
 						["relativeLeft"] = Frame.ReadableUIFrame.BookFrame.Content.Right,
 						["relativeTop"] = Frame.CloseButton,
@@ -109,12 +109,12 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
-				Script:StartNavigation("READABLE", DefaultFrame, ChildrenFrames)
+				Callback:StartNavigation("READABLE", DefaultFrame, ChildrenFrames)
 			end, 2)
 
 			CallbackRegistry:Add("STOP_READABLE", function()
-				if Script.CurrentNavigationSession == "READABLE" then
-					Script:StopNavigation()
+				if Callback.CurrentNavigationSession == "READABLE" then
+					Callback:StopNavigation()
 				end
 			end, 0)
 
@@ -157,9 +157,9 @@ function NS.Navigation:Load()
 				--------------------------------
 
 				do -- MENU BUTTONS
-					if INTDB.profile.INT_UIDIRECTION == 1 then
+					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						-- CLOSE BUTTON
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Parent.CloseButton,
 							-- ["relativeRight"] = Parent.TTSButton,
 							["relativeBottom"] = DefaultFrame,
@@ -180,7 +180,7 @@ function NS.Navigation:Load()
 						-- })
 
 						-- CLOSE BUTTON
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Parent.CloseButton,
 							-- ["relativeLeft"] = Parent.TTSButton,
 							["relativeBottom"] = DefaultFrame,
@@ -190,7 +190,7 @@ function NS.Navigation:Load()
 
 				do -- SIDEBAR
 					-- SEARCH
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Search,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Parent.CloseButton,
@@ -198,7 +198,7 @@ function NS.Navigation:Load()
 					})
 
 					-- TYPE LETTER
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Type_Letter,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Search,
@@ -206,7 +206,7 @@ function NS.Navigation:Load()
 					})
 
 					-- TYPE BOOK
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Type_Book,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Type_Letter,
@@ -214,7 +214,7 @@ function NS.Navigation:Load()
 					})
 
 					-- TYPE SLATE
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Type_Slate,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Type_Book,
@@ -222,7 +222,7 @@ function NS.Navigation:Load()
 					})
 
 					-- TYPE IN WORLD
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Type_InWorld,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Type_Slate,
@@ -230,7 +230,7 @@ function NS.Navigation:Load()
 					})
 
 					-- BUTTON EXPORT
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Button_Export,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Type_InWorld,
@@ -238,7 +238,7 @@ function NS.Navigation:Load()
 					})
 
 					-- BUTTON IMPORT
-					Script:SetFrameRelatives({
+					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Button_Import,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Button_Export,
@@ -251,7 +251,7 @@ function NS.Navigation:Load()
 							-- FIRST BUTTON
 							if button == 1 then
 								-- BUTTON
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button],
 									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
@@ -264,7 +264,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON DELETE
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
@@ -274,7 +274,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON OPEN
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
@@ -286,7 +286,7 @@ function NS.Navigation:Load()
 							-- LAST BUTTON
 							if button == #Buttons then
 								-- BUTTON
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button],
 									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
@@ -299,7 +299,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON DELETE
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
@@ -309,7 +309,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON OPEN
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
@@ -321,7 +321,7 @@ function NS.Navigation:Load()
 							-- CONTENT BUTTONS
 							if button > 1 and button < #Buttons then
 								-- BUTTON
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button],
 									["children"] = { Buttons[button].Content.ButtonContainer.Button_Delete, Buttons[button].Content.ButtonContainer.Button_Open },
 									["relativeLeft"] = Frame.Content.Sidebar.Search,
@@ -334,7 +334,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON DELETE
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Delete,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button],
@@ -344,7 +344,7 @@ function NS.Navigation:Load()
 								})
 
 								-- BUTTON OPEN
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Buttons[button].Content.ButtonContainer.Button_Open,
 									["parent"] = Buttons[button],
 									["relativeLeft"] = Buttons[button].Content.ButtonContainer.Button_Delete,
@@ -357,7 +357,7 @@ function NS.Navigation:Load()
 
 					do -- INDEX
 						-- BUTTON PREVIOUS PAGE
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage,
 							["relativeRight"] = Frame.Content.ContentFrame.Index.Content.Button_NextPage,
 							["relativeTop"] = Buttons[#Buttons],
@@ -365,7 +365,7 @@ function NS.Navigation:Load()
 						})
 
 						-- BUTTON NEXT PAGE
-						Script:SetFrameRelatives({
+						Callback:SetFrameRelatives({
 							["frame"] = Frame.Content.ContentFrame.Index.Content.Button_NextPage,
 							["relativeLeft"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage,
 							["relativeTop"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage,
@@ -375,12 +375,12 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
-				Script:StartNavigation("LIBRARY", DefaultFrame, ChildrenFrames)
+				Callback:StartNavigation("LIBRARY", DefaultFrame, ChildrenFrames)
 			end, 2)
 
 			CallbackRegistry:Add("STOP_LIBRARY", function()
-				if Script.CurrentNavigationSession == "LIBRARY" then
-					Script:StopNavigation()
+				if Callback.CurrentNavigationSession == "LIBRARY" then
+					Callback:StopNavigation()
 				end
 			end, 0)
 		end
@@ -439,7 +439,7 @@ function NS.Navigation:Load()
 					for element = 1, #Elements do
 						-- FIRST ELEMENT
 						if element == 1 then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Elements[element],
 								["relativeBottom"] = Elements[element + 1],
 								["scrollFrame"] = Frame.ScrollFrame,
@@ -451,7 +451,7 @@ function NS.Navigation:Load()
 
 						-- LAST ELEMENT
 						if element == #Elements then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Elements[element],
 								["relativeTop"] = Elements[element - 1],
 								-- ["relativeBottom"] = Frame.AcceptButton,
@@ -464,7 +464,7 @@ function NS.Navigation:Load()
 
 						-- CONTENT ELEMENTS
 						if element > 1 and element < #Elements then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Elements[element],
 								["relativeTop"] = Elements[element - 1],
 								["relativeBottom"] = Elements[element + 1],
@@ -527,12 +527,12 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
-				Script:StartNavigation("QUESTFRAME", DefaultFrame, ChildrenFrames)
+				Callback:StartNavigation("QUESTFRAME", DefaultFrame, ChildrenFrames)
 			end, 0)
 
 			CallbackRegistry:Add("STOP_QUEST", function()
-				if Script.CurrentNavigationSession == "QUESTFRAME" then
-					Script:StopNavigation()
+				if Callback.CurrentNavigationSession == "QUESTFRAME" then
+					Callback:StopNavigation()
 				end
 			end, 0)
 		end
@@ -540,7 +540,7 @@ function NS.Navigation:Load()
 
 	-- SETTINGS
 	do
-		function Script:Settings_SpecialInteractFunc1(Type, Frame)
+		function Callback:Settings_SpecialInteractFunc1(Type, Frame)
 			if Type == "Checkbox" then
 				Frame.Checkbox:Click()
 
@@ -609,7 +609,7 @@ function NS.Navigation:Load()
 			end
 		end
 
-		function Script:Settings_SpecialInteractFunc2(Type, Frame)
+		function Callback:Settings_SpecialInteractFunc2(Type, Frame)
 			if Type == "Checkbox" then
 				return false
 			end
@@ -774,7 +774,7 @@ function NS.Navigation:Load()
 
 							-- FIRST ELEMENT
 							if widget == 1 then
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Widget,
 									["relativeBottom"] = widgets[widget + 1],
 									["scrollFrame"] = InteractionSettingsFrame.Content.ScrollFrame,
@@ -788,7 +788,7 @@ function NS.Navigation:Load()
 
 							-- LAST ELEMENT
 							if widget == #widgets then
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Widget,
 									["relativeTop"] = widgets[widget - 1],
 									["scrollFrame"] = InteractionSettingsFrame.Content.ScrollFrame,
@@ -802,7 +802,7 @@ function NS.Navigation:Load()
 
 							-- CONTENT ELEMENTS
 							if widget > 1 and widget < #widgets then
-								Script:SetFrameRelatives({
+								Callback:SetFrameRelatives({
 									["frame"] = Widget,
 									["relativeTop"] = widgets[widget - 1],
 									["relativeBottom"] = widgets[widget + 1],
@@ -821,7 +821,7 @@ function NS.Navigation:Load()
 
 			--------------------------------
 
-			Script:StartNavigation("SETTING", DefaultFrame, ChildrenFrames)
+			Callback:StartNavigation("SETTING", DefaultFrame, ChildrenFrames)
 		end
 
 		if (NS.Variables.IsController or NS.Variables.SimulateController) then
@@ -836,8 +836,8 @@ function NS.Navigation:Load()
 			end, 2)
 
 			CallbackRegistry:Add("STOP_SETTING", function()
-				if Script.CurrentNavigationSession == "SETTING" then
-					Script:StopNavigation()
+				if Callback.CurrentNavigationSession == "SETTING" then
+					Callback:StopNavigation()
 				end
 			end, 0)
 
@@ -858,13 +858,13 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
-				if Script.CurrentNavigationSession == "SETTING" then
+				if Callback.CurrentNavigationSession == "SETTING" then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						Script:RegisterNewFrame()
+						Callback:RegisterNewFrame()
 					end, 0)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						Script:RegisterNewFrame()
+						Callback:RegisterNewFrame()
 					end, .1)
 				end
 			end, 0)
@@ -942,7 +942,7 @@ function NS.Navigation:Load()
 					for button = 1, #Buttons do
 						-- FIRST BUTTON
 						if button == 1 then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Buttons[button],
 								["relativeBottom"] = Buttons[button + 1],
 							})
@@ -950,7 +950,7 @@ function NS.Navigation:Load()
 
 						-- LAST BUTTON
 						if button == #Buttons then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Buttons[button],
 								["relativeTop"] = Buttons[button - 1],
 							})
@@ -958,7 +958,7 @@ function NS.Navigation:Load()
 
 						-- CONTENT BUTTONS
 						if button > 1 and button < #Buttons then
-							Script:SetFrameRelatives({
+							Callback:SetFrameRelatives({
 								["frame"] = Buttons[button],
 								["relativeTop"] = Buttons[button - 1],
 								["relativeBottom"] = Buttons[button + 1],
@@ -969,12 +969,12 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
-				Script:StartNavigation("GOSSIP", DefaultFrame, ChildrenFrames)
+				Callback:StartNavigation("GOSSIP", DefaultFrame, ChildrenFrames)
 			end, 0)
 
 			CallbackRegistry:Add("STOP_GOSSIP", function()
-				if Script.CurrentNavigationSession == "GOSSIP" then
-					Script:StopNavigation()
+				if Callback.CurrentNavigationSession == "GOSSIP" then
+					Callback:StopNavigation()
 				end
 			end, 0)
 		end
@@ -982,27 +982,27 @@ function NS.Navigation:Load()
 
 	-- EVENTS
 	do
-		function Script:StartGamepadControl()
+		function Callback:StartGamepadControl()
 			if NS.Variables.IsControllerEnabled then
 				InteractionFrame.PreventMouse:Show()
 				SetGamePadCursorControl()
 			end
 		end
 
-		function Script:StopGamepadControl()
+		function Callback:StopGamepadControl()
 			InteractionFrame.PreventMouse:Hide()
 		end
 
 		CallbackRegistry:Add("START_INTERACTION", function()
-			Script:StartGamepadControl()
+			Callback:StartGamepadControl()
 		end, 0)
 
 		CallbackRegistry:Add("START_READABLE", function()
-			Script:StartGamepadControl()
+			Callback:StartGamepadControl()
 		end, 0)
 
 		CallbackRegistry:Add("START_SETTING", function()
-			Script:StartGamepadControl()
+			Callback:StartGamepadControl()
 		end, 0)
 
 		local Events = CreateFrame("Frame")
@@ -1019,12 +1019,12 @@ function NS.Navigation:Load()
 
 				if IsInInteraction and IsInSettings then
 					if IsEnabled then
-						Script:StartGamepadControl()
+						Callback:StartGamepadControl()
 					else
-						Script:StopGamepadControl()
+						Callback:StopGamepadControl()
 					end
 				else
-					Script:StopGamepadControl()
+					Callback:StopGamepadControl()
 				end
 			end
 		end)

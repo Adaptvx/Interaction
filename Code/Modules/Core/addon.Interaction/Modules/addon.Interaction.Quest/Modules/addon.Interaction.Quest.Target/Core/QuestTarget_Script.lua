@@ -17,87 +17,110 @@ function NS.Script:Load()
 	local Frame = InteractionQuestFrame.Target
 	local Callback = NS.Script
 
-    --------------------------------
-    -- FUNCTIONS (FRAME)
-    --------------------------------
+	--------------------------------
+	-- FUNCTIONS (FRAME)
+	--------------------------------
 
-    do
-        Frame.UpdateLayout = function()
-            local totalHeight = 0
+	do
+		Frame.UpdateLayout = function()
+			local totalHeight = 0
+			local numElements = 0
 
-            if not Frame.Model.hidden then totalHeight = totalHeight + Frame.Art:GetHeight() end
-            totalHeight = totalHeight + NS.Variables.PADDING + Frame.Label:GetHeight()
-            totalHeight = totalHeight + NS.Variables.PADDING + Frame.Description:GetHeight()
-            totalHeight = totalHeight + NS.Variables.CONTENT_PADDING * 2
+			if not Frame.Model.hidden then -- MODEL
+				totalHeight = totalHeight + Frame.Art:GetHeight()
+				numElements = numElements + 1
+			end
 
-            Frame:SetHeight(totalHeight)
+			if Frame.Label:GetText() then -- TITLE
+				if numElements > 0 then
+					totalHeight = totalHeight + NS.Variables.PADDING
+				end
 
-            --------------------------------
+				totalHeight = totalHeight + Frame.Label:GetHeight()
+				numElements = numElements + 1
+			end
 
-            if not Frame.Model.hidden then
-                Frame.Art:Show()
+			if Frame.Description:GetText() then -- DESCRIPTION
+				if numElements > 0 then
+					totalHeight = totalHeight + NS.Variables.PADDING
+				end
 
-                --------------------------------
+				totalHeight = totalHeight + Frame.Description:GetHeight()
+				numElements = numElements + 1
+			end
 
-                Frame.Label:ClearAllPoints()
-                Frame.Label:SetPoint("BOTTOM", Frame.Art, 0, -NS.Variables.PADDING - Frame.Label:GetHeight())
+			DevTools_Dump(Frame.Description:GetText())
 
-                Frame.Description:ClearAllPoints()
-                Frame.Description:SetPoint("BOTTOM", Frame.Label, 0, -NS.Variables.PADDING - Frame.Description:GetHeight())
-            else
-                Frame.Art:Hide()
+			totalHeight = totalHeight + NS.Variables.CONTENT_PADDING * 2 -- TOP/BOTTOM PADDING
 
-                --------------------------------
+			Frame:SetHeight(totalHeight)
 
-                Frame.Label:ClearAllPoints()
-                Frame.Label:SetPoint("TOP", Frame, 0, -NS.Variables.CONTENT_PADDING)
+			--------------------------------
 
-                Frame.Description:ClearAllPoints()
-                Frame.Description:SetPoint("BOTTOM", Frame.Label, 0, -NS.Variables.PADDING - Frame.Description:GetHeight())
-            end
-        end
-    end
+			if not Frame.Model.hidden then
+				Frame.Art:Show()
 
-    --------------------------------
-    -- FUNCTIONS (ANIMATION)
-    --------------------------------
+				--------------------------------
 
-    do
-        local HideTimer = nil
+				Frame.Label:ClearAllPoints()
+				Frame.Label:SetPoint("BOTTOM", Frame.Art, 0, -NS.Variables.PADDING - Frame.Label:GetHeight())
 
-        Frame.ShowWithAnimation = function()
-            local modelID, description, name, mountModelID, sceneModelID = GetQuestPortraitGiver()
+				Frame.Description:ClearAllPoints()
+				Frame.Description:SetPoint("BOTTOM", Frame.Label, 0, -NS.Variables.PADDING - Frame.Description:GetHeight())
+			else
+				Frame.Art:Hide()
 
-            if (Frame.hidden) and (QuestModelScene:IsVisible()) and (#name > 1 or #description > 1) then
-                if HideTimer then
-                    HideTimer:Cancel()
-                    HideTimer = nil
-                end
+				--------------------------------
 
-                --------------------------------
+				Frame.Label:ClearAllPoints()
+				Frame.Label:SetPoint("TOP", Frame, 0, -NS.Variables.CONTENT_PADDING)
 
-                Frame.hidden = false
+				Frame.Description:ClearAllPoints()
+				Frame.Description:SetPoint("BOTTOM", Frame.Label, 0, -NS.Variables.PADDING - Frame.Description:GetHeight())
+			end
+		end
+	end
 
-                --------------------------------
+	--------------------------------
+	-- FUNCTIONS (ANIMATION)
+	--------------------------------
 
-                Frame:Show()
+	do
+		local HideTimer = nil
 
-                --------------------------------
+		Frame.ShowWithAnimation = function()
+			local modelID, description, name, mountModelID, sceneModelID = GetQuestPortraitGiver()
 
-                Frame.Model:Show()
+			if (Frame.hidden) and (QuestModelScene:IsVisible()) and (#name > 1 or #description > 1) then
+				if HideTimer then
+					HideTimer:Cancel()
+					HideTimer = nil
+				end
 
-                --------------------------------
+				--------------------------------
 
-                AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
-                AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -100, -75, "y")
-            end
-        end
+				Frame.hidden = false
 
-        Frame.HideWithAnimation = function(bypass, skipAnimation)
-            if bypass or not Frame.hidden then
-                if HideTimer then
-                    HideTimer:Cancel()
-                end
+				--------------------------------
+
+				Frame:Show()
+
+				--------------------------------
+
+				Frame.Model:Show()
+
+				--------------------------------
+
+				AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
+				AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -100, -75, "y")
+			end
+		end
+
+		Frame.HideWithAnimation = function(bypass, skipAnimation)
+			if bypass or not Frame.hidden then
+				if HideTimer then
+					HideTimer:Cancel()
+				end
 
 				if skipAnimation then
 					Frame.hidden = true
@@ -112,92 +135,92 @@ function NS.Script:Load()
 					end)
 				end
 
-                --------------------------------
+				--------------------------------
 
-                Frame.hidden = true
+				Frame.hidden = true
 
-                --------------------------------
+				--------------------------------
 
-                Frame.Model:Hide()
+				Frame.Model:Hide()
 
-                --------------------------------
+				--------------------------------
 
-                if skipAnimation then
-                    local point, relativeTo, relativePoint, offsetX, offsetY = Frame:GetPoint()
+				if skipAnimation then
+					local point, relativeTo, relativePoint, offsetX, offsetY = Frame:GetPoint()
 
-                    Frame:SetAlpha(0)
-                    Frame:SetPoint(point, relativeTo, offsetX, offsetY)
-                else
-                    AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
-                    AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -75, -100, "y")
-                end
-            end
-        end
-    end
+					Frame:SetAlpha(0)
+					Frame:SetPoint(point, relativeTo, offsetX, offsetY)
+				else
+					AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
+					AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -75, -100, "y")
+				end
+			end
+		end
+	end
 
-    --------------------------------
-    -- FUNCTIONS (EVENT)
-    --------------------------------
+	--------------------------------
+	-- FUNCTIONS (EVENT)
+	--------------------------------
 
-    do
-        if QuestModelScene then -- Fix for Classic Era
-            hooksecurefunc(QuestModelScene, "Show", function()
-                if QuestModelScene:IsVisible() then
-                    local modelID, description, name, mountModelID, sceneModelID = GetQuestPortraitGiver()
+	do
+		if QuestModelScene then -- Fix for Classic Era
+			hooksecurefunc(QuestModelScene, "Show", function()
+				if QuestModelScene:IsVisible() then
+					local modelID, description, name, mountModelID, sceneModelID = GetQuestPortraitGiver()
 
-                    if #name > 1 or #description > 1 then
-                        --------------------------------
+					if #name > 1 or #description > 1 then
+						--------------------------------
 
-                        Frame.Label:SetText(name)
-                        Frame.Description:SetText(description)
+						Frame.Label:SetText(name)
+						Frame.Description:SetText(description)
 
-                        --------------------------------
+						--------------------------------
 
-                        Frame.Model.hidden = true
+						Frame.Model.hidden = true
 
-                        --------------------------------
+						--------------------------------
 
-                        Frame.Model:SetDisplayInfo(modelID, mountModelID)
+						Frame.Model:SetDisplayInfo(modelID, mountModelID)
 
-                        --------------------------------
+						--------------------------------
 
-                        -- "OnModelLoaded" is called when the model is valid, so can do some formatting here.
-                        Frame.Model:Hide()
-                        Frame.Model:Show()
-                        Frame.Model:SetScript("OnModelLoaded", function()
-                            Frame.Model.hidden = false
+						-- "OnModelLoaded" is called when the model is valid, so can do some formatting here.
+						Frame.Model:Hide()
+						Frame.Model:Show()
+						Frame.Model:SetScript("OnModelLoaded", function()
+							Frame.Model.hidden = false
 
-                            --------------------------------
+							--------------------------------
 
-                            Frame.Model:SetCamera(0)
-                            Frame.Model:SetPortraitZoom(1)
-                            Frame.Model:SetPortraitZoom(.975)
-                            Frame.Model:FreezeAnimation(0, 0, 0)
-                            Frame.Model:SetModelAlpha(0)
+							Frame.Model:SetCamera(0)
+							Frame.Model:SetPortraitZoom(1)
+							Frame.Model:SetPortraitZoom(.975)
+							Frame.Model:FreezeAnimation(0, 0, 0)
+							Frame.Model:SetModelAlpha(0)
 
 							--------------------------------
 
 							Frame.UpdateLayout()
-                        end)
+						end)
 
 						--------------------------------
 
 						Frame.UpdateLayout()
-                    end
-                end
-            end)
+					end
+				end
+			end)
 
-            CallbackRegistry:Add("START_QUEST", function()
-                Frame.ShowWithAnimation()
-            end, 0)
+			CallbackRegistry:Add("START_QUEST", function()
+				Frame.ShowWithAnimation()
+			end, 0)
 
-            CallbackRegistry:Add("STOP_QUEST", function()
-                Frame.HideWithAnimation()
-            end, 0)
-        end
-    end
+			CallbackRegistry:Add("STOP_QUEST", function()
+				Frame.HideWithAnimation()
+			end, 0)
+		end
+	end
 
-    --------------------------------
-    -- SETUP
-    --------------------------------
+	--------------------------------
+	-- SETUP
+	--------------------------------
 end

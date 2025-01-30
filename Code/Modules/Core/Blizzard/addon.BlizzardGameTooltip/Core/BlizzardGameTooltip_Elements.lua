@@ -18,8 +18,8 @@ function NS.Elements:Load()
 		do -- CREATE ELEMENTS
 			local function StyleTooltip(frame)
 				frame.Background = CreateFrame("Frame", "$parent.Background", frame)
-				frame.Background:SetPoint("TOPLEFT", frame.NineSlice, -6.25, 6.25)
-				frame.Background:SetPoint("BOTTOMRIGHT", frame.NineSlice, 6.25, -6.25)
+				frame.Background:SetPoint("TOPLEFT", frame.NineSlice, -12.5, 12.5)
+				frame.Background:SetPoint("BOTTOMRIGHT", frame.NineSlice, 12.5, -12.5)
 				frame.Background:SetFrameStrata(frame.NineSlice:GetFrameStrata())
 				frame.Background:SetFrameLevel(frame.NineSlice:GetFrameLevel())
 
@@ -36,11 +36,11 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- BACKGROUND
-					frame.Background.NineSlice, frame.Background.NineSliceTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame.Background, "FULLSCREEN_DIALOG", AdaptiveAPI.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT, 25, 1, "$parent.NineSlice")
+					frame.Background.NineSlice, frame.Background.NineSliceTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(frame.Background, "FULLSCREEN_DIALOG", AdaptiveAPI.Presets.NINESLICE_TOOLTIP_CUSTOM_02, 64, .325, "$parent.NineSlice", Enum.UITextureSliceMode.Stretched)
 					frame.Background.NineSlice:SetAllPoints(frame.Background, true)
 					frame.Background.NineSlice:SetFrameStrata(frame.NineSlice:GetFrameStrata())
 					frame.Background.NineSlice:SetFrameLevel(frame.NineSlice:GetFrameLevel() - 1)
-					frame.Background.NineSliceTexture:SetVertexColor(.1, .1, .1)
+					frame.Background.NineSliceTexture:SetVertexColor(1, 1, 1)
 				end
 			end
 

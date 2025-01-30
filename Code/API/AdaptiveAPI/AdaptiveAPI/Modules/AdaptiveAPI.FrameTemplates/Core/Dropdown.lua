@@ -24,7 +24,7 @@ do
 	-- Data Table
 	----
 	-- valuesFunc, openListFunc, closeListFunc, autoCloseList,
-	-- getFunc, setFunc, theme, defaultTexture, highlightTexture, arrowTexture,
+	-- getFunc, setFunc, enableFunc, theme, defaultTexture, highlightTexture, arrowTexture,
 	-- arrowHighlightTexture, arrowEnableTexture, defaultColor, highlightColor,
 	-- textSize, textSizeTitle, defaultTextColor, highlightTextColor, listTexture,
 	-- listButtonTexture, listButtonCheckTexture,
@@ -41,8 +41,8 @@ do
 
 		--------------------------------
 
-		local valuesFunc, openListFunc, closeListFunc, autoCloseList, getFunc, setFunc, theme, defaultTexture, highlightTexture, arrowTexture, arrowHighlightTexture, arrowEnableTexture, defaultColor, highlightColor, textSize, textSizeTitle, defaultTextColor, highlightTextColor, listTexture, listButtonTexture, listButtonCheckTexture, listIndexBackgroundTexture, listIndexNextButtonTexture, listIndexPreviousButtonTexture, listColor, listElementColor, listPrimaryColor, listElementTextColor, listElementHighlightTextColor =
-			data.valuesFunc, data.openListFunc, data.closeListFunc, data.autoCloseList, data.getFunc, data.setFunc, data.theme, data.defaultTexture, data.highlightTexture, data.arrowTexture, data.arrowHighlightTexture, data.arrowEnableTexture, data.defaultColor, data.highlightColor, data.textSize, data.textSizeTitle, data.defaultTextColor, data.highlightTextColor, data.listTexture, data.listButtonTexture, data.listButtonCheckTexture, data.listIndexBackgroundTexture, data.listIndexNextButtonTexture, data.listIndexPreviousButtonTexture, data.listColor, data.listElementColor, data.listPrimaryColor, data.listElementTextColor, data.listElementHighlightTextColor
+		local valuesFunc, openListFunc, closeListFunc, autoCloseList, getFunc, setFunc, enableFunc, theme, defaultTexture, highlightTexture, arrowTexture, arrowHighlightTexture, arrowEnableTexture, defaultColor, highlightColor, textSize, textSizeTitle, defaultTextColor, highlightTextColor, listTexture, listButtonTexture, listButtonCheckTexture, listIndexBackgroundTexture, listIndexNextButtonTexture, listIndexPreviousButtonTexture, listColor, listElementColor, listPrimaryColor, listElementTextColor, listElementHighlightTextColor =
+			data.valuesFunc, data.openListFunc, data.closeListFunc, data.autoCloseList, data.getFunc, data.setFunc, data.enableFunc, data.theme, data.defaultTexture, data.highlightTexture, data.arrowTexture, data.arrowHighlightTexture, data.arrowEnableTexture, data.defaultColor, data.highlightColor, data.textSize, data.textSizeTitle, data.defaultTextColor, data.highlightTextColor, data.listTexture, data.listButtonTexture, data.listButtonCheckTexture, data.listIndexBackgroundTexture, data.listIndexNextButtonTexture, data.listIndexPreviousButtonTexture, data.listColor, data.listElementColor, data.listPrimaryColor, data.listElementTextColor, data.listElementHighlightTextColor
 
 		--------------------------------
 
@@ -862,6 +862,12 @@ do
 
 		do -- CLICK EVENTS
 			Frame.Enter = function()
+				if enableFunc and not enableFunc() then
+					return
+				end
+
+				--------------------------------
+
 				if not Frame.List:IsVisible() then
 					Frame.Text:SetTextColor(Frame._HighlightTextColor.r, Frame._HighlightTextColor.g, Frame._HighlightTextColor.b, Frame._HighlightTextColor.a or 1)
 
@@ -885,6 +891,12 @@ do
 			end
 
 			Frame.Leave = function()
+				if enableFunc and not enableFunc() then
+					return
+				end
+
+				--------------------------------
+
 				if not Frame.List:IsVisible() then
 					Frame.Text:SetTextColor(Frame._DefaultTextColor.r, Frame._DefaultTextColor.g, Frame._DefaultTextColor.b, Frame._DefaultTextColor.a or .75)
 
@@ -908,6 +920,12 @@ do
 			end
 
 			Frame.MouseDown = function()
+				if enableFunc and not enableFunc() then
+					return
+				end
+
+				--------------------------------
+
 				local mouseDownCallbacks = Frame.MouseDownCallbacks
 
 				for callback = 1, #mouseDownCallbacks do
@@ -916,6 +934,12 @@ do
 			end
 
 			Frame.MouseUp = function()
+				if enableFunc and not enableFunc() then
+					return
+				end
+
+				--------------------------------
+
 				Frame.List.ToggleVisibility()
 
 				--------------------------------

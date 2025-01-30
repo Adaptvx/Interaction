@@ -62,8 +62,8 @@ function NS.Elements:Load()
 
 					do -- BACKGROUND
 						Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-						Frame.GoodbyeButton.Background:SetSize(Frame.GoodbyeButton:GetWidth() + 125, Frame.GoodbyeButton:GetHeight() + 50)
-						Frame.GoodbyeButton.Background:SetPoint("CENTER", Frame.GoodbyeButton)
+						Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, -62.5, 25)
+						Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, 62.5, -25)
 						Frame.GoodbyeButton.Background:SetAlpha(.5)
 						Frame.GoodbyeButton.BackgroundTexture:SetAlpha(1)
 					end
@@ -80,7 +80,6 @@ function NS.Elements:Load()
 					do -- EVENTS
 						local function UpdateSize()
 							Frame.GoodbyeButton:SetSize(Frame:GetWidth() - 125, 27.5)
-							Frame.GoodbyeButton.Background:SetSize(Frame.GoodbyeButton:GetWidth() + 125, Frame.GoodbyeButton:GetHeight() + 50)
 						end
 						UpdateSize()
 
@@ -130,6 +129,7 @@ function NS.Elements:Load()
 					button.OptionFrame = nil
 					button.OptionType = nil
 					button.OptionID = nil
+					button.OrderIndex = nil
 					button.OptionIndex = nil
 
 					--------------------------------
@@ -154,8 +154,12 @@ function NS.Elements:Load()
 								C_GossipInfo.SelectAvailableQuest(button.OptionID)
 							elseif button.OptionType == "active" then
 								C_GossipInfo.SelectActiveQuest(button.OptionID)
-							elseif button.OptionType == "option" then
-								C_GossipInfo.SelectOption(button.OptionID)
+                            elseif button.OptionType == "option" then
+								if not button.OptionID then
+									C_GossipInfo.SelectOptionByIndex(button.OrderIndex)
+								else
+									C_GossipInfo.SelectOption(button.OptionID)
+								end
 							end
 						elseif button.OptionFrame == "quest-greeting" then
 							if button.OptionType == "available" then

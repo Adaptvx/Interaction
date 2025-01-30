@@ -23,11 +23,13 @@ function NS.Script:Load()
 
 	do
 		Frame.Enter = function()
-			Frame:SetAlpha(.75)
+			Frame.Notch:SetAlpha(1)
+			Frame.Progress:SetAlpha(1)
 		end
 
 		Frame.Leave = function()
-			Frame:SetAlpha(1)
+			Frame.Notch:SetAlpha(.5)
+			Frame.Progress:SetAlpha(.5)
 		end
 
 		--------------------------------
@@ -49,32 +51,36 @@ function NS.Script:Load()
 				return
 			end
 
-			local Min = 0
-			local Max = UnitXPMax("player")
-			local Value = UnitXP("player")
-			local Level = UnitLevel(UnitName("player"))
-			local UnitIsMaxLevel = (GetMaxPlayerLevel() == UnitLevel(UnitName("player")))
+			--------------------------------
+
+			local min = 0
+			local max = UnitXPMax("player")
+			local value = UnitXP("player")
+			local level = UnitLevel(UnitName("player"))
+			local unitIsMaxLevel = (GetMaxPlayerLevel() == UnitLevel(UnitName("player")))
 
 			--------------------------------
 
-			if UnitIsMaxLevel then
+			if unitIsMaxLevel then
 				Frame.HideWithAnimation()
+
+				--------------------------------
 
 				return
 			end
 
 			--------------------------------
 
-			Frame.Progress:SetMinMaxValues(Min, Max)
+			Frame.Progress:SetMinMaxValues(min, max)
 
 			--------------------------------
 
-			if Callback.SavedLevel ~= Level then
+			if Callback.SavedLevel ~= level then
 				Callback.IsNewLevelTransition = true
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, Max, 1, AdaptiveAPI.Animation.EaseExpo)
+				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, max, 1, AdaptiveAPI.Animation.EaseExpo)
 
 				--------------------------------
 
@@ -83,21 +89,21 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame.Progress:SetValue(Min)
-					AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, Value, 1, AdaptiveAPI.Animation.EaseExpo)
+					Frame.Progress:SetValue(min)
+					AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, value, 1, AdaptiveAPI.Animation.EaseExpo)
 				end, 1)
 			else
-				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, Value, 1, AdaptiveAPI.Animation.EaseExpo)
+				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, value, 1, AdaptiveAPI.Animation.EaseExpo)
 			end
-			Callback.SavedLevel = Level
+			Callback.SavedLevel = level
 
 			--------------------------------
 
-			local TooltipLine1 = L["PlayerStatusBar - TooltipLine1"] .. Value .. " (" .. string.format("%.0f", (Value / Max) * 100) .. "%)"
-			local TooltipLine2 = L["PlayerStatusBar - TooltipLine2"] .. (Max - Value)
-			local TooltipLine3 = L["PlayerStatusBar - TooltipLine3"] .. Level
+			local tooltipLine1 = L["PlayerStatusBar - TooltipLine1"] .. value .. " (" .. string.format("%.0f", (value / max) * 100) .. "%)"
+			local tooltipLine2 = L["PlayerStatusBar - TooltipLine2"] .. (max - value)
+			local tooltipLine3 = L["PlayerStatusBar - TooltipLine3"] .. level
 
-			AdaptiveAPI:AddTooltip(Frame, TooltipLine1 .. "\n" .. TooltipLine2 .. "\n" .. TooltipLine3, "ANCHOR_TOP", 0, 10, true)
+			AdaptiveAPI:AddTooltip(Frame, tooltipLine1 .. "\n" .. tooltipLine2 .. "\n" .. tooltipLine3, "ANCHOR_TOP", 0, 10, true)
 		end
 	end
 
@@ -116,7 +122,6 @@ function NS.Script:Load()
 			--------------------------------
 
 			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Move(Frame, .25, "BOTTOM", -5, 5, "y", AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
 		end
 
 		Frame.HideWithAnimation = function()
@@ -133,7 +138,6 @@ function NS.Script:Load()
 			--------------------------------
 
 			AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, AdaptiveAPI.Animation.EaseSine, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Move(Frame, .25, "BOTTOM", 5, -5, "y", AdaptiveAPI.Animation.EaseSine, function() return not Frame.hidden end)
 		end
 	end
 
@@ -162,7 +166,7 @@ function NS.Script:Load()
 
 					Frame.ShowWithAnimation()
 				end
-			end, .1)
+			end, 0)
 		end, 0)
 
 		CallbackRegistry:Add("STOP_INTERACTION", function()

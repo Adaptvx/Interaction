@@ -101,23 +101,23 @@ function NS.Script:Load()
 			local FrameType = frameType
 			local QuestID = GetQuestID() or 0
 
-			local RewardQuestText = GetRewardText()
-			local ProgressQuestText = GetProgressText()
-			local GreetingQuestText = GetGreetingText()
-			local InfoQuestText = GetQuestText()
-			local GossipText = C_GossipInfo.GetText()
+			local Text_Reward = GetRewardText()
+			local Text_Progress = GetProgressText()
+			local Text_Greeting = GetGreetingText()
+			local Text_Detail = GetQuestText()
+			local Text_Gossip = C_GossipInfo.GetText()
 
 			local Dialog
 			if frameType == "quest-reward" then
-				Dialog = RewardQuestText
+				Dialog = Text_Reward
 			elseif frameType == "quest-progress" then
-				Dialog = ProgressQuestText
+				Dialog = Text_Progress
 			elseif frameType == "gossip" then
-				Dialog = GossipText
+				Dialog = Text_Gossip
 			elseif frameType == "quest-greeting" then
-				Dialog = GreetingQuestText
+				Dialog = Text_Greeting
 			elseif frameType == "quest-detail" then
-				Dialog = InfoQuestText
+				Dialog = Text_Detail
 			end
 
 			--------------------------------
@@ -214,7 +214,7 @@ function NS.Script:Load()
 			end
 
 			do -- START
-				if #addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] > 1 then
+				if #addon.Interaction.Dialog.Variables.Temp_DialogStringList >= 1 and #addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] >= 1 then
 					addon.Interaction.Dialog.Script:UpdateString(true)
 
 					--------------------------------
@@ -256,7 +256,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if IsInitalized and IsInteractingWithNPC and IsGossip and (INTDB.profile.INT_ALWAYS_SHOW_GOSSIP or (not INTDB.profile.INT_ALWAYS_SHOW_GOSSIP and not IsDialog and IsDialogFinished)) then
+			if IsInitalized and IsInteractingWithNPC and IsGossip and (DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP or (not DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP and not IsDialog and IsDialogFinished)) then
 				InteractionGossipFrame.ShowWithAnimation()
 
 				--------------------------------
@@ -274,7 +274,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if INTDB.profile.INT_ALWAYS_SHOW_QUEST then
+			if DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST then
 				if (IsQuest and not IsGossip) then
 					InteractionQuestFrame.ShowWithAnimation()
 				else
@@ -488,8 +488,8 @@ function NS.Script:Load()
 
 			do -- TUTORIAL (SETTINGS)
 				CallbackRegistry:Add("START_INTERACTION", function()
-					if not INTDB.profile.TutorialSettingsShown then
-						INTDB.profile.TutorialSettingsShown = true
+					if not DB_GLOBAL.profile.TutorialSettingsShown then
+						DB_GLOBAL.profile.TutorialSettingsShown = true
 
 						--------------------------------
 

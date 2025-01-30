@@ -14,7 +14,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Script = NS.Script
+	local Callback = NS.Script
 
 	--------------------------------
 	-- INITALIZE
@@ -23,14 +23,14 @@ function NS.Script:Load()
 	do
 		local Checks = {}
 
-		function Script:Initalize()
+		function Callback:Initalize()
 			NS.Variables.IsController = (addon.Variables.Platform == 2 or addon.Variables.Platform == 3)
 			NS.Variables.IsPC = (addon.Variables.Platform == 1)
 
 			--------------------------------
 
 			local function UpdateChecks()
-				Checks.Settings_AlwaysShowGossipFrame = INTDB.profile.INT_ALWAYS_SHOW_GOSSIP
+				Checks.Settings_AlwaysShowGossipFrame = DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP
 
 				Checks.IsDialog = (InteractionDialogFrame:IsVisible())
 				Checks.IsGossip = (not Checks.IsDialog and InteractionGossipFrame:IsVisible())
@@ -42,7 +42,7 @@ function NS.Script:Load()
 			end
 
 			local function PreventInput()
-				addon.API:PreventInput(Script.KeybindFrame)
+				addon.API:PreventInput(Callback.KeybindFrame)
 			end
 
 			--------------------------------
@@ -66,7 +66,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				function Script:Input_Global(_, key)
+				function Callback:Input_Global(_, key)
 					local result = true
 
 					--------------------------------
@@ -356,13 +356,13 @@ function NS.Script:Load()
 					return result
 				end
 
-				function Script:Input_Keyboard(_, key)
+				function Callback:Input_Keyboard(_, key)
 					UpdateChecks()
 
 					--------------------------------
 
 					if NS.Variables.SimulateController then
-						Script:Input_Gamepad(_, key)
+						Callback:Input_Gamepad(_, key)
 					end
 
 					if NS.Variables.IsPC or not NS.Variables.IsControllerEnabled then
@@ -426,7 +426,7 @@ function NS.Script:Load()
 					end
 				end
 
-				function Script:Input_Gamepad(_, key)
+				function Callback:Input_Gamepad(_, key)
 					UpdateChecks()
 
 					--------------------------------
@@ -441,13 +441,13 @@ function NS.Script:Load()
 								--------------------------------
 
 								if GetMatchingKey(key, NS.Variables.Key_ScrollUp) then
-									if Script:Nav_ScrollUp() then
+									if Callback:Nav_ScrollUp() then
 										PreventInput()
 									end
 								end
 
 								if GetMatchingKey(key, NS.Variables.Key_ScrollDown) then
-									if Script:Nav_ScrollDown() then
+									if Callback:Nav_ScrollDown() then
 										PreventInput()
 									end
 								end
@@ -457,7 +457,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									Script:Nav_MoveUp()
+									Callback:Nav_MoveUp()
 								end
 
 								if GetMatchingKey(key, NS.Variables.Key_MoveLeft) then
@@ -465,7 +465,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									Script:Nav_MoveLeft()
+									Callback:Nav_MoveLeft()
 								end
 
 								if GetMatchingKey(key, NS.Variables.Key_MoveRight) then
@@ -473,7 +473,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									Script:Nav_MoveRight()
+									Callback:Nav_MoveRight()
 								end
 
 								if GetMatchingKey(key, NS.Variables.Key_MoveDown) then
@@ -481,7 +481,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									Script:Nav_MoveDown()
+									Callback:Nav_MoveDown()
 								end
 							end
 
@@ -497,7 +497,7 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									Script:Nav_Interact()
+									Callback:Nav_Interact()
 								end
 
 								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract3) then
@@ -506,7 +506,7 @@ function NS.Script:Load()
 									--------------------------------
 
 									if NS.Variables.CurrentFrame.Input_UseSpecialInteract and NS.Variables.CurrentFrame.Input_UseSpecialInteract_Button then
-										Script:Nav_SpecialInteract1()
+										Callback:Nav_SpecialInteract1()
 									end
 								end
 
@@ -516,7 +516,7 @@ function NS.Script:Load()
 									--------------------------------
 
 									if NS.Variables.CurrentFrame.Input_UseSpecialInteract and not NS.Variables.CurrentFrame.Input_UseSpecialInteract_Button then
-										Script:Nav_SpecialInteract2()
+										Callback:Nav_SpecialInteract2()
 									end
 								end
 
@@ -526,7 +526,7 @@ function NS.Script:Load()
 									--------------------------------
 
 									if NS.Variables.CurrentFrame.Input_UseSpecialInteract and not NS.Variables.CurrentFrame.Input_UseSpecialInteract_Button then
-										Script:Nav_SpecialInteract1()
+										Callback:Nav_SpecialInteract1()
 									end
 								end
 							end
@@ -568,7 +568,7 @@ function NS.Script:Load()
 									--------------------------------
 
 									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabUp) then
-										if Script.CurrentNavigationSession == "SETTING" then
+										if Callback.CurrentNavigationSession == "SETTING" then
 											PreventInput()
 
 											--------------------------------
@@ -592,7 +592,7 @@ function NS.Script:Load()
 									end
 
 									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabDown) then
-										if Script.CurrentNavigationSession == "SETTING" then
+										if Callback.CurrentNavigationSession == "SETTING" then
 											PreventInput()
 
 											--------------------------------
@@ -679,21 +679,21 @@ function NS.Script:Load()
 							--------------------------------
 
 							if Type == "Controller" then
-								if Script:Input_Global(nil, Key) then
-									Script:Input_Gamepad(nil, Key)
+								if Callback:Input_Global(nil, Key) then
+									Callback:Input_Gamepad(nil, Key)
 								end
 							end
 						end
 					end)
 
-					Script.KeybindFrame = CreateFrame("Frame")
-					Script.KeybindFrame:SetPropagateKeyboardInput(true)
+					Callback.KeybindFrame = CreateFrame("Frame")
+					Callback.KeybindFrame:SetPropagateKeyboardInput(true)
 
 					--------------------------------
 
 					-- PC
 					do
-						Script.KeybindFrame:SetScript("OnKeyDown", function(_, key)
+						Callback.KeybindFrame:SetScript("OnKeyDown", function(_, key)
 							if not addon.Initialize.Ready then
 								return
 							end
@@ -704,11 +704,11 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							if Script:Input_Global(_, key) then
-								Script:Input_Keyboard(_, key)
+							if Callback:Input_Global(_, key) then
+								Callback:Input_Keyboard(_, key)
 							end
 						end)
-						Script.KeybindFrame:SetScript("OnKeyUp", function(_, key)
+						Callback.KeybindFrame:SetScript("OnKeyUp", function(_, key)
 							if not addon.Initialize.Ready then
 								return
 							end
@@ -721,7 +721,7 @@ function NS.Script:Load()
 
 					-- GAMEPAD
 					do
-						Script.KeybindFrame:SetScript("OnGamePadButtonDown", function(_, key)
+						Callback.KeybindFrame:SetScript("OnGamePadButtonDown", function(_, key)
 							if not addon.Initialize.Ready then
 								return
 							end
@@ -732,8 +732,8 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							if Script:Input_Global(_, key) then
-								Script:Input_Gamepad(_, key)
+							if Callback:Input_Global(_, key) then
+								Callback:Input_Gamepad(_, key)
 							end
 
 							--------------------------------
@@ -747,7 +747,7 @@ function NS.Script:Load()
 								}
 							end
 						end)
-						Script.KeybindFrame:SetScript("OnGamePadButtonUp", function(_, key)
+						Callback.KeybindFrame:SetScript("OnGamePadButtonUp", function(_, key)
 							if not addon.Initialize.Ready then
 								return
 							end
@@ -765,17 +765,17 @@ function NS.Script:Load()
 			end
 
 			do -- HINT
-				Script.Hint = CreateFrame("Frame", "$parent.Hint", InteractionFrame)
-				Script.Hint:SetSize(25, 25)
-				Script.Hint:SetFrameStrata("FULLSCREEN_DIALOG")
-				Script.Hint:SetFrameLevel(99)
+				Callback.Hint = CreateFrame("Frame", "$parent.Hint", InteractionFrame)
+				Callback.Hint:SetSize(25, 25)
+				Callback.Hint:SetFrameStrata("FULLSCREEN_DIALOG")
+				Callback.Hint:SetFrameLevel(99)
 
-				Script.Hint:SetIgnoreParentAlpha(true)
-				Script.Hint:SetIgnoreParentScale(true)
+				Callback.Hint:SetIgnoreParentAlpha(true)
+				Callback.Hint:SetIgnoreParentScale(true)
 
-				Script.Hint.hidden = false
+				Callback.Hint.hidden = false
 
-				local Frame = Script.Hint
+				local Frame = Callback.Hint
 
 				--------------------------------
 
@@ -800,7 +800,7 @@ function NS.Script:Load()
 			end
 		end
 
-		Script:Initalize()
+		Callback:Initalize()
 	end
 
 	--------------------------------
@@ -808,16 +808,16 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Script.Hint.Set = function(frame, type)
-			Script.Hint:ClearAllPoints()
-			Script.Hint:SetPoint("BOTTOM", frame, 0, -Script.Hint:GetHeight() - 12.5)
+		Callback.Hint.Set = function(frame, type)
+			Callback.Hint:ClearAllPoints()
+			Callback.Hint:SetPoint("BOTTOM", frame, 0, -Callback.Hint:GetHeight() - 12.5)
 
 			local TEXTURE_Interact
 			local TEXTURE_Scrollable
-			if INTDB.profile.addon.Variables.Platform == 2 then
+			if DB_GLOBAL.profile.addon.Variables.Platform == 2 then
 				TEXTURE_Interact = NS.Variables.PATH .. "hint-static.png"
 				TEXTURE_Scrollable = NS.Variables.PATH .. "hint-scrollable.png"
-			elseif INTDB.profile.addon.Variables.Platform == 3 then
+			elseif DB_GLOBAL.profile.addon.Variables.Platform == 3 then
 				TEXTURE_Interact = NS.Variables.PATH .. "hint-static.png"
 				TEXTURE_Scrollable = NS.Variables.PATH .. "hint-scrollable.png"
 			elseif NS.Variables.SimulateController then
@@ -826,41 +826,41 @@ function NS.Script:Load()
 			end
 
 			if type == "Interact" then
-				Script.Hint.ImageTexture:SetTexture(TEXTURE_Interact)
+				Callback.Hint.ImageTexture:SetTexture(TEXTURE_Interact)
 			elseif type == "ScrollFrame" then
-				Script.Hint.ImageTexture:SetTexture(TEXTURE_Scrollable)
+				Callback.Hint.ImageTexture:SetTexture(TEXTURE_Scrollable)
 			elseif type == "Static" then
-				Script.Hint.ImageTexture:SetTexture(NS.Variables.PATH .. "hint-static.png")
+				Callback.Hint.ImageTexture:SetTexture(NS.Variables.PATH .. "hint-static.png")
 			end
 
-			Script.Hint.ShowWithAnimation()
+			Callback.Hint.ShowWithAnimation()
 		end
 
-		Script.Hint.Clear = function()
-			Script.Hint:SetParent(nil)
-			Script.Hint:ClearAllPoints()
+		Callback.Hint.Clear = function()
+			Callback.Hint:SetParent(nil)
+			Callback.Hint:ClearAllPoints()
 
-			Script.Hint:Hide()
+			Callback.Hint:Hide()
 		end
 
-		Script.Hint.ShowWithAnimation = function()
-			Script.Hint:Show()
-			Script.Hint.hidden = false
+		Callback.Hint.ShowWithAnimation = function()
+			Callback.Hint:Show()
+			Callback.Hint.hidden = false
 
-			AdaptiveAPI.Animation:Fade(Script.Hint, .5, 0, 1, nil, function() return Script.Hint.hidden end)
-			AdaptiveAPI.Animation:Move(Script.Hint, .5, "BOTTOM", -75, -Script.Hint:GetHeight() - 12.5, "y", AdaptiveAPI.Animation.EaseExpo, function() return Script.Hint.hidden end)
+			AdaptiveAPI.Animation:Fade(Callback.Hint, .5, 0, 1, nil, function() return Callback.Hint.hidden end)
+			AdaptiveAPI.Animation:Move(Callback.Hint, .5, "BOTTOM", -75, -Callback.Hint:GetHeight() - 12.5, "y", AdaptiveAPI.Animation.EaseExpo, function() return Callback.Hint.hidden end)
 		end
 
-		Script.Hint.HideWithAnimation = function()
+		Callback.Hint.HideWithAnimation = function()
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Script.Hint.hidden then
-					Script.Hint:Hide()
+				if Callback.Hint.hidden then
+					Callback.Hint:Hide()
 				end
 			end, .5)
-			Script.Hint.hidden = true
+			Callback.Hint.hidden = true
 
-			AdaptiveAPI.Animation:Fade(Script.Hint, .5, Script.Hint:GetAlpha(), 0, nil, function() return not Script.Hint.hidden end)
-			AdaptiveAPI.Animation:Move(Script.Hint, .5, "BOTTOM", -Script.Hint:GetHeight() - 12.5, -75, "y", AdaptiveAPI.Animation.EaseExpo, function() return not Script.Hint.hidden end)
+			AdaptiveAPI.Animation:Fade(Callback.Hint, .5, Callback.Hint:GetAlpha(), 0, nil, function() return not Callback.Hint.hidden end)
+			AdaptiveAPI.Animation:Move(Callback.Hint, .5, "BOTTOM", -Callback.Hint:GetHeight() - 12.5, -75, "y", AdaptiveAPI.Animation.EaseExpo, function() return not Callback.Hint.hidden end)
 		end
 	end
 
@@ -869,7 +869,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		function Script:Frame_Leave(frame)
+		function Callback:Frame_Leave(frame)
 			if frame.MouseLeaveCallback then
 				frame.MouseLeaveCallback()
 			elseif frame.Leave then
@@ -879,7 +879,7 @@ function NS.Script:Load()
 			end
 		end
 
-		function Script:Frame_Enter(frame)
+		function Callback:Frame_Enter(frame)
 			if frame.Enter then
 				frame.Enter()
 
@@ -893,13 +893,13 @@ function NS.Script:Load()
 
 		--------------------------------
 
-		function Script:StartNavigation(sessionName, defaultFrame, children)
+		function Callback:StartNavigation(sessionName, defaultFrame, children)
 			NS.Variables.PreviousFrame = nil
 			NS.Variables.CurrentFrame = nil
 
 			--------------------------------
 
-			Script:RegisterNewFrame(defaultFrame)
+			Callback:RegisterNewFrame(defaultFrame)
 
 			--------------------------------
 
@@ -908,33 +908,33 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				Script:Frame_Leave(frame)
+				Callback:Frame_Leave(frame)
 			end
 
 			--------------------------------
 
-			Script.CurrentNavigationSession = sessionName
+			Callback.CurrentNavigationSession = sessionName
 			NS.Variables.IsNavigating = true
 		end
 
-		function Script:StopNavigation()
+		function Callback:StopNavigation()
 			NS.Variables.PreviousFrame = nil
 			NS.Variables.CurrentFrame = nil
 
 			--------------------------------
 
-			Script.CurrentNavigationSession = nil
+			Callback.CurrentNavigationSession = nil
 			NS.Variables.IsNavigating = false
 
 			--------------------------------
 
-			Script.Hint.Clear()
+			Callback.Hint.Clear()
 		end
 
 		--------------------------------
 
 		-- Interact when not specified, is defaulted to the .Click/OnClick function if available. Variables: frame, relativeTop, relativeBottom, relativeLeft, relativeRight, scrollFrame, scrollChildFrame, axis, interact, specialInteract1, specialInteract2
-		function Script:SetFrameRelatives(tbl)
+		function Callback:SetFrameRelatives(tbl)
 			local frame = tbl.frame
 			local parent = tbl.parent
 			local children = tbl.children
@@ -974,7 +974,7 @@ function NS.Script:Load()
 
 		--------------------------------
 
-		function Script:RegisterNewFrame(new)
+		function Callback:RegisterNewFrame(new)
 			if not new then
 				return
 			end
@@ -994,7 +994,7 @@ function NS.Script:Load()
 				local function Exit()
 					local function Callback(frame)
 						if frame then
-							Script:Frame_Leave(frame)
+							Callback:Frame_Leave(frame)
 						end
 					end
 
@@ -1038,7 +1038,7 @@ function NS.Script:Load()
 				local function Enter()
 					local function Callback(frame, ignorePreviousFrame)
 						if ignorePreviousFrame or frame ~= NS.Variables.PreviousFrame then
-							Script:Frame_Enter(frame)
+							Callback:Frame_Enter(frame)
 						end
 					end
 
@@ -1068,7 +1068,7 @@ function NS.Script:Load()
 					local ScrollFrame = new.Input_ScrollFrame
 					local Axis = new.Input_Axis
 
-					Script:UpdateScrollFramePosition(ScrollFrame, Frame, Axis)
+					Callback:UpdateScrollFramePosition(ScrollFrame, Frame, Axis)
 				end
 			end
 
@@ -1082,18 +1082,18 @@ function NS.Script:Load()
 			CallbackRegistry:Trigger("INPUT_NAVIGATION_HIGHLIGHTED")
 		end
 
-		function Script:ResetSelectedFrame(new)
+		function Callback:ResetSelectedFrame(new)
 			NS.Variables.PreviousFrame = nil
 			NS.Variables.CurrentFrame = nil
 
 			--------------------------------
 
-			Script:RegisterNewFrame(new)
+			Callback:RegisterNewFrame(new)
 		end
 
 		--------------------------------
 
-		function Script:Nav_Interact()
+		function Callback:Nav_Interact()
 			if NS.Variables.CurrentFrame then
 				if NS.Variables.CurrentFrame.Input_Interact then
 					NS.Variables.CurrentFrame.Input_Interact()
@@ -1109,79 +1109,79 @@ function NS.Script:Load()
 			CallbackRegistry:Trigger("INPUT_NAVIGATION_INTERACT")
 		end
 
-		function Script:Nav_SpecialInteract1()
+		function Callback:Nav_SpecialInteract1()
 			if NS.Variables.CurrentFrame and NS.Variables.CurrentFrame.Input_UseSpecialInteract then
-				Script:Settings_SpecialInteractFunc1(NS.Variables.CurrentFrame.Type, NS.Variables.CurrentFrame)
+				Callback:Settings_SpecialInteractFunc1(NS.Variables.CurrentFrame.Type, NS.Variables.CurrentFrame)
 			end
 		end
 
-		function Script:Nav_SpecialInteract2()
+		function Callback:Nav_SpecialInteract2()
 			if NS.Variables.CurrentFrame and NS.Variables.CurrentFrame.Input_UseSpecialInteract then
-				Script:Settings_SpecialInteractFunc2(NS.Variables.CurrentFrame.Type, NS.Variables.CurrentFrame)
+				Callback:Settings_SpecialInteractFunc2(NS.Variables.CurrentFrame.Type, NS.Variables.CurrentFrame)
 			end
 		end
 
 		--------------------------------
 
-		function Script:Nav_MoveUp(customFrame)
+		function Callback:Nav_MoveUp(customFrame)
 			local Frame = customFrame or NS.Variables.CurrentFrame
 
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Top then
 				if Frame.Input_Relatives_Top:IsVisible() and (not Frame.Input_Relatives_Top.IsEnabled or (Frame.Input_Relatives_Top.IsEnabled and Frame.Input_Relatives_Top:IsEnabled())) then
-					Script:RegisterNewFrame(Frame.Input_Relatives_Top)
+					Callback:RegisterNewFrame(Frame.Input_Relatives_Top)
 				else
-					Script:Nav_MoveUp(Frame.Input_Relatives_Top)
+					Callback:Nav_MoveUp(Frame.Input_Relatives_Top)
 				end
 			end
 		end
 
-		function Script:Nav_MoveDown(customFrame)
+		function Callback:Nav_MoveDown(customFrame)
 			local Frame = customFrame or NS.Variables.CurrentFrame
 
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Bottom then
 				if Frame.Input_Relatives_Bottom:IsVisible() and (not Frame.Input_Relatives_Bottom.IsEnabled or (Frame.Input_Relatives_Bottom.IsEnabled and Frame.Input_Relatives_Bottom:IsEnabled())) then
-					Script:RegisterNewFrame(Frame.Input_Relatives_Bottom)
+					Callback:RegisterNewFrame(Frame.Input_Relatives_Bottom)
 				else
-					Script:Nav_MoveDown(Frame.Input_Relatives_Bottom)
+					Callback:Nav_MoveDown(Frame.Input_Relatives_Bottom)
 				end
 			end
 		end
 
-		function Script:Nav_MoveLeft(customFrame)
+		function Callback:Nav_MoveLeft(customFrame)
 			local Frame = customFrame or NS.Variables.CurrentFrame
 
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Left then
 				if Frame.Input_Relatives_Left:IsVisible() and (not Frame.Input_Relatives_Left.IsEnabled or (Frame.Input_Relatives_Left.IsEnabled and Frame.Input_Relatives_Left:IsEnabled())) then
-					Script:RegisterNewFrame(Frame.Input_Relatives_Left)
+					Callback:RegisterNewFrame(Frame.Input_Relatives_Left)
 				else
-					Script:Nav_MoveLeft(Frame.Input_Relatives_Left)
+					Callback:Nav_MoveLeft(Frame.Input_Relatives_Left)
 				end
 			end
 		end
 
-		function Script:Nav_MoveRight(customFrame)
+		function Callback:Nav_MoveRight(customFrame)
 			local Frame = customFrame or NS.Variables.CurrentFrame
 
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Right then
 				if Frame.Input_Relatives_Right:IsVisible() and (not Frame.Input_Relatives_Right.IsEnabled or (Frame.Input_Relatives_Right.IsEnabled and Frame.Input_Relatives_Right:IsEnabled())) then
-					Script:RegisterNewFrame(Frame.Input_Relatives_Right)
+					Callback:RegisterNewFrame(Frame.Input_Relatives_Right)
 				else
-					Script:Nav_MoveRight(Frame.Input_Relatives_Right)
+					Callback:Nav_MoveRight(Frame.Input_Relatives_Right)
 				end
 			end
 		end
 
 		--------------------------------
 
-		function Script:Nav_ScrollUp()
+		function Callback:Nav_ScrollUp()
 			local Result = false
 
 			--------------------------------
@@ -1220,7 +1220,7 @@ function NS.Script:Load()
 			return Result
 		end
 
-		function Script:Nav_ScrollDown()
+		function Callback:Nav_ScrollDown()
 			local Result = false
 
 			--------------------------------
@@ -1265,7 +1265,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		function Script:UpdateScrollFramePosition(scrollFrame, selectedFrame, axis)
+		function Callback:UpdateScrollFramePosition(scrollFrame, selectedFrame, axis)
 			local point, relativeTo, relativePoint, offsetX, offsetY = selectedFrame:GetPoint()
 
 			if axis == "x" then
@@ -1281,20 +1281,20 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		function Script:StartInteraction()
+		function Callback:StartInteraction()
 
 		end
 
-		function Script:StopInteraction()
+		function Callback:StopInteraction()
 
 		end
 
 		CallbackRegistry:Add("START_INTERACTION", function()
-			Script:StartInteraction()
+			Callback:StartInteraction()
 		end, 0)
 
 		CallbackRegistry:Add("STOP_INTERACTION", function()
-			Script:StopInteraction()
+			Callback:StopInteraction()
 		end, 0)
 	end
 

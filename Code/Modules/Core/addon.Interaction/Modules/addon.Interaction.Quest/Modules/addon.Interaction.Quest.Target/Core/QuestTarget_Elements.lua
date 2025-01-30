@@ -80,11 +80,9 @@ function NS.Elements:Load()
 			do -- TEXT
 				local function SetAutoTextHeight(frame, positionCalculation)
 					local function Update()
-						frame:SetHeight(1000)
-
-						--------------------------------
-
-						local textHeight = frame:GetStringHeight()
+						local fontName, fontSize, fontFlags = frame:GetFont()
+						local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
+						local _, textHeight = AdaptiveAPI:GetStringSize(frame:GetText(), fontName, fontSize, fontFlags, justifyH, justifyV, nil, nil)
 
 						--------------------------------
 

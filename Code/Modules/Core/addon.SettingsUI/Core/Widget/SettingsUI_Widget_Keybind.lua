@@ -6,7 +6,7 @@ local NS = addon.SettingsUI
 --------------------------------
 
 -- Creates a keybind button. Child Frames: KeybindButton
-function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
+function NS.Widgets:CreateKeybindButton(parent, getFunc, setFunc, enableFunc, subcategory, tooltipText, tooltipTextDynamic, tooltipImage, tooltipImageType, hidden, locked, opacity)
 	local OffsetX = 0
 
 	--------------------------------
@@ -17,8 +17,8 @@ function NS.Widgets:CreateKeybindButton(parent, setFunc, getFunc, enableFunc, su
 
 	do -- KEYBIND
 		Frame.KeybindButton = AdaptiveAPI.FrameTemplates:CreateKeybindButton(Frame.Container, Frame:GetFrameStrata(), {
-			setFunc = setFunc,
 			getFunc = getFunc,
+			setFunc = setFunc,
 			enableFunc = enableFunc
 		}, "$parent.KeybindButton")
 		Frame.KeybindButton:SetSize(225, Frame.Container:GetHeight())

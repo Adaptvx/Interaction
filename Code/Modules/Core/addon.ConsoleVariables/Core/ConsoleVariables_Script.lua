@@ -199,7 +199,7 @@ function NS.Script:Load()
 		local InteractionActive = (addon.Interaction.Variables.Active)
 		local InteractionLastActive = (addon.Interaction.Variables.LastActive)
 
-		local IsCinematic = (INTDB.profile.INT_CINEMATIC)
+		local IsCinematic = (DB_GLOBAL.profile.INT_CINEMATIC)
 		local IsDynamicPitch = (tonumber(GetCVar("test_cameraDynamicPitch")) > 0)
 		local IsOffset = (tonumber(GetCVar("test_cameraOverShoulder")) > 0)
 		local IsFocusEnabled = (tostring(GetCVar("test_cameraTargetFocusInteractEnable")) == "1")

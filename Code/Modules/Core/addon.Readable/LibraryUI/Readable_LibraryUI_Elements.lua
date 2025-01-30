@@ -76,7 +76,6 @@ function NS.LibraryUI.Elements:Load()
 							LibraryUIFrame.Content.Title.Main.Text:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Text:SetPoint("TOP", LibraryUIFrame.Content.Title)
 							LibraryUIFrame.Content.Title.Main.Text:SetAlpha(.75)
-							LibraryUIFrame.Content.Title.Main.Text:SetText(UnitName("player") .. L["Readable - Library - Name Text Append"])
 						end
 
 						do -- SUBTEXT
@@ -600,7 +599,7 @@ function NS.LibraryUI.Elements:Load()
 
 									Button.Click = function(_, button)
 										if NS.LibraryUI.Variables.SelectedIndex == index then
-											if INTDB.profile.INT_FLIPMOUSE and button == "RightButton" or INTDB.profile.INT_FLIPMOUSE or button == "LeftButton" then
+											if DB_GLOBAL.profile.INT_FLIPMOUSE and button == "RightButton" or DB_GLOBAL.profile.INT_FLIPMOUSE or button == "LeftButton" then
 												NS.LibraryUI.Script:OpenFromLibrary(Button.ID)
 											else
 												NS.LibraryUI.Variables.SelectedIndex = nil

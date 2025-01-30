@@ -47,32 +47,32 @@ function NS.Elements:Load()
 			end
 
 			do -- BUTTONS
-				-- do -- TTS
-				-- 	InteractionReadableUIFrame.TTSButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
-				-- 		defaultTexture = NS.Variables.NINESLICE_HEAVY,
-				-- 		highlightTexture = NS.Variables.NINESLICE_Highlight,
-				-- 		edgeSize = 25,
-				-- 		scale = 1,
-				-- 		theme = 2,
-				-- 		playAnimation = false,
-				-- 		customColor = nil,
-				-- 		customHighlightColor = nil,
-				-- 		customActiveColor = nil,
-				-- 	}, "$parent.TTSButton")
-				-- 	InteractionReadableUIFrame.TTSButton:SetPoint("TOPRIGHT", InteractionReadableUIFrame, -50, -25)
-				-- 	InteractionReadableUIFrame.TTSButton:SetScript("OnClick", function()
-				-- 		NS.ItemUI.Script:StartTTS()
-				-- 	end)
+				do -- TTS
+					InteractionReadableUIFrame.TTSButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
+						defaultTexture = NS.Variables.NINESLICE_HEAVY,
+						highlightTexture = NS.Variables.NINESLICE_Highlight,
+						edgeSize = 25,
+						scale = 1,
+						theme = 2,
+						playAnimation = false,
+						customColor = nil,
+						customHighlightColor = nil,
+						customActiveColor = nil,
+					}, "$parent.TTSButton")
+					InteractionReadableUIFrame.TTSButton:SetPoint("TOPRIGHT", InteractionReadableUIFrame, -50, -25)
+					InteractionReadableUIFrame.TTSButton:SetScript("OnClick", function()
+						NS.ItemUI.Script:StartTTS()
+					end)
 
-				-- 	--------------------------------
+					--------------------------------
 
-				-- 	do -- IMAGE
-				-- 		InteractionReadableUIFrame.TTSButton.Image, InteractionReadableUIFrame.TTSButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionReadableUIFrame.TTSButton, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/tts.png", "$parent.Image")
-				-- 		InteractionReadableUIFrame.TTSButton.Image:SetSize(InteractionReadableUIFrame.TTSButton:GetWidth() - 10, InteractionReadableUIFrame.TTSButton:GetHeight() - 10)
-				-- 		InteractionReadableUIFrame.TTSButton.Image:SetPoint("CENTER", InteractionReadableUIFrame.TTSButton)
-				-- 		InteractionReadableUIFrame.TTSButton.Image:SetAlpha(.75)
-				-- 	end
-				-- end
+					do -- IMAGE
+						InteractionReadableUIFrame.TTSButton.Image, InteractionReadableUIFrame.TTSButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionReadableUIFrame.TTSButton, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/tts.png", "$parent.Image")
+						InteractionReadableUIFrame.TTSButton.Image:SetSize(InteractionReadableUIFrame.TTSButton:GetWidth() - 10, InteractionReadableUIFrame.TTSButton:GetHeight() - 10)
+						InteractionReadableUIFrame.TTSButton.Image:SetPoint("CENTER", InteractionReadableUIFrame.TTSButton)
+						InteractionReadableUIFrame.TTSButton.Image:SetAlpha(.75)
+					end
+				end
 
 				do -- CLOSE
 					InteractionReadableUIFrame.CloseButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
@@ -113,15 +113,15 @@ function NS.Elements:Load()
 
 	do
 		CallbackRegistry:Add("START_READABLE", function()
-			-- InteractionReadableUIFrame.TTSButton:Show()
+			InteractionReadableUIFrame.TTSButton:Show()
 		end, 0)
 
 		CallbackRegistry:Add("START_LIBRARY", function()
-			-- InteractionReadableUIFrame.TTSButton:Hide()
+			InteractionReadableUIFrame.TTSButton:Hide()
 		end, 0)
 
 		CallbackRegistry:Add("STOP_READABLE_UI", function()
-			-- InteractionReadableUIFrame.TTSButton:Hide()
+			InteractionReadableUIFrame.TTSButton:Hide()
 		end, 0)
 	end
 

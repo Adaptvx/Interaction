@@ -18,7 +18,7 @@ function NS.Script:Load()
 	local Callback = NS.Script
 
 	--------------------------------
-	-- FUNCTIONS (BUTTON)
+	-- FUNCTIONS (BUTTONS)
 	--------------------------------
 
 	do
@@ -46,8 +46,8 @@ function NS.Script:Load()
 
 	do
 		Frame.ShowWithAnimation = function()
-			local AnimationID = GetTime()
-			Frame.AnimationID = AnimationID
+			local animationID = math.random(1, 999999999)
+			Frame.AnimationID = animationID
 
 			--------------------------------
 
@@ -60,10 +60,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame.AnimationID ~= AnimationID end)
+			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame.AnimationID ~= animationID end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:FadeText(Frame.Text, 1.5, 15, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.AnimationID ~= AnimationID end)
+				AdaptiveAPI.Animation:FadeText(Frame.Text, 1.5, 15, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.AnimationID ~= animationID end)
 			end, .2)
 
 			--------------------------------
@@ -76,20 +76,20 @@ function NS.Script:Load()
 		end
 
 		Frame.HideWithAnimation = function()
-			local AnimationID = Frame.AnimationID
+			local animationID = Frame.AnimationID
 
 			--------------------------------
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.AnimationID == AnimationID then
+				if Frame.AnimationID == animationID then
 					Frame:Hide()
 				end
 			end, .5)
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame.AnimationID ~= AnimationID end)
-			AdaptiveAPI.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame.AnimationID ~= AnimationID end)
+			AdaptiveAPI.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
+			AdaptiveAPI.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
 
 			--------------------------------
 
@@ -97,8 +97,8 @@ function NS.Script:Load()
 		end
 
 		Frame.Flare.PlayAnimation = function()
-			local AnimationID = GetTime()
-			Frame.Flare.AnimationID = AnimationID
+			local animationID = GetTime()
+			Frame.Flare.AnimationID = animationID
 
 			--------------------------------
 
@@ -108,18 +108,18 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Flare, .125, 0, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= AnimationID end)
-			AdaptiveAPI.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare.AnimationID ~= AnimationID end)
+			AdaptiveAPI.Animation:Fade(Frame.Flare, .125, 0, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
+			AdaptiveAPI.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare.AnimationID ~= animationID end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.Flare.AnimationID == AnimationID then
-					AdaptiveAPI.Animation:Fade(Frame.Flare, 2, 1, 0, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= AnimationID end)
-					AdaptiveAPI.Animation:Scale(Frame.Flare, 2, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= AnimationID end)
+				if Frame.Flare.AnimationID == animationID then
+					AdaptiveAPI.Animation:Fade(Frame.Flare, 2, 1, 0, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
+					AdaptiveAPI.Animation:Scale(Frame.Flare, 2, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
 				end
 			end, .125)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.Flare.AnimationID == AnimationID then
+				if Frame.Flare.AnimationID == animationID then
 					Frame.Flare:Hide()
 				end
 			end, 2)
@@ -133,7 +133,7 @@ function NS.Script:Load()
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
-			if INTDB.profile.INT_UIDIRECTION == 1 then
+			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 				Frame:SetPoint("TOPLEFT", UIParent, 25, -25)
 			else
 				Frame:SetPoint("TOPRIGHT", UIParent, -25, -25)
@@ -156,9 +156,8 @@ function NS.Script:Load()
 		Events:RegisterEvent("QUEST_TURNED_IN")
 		Events:SetScript("OnEvent", function(self, event, ...)
 			do -- QUEST
-				local isQuestFrameVisible = (InteractionQuestFrame.validForNotification)
-
-				if not isQuestFrameVisible then
+				local valid = (InteractionQuestFrame.validForNotification)
+				if not valid then
 					return
 				end
 

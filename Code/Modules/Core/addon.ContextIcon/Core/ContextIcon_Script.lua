@@ -9,60 +9,6 @@ NS.Script = {}
 
 --------------------------------
 
-local CONTEXT_ICON_PATH = addon.Variables.PATH .. "Art/ContextIcons/"
-local ICON_MAP = {
-	-- GOSSIP
-	["132053"] = "gossip-bubble",
-
-	-- DEFAULT
-	["132048"] = "quest-complete",
-	["132049"] = "quest-available",
-	["-1746"] = "quest-available", -- Cata classic bug?
-
-	-- CLASSIC ERA
-	["136788"] = "quest-available",
-
-	-- IMPORTANT
-	["importantactivequesticon"] = "quest-important-complete",
-	["importantavailablequesticon"] = "quest-important-available",
-	["importantincompletequesticon"] = "quest-important-active",
-
-	-- RECURRING
-	["Recurringactivequesticon"] = "quest-recurring-complete",
-	["Recurringavailablequesticon"] = "quest-recurring-available",
-	["Recurringincompletequesticon"] = "quest-recurring-active",
-
-	-- REPEATABLE
-	["Repeatableactivequesticon"] = "quest-repeatable-complete",
-	["Repeatableavailablequesticon"] = "quest-repeatable-available",
-	["Repeatableicnompletequesticon"] = "quest-repeatable-active",
-
-	-- CAMPAIGN
-	["CampaignActiveQuestIcon"] = "quest-campaign-complete",
-	["CampaignAvailableQuestIcon"] = "quest-campaign-available",
-	["CampaignIncompleteQuestIcon"] = "quest-campaign-active",
-	["CampaignActiveDailyQuestIcon"] = "quest-campaign-recurring-complete",
-	["CampaignAvailableDailyQuestIcon"] = "quest-campaign-recurring-available",
-
-	-- META
-	["Wrapperactivequesticon"] = "quest-meta-complete",
-	["Wrapperavailablequesticon"] = "quest-meta-available",
-	["Wrapperincompletequesticon"] = "quest-meta-active",
-
-	-- LEGENDARY
-	["legendaryactivequesticon"] = "quest-legendary-complete",
-	["legendaryavailablequesticon"] = "quest-legendary-available",
-	["legendaryincompletequesticon"] = "quest-legendary-active",
-
-	-- IN_PROGRESS
-	["CampaignInProgressQuestIcon"] = "quest-campaign-active",
-	["RepeatableInProgressquesticon"] = "quest-recurring-active",
-	["SideInProgressquesticon"] = "quest-active",
-	["importantInProgressquesticon"] = "quest-important-active",
-	["WrapperInProgressquesticon"] = "quest-meta-active",
-	["legendaryInProgressquesticon"] = "quest-legendary-active",
-}
-
 local function MissingAPI()
 	return false
 end
@@ -88,16 +34,15 @@ end
 local IsOnQuest = C_QuestLog.IsOnQuest or MissingAPI
 local IsReadyForTurnIn = C_QuestLog.ReadyForTurnIn or ReadyForTurnInMakeshiftAPI or MissingAPI
 local IsAutoAccept = addon.API.IsAutoAccept
-local GetAvailableQuestInfo = GetAvailableQuestInfo or function() return false, 0, false, false, 0 end
 
 --------------------------------
 
-function addon.ContextIcon.Script:Load()
+function NS.Script:Load()
 	--------------------------------
 	-- REFERENCES
 	--------------------------------
 
-	local DB = ICON_MAP
+	local Callback = NS.Script
 
 	--------------------------------
 	-- FUNCTIONS
@@ -105,17 +50,17 @@ function addon.ContextIcon.Script:Load()
 
 	do
 		do -- UTILITIES
-			function addon.ContextIcon.Script:ConvertToInlineIcon(name, isTexture)
-				local iconPath = isTexture and name or (CONTEXT_ICON_PATH .. name .. ".png")
+			function Callback:ConvertToInlineIcon(name, isTexture)
+				local iconPath = isTexture and name or (NS.Variables.PATH .. name .. ".png")
 				return AdaptiveAPI:InlineIcon(iconPath, 16, 16, 0, 0)
 			end
 		end
 
 		do -- REPLACEMENT
-			function addon.ContextIcon.Script:ReplaceIcon(texture)
+			function Callback:ReplaceIcon(texture)
 				local Result = texture
 
-				for k, v in pairs(DB) do
+				for k, v in pairs(NS.Variables.ICON_MAP) do
 					if tostring(texture) == tostring(k) then
 						Result = addon.Variables.PATH .. "Art/ContextIcons/" .. v .. ".png"
 					end
@@ -124,17 +69,208 @@ function addon.ContextIcon.Script:Load()
 				return Result
 			end
 
-			function addon.ContextIcon.Script:ChangeIcon(texture)
-				return addon.ContextIcon.Script:ReplaceIcon(texture)
+			function Callback:ChangeIcon(texture)
+				return Callback:ReplaceIcon(texture)
 			end
 		end
 
 		do -- GET
-			function addon.ContextIcon.Script:GetContextIcon(gossipButtonInfo, gossipButtonOptionTexture)
-				local isRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
-				local isClassicCata = addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
-				local isClassicEra = addon.Variables.IS_CLASSIC_ERA
+			function Callback:GetQuestInfo(questID, gossipButtonInfo)
+				local results = {}
 
+				--------------------------------
+
+				if NS.Variables.IsRetail then
+					local questClassification = C_QuestInfoSystem.GetQuestClassification(questID)
+					local questType = C_QuestLog.GetQuestType(questID)
+
+					-- QUEST CLASSIFICATION
+					local isAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
+					local isCompleted = (IsReadyForTurnIn(questID)) and not isAvailable
+					local isOnQuest = (C_QuestLog.IsOnQuest(questID) and not isAvailable)
+					local isDefault = (questClassification == Enum.QuestClassification.Normal)
+					local isImportant = (questClassification == Enum.QuestClassification.Important)
+					local isCampaign = (questClassification == Enum.QuestClassification.Campaign)
+					local isCalling = (questClassification == Enum.QuestClassification.Calling)
+					local isMeta = (questClassification == Enum.QuestClassification.Meta)
+					local isRecurring = (questClassification == Enum.QuestClassification.Recurring)
+					local isRepeatable = (C_QuestLog.IsQuestRepeatableType(questID))
+
+					-- QUEST TYPE
+					local isAccount = (questType == Enum.QuestTag.Account)
+					local isCombatAlly = (questType == Enum.QuestTag.CombatAlly)
+					local isDelve = (questType == Enum.QuestTag.Delve)
+					local isDungeon = (questType == Enum.QuestTag.Dungeon)
+					local isGroup = (questType == Enum.QuestTag.Group)
+					local isHeroic = (questType == Enum.QuestTag.Heroic)
+					local isLegendary = (questClassification == Enum.QuestClassification.Legendary or questType == Enum.QuestTag.Legendary)
+					local isArtifact = (questType == 107) -- Artifact
+					local isPvP = (questType == Enum.QuestTag.PvP)
+					local isRaid = (questType == Enum.QuestTag.Raid)
+					local isRaid10 = (questType == Enum.QuestTag.Raid10)
+					local isRaid25 = (questType == Enum.QuestTag.Raid25)
+					local isScenario = (questType == Enum.QuestTag.Scenario)
+
+					results = {
+						isAvailable = isAvailable,
+						isCompleted = isCompleted,
+						isOnQuest = isOnQuest,
+						isDefault = isDefault,
+						isImportant = isImportant,
+						isCampaign = isCampaign,
+						isCalling = isCalling,
+						isMeta = isMeta,
+						isRecurring = isRecurring,
+						isRepeatable = isRepeatable,
+						isAccount = isAccount,
+						isCombatAlly = isCombatAlly,
+						isDelve = isDelve,
+						isDungeon = isDungeon,
+						isGroup = isGroup,
+						isHeroic = isHeroic,
+						isLegendary = isLegendary,
+						isArtifact = isArtifact,
+						isPvP = isPvP,
+						isRaid = isRaid,
+						isRaid10 = isRaid10,
+						isRaid25 = isRaid25,
+						isScenario = isScenario,
+					}
+				elseif NS.Variables.IsClassicCata or NS.Variables.IsClassicEra then
+					local results = {}
+					local questInfo = {}
+
+					--------------------------------
+
+					if gossipButtonInfo then
+						-- FILL DATA
+						--------------------------------
+						questInfo.title,
+						questInfo.level,
+						questInfo.suggestedGroup,
+						questInfo.isHeader,
+						questInfo.isCollapsed,
+						questInfo.isComplete,
+						questInfo.frequency,
+						questInfo.questID,
+						questInfo.startEvent,
+						questInfo.displayQuestID,
+						questInfo.isOnMap,
+						questInfo.hasLocalPOI,
+						questInfo.isTask,
+						questInfo.isBounty,
+						questInfo.isStory,
+						questInfo.isHidden,
+						questInfo.isScaling = GetQuestLogTitle(GetQuestLogIndexByID(questID))
+
+						-- QUERY MISSING REFERENCES
+						--------------------------------
+
+						questInfo.frequency = (gossipButtonInfo.frequency or 0) + 1
+					else
+						-- FILL DATA
+						--------------------------------
+						questInfo.title,
+						questInfo.level,
+						questInfo.suggestedGroup,
+						questInfo.isHeader,
+						questInfo.isCollapsed,
+						questInfo.isComplete,
+						questInfo.frequency,
+						questInfo.questID,
+						questInfo.startEvent,
+						questInfo.displayQuestID,
+						questInfo.isOnMap,
+						questInfo.hasLocalPOI,
+						questInfo.isTask,
+						questInfo.isBounty,
+						questInfo.isStory,
+						questInfo.isHidden,
+						questInfo.isScaling = GetQuestLogTitle(GetQuestLogIndexByID(questID))
+
+						-- QUERY MISSING REFERENCES
+						--------------------------------
+						if questInfo.isOnQuest == nil then
+							questInfo.isOnQuest = (IsOnQuest and IsOnQuest(questID)) or false
+						end
+
+						if questInfo.frequency == nil then
+							questInfo.frequency = 0
+						end
+
+						if not questInfo.isComplete then
+							questInfo.isComplete = (IsReadyForTurnIn and IsReadyForTurnIn(questID)) or false
+						end
+
+						if QuestFrameAcceptButton:IsVisible() then
+							questInfo.isComplete = false
+						end
+					end
+
+					--------------------------------
+
+					local FREQUENCY_DEFAULT = 1
+					local FREQUENCY_DAILY = 2
+					local FREQUENCY_WEEKLY = 3
+
+					local QuestType = GetQuestTagInfo(questID)
+
+					local isAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
+					local isCompleted = (((questInfo.isComplete) or (IsReadyForTurnIn and IsReadyForTurnIn(questID))) and not isAvailable)
+					local isOnQuest = (((questInfo.isOnQuest) or (IsOnQuest and IsOnQuest(questID)) or questInfo.missingQuestID) and not isAvailable)
+					local isRecurring = (questInfo.frequency > FREQUENCY_DEFAULT)
+					local isDefault = (not isRecurring)
+
+					local isGroup = (QuestType == 1)
+					local isPvP = (QuestType == 41)
+					local isRaid = (QuestType == 62)
+					local isDungeon = (QuestType == 81)
+					local isLegendary = (QuestType == 83)
+					local isHeroic = (QuestType == 85)
+					local isScenario = (QuestType == 98)
+					local isAccount = (QuestType == 102)
+					local isLeatherworkingWorldQuest = (QuestType == 117)
+
+					print("------------------------------")
+					print(questID)
+					print("------------------------------")
+					print("isAvailable", isAvailable)
+					print("isCompleted", isCompleted)
+					print("isOnQuest", isOnQuest)
+					print("questInfo.frequency", questInfo.frequency or "nil, so set to 0")
+					print("isRecurring", isRecurring)
+					print("isDefault", isDefault)
+
+					--------------------------------
+
+					results = {
+						isAvailable = isAvailable,
+						isCompleted = isCompleted,
+						isOnQuest = isOnQuest,
+						isRecurring = isRecurring,
+						isDefault = isDefault,
+						isGroup = isGroup,
+						isPvP = isPvP,
+						isRaid = isRaid,
+						isDungeon = isDungeon,
+						isLegendary = isLegendary,
+						isHeroic = isHeroic,
+						isScenario = isScenario,
+						isAccount = isAccount,
+						isLeatherworkingWorldQuest = isLeatherworkingWorldQuest,
+					}
+
+					--------------------------------
+
+					return results
+				end
+
+				--------------------------------
+
+				return results
+			end
+
+			function Callback:GetContextIcon(gossipButtonInfo, gossipButtonOptionTexture)
 				local isGossip = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
 				local isQuest = (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible())
 
@@ -149,7 +285,7 @@ function addon.ContextIcon.Script:Load()
 				--------------------------------
 
 				do -- RETAIL
-					if isRetail then
+					if NS.Variables.IsRetail then
 						local resultPath
 
 						--------------------------------
@@ -168,34 +304,15 @@ function addon.ContextIcon.Script:Load()
 							--------------------------------
 
 							if questID then
-								local questClassification = C_QuestInfoSystem.GetQuestClassification(questID)
-								local questType = C_QuestLog.GetQuestType(questID)
-
-								local isAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
-								local isCompleted = (IsReadyForTurnIn(questID)) and not isAvailable
-								local isOnQuest = (C_QuestLog.IsOnQuest(questID) and not isAvailable)
-								local isDefault = (questClassification == Enum.QuestClassification.Normal)
-								local isImportant = (questClassification == Enum.QuestClassification.Important)
-								local isCampaign = (questClassification == Enum.QuestClassification.Campaign)
-								local isLegendary = (questClassification == Enum.QuestClassification.Legendary)
-								local isCalling = (questClassification == Enum.QuestClassification.Calling)
-								local isMeta = (questClassification == Enum.QuestClassification.Meta)
-								local isRecurring = (questClassification == Enum.QuestClassification.Recurring)
-								local isRepeatable = (C_QuestLog.IsQuestRepeatableType(questID))
-
-								local isAccount = (questType == Enum.QuestTag.Account)
-								local isCombatAlly = (questType == Enum.QuestTag.CombatAlly)
-								local isDelve = (questType == Enum.QuestTag.Delve)
-								local isDungeon = (questType == Enum.QuestTag.Dungeon)
-								local isGroup = (questType == Enum.QuestTag.Group)
-								local isHeroic = (questType == Enum.QuestTag.Heroic)
-								local isLegendary = (questType == Enum.QuestTag.Legendary)
-								local isArtifact = (questType == 107) -- Artifact
-								local isPvP = (questType == Enum.QuestTag.PvP)
-								local isRaid = (questType == Enum.QuestTag.Raid)
-								local isRaid10 = (questType == Enum.QuestTag.Raid10)
-								local isRaid25 = (questType == Enum.QuestTag.Raid25)
-								local isScenario = (questType == Enum.QuestTag.Scenario)
+								local questInfo = Callback:GetQuestInfo(questID)
+								local isAvailable, isCompleted, isOnQuest, isDefault, isImportant,
+								isCampaign, isCalling, isMeta, isRecurring, isRepeatable, isAccount,
+								isCombatAlly, isDelve, isDungeon, isGroup, isHeroic, isLegendary, isArtifact,
+								isPvP, isRaid, isRaid10, isRaid25, isScenario =
+									questInfo.isAvailable, questInfo.isCompleted, questInfo.isOnQuest, questInfo.isDefault, questInfo.isImportant,
+									questInfo.isCampaign, questInfo.isCalling, questInfo.isMeta, questInfo.isRecurring, questInfo.isRepeatable, questInfo.isAccount,
+									questInfo.isCombatAlly, questInfo.isDelve, questInfo.isDungeon, questInfo.isGroup, questInfo.isHeroic, questInfo.isLegendary, questInfo.isArtifact,
+									questInfo.isPvP, questInfo.isRaid, questInfo.isRaid10, questInfo.isRaid25, questInfo.isScenario
 
 								--------------------------------
 
@@ -262,7 +379,7 @@ function addon.ContextIcon.Script:Load()
 								end
 							else
 								if gossipButtonOptionTexture then
-									local new = addon.ContextIcon.Script:ReplaceIcon(gossipButtonOptionTexture)
+									local new = Callback:ReplaceIcon(gossipButtonOptionTexture)
 									resultPath = nil
 									resultTexture = new
 								end
@@ -271,7 +388,7 @@ function addon.ContextIcon.Script:Load()
 							--------------------------------
 
 							if resultPath and not resultTexture then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
+								result = Callback:ConvertToInlineIcon(resultPath)
 								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
@@ -284,7 +401,7 @@ function addon.ContextIcon.Script:Load()
 							--------------------------------
 
 							if resultPath then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
+								result = Callback:ConvertToInlineIcon(resultPath)
 								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
@@ -294,84 +411,98 @@ function addon.ContextIcon.Script:Load()
 				end
 
 				do -- CLASSIC CATA
-					if isClassicCata then
+					if NS.Variables.IsClassicCata then
 						local resultPath
 
 						--------------------------------
 
-						local questInfo = {}
-						local currentQuestInfo = {}
-
-						--------------------------------
-
 						if queryQuest then
-							local questID
+							local questID; if gossipButtonInfo then questID = gossipButtonInfo.questID or nil else questID = GetQuestID() end
 
 							--------------------------------
 
-							if gossipButtonInfo then
-								-- QUEST ID
-								questID = gossipButtonInfo.questID or nil
+							if questID then
+								local questInfo = Callback:GetQuestInfo(questID, gossipButtonInfo)
+								local isAvailable, isCompleted, isOnQuest, isDefault,
+								isRecurring, isGroup, isPvP, isRaid, isDungeon, isLegendary,
+								isHeroic, isScenario, isAccount, isLeatherworkingWorldQuest =
+									questInfo.isAvailable, questInfo.isCompleted, questInfo.isOnQuest, questInfo.isDefault,
+									questInfo.isRecurring, questInfo.isGroup, questInfo.isPvP, questInfo.isRaid, questInfo.isDungeon, questInfo.isLegendary,
+									questInfo.isHeroic, questInfo.isScenario, questInfo.isAccount, questInfo.isLeatherworkingWorldQuest
 
-								-- FILL DATA
-								currentQuestInfo.isComplete = gossipButtonInfo.isComplete or false
+								--------------------------------
+
+								if isCompleted then
+									if isDefault then
+										resultPath = "quest-complete"
+									elseif isRecurring then
+										resultPath = "quest-repeatable-complete"
+									end
+								elseif isOnQuest then
+									if isDefault then
+										resultPath = "quest-active"
+									elseif isRecurring then
+										resultPath = "quest-repeatable-active"
+									end
+								else
+									if isDefault then
+										resultPath = "quest-available"
+									elseif isRecurring then
+										resultPath = "quest-repeatable-available"
+									end
+								end
 							else
-								-- QUEST ID
-								questID = GetQuestID()
-
-								-- FILL DATA
-								currentQuestInfo.title,
-								currentQuestInfo.level,
-								currentQuestInfo.suggestedGroup,
-								currentQuestInfo.isHeader,
-								currentQuestInfo.isCollapsed,
-								currentQuestInfo.isComplete,
-								currentQuestInfo.frequency,
-								currentQuestInfo.questID,
-								currentQuestInfo.startEvent,
-								currentQuestInfo.displayQuestID,
-								currentQuestInfo.isOnMap,
-								currentQuestInfo.hasLocalPOI,
-								currentQuestInfo.isTask,
-								currentQuestInfo.isBounty,
-								currentQuestInfo.isStory,
-								currentQuestInfo.isHidden,
-								currentQuestInfo.isScaling = GetQuestLogTitle(GetQuestLogIndexByID(questID))
-
-								-- QUERY MISSING REFERENCES
-								if currentQuestInfo.isOnQuest == nil then
-									currentQuestInfo.isOnQuest = (IsOnQuest and IsOnQuest(questID)) or false
-								end
-
-								if not currentQuestInfo.isComplete then
-									currentQuestInfo.isComplete = (IsReadyForTurnIn and IsReadyForTurnIn(questID)) or false
-								end
-
-								if QuestFrameAcceptButton:IsVisible() then
-									currentQuestInfo.isComplete = false
+								if gossipButtonOptionTexture then
+									local new = Callback:ReplaceIcon(gossipButtonOptionTexture)
+									resultPath = nil
+									resultTexture = new
 								end
 							end
 
 							--------------------------------
 
+							if resultPath and not resultTexture then
+								result = Callback:ConvertToInlineIcon(resultPath)
+								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+							else
+								-- print("Invalid Texture")
+							end
+						end
+
+						if queryGossip then
+							resultPath = "gossip-bubble"
+
+							--------------------------------
+
+							if resultPath then
+								result = Callback:ConvertToInlineIcon(resultPath)
+								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+							else
+								-- print("Invalid Texture")
+							end
+						end
+					end
+				end
+
+				do -- CLASSIC ERA
+					if NS.Variables.IsClassicEra then
+						local resultPath
+
+						--------------------------------
+
+						if queryQuest then
+							local questID; if gossipButtonInfo then questID = gossipButtonInfo.questID or nil else questID = GetQuestID() end
+
+							--------------------------------
+
 							if questID then
-								local questType = GetQuestTagInfo(questID)
-
-								local isAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
-								local isCompleted = (((currentQuestInfo.isComplete) or (IsReadyForTurnIn and IsReadyForTurnIn(questID))) and not isAvailable)
-								local isOnQuest = (((currentQuestInfo.isOnQuest) or (IsOnQuest and IsOnQuest(questID)) or questInfo.missingQuestID) and not isAvailable)
-								local isRecurring = ((currentQuestInfo.frequency or 0) == (2)) -- 1 = Default, 2 = Daily, 3 = Weekly. Sometimes non-weekly quests get flagged as weekly by Blizzard?
-								local isDefault = (not isRecurring)
-
-								local isGroup = (questType == 1)
-								local isPvP = (questType == 41)
-								local isRaid = (questType == 62)
-								local isDungeon = (questType == 81)
-								local isLegendary = (questType == 83)
-								local isHeroic = (questType == 85)
-								local isScenario = (questType == 98)
-								local isAccount = (questType == 102)
-								local isLeatherworkingWorldQuest = (questType == 117)
+								local questInfo = Callback:GetQuestInfo(questID, gossipButtonInfo)
+								local isAvailable, isCompleted, isOnQuest, isDefault,
+								isRecurring, isGroup, isPvP, isRaid, isDungeon, isLegendary,
+								isHeroic, isScenario, isAccount, isLeatherworkingWorldQuest =
+									questInfo.isAvailable, questInfo.isCompleted, questInfo.isOnQuest, questInfo.isDefault,
+									questInfo.isRecurring, questInfo.isGroup, questInfo.isPvP, questInfo.isRaid, questInfo.isDungeon, questInfo.isLegendary,
+									questInfo.isHeroic, questInfo.isScenario, questInfo.isAccount, questInfo.isLeatherworkingWorldQuest
 
 								--------------------------------
 
@@ -396,7 +527,7 @@ function addon.ContextIcon.Script:Load()
 								end
 							else
 								if gossipButtonOptionTexture then
-									local new = addon.ContextIcon.Script:ReplaceIcon(gossipButtonOptionTexture)
+									local new = Callback:ReplaceIcon(gossipButtonOptionTexture)
 									resultPath = nil
 									resultTexture = new
 								end
@@ -405,7 +536,7 @@ function addon.ContextIcon.Script:Load()
 							--------------------------------
 
 							if resultPath and not resultTexture then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
+								result = Callback:ConvertToInlineIcon(resultPath)
 								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
@@ -418,141 +549,7 @@ function addon.ContextIcon.Script:Load()
 							--------------------------------
 
 							if resultPath then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
-							else
-								-- print("Invalid Texture")
-							end
-						end
-					end
-				end
-
-				do -- CLASSIC ERA
-					if isClassicEra then
-						local resultPath
-
-						--------------------------------
-
-						local questInfo = {}
-						local currentQuestInfo = {}
-
-						--------------------------------
-
-						if queryQuest then
-							local questID
-
-							--------------------------------
-
-							if gossipButtonInfo then
-								-- QUEST ID
-								questID = gossipButtonInfo.questID or nil
-
-								-- FILL DATA
-								currentQuestInfo.isComplete = gossipButtonInfo.isComplete or false
-							else
-								-- QUEST ID
-								questID = GetQuestID()
-
-								-- FILL DATA
-								currentQuestInfo.title,
-								currentQuestInfo.level,
-								currentQuestInfo.suggestedGroup,
-								currentQuestInfo.isHeader,
-								currentQuestInfo.isCollapsed,
-								currentQuestInfo.isComplete,
-								currentQuestInfo.frequency,
-								currentQuestInfo.questID,
-								currentQuestInfo.startEvent,
-								currentQuestInfo.displayQuestID,
-								currentQuestInfo.isOnMap,
-								currentQuestInfo.hasLocalPOI,
-								currentQuestInfo.isTask,
-								currentQuestInfo.isBounty,
-								currentQuestInfo.isStory,
-								currentQuestInfo.isHidden,
-								currentQuestInfo.isScaling = GetQuestLogTitle(GetQuestLogIndexByID(questID))
-
-								-- QUERY MISSING REFERENCES
-								if currentQuestInfo.isOnQuest == nil then
-									currentQuestInfo.isOnQuest = (IsOnQuest and IsOnQuest(questID)) or false
-								end
-
-								if not currentQuestInfo.isComplete then
-									currentQuestInfo.isComplete = (IsReadyForTurnIn and IsReadyForTurnIn(questID)) or false
-								end
-
-								if QuestFrameAcceptButton:IsVisible() then
-									currentQuestInfo.isComplete = false
-								end
-							end
-
-							--------------------------------
-
-							if questID then
-								local QuestType = GetQuestTagInfo(questID)
-
-								local IsAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
-								local IsCompleted = (((currentQuestInfo.isComplete) or (IsReadyForTurnIn and IsReadyForTurnIn(questID))) and not IsAvailable)
-								local IsOnQuest = (((currentQuestInfo.isOnQuest) or (IsOnQuest and IsOnQuest(questID)) or questInfo.missingQuestID) and not IsAvailable)
-								local IsRecurring = ((currentQuestInfo.frequency or 0) == (2)) -- 1 = Default, 2 = Daily, 3 = Weekly. Sometimes non-weekly quests get flagged as weekly by Blizzard?
-								local IsDefault = (not IsRecurring)
-
-								local IsGroup = (QuestType == 1)
-								local IsPvP = (QuestType == 41)
-								local IsRaid = (QuestType == 62)
-								local IsDungeon = (QuestType == 81)
-								local IsLegendary = (QuestType == 83)
-								local IsHeroic = (QuestType == 85)
-								local IsScenario = (QuestType == 98)
-								local IsAccount = (QuestType == 102)
-								local IsLeatherworkingWorldQuest = (QuestType == 117)
-
-								--------------------------------
-
-								if IsCompleted then
-									if IsDefault then
-										resultPath = "quest-complete"
-									elseif IsRecurring then
-										resultPath = "quest-recurring-complete"
-									end
-								elseif IsOnQuest then
-									if IsDefault then
-										resultPath = "quest-active"
-									elseif IsRecurring then
-										resultPath = "quest-recurring-active"
-									end
-								else
-									if IsDefault then
-										resultPath = "quest-available"
-									elseif IsRecurring then
-										resultPath = "quest-recurring-available"
-									end
-								end
-							else
-								if gossipButtonOptionTexture then
-									local new = addon.ContextIcon.Script:ReplaceIcon(gossipButtonOptionTexture)
-									resultPath = nil
-									resultTexture = new
-								end
-							end
-
-							--------------------------------
-
-							if resultPath and not resultTexture then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
-							else
-								-- print("Invalid Texture")
-							end
-						end
-
-						if queryGossip then
-							resultPath = "gossip-bubble"
-
-							--------------------------------
-
-							if resultPath then
-								result = addon.ContextIcon.Script:ConvertToInlineIcon(resultPath)
+								result = Callback:ConvertToInlineIcon(resultPath)
 								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
@@ -572,7 +569,15 @@ function addon.ContextIcon.Script:Load()
 	-- EVENTS
 	--------------------------------
 
+	do
+
+	end
+
 	--------------------------------
 	-- SETUP
 	--------------------------------
+
+	do
+
+	end
 end

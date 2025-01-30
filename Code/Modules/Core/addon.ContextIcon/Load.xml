@@ -5,4 +5,5 @@
 
 	<!-- Core -->
 	<Script file="Core/ContextIcon_Script.lua"/>
+	<Script file="Core/ContextIcon_Variables.lua"/>
 </Ui>

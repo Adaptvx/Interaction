@@ -33,7 +33,7 @@ function NS.Script:Load()
 
 	do
 		Frame.UpdateVisibility = function()
-			local isControlGuideEnabled = (INTDB.profile.INT_CONTROLGUIDE)
+			local isControlGuideEnabled = (DB_GLOBAL.profile.INT_CONTROLGUIDE)
 
 			--------------------------------
 

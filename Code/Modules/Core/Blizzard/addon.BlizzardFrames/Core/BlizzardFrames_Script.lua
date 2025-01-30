@@ -121,9 +121,10 @@ function NS.Script:Load()
 				CallbackRegistry:Trigger("QUEUE_POP")
 			end
 
-			hooksecurefunc(LFDRoleCheckPopup, "Show", Callback)
+			hooksecurefunc(LFGDungeonReadyPopup, "Show", Callback)
 			hooksecurefunc(PVPReadyDialog, "Show", Callback)
 			hooksecurefunc(PVPReadyPopup, "Show", Callback)
+			if PlunderstormFramePopup then hooksecurefunc(PlunderstormFramePopup, "Show", Callback) end
 		end
 	end
 
@@ -149,14 +150,15 @@ function NS.Script:Load()
 		--------------------------------
 
 		StaticPopup1:SetIgnoreParentAlpha(true)
-		if not addon.Variables.IS_CLASSIC then LFDRoleCheckPopup:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_CLASSIC_ERA then LFGDungeonReadyPopup:SetIgnoreParentAlpha(true) end
 		if not addon.Variables.IS_CLASSIC then PVPReadyDialog:SetIgnoreParentAlpha(true) end
 		if not addon.Variables.IS_CLASSIC then PVPReadyPopup:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_CLASSIC and PlunderstormFramePopup then PlunderstormFramePopup:SetIgnoreParentAlpha(true) end
 
 		--------------------------------
 
 		local function Update()
-			if INTDB.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
+			if DB_GLOBAL.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
 				if not NS.Variables.SetElementsActive then
 					Callback:SetElements()
 				end

@@ -17,8 +17,8 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionPlayerStatusBarFrame = CreateFrame("Frame", "$parent.InteractionPlayerStatusBarFrame", InteractionFrame)
-			InteractionPlayerStatusBarFrame:SetSize(addon.API:GetScreenWidth() - 10, 10)
-			InteractionPlayerStatusBarFrame:SetPoint("BOTTOM", UIParent, 0, 5)
+			InteractionPlayerStatusBarFrame:SetSize(addon.API:GetScreenWidth(), 10)
+			InteractionPlayerStatusBarFrame:SetPoint("BOTTOM", UIParent)
 			InteractionPlayerStatusBarFrame:SetFrameStrata("FULLSCREEN")
 			InteractionPlayerStatusBarFrame:SetFrameLevel(2)
 
@@ -44,6 +44,7 @@ function NS.Elements:Load()
 				Frame.Notch:SetPoint("LEFT", Frame, Padding, 0)
 				Frame.Notch:SetFrameStrata("FULLSCREEN")
 				Frame.Notch:SetFrameLevel(2)
+				Frame.Notch:SetAlpha(.5)
 			end
 
 			do -- PROGRESS BAR
@@ -54,6 +55,7 @@ function NS.Elements:Load()
 				Frame.Progress:SetFrameLevel(2)
 				Frame.Progress:SetMinMaxValues(0, 1)
 				Frame.Progress:SetValue(.5)
+				Frame.Progress:SetAlpha(.5)
 
 				Frame.Progress.Flare:SetSize(75, Frame.Progress:GetHeight())
 				Frame.Progress.Flare:SetFrameStrata("FULLSCREEN")
@@ -73,6 +75,8 @@ function NS.Elements:Load()
 	-- SETUP
 	--------------------------------
 
-	Frame.hidden = true
-	Frame:Hide()
+	do
+		Frame.hidden = true
+		Frame:Hide()
+	end
 end

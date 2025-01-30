@@ -9,7 +9,6 @@ local function Load()
 	if GetLocale() ~= "ptBR" then
 		return
 	end
-end
 
 	--------------------------------
 	-- SETTINGS
@@ -109,23 +108,23 @@ end
 		L["Checkbox - Dynamic Camera / Side View"] = "Visão lateral"
 		L["Checkbox - Dynamic Camera / Side View - Tooltip"] = "Ajustar câmera para visão lateral."
 		L["Range - Dynamic Camera / Side View / Strength"] = "Força da câmera"
-		L["Range - Dynamic Camera / Side View / Strength - Tooltip"] = "Valor mais alto aumenta o movimento lateral."
+		L["Range - Dynamic Camera / Side View / Strength - Tooltip"] = "Valor mais alto aumenta o movimento lateral."
 		L["Checkbox - Dynamic Camera / Offset"] = "Deslocamento"
-		L["Checkbox - Dynamic Camera / Offset - Tooltip"] = "Deslocar a visualização da tela em relação ao personagem."
+		L["Checkbox - Dynamic Camera / Offset - Tooltip"] = "Deslocar a visualização da tela em relação ao personagem."
 		L["Range - Dynamic Camera / Offset / Strength"] = "Força da câmera"
 		L["Range - Dynamic Camera / Offset / Strength - Tooltip"] = "Valor mais alto aumenta o deslocamento."
 		L["Checkbox - Dynamic Camera / Focus"] = "Foco"
-		L["Checkbox - Dynamic Camera / Focus - Tooltip"] = "Focar a visualização da tela no alvo."
+		L["Checkbox - Dynamic Camera / Focus - Tooltip"] = "Focar a visualização da tela no alvo."
 		L["Range - Dynamic Camera / Focus / Strength"] = "Força da câmera"
-		L["Range - Dynamic Camera / Focus / Strength - Tooltip"] = "Valor mais alto aumenta a força do foco."
-		L["Checkbox - Dynamic Camera / Focus / X"] = "Ignorar eixo X"
-		L["Checkbox - Dynamic Camera / Focus / X - Tooltip"] = "Impedir foco no eixo X."
-		L["Checkbox - Dynamic Camera / Focus / Y"] = "Ignorar eixo Y"
-		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Impedir foco no eixo Y."
+		L["Range - Dynamic Camera / Focus / Strength - Tooltip"] = "Valor mais alto aumenta a força do foco."
+		L["Checkbox - Dynamic Camera / Focus / X"] = "Ignorar eixo X"
+		L["Checkbox - Dynamic Camera / Focus / X - Tooltip"] = "Impedir foco no eixo X."
+		L["Checkbox - Dynamic Camera / Focus / Y"] = "Ignorar eixo Y"
+		L["Checkbox - Dynamic Camera / Focus / Y - Tooltip"] = "Impedir foco no eixo Y."
 		L["Checkbox - Vignette"] = "Vinheta"
 		L["Checkbox - Vignette - Tooltip"] = "Reduz a claridade nas bordas."
 		L["Checkbox - Vignette / Gradient"] = "Degradê"
-		L["Checkbox - Vignette / Gradient - Tooltip"] = "Reduz a luminosidade ao fundo dos balões de mensagem e das missões."
+		L["Checkbox - Vignette / Gradient - Tooltip"] = "Reduz a luminosidade ao fundo dos balões de mensagem e das missões."
 
 		-- PLAYBACK
 		L["Title - Pace"] = "Diálogos"
@@ -210,13 +209,13 @@ end
 		L["Checkbox - Readable - Tooltip"] = "Ativa interface personalizada para livros e textos e biblioteca para organizá-los.\n\nPadrão: Ligado."
 		L["Title - Readable / Display"] = "Exibição"
 		L["Checkbox - Readable / Display / Always Show Item"] = "Mostrar item sempre visível"
-		L["Checkbox - Readable / Display / Always Show Item - Tooltip"] = "Impede que a interface de leitura feche quando se afasta de um item no mundo.\n\nPadrão: Desligado."
+		L["Checkbox - Readable / Display / Always Show Item - Tooltip"] = "Impede que a interface de leitura feche quando se afasta de um item no mundo.\n\nPadrão: Desligado."
 		L["Title - Readable / Viewport"] = "Área de visualização"
 		L["Checkbox - Readable / Viewport"] = "Ativar efeitos na área de visualização"
-		L["Checkbox - Readable / Viewport - Tooltip"] = "Efeitos na área de visualização ao iniciar a interface de leitura.\n\nPadrão: Ligado."
+		L["Checkbox - Readable / Viewport - Tooltip"] = "Efeitos na área de visualização ao iniciar a interface de leitura.\n\nPadrão: Ligado."
 		L["Title - Readable / Shortcuts"] = "Atalhos"
 		L["Checkbox - Readable / Shortcuts / Minimap Icon"] = "Ícone no Minimapa"
-		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Exibi um ícone no minimapa para acesso rápido à biblioteca de livros.\n\nPadrão: Ligado."
+		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Exibi um ícone no minimapa para acesso rápido à biblioteca de livros.\n\nPadrão: Ligado."
 		L["Title - Readable / Audiobook"] = "Audio-book"
 		L["Range - Readable / Audiobook - Rate"] = "Velocidade de Texto"
 		L["Range - Readable / Audiobook - Rate - Tooltip"] = "Velocidade de reprodução.\n\nPadrão: 100%."
@@ -224,6 +223,8 @@ end
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Volume de reprodução.\n\nPadrão: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Narrador"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Voz de reprodução."
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Secondary Narrator"
+		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Playback voice used on special paragraphs such as those wrapped in '<>'."
 		L["Title - Gameplay"] = "Jogabilidade"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Selecionar Opções Automaticamente"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Seleciona a melhor opção para certos NPCs.\n\nPadrão: Desligado."
@@ -231,14 +232,16 @@ end
 		-- MORE
 		L["Title - Audio"] = "Audio"
 		L["Checkbox - Audio"] = "Ativar Audio"
-		L["Checkbox - Audio - Tooltip"] = "Ativa efeitos sonoros e áudio.\n\nPadrão: Ligado."
+		L["Checkbox - Audio - Tooltip"] = "Ativa efeitos sonoros e áudio.\n\nPadrão: Ligado."
 		L["Title - Settings"] = "Configurações"
 		L["Checkbox - Settings / Reset Settings"] = "Resetar todas as configurações"
-        L["Checkbox - Settings / Reset Settings - Tooltip"] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
+		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
 
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
-		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o russo!"
+		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o russo!"
+		L["Title - Credits / AKArenan"] = "AKArenan | Translator - Brazilian Portuguese"
+		L["Title - Credits / AKArenan - Tooltip"] = "Special thanks to AKArenan for the Brazilian Portuguese translations!"
 	end
 
 	--------------------------------
@@ -248,11 +251,11 @@ end
 	do
 		do -- LIBRARY
 			-- PROMPTS
-			L["Readable - Library - Prompt - Delete"] = "Isso removerá permanentemente essa entrada da sua biblioteca. Você tem certeza que deseja continuar?."
+			L["Readable - Library - Prompt - Delete"] = "Isso removerá permanentemente essa entrada da sua biblioteca. Você tem certeza que deseja continuar?."
 			L["Readable - Library - Prompt - Delete Button 1"] = "Remover"
 			L["Readable - Library - Prompt - Delete Button 2"] = "Cancelar"
 
-			L["Readable - Library - Prompt - Import"] = "Importar um estado salvo substituirá sua biblioteca atual. Você tem certeza que deseja continuar?."
+			L["Readable - Library - Prompt - Import"] = "Importar um estado salvo substituirá sua biblioteca atual. Você tem certeza que deseja continuar?."
 			L["Readable - Library - Prompt - Import Button 1"] = "Importar e Recarregar"
 			L["Readable - Library - Prompt - Import Button 2"] = "Cancelar"
 
@@ -274,7 +277,9 @@ end
 			L["Readable - Library - Show only World"] = "Somente o mundo"
 
 			-- TITLE
-			L["Readable - Library - Name Text Append"] = "'s Biblioteca"
+			L["Readable - Library - Name Text - Global Library"] = "Warband Library"
+			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
+			L["Readable - Library - Name Text - Local Library - Subtext 2"] = "'s Biblioteca"
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Mostrando "
 			L["Readable - Library - Showing Status Text - Subtext 2"] = " Itens"
 
@@ -419,7 +424,7 @@ end
 			"?",
 			".",
 			",",
-        }
+		}
 
 		-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.
 		L["DialogData - PlaybackSpeedModifier"] = 1
@@ -436,6 +441,16 @@ end
 		L["GossipData - Trigger - Movie 2"] = "%(Reproduzir Filme%)"
 		L["GossipData - Trigger - NPC Dialog"] = "%<Fique um pouco e ouça.%>"
 		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Fique um tempo e escute."
+	end
+
+	--------------------------------
+	-- AUDIOBOOK DATA
+	--------------------------------
+
+	do
+		-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
+		-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
+		L["AudiobookData - EstimatedCharPerSecond"] = 10
 	end
 end
 

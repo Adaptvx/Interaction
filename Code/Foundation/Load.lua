@@ -46,9 +46,9 @@ function NS:Load()
 
 	do
 		local Events = CreateFrame("Frame")
-		Events:RegisterEvent("LOADING_SCREEN_DISABLED")
+		Events:RegisterEvent("PLAYER_ENTERING_WORLD")
 		Events:SetScript("OnEvent", function(self, event, ...)
-			if event == "LOADING_SCREEN_DISABLED" then
+			if event == "PLAYER_ENTERING_WORLD" then
 				if not NS.Initalized then
 					C_Timer.After(addon.Variables.INIT_DELAY_2, function()
 						Modules()

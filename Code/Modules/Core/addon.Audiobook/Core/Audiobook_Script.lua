@@ -18,25 +18,49 @@ function NS.Script:Load()
 	local Frame = InteractionAudiobookFrame
 
 	--------------------------------
+	-- FUNCTIONS (BUTTONS)
+	--------------------------------
+
+	do
+		Frame.MouseResponder:HookScript("OnMouseUp", function(_, button)
+			if button == "RightButton" then
+				Callback:Stop()
+			end
+		end)
+
+		Frame.Content.PlaybackButton:HookScript("OnMouseUp", function()
+			Callback:TogglePlayback()
+		end)
+
+		Frame.Content.Slider:HookScript("OnMouseDown", function()
+			Callback:StopPlayback()
+		end)
+
+		Frame.Content.Slider:HookScript("OnMouseUp", function()
+			Frame.UpdateState()
+
+			local isSameLine, isLastLine = Callback:IsSameLine()
+			if isSameLine then
+				Callback:StartPlayback()
+			end
+		end)
+
+		Frame.Content.Slider:HookScript("OnValueChanged", function(self, value, userInput)
+			if userInput then
+				Frame.SetIndexOnValue()
+			end
+		end)
+
+		AdaptiveAPI:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true, true)
+	end
+
+	--------------------------------
 	-- FUNCTIONS (FRAME)
 	--------------------------------
 
-	-- DATA
 	do
-		function Callback:SplitText(text)
-			if text == nil then
-				return
-			end
-
-			if AdaptiveAPI:FindString(text, "HTML") then
-				text = Callback:RemoveHTML(text)
-			end
-
-			local separatorPattern = "[>|<|!|?|\n]%s+"
-
-			text = text:gsub(" %s+", " "):gsub("|cffFFFFFF", ""):gsub("|r", "")
-
-			local function splittext(text, pattern)
+		do -- DATA
+			local function SplitText(text, pattern)
 				local start, iterator = 1, text.gmatch(text, "()(" .. pattern .. ")")
 
 				local function getNextSegment(segments, separators, separator, capture1, ...)
@@ -51,350 +75,395 @@ function NS.Script:Load()
 				end
 			end
 
-			local lines = {}
-			local lineIndex = 1
-
-			for segment in splittext(text, separatorPattern) do
-				if segment ~= nil and segment ~= "" then
-					local String = string.gsub(segment, "\"", "")
-					local IsQuotation = AdaptiveAPI:FindString(segment, '"')
-
-					local entry = {
-						line = String,
-						quotation = IsQuotation
-					}
-
-					lines[lineIndex] = entry
-					lineIndex = lineIndex + 1
+			function Callback:SplitText(text)
+				if not text then
+					return
 				end
+
+				--------------------------------
+
+				if AdaptiveAPI:FindString(text, "HTML") then
+					text = Callback:RemoveHTML(text)
+				end
+
+				local separatorPattern = "[<|>|!|?|\n]%s+"
+				text = text:gsub(" %s+", " "):gsub("|cffFFFFFF", ""):gsub("|r", "")
+
+				--------------------------------
+
+				local lines = {}
+				local lineIndex = 1
+
+				for segment in SplitText(text, separatorPattern) do
+					if segment ~= nil and segment ~= "" then
+						local quotationStrings = { { string = "<", seperator = "<" }, { string = ">", seperator = ">" } }
+						local string = segment
+
+						local line = string
+						local quotation = false
+						for i = 1, #quotationStrings do
+							if AdaptiveAPI:FindString(segment, quotationStrings[i].string) then
+								quotation = true
+								break
+							end
+						end
+
+						--------------------------------
+
+						local entry = {
+							line = line,
+							quotation = quotation
+						}
+
+						lines[lineIndex] = entry
+						lineIndex = lineIndex + 1
+					end
+				end
+
+				--------------------------------
+
+				return lines
 			end
 
-			return lines
-		end
+			function Callback:RemoveHTML(text)
+				local cleanText = text:gsub("<[^>]+>", function(tag)
+					if tag:match("^</?[%w%d][^>]*>$") then
+						return ""
+					else
+						return tag
+					end
+				end)
 
-		function Callback:RemoveHTML(text)
-			local cleanText = text:gsub("<[^>]+>", function(tag)
-				if tag:match("^</?[%w%d][^>]*>$") then
-					return ""
+				cleanText = cleanText:gsub("%s+", " "):gsub("^%s*(.-)%s*$", "%1")
+
+				--------------------------------
+
+				return cleanText
+			end
+
+			function Callback:ReadLine(line, quotation)
+				local voice
+				local rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .125
+				local volume = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
+
+				if quotation then
+					voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL or 1) - 1
 				else
-					return tag
+					voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
 				end
-			end)
 
-			cleanText = cleanText:gsub("%s+", " "):gsub("^%s*(.-)%s*$", "%1")
+				--------------------------------
 
-			return cleanText
-		end
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					addon.TextToSpeech.Script:SpeakText(voice, line, Enum.VoiceTtsDestination.LocalPlayback, rate, volume)
+				end, 0)
+			end
 
-		function Callback:ReadLine(line)
-			local Voice = (INTDB.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
-			local Rate = (INTDB.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .125
-			local Volume = (INTDB.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				addon.TextToSpeech.Script:SpeakText(Voice, line, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
-			end, 0)
-		end
-
-		function Callback:SetData(ItemID, ItemLink, Type, Title, NumPages, Content)
-			Callback.IsPlaying = false
-			Callback.PlaybackLineIndex = 1
-
-			NS.ItemUI.Variables.Title = Title
-			NS.ItemUI.Variables.NumPages = NumPages
-			NS.ItemUI.Variables.Content = Content
-
-			--------------------------------
-
-			Callback:SetLines()
-		end
-
-		function Callback:SetLines()
-			local Lines = {}
-
-			for page = 1, NS.ItemUI.Variables.NumPages do
-				local PageLines = Callback:SplitText(NS.ItemUI.Variables.Content[page])
-				for line = 1, #PageLines do
-					table.insert(Lines, PageLines and PageLines[line])
+			function Callback:SetTextPreview(line, quotation)
+				if quotation then
+					Frame.TextPreviewFrame.Content.Text:SetTextColor(addon.Theme.RGB_CHAT_MSG_EMOTE.r, addon.Theme.RGB_CHAT_MSG_EMOTE.g, addon.Theme.RGB_CHAT_MSG_EMOTE.b, addon.Theme.RGB_CHAT_MSG_EMOTE.a)
+				else
+					Frame.TextPreviewFrame.Content.Text:SetTextColor(addon.Theme.RGB_CHAT_MSG_SAY.r, addon.Theme.RGB_CHAT_MSG_SAY.g, addon.Theme.RGB_CHAT_MSG_SAY.b, addon.Theme.RGB_CHAT_MSG_SAY.a)
 				end
+
+				--------------------------------
+
+				Frame.TextPreviewFrame.Content.Text:SetText(line)
 			end
 
-			Callback.Lines = Lines
-		end
+			function Callback:SetData(itemID, itemLink, type, title, numPages, content)
+				NS.Variables.IsPlaying = false
+				NS.Variables.PlaybackLineIndex = 1
 
-		function Callback:NextLine()
-			if Callback.PlaybackLineIndex < #Callback.Lines then
-				Callback.PlaybackLineIndex = Callback.PlaybackLineIndex + 1
-				Callback:StartPlayback()
-			else
-				Callback:StopPlayback()
+				NS.Variables.Title = title
+				NS.Variables.NumPages = numPages
+				NS.Variables.Content = content
+
+				--------------------------------
+
+				Callback:SetLines()
 			end
-		end
 
-		function Callback:PreviousLine()
-			if Callback.PlaybackLineIndex > 1 then
-				Callback.PlaybackLineIndex = Callback.PlaybackLineIndex - 1
-				Callback:StartPlayback()
-			else
-				Callback.PlaybackLineIndex = 1
+			function Callback:SetLines()
+				local lines = {}
+
+				for page = 1, NS.Variables.NumPages do
+					local PageLines = Callback:SplitText(NS.Variables.Content[page])
+					for line = 1, #PageLines do
+						table.insert(lines, PageLines and PageLines[line])
+					end
+				end
+
+				NS.Variables.Lines = lines
 			end
-		end
-	end
 
-	-- PLAYBACK
-	do
-		Callback.PlaybackTimer = nil
-
-		local function EstimateDuration(line)
-			local NumChars = #line
-			local CharsPerSecond = 10
-			local Padding = 5
-			local Duration = (NumChars / CharsPerSecond) + Padding
-
-			return Duration
-		end
-
-		local function HandlePlaybackTimeout(currentLineIndex, maxLines)
-			local IsSameLine = (Callback.PlaybackLineIndex == currentLineIndex)
-			local IsValidLine = (currentLineIndex < maxLines)
-
-			--------------------------------
-
-			if IsSameLine and IsValidLine then
-				if Callback.IsPlaying then
-					-- print("Playback Timeout")
+			function Callback:NextLine()
+				if NS.Variables.PlaybackLineIndex < #NS.Variables.Lines then
+					NS.Variables.PlaybackLineIndex = NS.Variables.PlaybackLineIndex + 1
+					Callback:StartPlayback()
+				else
 					Callback:StopPlayback()
 				end
 			end
-		end
 
-		local function CancelPlaybackTimer()
-			if Callback.PlaybackTimer and Callback.PlaybackTimer.Cancel then
-				Callback.PlaybackTimer:Cancel()
-				Callback.PlaybackTimer = nil
+			function Callback:PreviousLine()
+				if NS.Variables.PlaybackLineIndex > 1 then
+					NS.Variables.PlaybackLineIndex = NS.Variables.PlaybackLineIndex - 1
+					Callback:StartPlayback()
+				else
+					NS.Variables.PlaybackLineIndex = 1
+				end
+			end
+
+			function Callback:IsSameLine()
+				if not NS.Variables.Lines then
+					return
+				end
+
+				--------------------------------
+
+				local currentLineIndex = NS.Variables.PlaybackLineIndex
+				local maxLines = #NS.Variables.Lines
+				local isSameLine = (NS.Variables.PlaybackLineIndex == currentLineIndex)
+				local isLastLine = (currentLineIndex == maxLines)
+
+				return isSameLine, isLastLine
 			end
 		end
 
-		local function StartPlaybackTimer(currentLine)
-			CancelPlaybackTimer()
+		do -- PLAYBACK
+			local function EstimateDuration(line)
+				local numChars = strlenutf8(line)
+				local rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE + 10) * 10
+				local rateModifier = .025
+				local charsPerSecond = L["AudiobookData - EstimatedCharPerSecond"] + (rate * rateModifier - (100 * rateModifier))
+				local padding = 1
+				local duration = (numChars / charsPerSecond) + padding
 
-			--------------------------------
-
-			local duration = EstimateDuration(currentLine)
-			Callback.PlaybackTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-				HandlePlaybackTimeout(Callback.PlaybackLineIndex, #Callback.Lines)
-			end, duration)
-		end
-
-		function Callback:StartPlayback()
-			if addon.Interaction.Variables.Active and INTDB.profile.INT_TTS then
-				return
+				return duration
 			end
 
-			--------------------------------
+			local function HandlePlaybackTimeout()
+				if NS.Variables.IsPlaying then
+					local isSameLine, isLastLine = Callback:IsSameLine()
 
-			Callback.IsPlaying = true
-			Frame.UpdateState()
+					--------------------------------
 
-			--------------------------------
+					if isSameLine and not isLastLine then
+						Callback:StopPlayback()
 
-			local CurrentLine = Callback.Lines[Callback.PlaybackLineIndex].line
-			local IsQuotation = Callback.Lines[Callback.PlaybackLineIndex].quotation
-			Callback:ReadLine(CurrentLine)
+						--------------------------------
 
-			--------------------------------
+						addon.Libraries.AceTimer:ScheduleTimer(Callback.NextLine, .5)
+					elseif isLastLine then
+						Callback:StopPlayback()
+					end
+				end
+			end
 
-			-- print(quotation)
+			local function CancelPlaybackTimer()
+				if NS.Variables.PlaybackTimer and NS.Variables.PlaybackTimer.Cancel then
+					NS.Variables.PlaybackTimer:Cancel()
+					NS.Variables.PlaybackTimer = nil
+				end
+			end
 
-			StartPlaybackTimer(CurrentLine)
-		end
+			local function StartPlaybackTimer(currentLine)
+				CancelPlaybackTimer()
 
-		function Callback:StopPlayback()
-			if Callback.IsPlaying then
-				Callback.IsPlaying = false
+				--------------------------------
+
+				local duration = EstimateDuration(currentLine)
+				NS.Variables.PlaybackTimer = C_Timer.NewTimer(duration, function()
+					if NS.Variables.Lines then
+						HandlePlaybackTimeout()
+					end
+				end)
+			end
+
+			function Callback:StartPlayback()
+				if addon.Interaction.Variables.Active and DB_GLOBAL.profile.INT_TTS then
+					return
+				end
+
+				--------------------------------
+
+				NS.Variables.IsPlaying = true
+				NS.Variables.LastPlayTime = GetTime()
 				Frame.UpdateState()
 
 				--------------------------------
 
-				addon.TextToSpeech.Script:StopSpeakingText()
+				local line = NS.Variables.Lines[NS.Variables.PlaybackLineIndex].line
+				local quotation = NS.Variables.Lines[NS.Variables.PlaybackLineIndex].quotation
+				Callback:ReadLine(line, quotation)
+				Callback:SetTextPreview(line, quotation)
 
 				--------------------------------
 
-				CancelPlaybackTimer()
-			end
-		end
-
-		function Callback:TogglePlayback()
-			if Callback.IsPlaying then
-				Callback:StopPlayback()
-			else
-				if Callback.PlaybackLineIndex >= #Callback.Lines then
-					Callback.PlaybackLineIndex = 1
-				end
-
-				--------------------------------
-
-				Frame.UpdateState(false)
-				Callback:StartPlayback()
-			end
-		end
-
-		function Callback:Play(LibraryID)
-			if addon.Interaction.Variables.Active and INTDB.profile.INT_TTS then
-				return
+				StartPlaybackTimer(line)
 			end
 
-			local function Main()
-				local Entry = INTLIB.profile.READABLE[LibraryID]
-
-				local ItemID = Entry.ItemID
-				local ItemLink = Entry.ItemLink
-				local Type = Entry.Type
-				local Title = Entry.Title
-				local NumPages = Entry.NumPages
-				local Content = Entry.Content
-
-				Callback:SetData(ItemID, ItemLink, Type, Title, NumPages, Content)
-				Frame.UpdateState(false)
-
-				--------------------------------
-
-				addon.TextToSpeech.Script:StopSpeakingText()
-
-				--------------------------------
-
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					Callback:StartPlayback()
+			function Callback:StopPlayback()
+				if NS.Variables.IsPlaying then
+					NS.Variables.IsPlaying = false
+					Frame.UpdateState()
 
 					--------------------------------
 
-					Frame.ShowWithAnimation()
-				end, 1)
-			end
+					addon.TextToSpeech.Script:StopSpeakingText()
 
-			if Callback.IsPlaying then
-				Callback:Stop()
+					--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					Main()
-				end, 1)
-			else
-				Main()
-			end
-		end
-
-		function Callback:Stop()
-			NS.Variables.IsPlaying = nil
-			NS.Variables.PlaybackLineIndex = nil
-
-			NS.Variables.Title = nil
-			NS.Variables.NumPages = nil
-			NS.Variables.Content = nil
-			NS.Variables.Lines = nil
-
-			--------------------------------
-
-			addon.TextToSpeech.Script:StopSpeakingText()
-
-			--------------------------------
-
-			Callback:StopPlayback()
-
-			--------------------------------
-
-			Frame.HideWithAnimation()
-		end
-	end
-
-	-- FRAME
-	do
-		Frame.UpdateState = function(playAnimation)
-			if not Callback.Lines then
-				return
-			end
-
-			--------------------------------
-
-			local MaxLines = #Callback.Lines
-			local CurrentLine = Callback.PlaybackLineIndex
-
-			local Value = ((MaxLines) * (CurrentLine / MaxLines))
-
-			--------------------------------
-
-			local ProgressBar = Frame.Content.MainFrame.Right.Footer.StatusBar
-			local PlaybackButtonImageTexture = Frame.Content.ButtonFrame.PlaybackButton.ImageTexture
-
-			ProgressBar:SetMinMaxValues(1, MaxLines)
-			if playAnimation == false then
-				ProgressBar:SetValue(Value)
-			else
-				if ProgressBar.TargetValue ~= Value then
-					ProgressBar.TargetValue = Value
-
-					AdaptiveAPI.Animation:SetProgressTo(ProgressBar, Value, 1, AdaptiveAPI.Animation.EaseExpo, function() return ProgressBar.TargetValue ~= Value end)
+					CancelPlaybackTimer()
 				end
 			end
 
-			if Callback.IsPlaying then
-				PlaybackButtonImageTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "playback-pause.png")
-			else
-				PlaybackButtonImageTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "playback-play.png")
+			function Callback:TogglePlayback()
+				if NS.Variables.IsPlaying then
+					Callback:StopPlayback()
+				else
+					if NS.Variables.PlaybackLineIndex >= #NS.Variables.Lines then
+						NS.Variables.PlaybackLineIndex = 1
+					end
+
+					--------------------------------
+
+					Frame.UpdateState()
+					Callback:StartPlayback()
+				end
 			end
 
-			--------------------------------
+			function Callback:Play(LibraryID)
+				if addon.Interaction.Variables.Active and DB_GLOBAL.profile.INT_TTS then
+					return
+				end
 
-			Frame.UpdateText()
-		end
+				local function Main()
+					local entry = DB_LOCAL.profile.READABLE[LibraryID]
 
-		Frame.UpdateText = function()
-			if not Callback.Lines then
-				return
+					local itemID = entry.ItemID
+					local itemLink = entry.ItemLink
+					local type = entry.Type
+					local title = entry.Title
+					local numPages = entry.NumPages
+					local content = entry.Content
+
+					Callback:SetData(itemID, itemLink, type, title, numPages, content)
+					Frame.UpdateState()
+
+					--------------------------------
+
+					addon.TextToSpeech.Script:StopSpeakingText()
+
+					--------------------------------
+
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						Callback:StartPlayback()
+
+						--------------------------------
+
+						Frame.ShowWithAnimation()
+					end, 1)
+				end
+
+				if NS.Variables.IsPlaying then
+					Callback:Stop()
+
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						Main()
+					end, .25)
+				else
+					Main()
+				end
 			end
 
-			--------------------------------
+			function Callback:Stop()
+				NS.Variables.IsPlaying = nil
+				NS.Variables.LastPlayTime = nil
+				NS.Variables.PlaybackLineIndex = nil
 
-			local MaxLines = #Callback.Lines
-			local CurrentLine = Callback.PlaybackLineIndex
+				NS.Variables.Title = nil
+				NS.Variables.NumPages = nil
+				NS.Variables.Content = nil
+				NS.Variables.Lines = nil
 
-			--------------------------------
+				--------------------------------
 
-			local Title = Frame.Content.MainFrame.Right.Header.Title
-			local StatusText = Frame.Content.MainFrame.Left.StatusText
+				addon.TextToSpeech.Script:StopSpeakingText()
 
-			Title:SetText(NS.ItemUI.Variables.Title)
-			StatusText:SetText(Callback.PlaybackLineIndex .. "/" .. MaxLines)
+				--------------------------------
+
+				Callback:StopPlayback()
+
+				--------------------------------
+
+				Frame.HideWithAnimation()
+			end
 		end
 
-		Frame.SetSteps = function()
-			local StatusBar = Frame.Content.MainFrame.Right.Footer.StatusBar
+		do -- FRAME
+			Frame.UpdateState = function()
+				if not NS.Variables.Lines then
+					return
+				end
 
-			--------------------------------
+				--------------------------------
 
-			local MaxLines = #Callback.Lines
-			local Min, Max = StatusBar:GetMinMaxValues()
+				local maxLines = #NS.Variables.Lines
+				local currentLine = NS.Variables.PlaybackLineIndex
 
-			StatusBar:SetValueStep(Max / MaxLines)
-		end
+				local value = ((maxLines) * (currentLine / maxLines))
 
-		Frame.RemoveSteps = function()
-			local StatusBar = Frame.Content.MainFrame.Right.Footer.StatusBar
+				--------------------------------
 
-			--------------------------------
+				Frame.Content.Slider:SetMinMaxValues(1, maxLines)
+				Frame.Content.Slider:SetValue(value)
 
-			StatusBar:SetValueStep(0)
-		end
+				if NS.Variables.IsPlaying then
+					Frame.Content.PlaybackButton.ImageTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-pause.png")
 
-		Frame.SetIndexOnValue = function()
-			local StatusBar = Frame.Content.MainFrame.Right.Footer.StatusBar
+					--------------------------------
 
-			--------------------------------
+					if Frame.TextPreviewFrame.hidden then
+						Frame.TextPreviewFrame:ShowWithAnimation()
+					end
+				else
+					Frame.Content.PlaybackButton.ImageTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-play.png")
 
-			Callback.PlaybackLineIndex = math.floor(StatusBar:GetValue())
+					--------------------------------
 
-			--------------------------------
+					if not Frame.TextPreviewFrame.hidden then
+						Frame.TextPreviewFrame:HideWithAnimation()
+					end
+				end
 
-			Frame.UpdateState(false)
+				--------------------------------
+
+				Frame.UpdateText()
+			end
+
+			Frame.UpdateText = function()
+				if not NS.Variables.Lines then
+					return
+				end
+
+				--------------------------------
+
+				local minPage, maxPage = Frame.Content.Slider:GetMinMaxValues()
+				local currentPage = Frame.Content.Slider:GetValue()
+
+				Frame.Content.Text.Title:SetText(NS.Variables.Title or "")
+				Frame.Content.Text.Index.Text:SetText(currentPage .. "/" .. maxPage)
+			end
+
+			Frame.SetIndexOnValue = function()
+				NS.Variables.PlaybackLineIndex = math.floor(Frame.Content.Slider:GetValue())
+
+				--------------------------------
+
+				Frame.UpdateState()
+			end
 		end
 	end
 
@@ -402,77 +471,118 @@ function NS.Script:Load()
 	-- FUNCTIONS (ANIMATION)
 	--------------------------------
 
-	Frame.ShowWithAnimation = function()
-		Frame.hidden = false
-		Frame:Show()
+	do
+		Frame.ShowWithAnimation = function()
+			Frame.hidden = false
+			Frame:Show()
 
-		--------------------------------
+			Frame.MouseResponder:Show()
 
-		AdaptiveAPI.Animation:FadeText(Frame.Content.MainFrame.Right.Header.Title, 1, 35, 1, nil, function() return Frame.moving or Frame.hidden end)
-		AdaptiveAPI.Animation:FadeText(Frame.Content.MainFrame.Left.StatusText, 1, 35, 1, nil, function() return Frame.moving or Frame.hidden end)
+			--------------------------------
 
-		--------------------------------
+			AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
+			AdaptiveAPI.Animation:Scale(Frame.Background, .25, .875, 1, nil, AdaptiveAPI.Animation.EaseSine)
+			AdaptiveAPI.Animation:Fade(Frame.Content, .25, 0, 1)
+			AdaptiveAPI.Animation:Scale(Frame.Content, .25, 1.05, 1, nil, AdaptiveAPI.Animation.EaseSine)
+		end
 
-		AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
-		AdaptiveAPI.Animation:Scale(Frame.Content, .75, 1.25, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
-		AdaptiveAPI.Animation:Scale(Frame.Background, .5, 1.125, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
-	end
+		Frame.HideWithAnimation = function()
+			Frame.hidden = true
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				if Frame.hidden then
+					Frame:Hide()
+				end
+			end, 1)
 
-	Frame.HideWithAnimation = function()
-		Frame.hidden = true
-		addon.Libraries.AceTimer:ScheduleTimer(function()
-			if Frame.hidden then
-				Frame:Hide()
+			Frame.MouseResponder:Hide()
+
+			--------------------------------
+
+			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
+			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, AdaptiveAPI.Animation.EaseSine)
+			AdaptiveAPI.Animation:Fade(Frame.Content, .125, Frame.Content:GetAlpha(), 0)
+			AdaptiveAPI.Animation:Scale(Frame.Content, .25, Frame.Content:GetScale(), 1.125, nil, AdaptiveAPI.Animation.EaseSine)
+		end
+
+		Frame.TextPreviewFrame.ShowWithAnimation = function()
+			if not Frame.TextPreviewFrame.hidden then
+				return
 			end
-		end, 1)
+			Frame.TextPreviewFrame.hidden = false
+			Frame.TextPreviewFrame:Show()
 
-		--------------------------------
+			--------------------------------
 
-		AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-		AdaptiveAPI.Animation:Scale(Frame.Content, .375, Frame.Content:GetScale(), 1.175, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
-		AdaptiveAPI.Animation:Scale(Frame.Background, .375, Frame.Background:GetScale(), 1.125, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
+			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame, .125, 0, 1, nil, function() return Frame.TextPreviewFrame.hidden end)
+		end
+
+		Frame.TextPreviewFrame.HideWithAnimation = function()
+			if Frame.TextPreviewFrame.hidden then
+				return
+			end
+			Frame.TextPreviewFrame.hidden = true
+			addon.Libraries.AceTimer:ScheduleTimer(function()
+				if Frame.TextPreviewFrame.hidden then
+					Frame.TextPreviewFrame:Hide()
+				end
+			end, .25)
+
+			--------------------------------
+
+			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame, .125, Frame.TextPreviewFrame:GetAlpha(), 0, nil, function() return not Frame.TextPreviewFrame.hidden end)
+		end
+
+		Frame.TextPreviewFrame.NewTextAnimation = function()
+			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame.Content.Text, .5, 0, 1)
+			AdaptiveAPI.Animation:Move(Frame.TextPreviewFrame.Content.Text, .375, "CENTER", 25, 0, "y")
+		end
 	end
-
-	--------------------------------
-	-- SETTINGS
-	--------------------------------
 
 	--------------------------------
 	-- EVENTS
 	--------------------------------
 
-	CallbackRegistry:Add("START_INTERACTION", function()
-		local InteractionActive = (addon.Interaction.Variables.Active)
-		local IsTTS = (INTDB.profile.INT_TTS)
+	do
+		CallbackRegistry:Add("START_INTERACTION", function()
+			local interactionActive = (addon.Interaction.Variables.Active)
+			local isTTS = (DB_GLOBAL.profile.INT_TTS)
 
-		--------------------------------
+			--------------------------------
 
-		if InteractionActive and IsTTS then
-			Callback:StopPlayback()
-		end
-	end)
+			if interactionActive and isTTS then
+				Callback:StopPlayback()
+			end
+		end)
 
-	CallbackRegistry:Add("START_READABLE", function()
+		CallbackRegistry:Add("START_READABLE", function()
 
-	end)
+		end)
 
-	local Events = CreateFrame("Frame")
-	Events:RegisterEvent("VOICE_CHAT_TTS_PLAYBACK_FINISHED")
-	Events:SetScript("OnEvent", function(self, event, ...)
-		if Callback.IsPlaying then
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Callback.IsPlaying then
-					Callback:NextLine()
+		local Events = CreateFrame("Frame")
+		Events:RegisterEvent("VOICE_CHAT_TTS_PLAYBACK_FINISHED")
+		Events:SetScript("OnEvent", function(self, event, ...)
+			if NS.Variables.IsPlaying then
+				local isSameLine, isLastLine = Callback:IsSameLine()
+				local isActualPlayback = (GetTime() - NS.Variables.LastPlayTime > 1)
+
+				--------------------------------
+
+				if isActualPlayback then
+					if isSameLine and not isLastLine then
+						Callback:NextLine()
+					elseif isLastLine then
+						Callback:StopPlayback()
+					end
 				end
-			end, .5)
-		end
-	end)
+			end
+		end)
 
-	local ResponseFrame = CreateFrame("Frame")
-	ResponseFrame:RegisterEvent("ADDONS_UNLOADING")
-	ResponseFrame:SetScript("OnEvent", function(self, event, ...)
-		if event == "ADDONS_UNLOADING" then
-			addon.TextToSpeech.Script:StopSpeakingText()
-		end
-	end)
+		local ResponseFrame = CreateFrame("Frame")
+		ResponseFrame:RegisterEvent("ADDONS_UNLOADING")
+		ResponseFrame:SetScript("OnEvent", function(self, event, ...)
+			if event == "ADDONS_UNLOADING" then
+				addon.TextToSpeech.Script:StopSpeakingText()
+			end
+		end)
+	end
 end
