@@ -47,11 +47,10 @@ function NS.Elements:Load()
 				do -- TAIL
 					InteractionDialogFrame.DialogBackground.Tail, InteractionDialogFrame.DialogBackground.TailTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionDialogFrame, "LOW", nil)
 					InteractionDialogFrame.DialogBackground.Tail:SetParent(InteractionDialogFrame.DialogBackground)
-					InteractionDialogFrame.DialogBackground.Tail:SetSize(22, 22)
-					InteractionDialogFrame.DialogBackground.Tail:SetPoint("BOTTOM", InteractionDialogFrame.DialogBackground, -10, -16.5)
+					InteractionDialogFrame.DialogBackground.Tail:SetSize(22, 22 * 1.07)
+					InteractionDialogFrame.DialogBackground.Tail:SetPoint("BOTTOM", InteractionDialogFrame.DialogBackground, -10, -17)
 					InteractionDialogFrame.DialogBackground.Tail:SetFrameStrata("LOW")
 					InteractionDialogFrame.DialogBackground.Tail:SetFrameLevel(1)
-					InteractionDialogFrame.DialogBackground.TailTexture:SetVertexColor(.75, .75, .75)
 
 					addon.API:RegisterThemeUpdate(function()
 						local TEXTURE_Background
@@ -59,7 +58,7 @@ function NS.Elements:Load()
 						if addon.Theme.IsDarkTheme_Dialog then
 							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-dark.png"
 						else
-							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail.png"
+							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-light.png"
 						end
 
 						InteractionDialogFrame.DialogBackground.TailTexture:SetTexture(TEXTURE_Background)

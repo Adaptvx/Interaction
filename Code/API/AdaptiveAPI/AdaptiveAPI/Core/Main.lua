@@ -50,183 +50,183 @@ end
 
 do
 	do -- STRING
-		-- Gets the width & height of the given string.
-		---@param text string
-		---@param font string
-		---@param size number
-		---@param flags string
-		---@param justifyH? string
-		---@param justifyV? string
-		---@param maxWidth? number
-		---@param maxHeight? number
-		---@return width number
-		---@return height number
-		function AdaptiveAPI:GetStringSize(text, font, size, flags, justifyH, justifyV, maxWidth, maxHeight)
-			local textFrame = AdaptiveAPI.MeasurementText
-			if not textFrame then
-				AdaptiveAPI.MeasurementText = UIParent:CreateFontString("AdaptiveAPI.MeasurementText", "OVERLAY")
-				AdaptiveAPI.MeasurementText:SetPoint("CENTER", UIParent)
-				AdaptiveAPI.MeasurementText:Hide()
-				textFrame = AdaptiveAPI.MeasurementText
+		do -- MEASUREMENT
+			AdaptiveAPI.MeasurementText = UIParent:CreateFontString("AdaptiveAPI.MeasurementText", "OVERLAY")
+			AdaptiveAPI.MeasurementText:SetPoint("CENTER", UIParent)
+			AdaptiveAPI.MeasurementText:Hide()
+
+			-- Gets the width & height of the given string.
+			---@param text string
+			---@param font string
+			---@param size number
+			---@param flags string
+			---@param justifyH? string
+			---@param justifyV? string
+			---@param maxWidth? number
+			---@param maxHeight? number
+			---@return width number
+			---@return height number
+			function AdaptiveAPI:GetStringSize(text, font, size, flags, justifyH, justifyV, maxWidth, maxHeight)
+				AdaptiveAPI.MeasurementText:SetFont(font or GameFontNormal:GetFont(), size > 0 and size or 12.5, flags or "")
+				AdaptiveAPI.MeasurementText:SetText(text)
+
+				if justifyH then
+					AdaptiveAPI.MeasurementText:SetJustifyH(justifyH)
+				end
+
+				if justifyV then
+					AdaptiveAPI.MeasurementText:SetJustifyV(justifyV)
+				end
+
+				if maxWidth then
+					AdaptiveAPI.MeasurementText:SetWidth(maxWidth)
+				end
+
+				if maxHeight then
+					AdaptiveAPI.MeasurementText:SetHeight(maxHeight)
+				end
+
+				--------------------------------
+
+				local width, height = AdaptiveAPI.MeasurementText:GetWrappedWidth(), AdaptiveAPI.MeasurementText:GetStringHeight()
+				return width, height
 			end
 
-			--------------------------------
+			--- Gets the actual height of the text in the given font string without any color codes.
+			---@param text FontString
+			---@return number
+			function AdaptiveAPI:GetActualStringHeight(text)
+				local cleanedText = AdaptiveAPI:StripColorCodes(text:GetText())
 
-			textFrame:SetFont(font or GameFontNormal, size > 0 and size or 12.5, flags or "")
-			textFrame:SetText(text)
+				--------------------------------
 
-			if justifyH then
-				textFrame:SetJustifyH(justifyH)
+				local textFrame = CreateFrame("Frame"):CreateFontString(nil, "BACKGROUND", text:GetFont())
+				textFrame:SetWidth(text:GetWidth())
+				textFrame:SetText(cleanedText)
+
+				--------------------------------
+
+				local height = textFrame:GetHeight()
+				return height
 			end
-
-			if justifyV then
-				textFrame:SetJustifyV(justifyV)
-			end
-
-			if maxWidth then
-				textFrame:SetWidth(maxWidth)
-			end
-
-			if maxHeight then
-				textFrame:SetHeight(maxHeight)
-			end
-
-			--------------------------------
-
-			local width, height = textFrame:GetWrappedWidth(), textFrame:GetStringHeight()
-			return width, height
 		end
 
-		--- Gets the actual height of the text in the given font string without any color codes.
-		---@param text FontString
-		---@return number
-		function AdaptiveAPI:GetActualStringHeight(text)
-			local cleanedText = AdaptiveAPI:StripColorCodes(text:GetText())
-
-			--------------------------------
-
-			local textFrame = CreateFrame("Frame"):CreateFontString(nil, "BACKGROUND", text:GetFont())
-			textFrame:SetWidth(text:GetWidth())
-			textFrame:SetText(cleanedText)
-
-			--------------------------------
-
-			local height = textFrame:GetHeight()
-			return height
-		end
-
-		-- Returns if the given string is found in the string.
-		---@param string string
-		---@param stringToSearch string
-		---@return success boolean
-		function AdaptiveAPI:FindString(string, stringToSearch)
-			if string and stringToSearch then
-				if string.match(string, stringToSearch) then
-					return true
+		do -- SEARCH
+			-- Returns if the given string is found in the string.
+			---@param string string
+			---@param stringToSearch string
+			---@return success boolean
+			function AdaptiveAPI:FindString(string, stringToSearch)
+				if string and stringToSearch then
+					if string.match(string, stringToSearch) then
+						return true
+					else
+						return false
+					end
 				else
 					return false
 				end
-			else
-				return false
 			end
-		end
 
-		--- Returns the starting index of the character at the given index in the given UTF-8 encoded string.
-		---@param str string
-		---@param index number
-		---@return number|nil
-		function AdaptiveAPI:GetCharacterStartIndex(str, index)
-			local i = 1
-			local charCount = 0
+			--- Returns the starting index of the character at the given index in the given UTF-8 encoded string.
+			---@param str string
+			---@param index number
+			---@return number|nil
+			function AdaptiveAPI:GetCharacterStartIndex(str, index)
+				local i = 1
+				local charCount = 0
 
-			while i <= #str do
-				local byte = str:byte(i)
+				while i <= #str do
+					local byte = str:byte(i)
 
-				if byte >= 0 and byte <= 127 then
-					charCount = charCount + 1
-					if charCount == index then
-						return i
+					if byte >= 0 and byte <= 127 then
+						charCount = charCount + 1
+						if charCount == index then
+							return i
+						end
+						i = i + 1
+					elseif byte >= 192 and byte <= 223 then
+						charCount = charCount + 1
+						if charCount == index then
+							return i
+						end
+						i = i + 2
+					elseif byte >= 224 and byte <= 239 then
+						charCount = charCount + 1
+						if charCount == index then
+							return i
+						end
+						i = i + 3
+					elseif byte >= 240 and byte <= 247 then
+						charCount = charCount + 1
+						if charCount == index then
+							return i
+						end
+						i = i + 4
+					else
+						i = i + 1
 					end
-					i = i + 1
-				elseif byte >= 192 and byte <= 223 then
-					charCount = charCount + 1
-					if charCount == index then
-						return i
+				end
+
+				return nil
+			end
+
+			--- Returns the index of the last byte of the character at the given index in the given UTF-8 encoded string.
+			---@param str string
+			---@param index number
+			---@return number|nil
+			function AdaptiveAPI:GetCharacterEndIndex(str, index)
+				local start = AdaptiveAPI:GetCharacterStartIndex(str, index)
+				if start then
+					local byte = str:byte(start)
+					if byte >= 0 and byte <= 127 then
+						return start
+					elseif byte >= 192 and byte <= 223 then
+						return start + 1
+					elseif byte >= 224 and byte <= 239 then
+						return start + 2
+					elseif byte >= 240 and byte <= 247 then
+						return start + 3
 					end
-					i = i + 2
-				elseif byte >= 224 and byte <= 239 then
-					charCount = charCount + 1
-					if charCount == index then
-						return i
-					end
-					i = i + 3
-				elseif byte >= 240 and byte <= 247 then
-					charCount = charCount + 1
-					if charCount == index then
-						return i
-					end
-					i = i + 4
+				end
+				return nil
+			end
+
+			--- Returns a substring of the given string from the starting index to the ending index.
+			---@param str string
+			---@param A number
+			---@param B number
+			---@return string
+			function AdaptiveAPI:GetSubstring(str, A, B)
+				local startIndex = AdaptiveAPI:GetCharacterStartIndex(str, A)
+				local endIndex = AdaptiveAPI:GetCharacterEndIndex(str, B)
+
+				--------------------------------
+
+				if startIndex and endIndex then
+					return str:sub(startIndex, endIndex)
 				else
-					i = i + 1
+					return ""
 				end
 			end
-
-			return nil
 		end
 
-		--- Returns the index of the last byte of the character at the given index in the given UTF-8 encoded string.
-		---@param str string
-		---@param index number
-		---@return number|nil
-		function AdaptiveAPI:GetCharacterEndIndex(str, index)
-			local start = AdaptiveAPI:GetCharacterStartIndex(str, index)
-			if start then
-				local byte = str:byte(start)
-				if byte >= 0 and byte <= 127 then
-					return start
-				elseif byte >= 192 and byte <= 223 then
-					return start + 1
-				elseif byte >= 224 and byte <= 239 then
-					return start + 2
-				elseif byte >= 240 and byte <= 247 then
-					return start + 3
+		do -- UTILITIES
+			-- Removes atlas markup from the given string.
+			---@param str string
+			---@param removeSpace boolean
+			---@return string
+			function AdaptiveAPI:RemoveAtlasMarkup(str, removeSpace)
+				if removeSpace then
+					str = string.gsub(str, "(|A.-|a )", "")
+					str = string.gsub(str, "(|H.-|h )", "")
+				else
+					str = string.gsub(str, "(|A.-|a)", "")
+					str = string.gsub(str, "(|H.-|h)", "")
 				end
+
+				return str
 			end
-			return nil
-		end
-
-		--- Returns a substring of the given string from the starting index to the ending index.
-		---@param str string
-		---@param A number
-		---@param B number
-		---@return string
-		function AdaptiveAPI:GetSubstring(str, A, B)
-			local startIndex = AdaptiveAPI:GetCharacterStartIndex(str, A)
-			local endIndex = AdaptiveAPI:GetCharacterEndIndex(str, B)
-
-			--------------------------------
-
-			if startIndex and endIndex then
-				return str:sub(startIndex, endIndex)
-			else
-				return ""
-			end
-		end
-
-		-- Removes atlas markup from the given string.
-		---@param str string
-		---@param removeSpace boolean
-		---@return string
-		function AdaptiveAPI:RemoveAtlasMarkup(str, removeSpace)
-			if removeSpace then
-				str = string.gsub(str, "(|A.-|a )", "")
-				str = string.gsub(str, "(|H.-|h )", "")
-			else
-				str = string.gsub(str, "(|A.-|a)", "")
-				str = string.gsub(str, "(|H.-|h)", "")
-			end
-
-			return str
 		end
 	end
 
@@ -1077,7 +1077,6 @@ do
 	end
 
 	do -- STANDARD FUNCTIONS
-
 		-- Returns the length of a table.
 		---@param table table
 		---@return length number

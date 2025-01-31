@@ -39,6 +39,7 @@ function NS.Script:Load()
 				Checks.IsQuest = (InteractionQuestFrame:IsVisible())
 				Checks.IsQuestRewardSelection = (Checks.IsQuest and addon.Interaction.Quest.Variables.Num_Choice >= 1)
 				Checks.IsPrompt = (InteractionPromptFrame:IsVisible())
+				Checks.IsTextPrompt = (InteractionTextPromptFrame:IsVisible())
 			end
 
 			local function PreventInput()
@@ -114,12 +115,25 @@ function NS.Script:Load()
 						end
 					end
 
+					do -- Text Prompt
+						if (Checks.IsTextPrompt) and (result) then
+							do -- CLOSE
+								if GetMatchingKey(key, NS.Variables.Key_Close) then
+									PreventInput()
+									result = false
+
+									--------------------------------
+
+									InteractionTextPromptFrame.HideWithAnimation()
+								end
+							end
+						end
+					end
+
 					do -- Settings
 						if result then
 							if InteractionSettingsFrame then
 								do -- Toggle
-									local isReadableUI = InteractionReadableUIFrame:IsVisible()
-									local isInteraction = addon.Interaction.Variables.Active
 									local isSettings = InteractionSettingsFrame:IsVisible()
 
 									--------------------------------
@@ -332,7 +346,7 @@ function NS.Script:Load()
 						end
 					end
 
-					do -- Library
+					do -- Readable
 						if result then
 							if InteractionReadableUIFrame then
 								do -- Close

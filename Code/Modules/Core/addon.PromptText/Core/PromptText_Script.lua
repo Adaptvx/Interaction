@@ -132,19 +132,4 @@ function NS.Script:Load()
     --------------------------------
     -- EVENTS
     --------------------------------
-
-    do
-        InteractionTextPromptFrame:SetPropagateKeyboardInput(true)
-        InteractionTextPromptFrame:SetScript("OnKeyDown", function(_, key)
-            local function PreventInput()
-                addon.API:PreventInput(InteractionTextPromptFrame)
-            end
-
-            if key == "ESCAPE" then
-                PreventInput()
-
-                InteractionTextPromptFrame.HideWithAnimation()
-            end
-        end)
-    end
 end

@@ -41,13 +41,11 @@ function NS.Script:Load()
 			end
 
 			QuestFrame.Clear = function()
-				if not addon._DEV.ENABLED then
-					ScanHideElement(QuestFrame)
-				end
-
 				QuestFrame:ClearAllPoints()
 
 				if not addon._DEV.ENABLED then
+					ScanHideElement(QuestFrame)
+
 					QuestFrame:SetPoint("CENTER", UIParent, 0, 10000)
 					QuestFrame:SetAlpha(0)
 				else
@@ -57,13 +55,11 @@ function NS.Script:Load()
 			end
 
 			GossipFrame.Clear = function()
-				if not addon._DEV.ENABLED then
-					ScanHideElement(GossipFrame)
-				end
-
 				GossipFrame:ClearAllPoints()
 
 				if not addon._DEV.ENABLED then
+					ScanHideElement(GossipFrame)
+
 					GossipFrame:SetPoint("CENTER", UIParent, 0, 10000)
 					GossipFrame:SetAlpha(0)
 				else

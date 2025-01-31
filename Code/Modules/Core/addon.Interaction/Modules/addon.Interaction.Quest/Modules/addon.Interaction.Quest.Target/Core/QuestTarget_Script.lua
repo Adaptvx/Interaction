@@ -49,8 +49,6 @@ function NS.Script:Load()
 				numElements = numElements + 1
 			end
 
-			DevTools_Dump(Frame.Description:GetText())
-
 			totalHeight = totalHeight + NS.Variables.CONTENT_PADDING * 2 -- TOP/BOTTOM PADDING
 
 			Frame:SetHeight(totalHeight)

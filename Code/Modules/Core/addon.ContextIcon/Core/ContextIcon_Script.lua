@@ -231,16 +231,6 @@ function NS.Script:Load()
 					local isAccount = (QuestType == 102)
 					local isLeatherworkingWorldQuest = (QuestType == 117)
 
-					print("------------------------------")
-					print(questID)
-					print("------------------------------")
-					print("isAvailable", isAvailable)
-					print("isCompleted", isCompleted)
-					print("isOnQuest", isOnQuest)
-					print("questInfo.frequency", questInfo.frequency or "nil, so set to 0")
-					print("isRecurring", isRecurring)
-					print("isDefault", isDefault)
-
 					--------------------------------
 
 					results = {

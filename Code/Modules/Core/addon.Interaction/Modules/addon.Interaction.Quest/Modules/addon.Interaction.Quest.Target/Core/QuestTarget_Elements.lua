@@ -78,23 +78,25 @@ function NS.Elements:Load()
 			end
 
 			do -- TEXT
-				local function SetAutoTextHeight(frame, positionCalculation)
-					local function Update()
-						local fontName, fontSize, fontFlags = frame:GetFont()
-						local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
-						local _, textHeight = AdaptiveAPI:GetStringSize(frame:GetText(), fontName, fontSize, fontFlags, justifyH, justifyV, nil, nil)
-
-						--------------------------------
-
-						frame:SetHeight(textHeight)
-						if positionCalculation then
-							positionCalculation(frame, textHeight)
-						end
-					end
+				local function UpdateAutoTextHeight(frame, positionCalculation)
+					frame:SetHeight(1000)
+					local textHeight = frame:GetStringHeight()
 
 					--------------------------------
 
-					hooksecurefunc(frame, "SetText", Update)
+					frame:SetHeight(textHeight)
+					if positionCalculation then
+						positionCalculation(frame, textHeight)
+					end
+				end
+
+				local function SetAutoTextHeight(frame, positionCalculation)
+
+					--------------------------------
+
+					hooksecurefunc(frame, "SetText", function()
+						UpdateAutoTextHeight(frame, positionCalculation)
+					end)
 				end
 
 				do -- LABEL

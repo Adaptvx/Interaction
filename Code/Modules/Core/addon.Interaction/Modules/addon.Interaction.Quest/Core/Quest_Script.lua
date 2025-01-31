@@ -1169,10 +1169,7 @@ function NS.Script:Load()
 			do -- CONTENT
 				if not Frame.hidden then
 					AdaptiveAPI.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.hidden end)
-
-					if Frame.Storyline:IsShown() then
-						AdaptiveAPI.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.hidden end)
-					end
+					AdaptiveAPI.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.hidden end)
 
 					--------------------------------
 

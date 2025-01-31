@@ -70,8 +70,8 @@ function NS.Script:Load()
 				end
 
 				do -- BLIZZARD
-					QuestFrame:Hide()
-					GossipFrame:Hide()
+					HideUIPanel(QuestFrame)
+					HideUIPanel(GossipFrame)
 				end
 
 				do -- STATE
