@@ -235,7 +235,7 @@ local function Load()
 		L["Checkbox - Audio - Tooltip"] = "Ativa efeitos sonoros e áudio.\n\nPadrão: Ligado."
 		L["Title - Settings"] = "Configurações"
 		L["Checkbox - Settings / Reset Settings"] = "Resetar todas as configurações"
-				L["Checkbox - Settings / Reset Settings - Tooltip"]] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
+		L["Checkbox - Settings / Reset Settings - Tooltip"]] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
 
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
@@ -305,6 +305,7 @@ local function Load()
 	do
 		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
 	end
+	
 	--------------------------------
 	-- INTERACTION QUEST FRAME
 	--------------------------------
