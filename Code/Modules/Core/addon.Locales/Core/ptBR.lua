@@ -62,7 +62,7 @@ local function Load()
 		L["Checkbox - UIDirection / Dialog / Mirror"] = "Inverter"
 		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Inverte a direção da interface."
 		L["Range - Quest Frame Size"] = "Tamanho do Quadro de Missão"
-		L["Range - Quest Frame Size - Tooltip"] = "Ajusta o tamanho do quadro de missão.\n\nPadrão: Grande."
+		L["Range - Quest Frame Size - Tooltip"] = "Ajusta o tamanho do quadro de missão.\n\nPadrão: Médio."
 		L["Range - Quest Frame Size - Small"] = "PEQUENO"
 		L["Range - Quest Frame Size - Medium"] = "MÉDIO"
 		L["Range - Quest Frame Size - Large"] = "GRANDE"
@@ -85,7 +85,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Ocultar a Interface"
 		L["Checkbox - Hide UI - Tooltip"] = "Oculta a interface durante a interação com o NPC.\n\nPadrão: Ligado."
 		L["Range - Cinematic"] = "Efeitos da Câmera"
-		L["Range - Cinematic - Tooltip"] = "Efeitos de câmera durante a interação.\n\nPadrão: COMPLETO."
+		L["Range - Cinematic - Tooltip"] = "Efeitos de câmera durante a interação.\n\nPadrão: EQUILIBRADO."
 		L["Range - Cinematic - None"] = "NENHUM"
 		L["Range - Cinematic - Full"] = "COMPLETO"
 		L["Range - Cinematic - Balanced"] = "EQUILIBRADO"
@@ -223,8 +223,8 @@ local function Load()
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Volume de reprodução.\n\nPadrão: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Narrador"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Voz de reprodução."
-		L["Dropdown - Readable / Audiobook - Special Voice"] = "Secondary Narrator"
-		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Playback voice used on special paragraphs such as those wrapped in '<>'."
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Narrador Secundário"
+		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Voz de reprodução usada em parágrafos especiais, como aqueles envoltos em '<>'."
 		L["Title - Gameplay"] = "Jogabilidade"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Selecionar Opções Automaticamente"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Seleciona a melhor opção para certos NPCs.\n\nPadrão: Desligado."
@@ -240,8 +240,8 @@ local function Load()
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o russo!"
-		L["Title - Credits / AKArenan"] = "AKArenan | Translator - Brazilian Portuguese"
-		L["Title - Credits / AKArenan - Tooltip"] = "Special thanks to AKArenan for the Brazilian Portuguese translations!"
+		L["Title - Credits / AKArenan"] = "AKArenan | Tradução - Português do Brasil"
+		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimentos especiais a AKArenan pelas traduções para o Português do Brasil!"
 	end
 
 	--------------------------------
@@ -277,7 +277,7 @@ local function Load()
 			L["Readable - Library - Show only World"] = "Somente o mundo"
 
 			-- TITLE
-			L["Readable - Library - Name Text - Global Library"] = "Warband Library"
+			L["Readable - Library - Name Text - Global Library"] = "Livraria Bando de Guerra"
 			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
 			L["Readable - Library - Name Text - Local Library - Subtext 2"] = "'s Biblioteca"
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Mostrando "
@@ -297,7 +297,14 @@ local function Load()
 			L["Readable - Tooltip - Change Page"] = "Role para mudar as páginas."
 		end
 	end
+	
+	--------------------------------
+	-- AUDIOBOOK
+	--------------------------------
 
+	do
+		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " para Arrastar.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " para Fechar."
+	end
 	--------------------------------
 	-- INTERACTION QUEST FRAME
 	--------------------------------
@@ -391,7 +398,12 @@ local function Load()
 	--------------------------------
 
 	do
-		L["MinimapIcon - Text"] = "Abrir Biblioteca."
+		L["MinimapIcon - Tooltip - Title"] = "Coleção de Livros"
+		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Registros"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Registro"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "Sem Registros."
 	end
 
 	--------------------------------
