@@ -226,8 +226,8 @@ local function Load()
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Громкость воспроизведения.\n\nПо умолчанию: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Рассказчик"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Воспроизведение голоса."
-		L["Dropdown - Readable / Audiobook - Special Voice"] = "Secondary Narrator"
-		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Playback voice used on special paragraphs such as those wrapped in '<>'."
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Вторичный рассказчик"
+		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Голос воспроизведения, используемый в специальных абзацах, например, в заключённых в '<>'."
 		L["Title - Gameplay"] = "Геймплей"
 		L["Checkbox - Gameplay / Auto Select Option"] = "Автоматический выбор параметров"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Выбирает лучший вариант для определенных НПС.\n\nПо умолчанию: Выкл."
@@ -243,8 +243,8 @@ local function Load()
 		L["Title - Credits"] = "Благодарности"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Переводчик на русский язык"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Особая благодарность ZamestoTV за перевод на русский язык!"
-		L["Title - Credits / AKArenan"] = "AKArenan | Translator - Brazilian Portuguese"
-		L["Title - Credits / AKArenan - Tooltip"] = "Special thanks to AKArenan for the Brazilian Portuguese translations!"
+		L["Title - Credits / AKArenan"] = "AKArenan | Переводчик на португальский (бразильский) язык"
+		L["Title - Credits / AKArenan - Tooltip"] = "Особая благодарность AKArenan за перевод на португальский (бразильский) язык!"
 	end
 
 	--------------------------------
@@ -280,7 +280,7 @@ local function Load()
 			L["Readable - Library - Show only World"] = "Только Мир"
 
 			-- TITLE
-			L["Readable - Library - Name Text - Global Library"] = "Warband Library"
+			L["Readable - Library - Name Text - Global Library"] = "Библиотека Отряда"
 			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
 			L["Readable - Library - Name Text - Local Library - Subtext 2"] = " Библиотека"
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Показ "
@@ -306,7 +306,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
+		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " перетащить.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " Закрыть."
 	end
 
 	--------------------------------
@@ -402,12 +402,12 @@ local function Load()
 	--------------------------------
 
 	do
-		L["MinimapIcon - Tooltip - Title"] = "Interaction Library"
+		L["MinimapIcon - Tooltip - Title"] = "Библиотека взаимодействия"
 		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Entries"
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Записи"
 		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Entry"
-		L["MinimapIcon - Tooltip - Entries - Empty"] = "No Entries."
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Вход"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "Нет записей."
 	end
 
 	--------------------------------
