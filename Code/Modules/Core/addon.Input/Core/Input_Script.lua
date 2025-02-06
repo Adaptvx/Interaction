@@ -1000,7 +1000,7 @@ function NS.Script:Load()
 
 			local function Highlight()
 				local function Exit()
-					local function Callback(frame)
+					local function Trigger(frame)
 						if frame then
 							Callback:Frame_Leave(frame)
 						end
@@ -1025,10 +1025,10 @@ function NS.Script:Load()
 							--------------------------------
 
 							if ShouldContinue then
-								Callback(frame)
+								Trigger(frame)
 							end
 						else
-							Callback(frame)
+							Trigger(frame)
 						end
 					end
 
@@ -1044,7 +1044,7 @@ function NS.Script:Load()
 				end
 
 				local function Enter()
-					local function Callback(frame, ignorePreviousFrame)
+					local function Trigger(frame, ignorePreviousFrame)
 						if ignorePreviousFrame or frame ~= NS.Variables.PreviousFrame then
 							Callback:Frame_Enter(frame)
 						end
@@ -1055,10 +1055,10 @@ function NS.Script:Load()
 					if NS.Variables.CurrentFrame then
 						addon.Libraries.AceTimer:ScheduleTimer(function()
 							if NS.Variables.CurrentFrame then
-								Callback(NS.Variables.CurrentFrame)
+								Trigger(NS.Variables.CurrentFrame)
 
 								if NS.Variables.CurrentFrame.Input_Parent then
-									Callback(NS.Variables.CurrentFrame.Input_Parent, true)
+									Trigger(NS.Variables.CurrentFrame.Input_Parent, true)
 								end
 							end
 						end, 0)

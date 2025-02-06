@@ -288,7 +288,11 @@ function NS.Script:Load()
 		end
 
 		local function RemoveAngledBrackets(str)
-			return str:gsub("[<>]", "")
+			if str then
+				return str:gsub("[<>]", "")
+			else
+				return str
+			end
 		end
 
 		local function DoesCurrentIndexAppearIn(table)
