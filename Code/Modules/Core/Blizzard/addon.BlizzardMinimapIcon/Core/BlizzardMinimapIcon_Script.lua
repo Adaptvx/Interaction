@@ -100,8 +100,8 @@ function NS.Script:Load()
 
 	do
 		local function Settings_MinimapIcon()
-			local Settings_Readable = DB_GLOBAL.profile.INT_READABLE
-			local Settings_MinimapIcon = DB_GLOBAL.profile.INT_MINIMAP
+			local Settings_Readable = addon.Database.DB_GLOBAL.profile.INT_READABLE
+			local Settings_MinimapIcon = addon.Database.DB_GLOBAL.profile.INT_MINIMAP
 
 			if Settings_Readable and Settings_MinimapIcon then
 				NS.Script:Show()

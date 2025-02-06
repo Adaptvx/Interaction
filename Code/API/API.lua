@@ -220,7 +220,8 @@ do
 
 								--------------------------------
 
-								keybindTextWidth = Frame.KeybindFrame.Text:GetStringWidth()
+								local textWidth, _ = AdaptiveAPI:GetStringSize(Frame.KeybindFrame.Text)
+								keybindTextWidth = textWidth
 							end
 
 							if IsPC then
@@ -235,7 +236,7 @@ do
 
 							--------------------------------
 
-							local textWidth = Text:GetStringWidth()
+							local textWidth, _ = AdaptiveAPI:GetStringSize(Text)
 							Frame:SetWidth(Frame.KeybindFrame:GetWidth() + padding + textWidth)
 
 							--------------------------------
@@ -244,11 +245,6 @@ do
 							Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + padding, 0)
 						else
 							Frame:Hide()
-
-							--------------------------------
-
-							local justifyH = Text:GetJustifyH()
-							local justifyV = Text:GetJustifyV()
 
 							--------------------------------
 
@@ -402,7 +398,7 @@ do
 			if event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
 				IsInCutscene = true
 
-				if DB_GLOBAL.profile.INT_HIDEUI then
+				if addon.Database.DB_GLOBAL.profile.INT_HIDEUI then
 					if InteractionPriorityFrame then
 						addon.BlizzardFrames.Script:RemoveElements()
 					end
@@ -412,7 +408,7 @@ do
 			if event == "STOP_MOVIE" or event == "CINEMATIC_STOP" then
 				IsInCutscene = false
 
-				if DB_GLOBAL.profile.INT_HIDEUI then
+				if addon.Database.DB_GLOBAL.profile.INT_HIDEUI then
 					if InteractionPriorityFrame then
 						addon.BlizzardFrames.Script:SetElements()
 					end

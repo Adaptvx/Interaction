@@ -599,7 +599,7 @@ function NS.LibraryUI.Elements:Load()
 
 									Button.Click = function(_, button)
 										if NS.LibraryUI.Variables.SelectedIndex == index then
-											if DB_GLOBAL.profile.INT_FLIPMOUSE and button == "RightButton" or DB_GLOBAL.profile.INT_FLIPMOUSE or button == "LeftButton" then
+											if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE and button == "RightButton" or addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE or button == "LeftButton" then
 												NS.LibraryUI.Script:OpenFromLibrary(Button.ID)
 											else
 												NS.LibraryUI.Variables.SelectedIndex = nil

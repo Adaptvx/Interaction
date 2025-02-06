@@ -133,7 +133,7 @@ function NS.Script:Load()
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
-			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+			if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 				Frame:SetPoint("TOPLEFT", UIParent, 25, -25)
 			else
 				Frame:SetPoint("TOPRIGHT", UIParent, -25, -25)

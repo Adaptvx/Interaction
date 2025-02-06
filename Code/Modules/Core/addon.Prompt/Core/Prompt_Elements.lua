@@ -22,22 +22,24 @@ function NS.Elements:Load()
 			InteractionPromptFrame:SetFrameStrata("FULLSCREEN_DIALOG")
 			InteractionPromptFrame:SetFrameLevel(51)
 
+			local Frame = InteractionPromptFrame
+
 			--------------------------------
 
 			do -- BACKDROP
-				InteractionPromptFrame.Backdrop, InteractionPromptFrame.BackdropTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionPromptFrame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
-				InteractionPromptFrame.Backdrop:SetSize(500, 500)
-				InteractionPromptFrame.Backdrop:SetPoint("CENTER", InteractionPromptFrame)
-				InteractionPromptFrame.Backdrop:SetFrameStrata("FULLSCREEN_DIALOG")
-				InteractionPromptFrame.Backdrop:SetFrameLevel(49)
-				InteractionPromptFrame.Backdrop:SetAlpha(.5)
+				Frame.Backdrop, Frame.BackdropTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
+				Frame.Backdrop:SetSize(500, 500)
+				Frame.Backdrop:SetPoint("CENTER", Frame)
+				Frame.Backdrop:SetFrameStrata("FULLSCREEN_DIALOG")
+				Frame.Backdrop:SetFrameLevel(49)
+				Frame.Backdrop:SetAlpha(.5)
 			end
 
 			do -- BACKGROUND
-				InteractionPromptFrame.Background, InteractionPromptFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionPromptFrame, "FULLSCREEN_DIALOG", nil, 128, .575, "$parent.Background")
-				InteractionPromptFrame.Background:SetPoint("CENTER", InteractionPromptFrame)
-				InteractionPromptFrame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
-				InteractionPromptFrame.Background:SetFrameLevel(50)
+				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 128, .575, "$parent.Background")
+				Frame.Background:SetPoint("CENTER", Frame)
+				Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
+				Frame.Background:SetFrameLevel(50)
 
 				addon.API:RegisterThemeUpdate(function()
 					local TEXTURE_Background
@@ -48,33 +50,33 @@ function NS.Elements:Load()
 						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL
 					end
 
-					InteractionPromptFrame.BackgroundTexture:SetTexture(TEXTURE_Background)
+					Frame.BackgroundTexture:SetTexture(TEXTURE_Background)
 				end, 5)
 			end
 
 			do -- CONTENT
-				InteractionPromptFrame.Content = CreateFrame("Frame", "$parent.Content", InteractionPromptFrame)
-				InteractionPromptFrame.Content:SetSize(InteractionPromptFrame:GetWidth(), InteractionPromptFrame:GetHeight())
-				InteractionPromptFrame.Content:SetPoint("CENTER", InteractionPromptFrame)
+				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
+				Frame.Content:SetSize(Frame:GetWidth(), Frame:GetHeight())
+				Frame.Content:SetPoint("CENTER", Frame)
 
-				InteractionPromptFrame.Content.TextArea = CreateFrame("Frame", "$parent.TextArea", InteractionPromptFrame.Content)
-				InteractionPromptFrame.Content.TextArea:SetSize(InteractionPromptFrame.Content:GetWidth(), 1000)
-				InteractionPromptFrame.Content.TextArea:SetPoint("TOP", InteractionPromptFrame.Content)
+				Frame.Content.TextArea = CreateFrame("Frame", "$parent.TextArea", Frame.Content)
+				Frame.Content.TextArea:SetSize(Frame.Content:GetWidth(), 1000)
+				Frame.Content.TextArea:SetPoint("TOP", Frame.Content)
 
-				InteractionPromptFrame.Content.ButtonArea = CreateFrame("Frame", "$parent.ButtonArea", InteractionPromptFrame.Content)
-				InteractionPromptFrame.Content.ButtonArea:SetSize(InteractionPromptFrame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
-				InteractionPromptFrame.Content.ButtonArea:SetPoint("BOTTOM", InteractionPromptFrame.ClearPoint)
+				Frame.Content.ButtonArea = CreateFrame("Frame", "$parent.ButtonArea", Frame.Content)
+				Frame.Content.ButtonArea:SetSize(Frame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
+				Frame.Content.ButtonArea:SetPoint("BOTTOM", Frame.ClearPoint)
 
 				--------------------------------
 
 				do -- TEXT
-					InteractionPromptFrame.Content.TextArea.Text = AdaptiveAPI.FrameTemplates:CreateText(InteractionPromptFrame.Content.TextArea, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
-					InteractionPromptFrame.Content.TextArea.Text:SetPoint("CENTER", InteractionPromptFrame.Content.TextArea)
+					Frame.Content.TextArea.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.TextArea, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+					Frame.Content.TextArea.Text:SetAllPoints(Frame.Content.TextArea)
 				end
 
 				do -- BUTTONS
 					do -- BUTTON 1
-						InteractionPromptFrame.Content.ButtonArea.Button1 = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionPromptFrame.Content.ButtonArea, InteractionPromptFrame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
+						Frame.Content.ButtonArea.Button1 = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = nil,
@@ -85,12 +87,12 @@ function NS.Elements:Load()
 							customHighlightColor = nil,
 							customActiveColor = nil,
 						}, "$parent.Content.TextArea.Button1")
-						InteractionPromptFrame.Content.ButtonArea.Button1:SetPoint("LEFT", InteractionPromptFrame.Content.ButtonArea, 0, 0)
-						addon.SoundEffects:SetButton(InteractionPromptFrame.Content.ButtonArea.Button1, addon.SoundEffects.Prompt_Button_Enter, addon.SoundEffects.Prompt_Button_Leave, addon.SoundEffects.Prompt_Button_MouseDown, addon.SoundEffects.Prompt_Button_MouseUp)
+						Frame.Content.ButtonArea.Button1:SetPoint("LEFT", Frame.Content.ButtonArea, 0, 0)
+						addon.SoundEffects:SetButton(Frame.Content.ButtonArea.Button1, addon.SoundEffects.Prompt_Button_Enter, addon.SoundEffects.Prompt_Button_Leave, addon.SoundEffects.Prompt_Button_MouseDown, addon.SoundEffects.Prompt_Button_MouseUp)
 					end
 
 					do -- BUTTON 2
-						InteractionPromptFrame.Content.ButtonArea.Button2 = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionPromptFrame.Content.ButtonArea, InteractionPromptFrame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
+						Frame.Content.ButtonArea.Button2 = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = nil,
@@ -101,8 +103,8 @@ function NS.Elements:Load()
 							customHighlightColor = nil,
 							customActiveColor = nil,
 						}, "$parent.Content.TextArea.Button2")
-						InteractionPromptFrame.Content.ButtonArea.Button2:SetPoint("LEFT", InteractionPromptFrame.Content.ButtonArea, InteractionPromptFrame.Content.ButtonArea:GetWidth() / 2 + NS.Variables.PADDING, 0)
-						addon.SoundEffects:SetButton(InteractionPromptFrame.Content.ButtonArea.Button2, addon.SoundEffects.Prompt_Button_Enter, addon.SoundEffects.Prompt_Button_Leave, addon.SoundEffects.Prompt_Button_MouseDown, addon.SoundEffects.Prompt_Button_MouseUp)
+						Frame.Content.ButtonArea.Button2:SetPoint("LEFT", Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 + NS.Variables.PADDING, 0)
+						addon.SoundEffects:SetButton(Frame.Content.ButtonArea.Button2, addon.SoundEffects.Prompt_Button_Enter, addon.SoundEffects.Prompt_Button_Leave, addon.SoundEffects.Prompt_Button_MouseDown, addon.SoundEffects.Prompt_Button_MouseUp)
 					end
 				end
 			end
@@ -111,18 +113,20 @@ function NS.Elements:Load()
 
 			do -- EVENTS
 				local function UpdateLayout()
-					InteractionPromptFrame.Content.TextArea.Text:SetHeight(1000)
+					local _, textHeight = AdaptiveAPI:GetStringSize(Frame.Content.TextArea.Text)
 
-					local textHeight = InteractionPromptFrame.Content.TextArea.Text:GetStringHeight()
+					local textAreaHeight = textHeight
 					local buttonAreaHeight = NS.Variables.BUTTON_HEIGHT
 
-					InteractionPromptFrame:SetHeight(NS.Variables.PADDING + textHeight + buttonAreaHeight + NS.Variables.PADDING)
-					InteractionPromptFrame.Background:SetSize(InteractionPromptFrame:GetWidth() + NS.Variables:RATIO(4), InteractionPromptFrame:GetHeight() + NS.Variables:RATIO(4))
+					--------------------------------
 
-					InteractionPromptFrame.Content:SetSize(InteractionPromptFrame:GetSize())
-					InteractionPromptFrame.Content.TextArea:SetSize(InteractionPromptFrame.Content:GetWidth(), textHeight)
-					InteractionPromptFrame.Content.ButtonArea:SetSize(InteractionPromptFrame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
-					InteractionPromptFrame.Content.TextArea.Text:SetSize(InteractionPromptFrame.Content.TextArea:GetWidth(), InteractionPromptFrame.Content.TextArea:GetHeight())
+					Frame:SetHeight(NS.Variables.PADDING + textAreaHeight + buttonAreaHeight + NS.Variables.PADDING)
+					Frame.Background:SetSize(Frame:GetWidth() + NS.Variables:RATIO(4), Frame:GetHeight() + NS.Variables:RATIO(4))
+
+					Frame.Content:SetSize(Frame:GetSize())
+					Frame.Content.TextArea:SetSize(Frame.Content:GetWidth(), textAreaHeight)
+					Frame.Content.ButtonArea:SetSize(Frame.Content:GetWidth(), NS.Variables.BUTTON_HEIGHT)
+					Frame.Content.TextArea.Text:SetSize(Frame.Content.TextArea:GetWidth(), Frame.Content.TextArea:GetHeight())
 				end
 
 				CallbackRegistry:Add("START_PROMPT", UpdateLayout, 0)

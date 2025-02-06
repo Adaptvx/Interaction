@@ -104,13 +104,13 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.TextToSpeech.Script:PlayConfiguredTTS(DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE, string)
+				addon.TextToSpeech.Script:PlayConfiguredTTS(addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE, string)
 			end
 
 			local function Click(button)
 				local PATH_GOSSIP = addon.Variables.PATH .. "Art/ContextIcons/gossip-bubble.png"
 
-				local usePlayerVoice = (DB_GLOBAL.profile.INT_TTS and DB_GLOBAL.profile.INT_TTS_PLAYER)
+				local usePlayerVoice = (addon.Database.DB_GLOBAL.profile.INT_TTS and addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER)
 				local isGossipOption = (button.texture == PATH_GOSSIP)
 
 				--------------------------------
@@ -173,7 +173,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			CallbackRegistry:Add("GOSSIP_BUTTON_CLICKED", function(button)
-				if DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP then
+				if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP then
 					Click(button)
 				end
 			end, 0)
@@ -187,9 +187,9 @@ function NS.Script:Load()
 
 		do -- MOUSE RESPONDER
 			Frame.MouseResponder:SetScript("OnMouseUp", function(self, button)
-				if DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
+				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
 					InteractionDialogFrame.ReturnToPreviousDialog()
-				elseif DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
+				elseif addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
 					InteractionDialogFrame.ReturnToPreviousDialog()
 				end
 			end)
@@ -639,7 +639,7 @@ function NS.Script:Load()
 		end
 
 		Frame.UpdatePosition = function()
-			local Settings_UIDirection = DB_GLOBAL.profile.INT_UIDIRECTION
+			local Settings_UIDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
 
 			--------------------------------
 
@@ -718,7 +718,7 @@ function NS.Script:Load()
 	do
 		do -- BUTTONS
 			local function ButtonAnimation(index, button)
-				local START_POSITION = DB_GLOBAL.profile.INT_UIDIRECTION == 1 and 6.25 or -6.25
+				local START_POSITION = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 and 6.25 or -6.25
 
 				local isValid = true -- Flag to check if button was hidden
 

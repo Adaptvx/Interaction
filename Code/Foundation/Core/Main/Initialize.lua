@@ -74,7 +74,7 @@ function NS:Load()
 
 			--------------------------------
 
-			DB_GLOBAL.profile.LastLoadedSession = GetTime()
+			addon.Database.DB_GLOBAL.profile.LastLoadedSession = GetTime()
 
 			--------------------------------
 

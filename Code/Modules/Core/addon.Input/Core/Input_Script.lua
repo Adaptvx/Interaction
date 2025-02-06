@@ -30,7 +30,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			local function UpdateChecks()
-				Checks.Settings_AlwaysShowGossipFrame = DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP
+				Checks.Settings_AlwaysShowGossipFrame = addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP
 
 				Checks.IsDialog = (InteractionDialogFrame:IsVisible())
 				Checks.IsGossip = (not Checks.IsDialog and InteractionGossipFrame:IsVisible())
@@ -213,29 +213,23 @@ function NS.Script:Load()
 									--------------------------------
 
 									if isRewardSelection then
+										PreventInput()
+										result = false
+
+										--------------------------------
+
 										if choiceSelected < choiceNum then
-											PreventInput()
-											result = false
-
-											--------------------------------
-
 											choiceSelected = choiceSelected + 1
-
-											--------------------------------
-
-											choiceButtons[choiceSelected].Click()
 										else
-											PreventInput()
-											result = false
-
-											--------------------------------
-
 											choiceSelected = 1
-
-											--------------------------------
-
-											choiceButtons[choiceSelected].Click()
 										end
+
+										--------------------------------
+
+										choiceButtons[choiceSelected].MouseEnterCallback()
+										choiceButtons[choiceSelected].Click()
+
+										Callback:UpdateScrollFramePosition(InteractionQuestFrame.ScrollFrame, choiceButtons[choiceSelected], "y")
 									end
 								end
 							end
@@ -828,10 +822,10 @@ function NS.Script:Load()
 
 			local TEXTURE_Interact
 			local TEXTURE_Scrollable
-			if DB_GLOBAL.profile.addon.Variables.Platform == 2 then
+			if addon.Database.DB_GLOBAL.profile.addon.Variables.Platform == 2 then
 				TEXTURE_Interact = NS.Variables.PATH .. "hint-static.png"
 				TEXTURE_Scrollable = NS.Variables.PATH .. "hint-scrollable.png"
-			elseif DB_GLOBAL.profile.addon.Variables.Platform == 3 then
+			elseif addon.Database.DB_GLOBAL.profile.addon.Variables.Platform == 3 then
 				TEXTURE_Interact = NS.Variables.PATH .. "hint-static.png"
 				TEXTURE_Scrollable = NS.Variables.PATH .. "hint-scrollable.png"
 			elseif NS.Variables.SimulateController then

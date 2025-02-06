@@ -94,7 +94,7 @@ function NS.Script:Load()
 			if not IsInInstance() then
 				addon.HideUI.Script:HideUI(true)
 
-				if DB_GLOBAL.profile.INT_READABLE_CINEMATIC then
+				if addon.Database.DB_GLOBAL.profile.INT_READABLE_CINEMATIC then
 					addon.Cinematic.Script:StartCinematicMode(true, true)
 				end
 			end
@@ -199,7 +199,7 @@ function NS.Script:Load()
 			if not IsInInstance() then
 				addon.HideUI.Script:ShowUI(true)
 
-				if DB_GLOBAL.profile.INT_READABLE_CINEMATIC then
+				if addon.Database.DB_GLOBAL.profile.INT_READABLE_CINEMATIC then
 					addon.Cinematic.Script:CancelCinematicMode(true)
 				end
 			end
@@ -247,27 +247,27 @@ function NS.Script:Load()
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
-			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+			if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 				Frame:SetPoint("LEFT", nil)
 			else
 				Frame:SetPoint("RIGHT", nil, 0, 0)
 			end
 
-			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+			if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 				Frame.BackgroundTexture:SetTexCoord(1, 0, 0, 1)
 			else
 				Frame.BackgroundTexture:SetTexCoord(0, 1, 0, 1)
 			end
 
 			Frame.CloseButton:ClearAllPoints()
-			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+			if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 				Frame.CloseButton:SetPoint("TOPLEFT", Frame, 25, -25)
 			else
 				Frame.CloseButton:SetPoint("TOPRIGHT", Frame, -25, -25)
 			end
 
 			InteractionReadableUIFrame.TTSButton:ClearAllPoints()
-			if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+			if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 			    InteractionReadableUIFrame.TTSButton:SetPoint("TOPLEFT", InteractionReadableUIFrame, 50, -25)
 			else
 			    InteractionReadableUIFrame.TTSButton:SetPoint("TOPRIGHT", InteractionReadableUIFrame, -50, -25)
@@ -285,7 +285,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		if DB_GLOBAL.profile.INT_READABLE then
+		if addon.Database.DB_GLOBAL.profile.INT_READABLE then
 			CallbackRegistry:Add("READABLE_DATA_READY", function()
 				Frame.ShowWithAnimation("ReadableUI")
 
@@ -364,7 +364,7 @@ function NS.Script:Load()
 				end
 
 				if event == "ITEM_TEXT_CLOSED" then
-					if not DB_GLOBAL.profile.INT_READABLE_ALWAYS_SHOW then
+					if not addon.Database.DB_GLOBAL.profile.INT_READABLE_ALWAYS_SHOW then
 						if Frame.ReadableUIFrame:IsVisible() then
 							Frame.HideWithAnimation(true, true)
 						end

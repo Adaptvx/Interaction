@@ -691,8 +691,8 @@ function NS:Load()
 			local hour = time.hour
 
 			-- Sunrise is at 5:30 AM and sunset at 9:00 PM.
-			local dayTime = DB_GLOBAL.profile.INT_TIME_DAY
-			local nightTime = DB_GLOBAL.profile.INT_TIME_NIGHT
+			local dayTime = addon.Database.DB_GLOBAL.profile.INT_TIME_DAY
+			local nightTime = addon.Database.DB_GLOBAL.profile.INT_TIME_NIGHT
 
 			--------------------------------
 
@@ -720,9 +720,9 @@ function NS:Load()
 			-- 2 -> NIGHT
 			-- 3 -> DYNAMIC
 
-			local rawTheme = DB_GLOBAL.profile.INT_MAIN_THEME
+			local rawTheme = addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME
 			local theme = rawTheme == 3 and select(1, NS:GetDynamicMainTheme()) or rawTheme
-			local theme_dialog = DB_GLOBAL.profile.INT_DIALOG_THEME
+			local theme_dialog = addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME
 
 			--------------------------------
 

@@ -37,11 +37,11 @@ function NS.Script:Load()
 		end
 
 		function NS.Script:PlayConfiguredTTS(voice, text)
-			local IsTextToSpeech = DB_GLOBAL.profile.INT_TTS
+			local IsTextToSpeech = addon.Database.DB_GLOBAL.profile.INT_TTS
 
 			local Voice = (voice or 1) - 1
-			local Rate = DB_GLOBAL.profile.INT_TTS_SPEED * .725
-			local Volume = DB_GLOBAL.profile.INT_TTS_VOLUME
+			local Rate = addon.Database.DB_GLOBAL.profile.INT_TTS_SPEED * .725
+			local Volume = addon.Database.DB_GLOBAL.profile.INT_TTS_VOLUME
 
 			--------------------------------
 

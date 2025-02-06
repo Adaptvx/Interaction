@@ -39,7 +39,7 @@ function NS.Script:Load()
 	local Events = CreateFrame("Frame")
 	Events:RegisterEvent("GOSSIP_SHOW")
 	Events:SetScript("OnEvent", function(self, event, ...)
-		local AutoSelectOptions = DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION
+		local AutoSelectOptions = addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION
 		if not AutoSelectOptions then
 			return
 		end

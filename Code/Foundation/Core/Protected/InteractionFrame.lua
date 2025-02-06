@@ -26,60 +26,51 @@ function NS:Load()
 	-- CREATE ELEMENTS
 	--------------------------------
 
-	function CreateElements()
-		local function CreateInteractionFrame()
-			InteractionFrame = CreateFrame("Frame", "InteractionFrame", nil)
-			InteractionFrame:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
-			InteractionFrame:SetPoint("CENTER", nil)
+	do
+		do -- CREATE ELEMENTS
+			do -- FRAME
+				InteractionFrame = CreateFrame("Frame", "InteractionFrame", nil)
+				InteractionFrame:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+				InteractionFrame:SetPoint("CENTER", nil)
 
-			--------------------------------
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					InteractionFrame:SetScale(addon.API.UIScale)
+				end, .1)
 
-			C_Timer.After(.1, function()
-				InteractionFrame:SetScale(addon.API.UIScale)
-			end)
+				--------------------------------
+
+				do -- PREVENT MOUSE
+					InteractionFrame.PreventMouse = CreateFrame("Frame")
+					InteractionFrame.PreventMouse:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+					InteractionFrame.PreventMouse:SetPoint("CENTER", UIParent)
+					InteractionFrame.PreventMouse:SetFrameStrata("FULLSCREEN_DIALOG")
+					InteractionFrame.PreventMouse:SetFrameLevel(999)
+					InteractionFrame.PreventMouse:EnableMouse(true)
+
+					--------------------------------
+
+					InteractionFrame.PreventMouse:Hide()
+				end
+
+				do -- KEYBIND FRAME
+					InteractionFrame.KeybindFrame = CreateFrame("Frame", "$parent.KeybindFrame", InteractionFrame)
+					InteractionFrame.KeybindFrame:SetPropagateKeyboardInput(true)
+				end
+			end
+
+			do -- PRIORITY FRAME
+				InteractionPriorityFrame = CreateFrame("Frame", "InteractionPriorityFrame", nil)
+				InteractionPriorityFrame:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
+				InteractionPriorityFrame:SetPoint("CENTER", nil)
+				InteractionPriorityFrame:SetFrameStrata("FULLSCREEN_DIALOG")
+				InteractionPriorityFrame:SetFrameLevel(0)
+
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					InteractionPriorityFrame:SetScale(UIParent:GetScale())
+				end, .1)
+			end
 		end
-
-		local function CreateInteractionPriorityFrame()
-			InteractionPriorityFrame = CreateFrame("Frame", "InteractionPriorityFrame", nil)
-			InteractionPriorityFrame:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
-			InteractionPriorityFrame:SetPoint("CENTER", nil)
-			InteractionPriorityFrame:SetFrameStrata("FULLSCREEN_DIALOG")
-			InteractionPriorityFrame:SetFrameLevel(0)
-
-			--------------------------------
-
-			C_Timer.After(.1, function()
-				InteractionPriorityFrame:SetScale(UIParent:GetScale())
-			end)
-		end
-
-		local function CreatePreventMouseFrame()
-			InteractionFrame.PreventMouse = CreateFrame("Frame")
-			InteractionFrame.PreventMouse:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
-			InteractionFrame.PreventMouse:SetPoint("CENTER", UIParent)
-			InteractionFrame.PreventMouse:SetFrameStrata("FULLSCREEN_DIALOG")
-			InteractionFrame.PreventMouse:SetFrameLevel(999)
-			InteractionFrame.PreventMouse:EnableMouse(true)
-
-			--------------------------------
-
-			InteractionFrame.PreventMouse:Hide()
-		end
-
-		local function CrateKeybindFrame()
-			InteractionFrame.KeybindFrame = CreateFrame("Frame", "$parent.KeybindFrame", InteractionFrame)
-			InteractionFrame.KeybindFrame:SetPropagateKeyboardInput(true)
-		end
-
-		--------------------------------
-
-		CreateInteractionFrame()
-		CreateInteractionPriorityFrame()
-		CreatePreventMouseFrame()
-		CrateKeybindFrame()
 	end
-
-	CreateElements()
 
 	--------------------------------
 	-- REFERENCES

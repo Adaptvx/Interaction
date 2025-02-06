@@ -87,7 +87,7 @@ function NS.Script:Load()
             InteractionTextPromptFrame.hidden = false
 
             AdaptiveAPI.Animation:Fade(InteractionTextPromptFrame, .25, 0, 1, nil, function() return InteractionTextPromptFrame.hidden end)
-            if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+            if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
                 AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
             else
                 AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
@@ -101,7 +101,7 @@ function NS.Script:Load()
             InteractionTextPromptFrame.hidden = true
 
             AdaptiveAPI.Animation:Fade(InteractionTextPromptFrame, .25, InteractionTextPromptFrame:GetAlpha(), 0, nil, function() return not InteractionTextPromptFrame.hidden end)
-            if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+            if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
                 AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
             else
                 AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
@@ -116,7 +116,7 @@ function NS.Script:Load()
     do
         local function Settings_UIDirection()
             InteractionTextPromptFrame:ClearAllPoints()
-            if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+            if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
                 InteractionTextPromptFrame:SetPoint("CENTER", UIParent, 0, 0)
             else
                 InteractionTextPromptFrame:SetPoint("CENTER", UIParent, 0, 0)

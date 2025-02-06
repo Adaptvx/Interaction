@@ -165,8 +165,8 @@ function NS.Script:Load()
 
 						-- QUERY MISSING REFERENCES
 						--------------------------------
-
-						questInfo.frequency = (gossipButtonInfo.frequency or 0) + 1
+						questInfo.isComplete = (gossipButtonInfo.isComplete or questInfo.isComplete)
+						questInfo.isOnQuest = (gossipButtonInfo.isOnQuest or false)
 					else
 						-- FILL DATA
 						--------------------------------

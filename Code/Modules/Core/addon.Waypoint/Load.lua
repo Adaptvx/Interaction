@@ -10,7 +10,7 @@ local NS = addon.Waypoint
 --------------------------------
 
 function NS:Load()
-	local WAYPOINT_ENABLE = DB_GLOBAL.profile.INT_WAYPOINT
+	local WAYPOINT_ENABLE = addon.Database.DB_GLOBAL.profile.INT_WAYPOINT
 	if not WAYPOINT_ENABLE or addon.Variables.IS_CLASSIC then return end
 
 	--------------------------------

@@ -78,24 +78,10 @@ function NS.Elements:Load()
 			end
 
 			do -- TEXT
-				local function UpdateAutoTextHeight(frame, positionCalculation)
-					frame:SetHeight(1000)
-					local textHeight = frame:GetStringHeight()
-
-					--------------------------------
-
-					frame:SetHeight(textHeight)
-					if positionCalculation then
-						positionCalculation(frame, textHeight)
-					end
-				end
-
-				local function SetAutoTextHeight(frame, positionCalculation)
-
-					--------------------------------
-
+				local function SetAutoTextHeight(frame)
 					hooksecurefunc(frame, "SetText", function()
-						UpdateAutoTextHeight(frame, positionCalculation)
+						local _, height = AdaptiveAPI:GetStringSize(frame, frame:GetWidth(), nil)
+						frame:SetHeight(height)
 					end)
 				end
 

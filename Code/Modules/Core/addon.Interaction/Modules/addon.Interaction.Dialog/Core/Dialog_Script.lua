@@ -58,7 +58,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST and (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible()) then
+			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST and (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible()) then
 				Frame.Title.Label:Hide()
 			else
 				Frame.Title.Label:Show()
@@ -316,6 +316,10 @@ function NS.Script:Load()
 		end
 
 		function Callback:UpdateString(animate)
+			if not NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex] then
+				return
+			end
+
 			local callbackID = GetTime()
 
 			--------------------------------
@@ -478,13 +482,13 @@ function NS.Script:Load()
 				if animate then
 					do -- PLAY ANIMATION
 						local skipAnimation = false
-						local animationSpeed = .05 / (DB_GLOBAL.profile.INT_PLAYBACK_SPEED * L["DialogData - PlaybackSpeedModifier"])
+						local animationSpeed = .05 / (addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_SPEED * L["DialogData - PlaybackSpeedModifier"])
 
-						local autoPlayEnabled = DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS
-						local autoPlayDynamicPausingEnabled = DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
-						local autoCloseEnabled = DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
+						local autoPlayEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS
+						local autoPlayDynamicPausingEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
+						local autoCloseEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
 
-						local autoPlayDelay = DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
+						local autoPlayDelay = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
 
 						--------------------------------
 
@@ -500,9 +504,9 @@ function NS.Script:Load()
 
 			do -- TTS
 				do -- READ CURRENT LINE
-					local quest = DB_GLOBAL.profile.INT_TTS_QUEST
-					local gossip = DB_GLOBAL.profile.INT_TTS_GOSSIP
-					local voice = DB_GLOBAL.profile.INT_TTS_VOICE
+					local quest = addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST
+					local gossip = addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP
+					local voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
 					local gender = UnitSex("npc")
 
 					--------------------------------
@@ -520,12 +524,12 @@ function NS.Script:Load()
 					--------------------------------
 
 					if gender == 2 then
-						voice = DB_GLOBAL.profile.INT_TTS_VOICE_01
+						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01
 					elseif gender == 3 then
-						voice = DB_GLOBAL.profile.INT_TTS_VOICE_02
+						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02
 					end
 					if NS.Variables.Temp_IsEmoteDialog then
-						voice = DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE
+						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE
 					end
 
 					--------------------------------
@@ -685,9 +689,9 @@ function NS.Script:Load()
 						-- 2 -> CENTER
 						-- 3 -> BOTTOM
 
-						local uiDirection = DB_GLOBAL.profile.INT_UIDIRECTION
-						local dialogDirection = DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG
-						local mirrorQuest = DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR
+						local uiDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
+						local dialogDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG
+						local mirrorQuest = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR
 
 						local screenWidth = addon.API:GetScreenWidth()
 						local screenHeight = addon.API:GetScreenHeight()
@@ -894,7 +898,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						if DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
+						if addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
 							if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
 								color = isMouseOver and "101010" or "101010"
 							elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
@@ -913,7 +917,7 @@ function NS.Script:Load()
 								end
 							end
 						else
-							local modifier = .2 + (DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
+							local modifier = .2 + (addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
 							if not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
 								color = AdaptiveAPI:SetHexColorFromModifierWithBase(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
 							else
@@ -1067,10 +1071,10 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					if DB_GLOBAL.profile.INT_TITLE_ALPHA > 0 then
-						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, DB_GLOBAL.profile.INT_TITLE_ALPHA)
+					if addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA > 0 then
+						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
 					else
-						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, DB_GLOBAL.profile.INT_TITLE_ALPHA)
+						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
 					end
 
 					--------------------------------
@@ -1137,7 +1141,7 @@ function NS.Script:Load()
 
 	do
 		local function Settings_ContentSize()
-			local TextSize = DB_GLOBAL.profile.INT_CONTENT_SIZE
+			local TextSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
 
 			AdaptiveAPI:SetFontSize(Frame.Content.Measurement, TextSize)
 			AdaptiveAPI:SetFontSize(Frame.Content.Label, TextSize)
@@ -1149,7 +1153,7 @@ function NS.Script:Load()
 		Settings_ContentSize()
 
 		local function Settings_TitleProgressVisibility()
-			local Visiblity = DB_GLOBAL.profile.INT_PROGRESS_SHOW
+			local Visiblity = addon.Database.DB_GLOBAL.profile.INT_PROGRESS_SHOW
 
 			Frame.Title.Progress:SetShown(Visiblity)
 			Frame.Title.Progress:SetAlpha(1)
@@ -1157,7 +1161,7 @@ function NS.Script:Load()
 		Settings_TitleProgressVisibility()
 
 		local function Settings_TitleAlpha()
-			local Alpha = DB_GLOBAL.profile.INT_TITLE_ALPHA
+			local Alpha = addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA
 
 			Frame.Title.Label:SetAlpha(Alpha)
 		end
@@ -1237,7 +1241,7 @@ function NS.Script:Load()
 
 		Frame:SetScript("OnMouseUp", function(self, button)
 			if button == "LeftButton" then
-				if DB_GLOBAL.profile.INT_FLIPMOUSE == true then
+				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
 					Frame.DecrementIndex()
 				else
 					Frame.IncrementIndex()
@@ -1245,7 +1249,7 @@ function NS.Script:Load()
 
 				NS.Variables.AllowAutoProgress = false
 			elseif button == "RightButton" then
-				if DB_GLOBAL.profile.INT_FLIPMOUSE == true then
+				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
 					Frame.IncrementIndex()
 				else
 					Frame.DecrementIndex()
@@ -1279,7 +1283,7 @@ function NS.Script:Load()
 
 					if (tostring(npcName_Target) == tostring(npcName_MouseOver)) then
 						if button == "LeftButton" then
-							if DB_GLOBAL.profile.INT_FLIPMOUSE == true then
+							if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
 								Frame.DecrementIndex()
 							else
 								Frame.IncrementIndex()
@@ -1287,7 +1291,7 @@ function NS.Script:Load()
 
 							NS.Variables.AllowAutoProgress = false
 						elseif button == "RightButton" then
-							if DB_GLOBAL.profile.INT_FLIPMOUSE == true then
+							if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
 								Frame.IncrementIndex()
 							else
 								Frame.DecrementIndex()

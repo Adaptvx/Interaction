@@ -12,7 +12,6 @@
 	<Script file="Core/itIT.lua"/>
 	<Script file="Core/koKR.lua"/>
 	<Script file="Core/ptBR.lua"/>
-	<Script file="Core/ptPT.lua"/>
 	<Script file="Core/ruRU.lua"/>
 	<Script file="Core/zhCN.lua"/>
 	<Script file="Core/zhTW.lua"/>

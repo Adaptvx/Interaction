@@ -143,13 +143,13 @@ function NS.Script:Load()
 
 			function Callback:ReadLine(line, quotation)
 				local voice
-				local rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .125
-				local volume = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
+				local rate = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .125
+				local volume = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 				if quotation then
-					voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL or 1) - 1
+					voice = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL or 1) - 1
 				else
-					voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
+					voice = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
 				end
 
 				--------------------------------
@@ -234,7 +234,7 @@ function NS.Script:Load()
 		do -- PLAYBACK
 			local function EstimateDuration(line)
 				local numChars = strlenutf8(line)
-				local rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE + 10) * 10
+				local rate = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE + 10) * 10
 				local rateModifier = .025
 				local charsPerSecond = L["AudiobookData - EstimatedCharPerSecond"] + (rate * rateModifier - (100 * rateModifier))
 				local padding = 1
@@ -282,7 +282,7 @@ function NS.Script:Load()
 			end
 
 			function Callback:StartPlayback()
-				if addon.Interaction.Variables.Active and DB_GLOBAL.profile.INT_TTS then
+				if addon.Interaction.Variables.Active and addon.Database.DB_GLOBAL.profile.INT_TTS then
 					return
 				end
 
@@ -335,12 +335,12 @@ function NS.Script:Load()
 			end
 
 			function Callback:Play(LibraryID)
-				if addon.Interaction.Variables.Active and DB_GLOBAL.profile.INT_TTS then
+				if addon.Interaction.Variables.Active and addon.Database.DB_GLOBAL.profile.INT_TTS then
 					return
 				end
 
 				local function Main()
-					local entry = DB_LOCAL.profile.READABLE[LibraryID]
+					local entry = addon.Database.DB_LOCAL.profile.READABLE[LibraryID]
 
 					local itemID = entry.ItemID
 					local itemLink = entry.ItemLink
@@ -545,7 +545,7 @@ function NS.Script:Load()
 	do
 		CallbackRegistry:Add("START_INTERACTION", function()
 			local interactionActive = (addon.Interaction.Variables.Active)
-			local isTTS = (DB_GLOBAL.profile.INT_TTS)
+			local isTTS = (addon.Database.DB_GLOBAL.profile.INT_TTS)
 
 			--------------------------------
 

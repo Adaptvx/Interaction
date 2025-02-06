@@ -33,7 +33,7 @@ function NS.Script:Load()
 
 	do
 		Frame.UpdateVisibility = function()
-			local isControlGuideEnabled = (DB_GLOBAL.profile.INT_CONTROLGUIDE)
+			local isControlGuideEnabled = (addon.Database.DB_GLOBAL.profile.INT_CONTROLGUIDE)
 
 			--------------------------------
 
@@ -85,10 +85,10 @@ function NS.Script:Load()
 						local isAccept = (QuestFrameAcceptButton:IsEnabled() and QuestFrameAcceptButton:IsVisible())
 						local isContinue = (QuestFrameCompleteButton:IsEnabled() and QuestFrameCompleteButton:IsVisible())
 						local isComplete = (QuestFrameCompleteQuestButton:IsEnabled() and QuestFrameCompleteQuestButton:IsVisible())
-						local isGoodbye = (addon.Interaction.Variables.Type == "quest-progress")
+						local isGoodbye = (isComplete or addon.Interaction.Variables.Type == "quest-progress")
 						local isDecline = (not isGoodbye)
 						local isAutoAccept = (addon.API:IsAutoAccept())
-						local isRewardSelection = (isComplete and addon.Interaction.Quest.Variables.Num_Choice >= 1)
+						local isRewardSelection = (isComplete and addon.Interaction.Quest.Variables.Num_Choice > 1)
 						local isRewardSelectionValid = (isRewardSelection and addon.Interaction.Quest.Variables.ChoiceSelected)
 
 						--------------------------------
@@ -98,7 +98,7 @@ function NS.Script:Load()
 							keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Quest_NextReward)
 						}
 						local accept = {
-							text = (isAccept) and L["ControlGuide - Accept"] or (isContinue) and L["ControlGuide - Continue"] or (isComplete and isRewardSelectionValid) and L["ControlGuide - Complete"],
+							text = (isAccept) and L["ControlGuide - Accept"] or (isContinue) and L["ControlGuide - Continue"] or (isComplete and (not isRewardSelection or (isRewardSelection and isRewardSelectionValid))) and L["ControlGuide - Complete"],
 							keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress)
 						}
 						local decline = {

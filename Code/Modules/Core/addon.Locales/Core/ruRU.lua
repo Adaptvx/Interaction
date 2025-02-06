@@ -68,8 +68,6 @@ local function Load()
 		L["Range - Quest Frame Size - Medium"] = "СРЕДНИЙ"
 		L["Range - Quest Frame Size - Large"] = "БОЛЬШОЙ"
 		L["Range - Quest Frame Size - Extra Large"] = "ОЧЕНЬ БОЛЬШОЙ"
-		L["Range - Text Size"] = "Размер текста"
-		L["Range - Text Size - Tooltip"] = "Изменить размер текста."
 		L["Range - Text Size"] = "Размер содержимого"
 		L["Range - Text Size - Tooltip"] = "Настройте размер текста диалога."
 		L["Title - Dialog"] = "Диалог"

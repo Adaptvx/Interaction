@@ -297,7 +297,7 @@ local function Load()
 			L["Readable - Tooltip - Change Page"] = "Role para mudar as páginas."
 		end
 	end
-	
+
 	--------------------------------
 	-- AUDIOBOOK
 	--------------------------------
@@ -305,6 +305,7 @@ local function Load()
 	do
 		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " para Arrastar.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " para Fechar."
 	end
+
 	--------------------------------
 	-- INTERACTION QUEST FRAME
 	--------------------------------

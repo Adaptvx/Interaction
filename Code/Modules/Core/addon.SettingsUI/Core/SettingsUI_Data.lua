@@ -254,7 +254,7 @@ function NS.Data:Load()
 							return L["Range - Main Theme - Dynamic"]
 						end
 					end,
-					get = function() return DB_GLOBAL.profile.INT_MAIN_THEME end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME end,
 					setCriteria = function(_, val)
 						if not InteractionFrame.ThemeTransition then
 							return true
@@ -263,13 +263,13 @@ function NS.Data:Load()
 						end
 					end,
 					set = function(_, val)
-						if val ~= DB_GLOBAL.profile.INT_MAIN_THEME then
+						if val ~= addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME then
 							addon.Libraries.AceTimer:ScheduleTimer(function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
 							end, .125)
 						end
 
-						DB_GLOBAL.profile.INT_MAIN_THEME = val
+						addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME = val
 					end
 				},
 				Range_DialogTheme = {
@@ -298,7 +298,7 @@ function NS.Data:Load()
 						end
 					end,
 					grid = true,
-					get = function() return DB_GLOBAL.profile.INT_DIALOG_THEME end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME end,
 					setCriteria = function(_, val)
 						if not addon.Interaction.Gossip.Variables.ThemeUpdateTransition then
 							return true
@@ -307,13 +307,13 @@ function NS.Data:Load()
 						end
 					end,
 					set = function(_, val)
-						if val ~= DB_GLOBAL.profile.INT_DIALOG_THEME then
+						if val ~= addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME then
 							addon.Libraries.AceTimer:ScheduleTimer(function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
 							end, 0)
 						end
 
-						DB_GLOBAL.profile.INT_DIALOG_THEME = val
+						addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME = val
 					end
 				},
 				Title_Appearance = {
@@ -344,9 +344,9 @@ function NS.Data:Load()
 							return L["Range - UIDirection - Right"]
 						end
 					end,
-					get = function() return DB_GLOBAL.profile.INT_UIDIRECTION end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_UIDIRECTION = val
+						addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION = val
 
 						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
 					end
@@ -374,9 +374,9 @@ function NS.Data:Load()
 							return L["Range - UIDirection / Dialog - Bottom"]
 						end
 					end,
-					get = function() return DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG = val
+						addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG = val
 
 						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
 					end
@@ -392,9 +392,9 @@ function NS.Data:Load()
 					hidden = function() return false end,
 					subcategory = 2,
 					category = Appearance,
-					get = function() return DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR = val
+						addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR = val
 
 						CallbackRegistry:Trigger("SETTINGS_UIDIRECTION_CHANGED")
 					end,
@@ -424,9 +424,9 @@ function NS.Data:Load()
 							return L["Range - Quest Frame Size - Extra Large"]
 						end
 					end,
-					get = function() return DB_GLOBAL.profile.INT_QUESTFRAME_SIZE end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_QUESTFRAME_SIZE end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_QUESTFRAME_SIZE = val
+						addon.Database.DB_GLOBAL.profile.INT_QUESTFRAME_SIZE = val
 
 						--------------------------------
 
@@ -450,9 +450,9 @@ function NS.Data:Load()
 					valueText = function(val)
 						return string.format("%.1f", val) .. " PT"
 					end,
-					get = function() return DB_GLOBAL.profile.INT_CONTENT_SIZE end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_CONTENT_SIZE = val
+						addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE = val
 
 						CallbackRegistry:Trigger("SETTINGS_CONTENT_SIZE_CHANGED")
 					end
@@ -476,9 +476,9 @@ function NS.Data:Load()
 					locked = function() return false end,
 					subcategory = 0,
 					category = Appearance,
-					get = function() return DB_GLOBAL.profile.INT_PROGRESS_SHOW end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_PROGRESS_SHOW end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_PROGRESS_SHOW = val
+						addon.Database.DB_GLOBAL.profile.INT_PROGRESS_SHOW = val
 
 						CallbackRegistry:Trigger("SETTINGS_TITLE_PROGRESS_VISIBILITY_CHANGED")
 					end,
@@ -501,9 +501,9 @@ function NS.Data:Load()
 					valueText = function(val)
 						return string.format("%.0f", (val * 100)) .. "%"
 					end,
-					get = function() return DB_GLOBAL.profile.INT_TITLE_ALPHA end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_TITLE_ALPHA = val
+						addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA = val
 
 						CallbackRegistry:Trigger("SETTINGS_TITLE_ALPHA_CHANGED")
 					end
@@ -525,9 +525,9 @@ function NS.Data:Load()
 					valueText = function(val)
 						return string.format("%.0f", (val * 100)) .. "%"
 					end,
-					get = function() return DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA = val
+						addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA = val
 					end
 				},
 				Title_Quest = {
@@ -549,10 +549,10 @@ function NS.Data:Load()
 					locked = function() return addon.Interaction.Variables.Active end,
 					subcategory = 0,
 					category = Appearance,
-					get = function() return DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST end,
 					set = function(_, val)
 						if not addon.Interaction.Variables.Active then
-							DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST = val
+							addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST = val
 						end
 					end
 				}
@@ -592,7 +592,7 @@ function NS.Data:Load()
 					locked = function() return addon.Interaction.Variables.Active end,
 					subcategory = 0,
 					category = Effects,
-					get = function() return DB_GLOBAL.profile.INT_HIDEUI end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_HIDEUI end,
 					set = function(_, val)
 						addon.Database:PreventSetVariableDuringCinematicMode("INT_HIDEUI", val)
 					end,
@@ -624,7 +624,7 @@ function NS.Data:Load()
 						end
 					end,
 					grid = true,
-					get = function() return DB_GLOBAL.profile.INT_CINEMATIC_PRESET end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_PRESET end,
 					set = function(_, val)
 						addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_PRESET", val)
 
@@ -635,7 +635,7 @@ function NS.Data:Load()
 					name = "Custom",
 					type = "Group",
 					order = 6,
-					hidden = function() return (DB_GLOBAL.profile.INT_CINEMATIC_PRESET < 4) end,
+					hidden = function() return (addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_PRESET < 4) end,
 					locked = function() return addon.Interaction.Variables.Active end,
 					category = Effects,
 					args = {
@@ -651,7 +651,7 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM", val)
 							end,
@@ -667,15 +667,15 @@ function NS.Data:Load()
 							max = 39,
 							step = 1,
 							order = 8,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.1f", val)
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN end,
-							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MIN", math.min(val, DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX)) end
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN end,
+							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MIN", math.min(val, addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX)) end
 						},
 						Range_Zoom_MaxDistance = {
 							name = L["Range - Zoom / Max Distance"],
@@ -688,15 +688,15 @@ function NS.Data:Load()
 							max = 39,
 							step = 1,
 							order = 9,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.1f", val)
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX end,
-							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MAX", math.max(val, DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN)) end
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX end,
+							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_DISTANCE_MAX", math.max(val, addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN)) end
 						},
 						Checkbox_Zoom_Pitch = {
 							name = L["Checkbox - Zoom / Pitch"],
@@ -706,11 +706,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 10,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_PITCH", val)
 							end,
@@ -726,14 +726,14 @@ function NS.Data:Load()
 							max = 89,
 							step = 1,
 							order = 11,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM or not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.1f", val)
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL end,
 							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_PITCH_LEVEL", val); end
 						},
 						Checkbox_FieldOfView = {
@@ -744,11 +744,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 12,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_FOV end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_FOV end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ZOOM_FOV", val)
 							end,
@@ -765,7 +765,7 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_PAN end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_PAN end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_PAN", val)
 							end,
@@ -781,14 +781,14 @@ function NS.Data:Load()
 							max = 5,
 							step = .25,
 							order = 14,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_PAN end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_PAN end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.0f", val * 100) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_PAN_SPEED end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_PAN_SPEED end,
 							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_PAN_SPEED", val); end
 						},
 						Checkbox_DynamicCamera = {
@@ -803,7 +803,7 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM", val)
 							end,
@@ -816,11 +816,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 16,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_SIDE", val)
 							end,
@@ -836,14 +836,14 @@ function NS.Data:Load()
 							max = 3,
 							step = .25,
 							order = 17,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.0f", val * 100) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH end,
 							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH", val); end
 						},
 						Checkbox_DynamicCamera_Offset = {
@@ -854,11 +854,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 18,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_OFFSET", val)
 							end,
@@ -874,14 +874,14 @@ function NS.Data:Load()
 							max = 25,
 							step = .25,
 							order = 19,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.0f", val * 10) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH end,
 							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH", val); end
 						},
 						Checkbox_DynamicCamera_Focus = {
@@ -892,11 +892,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 20,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_FOCUS", val)
 							end,
@@ -912,14 +912,14 @@ function NS.Data:Load()
 							max = 1,
 							step = .1,
 							order = 21,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
 							valueText = function(val)
 								return string.format("%.0f", val * 100) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH end,
 							set = function(_, val) addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH", val); end
 						},
 						Checkbox_DynamicCamera_Focus_X = {
@@ -930,11 +930,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 22,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_FOCUS_X", val)
 							end,
@@ -947,11 +947,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 23,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM or not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 3,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_ACTIONCAM_FOCUS_Y", val)
 							end,
@@ -968,7 +968,7 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 1,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_VIGNETTE", val)
 							end,
@@ -981,11 +981,11 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 25,
-							hidden = function() return not DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE end,
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 2,
 							category = Effects,
-							get = function() return DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE_GRADIENT end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE_GRADIENT end,
 							set = function(_, val)
 								addon.Database:PreventSetVariableDuringCinematicMode("INT_CINEMATIC_VIGNETTE_GRADIENT", val)
 							end,
@@ -1025,8 +1025,8 @@ function NS.Data:Load()
 					valueText = function(val)
 						return string.format("%.0f", val * 100) .. "%"
 					end,
-					get = function() return DB_GLOBAL.profile.INT_PLAYBACK_SPEED end,
-					set = function(_, val) DB_GLOBAL.profile.INT_PLAYBACK_SPEED = val; end
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_SPEED end,
+					set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_SPEED = val; end
 				},
 				Checkbox_DynamicPlayback = {
 					name = L["Checkbox - Dynamic Playback"],
@@ -1039,8 +1039,8 @@ function NS.Data:Load()
 					hidden = function() return false end,
 					subcategory = 0,
 					category = Playback,
-					get = function() return DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING end,
-					set = function(_, val) DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING = val end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING end,
+					set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING = val end,
 				},
 				Title_AutoProgress = {
 					name = L["Title - Auto Progress"],
@@ -1060,16 +1060,16 @@ function NS.Data:Load()
 					hidden = function() return false end,
 					subcategory = 0,
 					category = Playback,
-					get = function() return DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS = val
+						addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS = val
 					end,
 				},
 				Group_AutoProgress = {
 					name = L["Title - Auto Progress"],
 					type = "Group",
 					order = 7,
-					hidden = function() return not DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
+					hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 					category = Playback,
 					args = {
 						Checkbox_AutoProgress_AutoCloseDialog = {
@@ -1080,12 +1080,12 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 8,
-							hidden = function() return not DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE = val
+								addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE = val
 							end,
 						},
 						Range_AutoProgress_Delay = {
@@ -1099,12 +1099,12 @@ function NS.Data:Load()
 							max = 5,
 							step = .5,
 							order = 9,
-							hidden = function() return not DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 							subcategory = 1,
 							category = Playback,
 							valueText = function(val) return string.format("%.1f", val) .. "s" end,
-							get = function() return DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY end,
-							set = function(_, val) DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY = val; end
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY end,
+							set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY = val; end
 						},
 					}
 				},
@@ -1128,16 +1128,16 @@ function NS.Data:Load()
 					locked = function() return false end,
 					subcategory = 0,
 					category = Playback,
-					get = function() return DB_GLOBAL.profile.INT_TTS end,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS end,
 					set = function(_, val)
-						DB_GLOBAL.profile.INT_TTS = val
+						addon.Database.DB_GLOBAL.profile.INT_TTS = val
 					end,
 				},
 				Group_TextToSpeech = {
 					name = L["Title - Text To Speech"],
 					type = "Group",
 					order = 12,
-					hidden = function() return not DB_GLOBAL.profile.INT_TTS end,
+					hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_TTS end,
 					category = Playback,
 					args = {
 						Title_TextToSpeech_Playback = {
@@ -1161,9 +1161,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_QUEST end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_QUEST = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST = val
 							end,
 						},
 						Checkbox_TextToSpeech_Gossip = {
@@ -1178,9 +1178,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_GOSSIP end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_GOSSIP = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP = val
 							end,
 						},
 						Range_TextToSpeech_Rate = {
@@ -1201,8 +1201,8 @@ function NS.Data:Load()
 							valueText = function(val)
 								return string.format("%.0f", (val + 10) * 10) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_TTS_SPEED end,
-							set = function(_, val) DB_GLOBAL.profile.INT_TTS_SPEED = val; end
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_SPEED end,
+							set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_TTS_SPEED = val; end
 						},
 						Range_TextToSpeech_Volume = {
 							name = L["Range - Text To Speech / Volume"],
@@ -1222,8 +1222,8 @@ function NS.Data:Load()
 							valueText = function(val)
 								return string.format("%.0f", val) .. "%"
 							end,
-							get = function() return DB_GLOBAL.profile.INT_TTS_VOLUME end,
-							set = function(_, val) DB_GLOBAL.profile.INT_TTS_VOLUME = val; end
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_VOLUME end,
+							set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_TTS_VOLUME = val; end
 						},
 						Title_TextToSpeech_Voice = {
 							name = L["Title - Text To Speech / Voice"],
@@ -1253,9 +1253,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_VOICE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_VOICE = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE = val
 
 								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
@@ -1282,9 +1282,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_VOICE_01 end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_VOICE_01 = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 = val
 
 								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
@@ -1311,9 +1311,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_VOICE_02 end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_VOICE_02 = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 = val
 
 								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
@@ -1340,9 +1340,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE = val
 
 								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
@@ -1361,9 +1361,9 @@ function NS.Data:Load()
 							hidden = function() return false end,
 							subcategory = 1,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_PLAYER end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_PLAYER = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER = val
 							end,
 						},
 						Dropdown_TextToSpeech_PlayerVoice_Voice = {
@@ -1381,13 +1381,13 @@ function NS.Data:Load()
 								return table
 							end,
 							order = 24,
-							hidden = function() return not DB_GLOBAL.profile.INT_TTS_PLAYER end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER end,
 							locked = function() return false end,
 							subcategory = 2,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE = val
+								addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER_VOICE = val
 
 								addon.TextToSpeech.Script:PlayConfiguredTTS(val, "Interaction example text.")
 							end,
@@ -1425,9 +1425,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 0,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_MUTE_DIALOG end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_MUTE_DIALOG end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_MUTE_DIALOG = val
+								addon.Database.DB_GLOBAL.profile.INT_MUTE_DIALOG = val
 							end,
 						},
 					}
@@ -1476,10 +1476,10 @@ function NS.Data:Load()
 							locked = function() return addon.Interaction.Variables.Active end,
 							subcategory = 0,
 							category = Controls,
-							get = function() return DB_GLOBAL.profile.INT_CONTROLGUIDE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_CONTROLGUIDE end,
 							set = function(_, val)
 								if not addon.Interaction.Variables.Active then
-									DB_GLOBAL.profile.INT_CONTROLGUIDE = val
+									addon.Database.DB_GLOBAL.profile.INT_CONTROLGUIDE = val
 								end
 							end,
 						}
@@ -1525,11 +1525,11 @@ function NS.Data:Load()
 									return L["Range - Platform - Xbox"]
 								end
 							end,
-							get = function() return DB_GLOBAL.profile.INT_PLATFORM end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_PLATFORM end,
 							set = function(_, val)
 								if not addon.Interaction.Variables.Active then
-									if val ~= DB_GLOBAL.profile.INT_PLATFORM then
-										DB_GLOBAL.profile.TutorialSettingsShown = false
+									if val ~= addon.Database.DB_GLOBAL.profile.INT_PLATFORM then
+										addon.Database.DB_GLOBAL.profile.TutorialSettingsShown = false
 
 										--------------------------------
 
@@ -1540,7 +1540,7 @@ function NS.Data:Load()
 										end
 									end
 
-									DB_GLOBAL.profile.INT_PLATFORM = val
+									addon.Database.DB_GLOBAL.profile.INT_PLATFORM = val
 								end
 							end
 						},
@@ -1548,7 +1548,7 @@ function NS.Data:Load()
 							name = L["Title - PC"],
 							type = "Group",
 							order = 10,
-							hidden = function() return DB_GLOBAL.profile.INT_PLATFORM > 1 end,
+							hidden = function() return addon.Database.DB_GLOBAL.profile.INT_PLATFORM > 1 end,
 							category = Controls,
 							args = {
 								Group_PC_Keyboard = {
@@ -1579,16 +1579,16 @@ function NS.Data:Load()
 											locked = function() return addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_USEINTERACTKEY end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													if DB_GLOBAL.profile.INT_USEINTERACTKEY ~= val then
+													if addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY ~= val then
 														CallbackRegistry:Trigger("SETTINGS_CONTROLS_CHANGED")
 													end
 
 													--------------------------------
 
-													DB_GLOBAL.profile.INT_USEINTERACTKEY = val
+													addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY = val
 												end
 											end,
 										},
@@ -1622,10 +1622,10 @@ function NS.Data:Load()
 											locked = function() return addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_FLIPMOUSE end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													DB_GLOBAL.profile.INT_FLIPMOUSE = val
+													addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE = val
 												end
 											end,
 										},
@@ -1659,7 +1659,7 @@ function NS.Data:Load()
 											locked = function() return addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_KEY_PREVIOUS end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_KEY_PREVIOUS end,
 											setCriteria = function()
 												if not addon.Interaction.Variables.Active then
 													return true
@@ -1669,7 +1669,7 @@ function NS.Data:Load()
 											end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													DB_GLOBAL.profile.INT_KEY_PREVIOUS = val
+													addon.Database.DB_GLOBAL.profile.INT_KEY_PREVIOUS = val
 												end
 											end,
 										},
@@ -1685,7 +1685,7 @@ function NS.Data:Load()
 											locked = function() return addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_KEY_NEXT end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_KEY_NEXT end,
 											setCriteria = function()
 												if not addon.Interaction.Variables.Active then
 													return true
@@ -1695,7 +1695,7 @@ function NS.Data:Load()
 											end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													DB_GLOBAL.profile.INT_KEY_NEXT = val
+													addon.Database.DB_GLOBAL.profile.INT_KEY_NEXT = val
 												end
 											end,
 										},
@@ -1703,15 +1703,15 @@ function NS.Data:Load()
 											name = L["Keybind - PC / Keybind / Progress"],
 											tooltipImage = "",
 											tooltipText = L["Keybind - PC / Keybind / Progress - Tooltip"],
-											tooltipTextDynamic = function() if DB_GLOBAL.profile.INT_USEINTERACTKEY then return L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] else return nil end end,
+											tooltipTextDynamic = function() if addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY then return L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] else return nil end end,
 											tooltipImageType = "Small",
 											type = "Keybind",
 											order = 21,
 											hidden = function() return false end,
-											locked = function() return DB_GLOBAL.profile.INT_USEINTERACTKEY or addon.Interaction.Variables.Active end,
+											locked = function() return addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY or addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_KEY_PROGRESS end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS end,
 											setCriteria = function()
 												if not addon.Interaction.Variables.Active then
 													return true
@@ -1721,7 +1721,7 @@ function NS.Data:Load()
 											end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													DB_GLOBAL.profile.INT_KEY_PROGRESS = val
+													addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS = val
 												end
 											end
 										},
@@ -1737,7 +1737,7 @@ function NS.Data:Load()
 											locked = function() return addon.Interaction.Variables.Active end,
 											subcategory = 1,
 											category = Controls,
-											get = function() return DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD end,
 											setCriteria = function()
 												if not addon.Interaction.Variables.Active then
 													return true
@@ -1747,7 +1747,7 @@ function NS.Data:Load()
 											end,
 											set = function(_, val)
 												if not addon.Interaction.Variables.Active then
-													DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD = val
+													addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD = val
 												end
 											end
 										}
@@ -1759,7 +1759,7 @@ function NS.Data:Load()
 							name = L["Title - Controller"],
 							type = "Group",
 							order = 23,
-							hidden = function() return DB_GLOBAL.profile.INT_PLATFORM == 1 end,
+							hidden = function() return addon.Database.DB_GLOBAL.profile.INT_PLATFORM == 1 end,
 							category = Controls,
 							args = {
 								-- Group_Controller_Controller = {
@@ -1821,11 +1821,11 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 0,
 							category = Gameplay,
-							get = function() return DB_GLOBAL.profile.INT_WAYPOINT end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_WAYPOINT end,
 							set = function(_, val)
 								NS.Utils.ReloadPrompt()
 
-								DB_GLOBAL.profile.INT_WAYPOINT = val
+								addon.Database.DB_GLOBAL.profile.INT_WAYPOINT = val
 							end,
 						},
 						Checkbox_Waypoint_SoundEffects = {
@@ -1836,13 +1836,13 @@ function NS.Data:Load()
 							tooltipImageType = "Small",
 							type = "Checkbox",
 							order = 5,
-							hidden = function() return not DB_GLOBAL.profile.INT_WAYPOINT end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_WAYPOINT end,
 							locked = function() return false end,
 							subcategory = 1,
 							category = Gameplay,
-							get = function() return DB_GLOBAL.profile.INT_WAYPOINT_AUDIO end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_WAYPOINT_AUDIO end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_WAYPOINT_AUDIO = val
+								addon.Database.DB_GLOBAL.profile.INT_WAYPOINT_AUDIO = val
 							end,
 						},
 					}
@@ -1881,14 +1881,14 @@ function NS.Data:Load()
 							locked = function() return InteractionReadableUIFrame:IsVisible() end,
 							subcategory = 0,
 							category = Gameplay,
-							get = function() return DB_GLOBAL.profile.INT_READABLE end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 							set = function(_, val)
 								if not InteractionReadableUIFrame:IsVisible() then
 									NS.Utils.ReloadPrompt()
 
 									--------------------------------
 
-									DB_GLOBAL.profile.INT_READABLE = val
+									addon.Database.DB_GLOBAL.profile.INT_READABLE = val
 								end
 							end,
 						},
@@ -1896,7 +1896,7 @@ function NS.Data:Load()
 							name = L["Title - Readable"],
 							type = "Group",
 							order = 10,
-							hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 							locked = function() return InteractionReadableUIFrame:IsVisible() end,
 							category = Gameplay,
 							args = {
@@ -1904,7 +1904,7 @@ function NS.Data:Load()
 									name = L["Title - Readable / Display"],
 									type = "Group",
 									order = 11,
-									hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+									hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 									locked = function() return InteractionReadableUIFrame:IsVisible() end,
 									category = Gameplay,
 									args = {
@@ -1912,7 +1912,7 @@ function NS.Data:Load()
 											name = L["Title - Readable / Display"],
 											type = "Title",
 											order = 12,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
@@ -1925,14 +1925,14 @@ function NS.Data:Load()
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 13,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_DISPLAY_ALWAYS_SHOW_ITEM end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_DISPLAY_ALWAYS_SHOW_ITEM end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_DISPLAY_ALWAYS_SHOW_ITEM = val
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_DISPLAY_ALWAYS_SHOW_ITEM = val
 												end
 											end,
 										},
@@ -1942,7 +1942,7 @@ function NS.Data:Load()
 									name = L["Title - Readable / Viewport"],
 									type = "Group",
 									order = 14,
-									hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+									hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 									locked = function() return InteractionReadableUIFrame:IsVisible() end,
 									category = Gameplay,
 									args = {
@@ -1950,7 +1950,7 @@ function NS.Data:Load()
 											name = L["Title - Readable / Viewport"],
 											type = "Title",
 											order = 15,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
@@ -1963,14 +1963,14 @@ function NS.Data:Load()
 											tooltipImageType = "Small",
 											type = "Checkbox",
 											order = 16,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_CINEMATIC end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_CINEMATIC end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_CINEMATIC = val
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_CINEMATIC = val
 												end
 											end,
 										},
@@ -1980,7 +1980,7 @@ function NS.Data:Load()
 									name = L["Title - Readable / Shortcuts"],
 									type = "Group",
 									order = 17,
-									hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+									hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 									locked = function() return InteractionReadableUIFrame:IsVisible() end,
 									category = Gameplay,
 									args = {
@@ -1988,7 +1988,7 @@ function NS.Data:Load()
 											name = L["Title - Readable / Shortcuts"],
 											type = "Title",
 											order = 18,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
@@ -2001,20 +2001,20 @@ function NS.Data:Load()
 											tooltipImageType = "Large",
 											type = "Checkbox",
 											order = 19,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
-											get = function() return DB_GLOBAL.profile.INT_MINIMAP end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_MINIMAP end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													if DB_GLOBAL.profile.INT_MINIMAP ~= val then
+													if addon.Database.DB_GLOBAL.profile.INT_MINIMAP ~= val then
 														CallbackRegistry:Trigger("SETTINGS_MINIMAP_CHANGED")
 													end
 
 													--------------------------------
 
-													DB_GLOBAL.profile.INT_MINIMAP = val
+													addon.Database.DB_GLOBAL.profile.INT_MINIMAP = val
 												end
 											end
 										}
@@ -2024,7 +2024,7 @@ function NS.Data:Load()
 									name = L["Title - Readable / Audiobook"],
 									type = "Group",
 									order = 20,
-									hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+									hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 									locked = function() return InteractionReadableUIFrame:IsVisible() end,
 									category = Gameplay,
 									args = {
@@ -2032,7 +2032,7 @@ function NS.Data:Load()
 											name = L["Title - Readable / Audiobook"],
 											type = "Title",
 											order = 21,
-											hidden = function() return not DB_GLOBAL.profile.INT_READABLE end,
+											hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Gameplay,
@@ -2055,10 +2055,10 @@ function NS.Data:Load()
 											valueText = function(val)
 												return string.format("%.0f", (val + 10) * 10) .. "%"
 											end,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE = val;
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE = val;
 												end
 											end
 										},
@@ -2080,10 +2080,10 @@ function NS.Data:Load()
 											valueText = function(val)
 												return string.format("%.0f", val) .. "%"
 											end,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME = val
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME = val
 												end
 											end
 										},
@@ -2106,14 +2106,14 @@ function NS.Data:Load()
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Playback,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE = val
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE = val
 
-													local Voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
-													local Rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .25
-													local Volume = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
+													local Voice = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE or 1) - 1
+													local Rate = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .25
+													local Volume = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 													addon.TextToSpeech.Script:StopSpeakingText()
 													addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -2151,14 +2151,14 @@ function NS.Data:Load()
 											locked = function() return InteractionReadableUIFrame:IsVisible() end,
 											subcategory = 1,
 											category = Playback,
-											get = function() return DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL end,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL end,
 											set = function(_, val)
 												if not InteractionReadableUIFrame:IsVisible() then
-													DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL = val
+													addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL = val
 
-													local Voice = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL or 1) - 1
-													local Rate = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .25
-													local Volume = (DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
+													local Voice = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOICE_SPECIAL or 1) - 1
+													local Rate = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_RATE or 1) * .25
+													local Volume = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 													addon.TextToSpeech.Script:StopSpeakingText()
 													addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -2210,8 +2210,8 @@ function NS.Data:Load()
 							hidden = function() return false end,
 							subcategory = 0,
 							category = Playback,
-							get = function() return DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION end,
-							set = function(_, val) DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION = val end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION end,
+							set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION = val end,
 						},
 					}
 				}
@@ -2252,9 +2252,9 @@ function NS.Data:Load()
 							locked = function() return false end,
 							subcategory = 0,
 							category = More,
-							get = function() return DB_GLOBAL.profile.INT_AUDIO end,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_AUDIO end,
 							set = function(_, val)
-								DB_GLOBAL.profile.INT_AUDIO = val
+								addon.Database.DB_GLOBAL.profile.INT_AUDIO = val
 							end,
 						},
 					}

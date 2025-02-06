@@ -38,7 +38,7 @@ function NS.Navigation:Load()
 				--------------------------------
 
 				do -- MENU BUTTONS
-					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+					if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						-- CLOSE BUTTON
 						Callback:SetFrameRelatives({
 							["frame"] = Frame.CloseButton,
@@ -157,7 +157,7 @@ function NS.Navigation:Load()
 				--------------------------------
 
 				do -- MENU BUTTONS
-					if DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
+					if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
 						-- CLOSE BUTTON
 						Callback:SetFrameRelatives({
 							["frame"] = Parent.CloseButton,

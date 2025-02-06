@@ -443,7 +443,7 @@ function NS.Script:Load()
 		-- USE FOR GLOBAL TEXT SCALE WHEN IMPLEMENTED
 
 		-- local function Settings_ContentSize()
-		-- 	local TextSize = DB_GLOBAL.profile.INT_CONTENT_SIZE
+		-- 	local TextSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
 
 		-- 	local TargetScale = TextSize / 17.5
 		-- 	InteractionSettingsParent:SetScale(TargetScale)

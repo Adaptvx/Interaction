@@ -56,19 +56,19 @@ do
 			AdaptiveAPI.MeasurementText:Hide()
 
 			-- Gets the width & height of the given string.
-			---@param text string
-			---@param font string
-			---@param size number
-			---@param flags string
-			---@param justifyH? string
-			---@param justifyV? string
+			---@param frame fontstring
 			---@param maxWidth? number
 			---@param maxHeight? number
 			---@return width number
 			---@return height number
-			function AdaptiveAPI:GetStringSize(text, font, size, flags, justifyH, justifyV, maxWidth, maxHeight)
+			function AdaptiveAPI:GetStringSize(frame, maxWidth, maxHeight)
+				local font, size, flags = frame:GetFont()
+				local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
+
+				--------------------------------
+
 				AdaptiveAPI.MeasurementText:SetFont(font or GameFontNormal:GetFont(), size > 0 and size or 12.5, flags or "")
-				AdaptiveAPI.MeasurementText:SetText(text)
+				AdaptiveAPI.MeasurementText:SetText(frame:GetText())
 
 				if justifyH then
 					AdaptiveAPI.MeasurementText:SetJustifyH(justifyH)
@@ -78,13 +78,8 @@ do
 					AdaptiveAPI.MeasurementText:SetJustifyV(justifyV)
 				end
 
-				if maxWidth then
-					AdaptiveAPI.MeasurementText:SetWidth(maxWidth)
-				end
-
-				if maxHeight then
-					AdaptiveAPI.MeasurementText:SetHeight(maxHeight)
-				end
+				AdaptiveAPI.MeasurementText:SetWidth(maxWidth or frame:GetWidth())
+				AdaptiveAPI.MeasurementText:SetHeight(maxHeight or 1000)
 
 				--------------------------------
 
@@ -438,14 +433,7 @@ do
 		-- Formats x to be comma seperated.
 		---@param x number
 		function AdaptiveAPI:FormatNumber(x)
-			if x >= 1000 then
-				local formattedNumber = string.format("%d", x)
-				local reverseFormatted = formattedNumber:reverse()
-				local result = reverseFormatted:gsub("(%d%d%d)", "%1,")
-				return result:reverse()
-			else
-				return string.format("%.0f", x)
-			end
+			return BreakUpLargeNumbers(x)
 		end
 
 		-- Returns x amount coverted to gold, silver and copper.

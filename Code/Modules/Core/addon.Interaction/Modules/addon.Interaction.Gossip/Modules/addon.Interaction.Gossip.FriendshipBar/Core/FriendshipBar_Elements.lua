@@ -53,6 +53,7 @@ function NS.Elements:Load()
             Frame.Image:SetPoint("LEFT", Frame)
             Frame.Image:SetFrameStrata("FULLSCREEN")
             Frame.Image:SetFrameLevel(5)
+			Frame.Image:SetClipsChildren(true)
 
             --------------------------------
 
@@ -68,7 +69,6 @@ function NS.Elements:Load()
                 Frame.Image.Image:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
                 Frame.Image.Image:SetPoint("CENTER", Frame.Image)
                 Frame.Image.Image:SetFrameLevel(7)
-                Frame.Image.ImageTexture:SetMask(NS.Variables.PATH .. "image-mask.png")
             end
         end
 

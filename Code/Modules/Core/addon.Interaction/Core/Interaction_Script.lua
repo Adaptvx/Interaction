@@ -201,20 +201,20 @@ function NS.Script:Load()
 
 			do -- NAMEPLATE
 				C_Timer.After(0, function()
-					local Nameplate = C_NamePlate.GetNamePlateForUnit("npc")
+					local nameplate = C_NamePlate.GetNamePlateForUnit("npc")
 
 					--------------------------------
 
 					if not InCombatLockdown() then
-						if Nameplate then
-							Nameplate:Hide()
+						if nameplate then
+							nameplate:Hide()
 						end
 					end
 				end)
 			end
 
 			do -- START
-				if #addon.Interaction.Dialog.Variables.Temp_DialogStringList >= 1 and #addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] >= 1 then
+				if #addon.Interaction.Dialog.Variables.Temp_DialogStringList >= 1 and #addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] >= 1 and addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] ~= " " then
 					addon.Interaction.Dialog.Script:UpdateString(true)
 
 					--------------------------------
@@ -256,7 +256,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if IsInitalized and IsInteractingWithNPC and IsGossip and (DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP or (not DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP and not IsDialog and IsDialogFinished)) then
+			if IsInitalized and IsInteractingWithNPC and IsGossip and (addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP or (not addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP and not IsDialog and IsDialogFinished)) then
 				InteractionGossipFrame.ShowWithAnimation()
 
 				--------------------------------
@@ -274,7 +274,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST then
+			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST then
 				if (IsQuest and not IsGossip) then
 					InteractionQuestFrame.ShowWithAnimation()
 				else
@@ -488,8 +488,8 @@ function NS.Script:Load()
 
 			do -- TUTORIAL (SETTINGS)
 				CallbackRegistry:Add("START_INTERACTION", function()
-					if not DB_GLOBAL.profile.TutorialSettingsShown then
-						DB_GLOBAL.profile.TutorialSettingsShown = true
+					if not addon.Database.DB_GLOBAL.profile.TutorialSettingsShown then
+						addon.Database.DB_GLOBAL.profile.TutorialSettingsShown = true
 
 						--------------------------------
 

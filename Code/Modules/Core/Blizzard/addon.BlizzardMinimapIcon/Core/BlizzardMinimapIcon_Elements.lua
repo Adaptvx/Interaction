@@ -32,7 +32,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			NS.Variables.Icon = LibStub("LibDBIcon-1.0")
-			NS.Variables.Icon:Register("Interaction", LDB, DB_GLOBAL.profile.LibDBIcon)
+			NS.Variables.Icon:Register("Interaction", LDB, addon.Database.DB_GLOBAL.profile.LibDBIcon)
 		end
 	end
 

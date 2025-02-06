@@ -570,8 +570,8 @@ function NS.ItemUI.Script:Load()
 
 	do
 		local function Settings_ContentSize()
-			local item_textSize = DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
-			local book_textSize = DB_GLOBAL.profile.INT_CONTENT_SIZE * .75
+			local item_textSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
+			local book_textSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE * .75
 
 			--------------------------------
 

@@ -12,228 +12,12 @@ addon.Database = {}
 local NS = addon.Database
 
 do -- MAIN
-	DB_GLOBAL = nil
-	DB_LOCAL = nil
+	NS.DB_GLOBAL = nil
+	NS.DB_LOCAL = nil
 end
 
 do -- CONSTANTS
-
-end
-
---------------------------------
--- CINEMATIC
---------------------------------
-
-do
-	--------------------------------
-	-- VARIABLES
-	--------------------------------
-
-	do -- CONSTANTS
-		NS.VAR_CINEMATIC_ZOOM = nil
-		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MIN = nil
-		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MAX = nil
-		NS.VAR_CINEMATIC_ZOOM_PITCH = nil
-		NS.VAR_CINEMATIC_ZOOM_PITCH_LEVEL = nil
-		NS.VAR_CINEMATIC_ZOOM_FOV = nil
-		NS.VAR_CINEMATIC_PAN = nil
-		NS.VAR_CINEMATIC_PAN_SPEED = nil
-		NS.VAR_CINEMATIC_ACTIONCAM = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_SIDE = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_X = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y = nil
-		NS.VAR_CINEMATIC_VIGNETTE = nil
-		NS.VAR_CINEMATIC_VIGNETTE_GRADIENT = nil
-
-		NS.CINEMATIC_PROFILE_FULL =
-		{
-			true, -- ZOOM
-			0, -- ZOOM / MIN DISTANCE
-			10, -- ZOOM / MAX DISTANCE
-			false, -- ZOOM / PITCH
-			10, -- ZOOM / PITCH / LEVEL
-			true, -- ZOOM / FOV
-			false, -- PAN
-			.25, -- PAN / SPEED
-			true, -- ACTIONCAM
-			false, -- ACTIONCAM / SIDE VIEW
-			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
-			true, -- ACTIONCAM / OFFSET
-			10, -- ACTIONCAM / OFFSET / STRENGTH
-			true, -- ACTIONCAM / FOCUS
-			1, -- ACTIONCAM / FOCUS / STRENGTH
-			true, -- ACTIONCAM / FOCUS / X
-			false, -- ACTIONCAM / FOCUS / Y
-			true, -- VIGNETTE
-			true, -- VIGNETTE / GRADIENT
-		}
-
-		NS.CINEMATIC_PROFILE_BALANCED =
-		{
-			false, -- ZOOM
-			0, -- ZOOM / MIN DISTANCE
-			10, -- ZOOM / MAX DISTANCE
-			false, -- ZOOM / PITCH
-			10, -- ZOOM / PITCH / LEVEL
-			false, -- ZOOM / FOV
-			false, -- PAN
-			.25, -- PAN / SPEED
-			true, -- ACTIONCAM
-			false, -- ACTIONCAM / SIDE VIEW
-			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
-			true, -- ACTIONCAM / OFFSET
-			10, -- ACTIONCAM / OFFSET / STRENGTH
-			false, -- ACTIONCAM / FOCUS
-			1, -- ACTIONCAM / FOCUS / STRENGTH
-			false, -- ACTIONCAM / FOCUS / X
-			false, -- ACTIONCAM / FOCUS / Y
-			true, -- VIGNETTE
-			true, -- VIGNETTE / GRADIENT
-		}
-
-		NS.CINEMATIC_PROFILES = {
-			nil,                  -- NONE
-			NS.CINEMATIC_PROFILE_FULL, -- FULL
-			NS.CINEMATIC_PROFILE_BALANCED, -- BALANCED
-			nil                   -- CUSTOM
-		}
-	end
-
-	--------------------------------
-	-- FUNCTIONS
-	--------------------------------
-
-	do
-		function NS:SetToProfileCinematicVariables()
-			local offset = 0
-
-			local variables = {
-				"VAR_CINEMATIC_ZOOM",
-				"VAR_CINEMATIC_ZOOM_DISTANCE_MIN",
-				"VAR_CINEMATIC_ZOOM_DISTANCE_MAX",
-				"VAR_CINEMATIC_ZOOM_PITCH",
-				"VAR_CINEMATIC_ZOOM_PITCH_LEVEL",
-				"VAR_CINEMATIC_ZOOM_FOV",
-				"VAR_CINEMATIC_PAN",
-				"VAR_CINEMATIC_PAN_SPEED",
-				"VAR_CINEMATIC_ACTIONCAM",
-				"VAR_CINEMATIC_ACTIONCAM_SIDE",
-				"VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_OFFSET",
-				"VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_X",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_Y",
-				"VAR_CINEMATIC_VIGNETTE",
-				"VAR_CINEMATIC_VIGNETTE_GRADIENT"
-			}
-
-			local profile = {
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM,
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN,
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX,
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH,
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL,
-				DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_FOV,
-				DB_GLOBAL.profile.INT_CINEMATIC_PAN,
-				DB_GLOBAL.profile.INT_CINEMATIC_PAN_SPEED,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X,
-				DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y,
-				DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE,
-				DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE_GRADIENT
-			}
-
-			for i = 1, #variables do
-				NS[variables[i]] = profile[i + offset]
-			end
-		end
-
-		function NS:SetToPresetCinematicVariables(preset)
-			local offset = 0
-
-			local variables = {
-				"VAR_CINEMATIC_ZOOM",
-				"VAR_CINEMATIC_ZOOM_DISTANCE_MIN",
-				"VAR_CINEMATIC_ZOOM_DISTANCE_MAX",
-				"VAR_CINEMATIC_ZOOM_PITCH",
-				"VAR_CINEMATIC_ZOOM_PITCH_LEVEL",
-				"VAR_CINEMATIC_ZOOM_FOV",
-				"VAR_CINEMATIC_PAN",
-				"VAR_CINEMATIC_PAN_SPEED",
-				"VAR_CINEMATIC_ACTIONCAM",
-				"VAR_CINEMATIC_ACTIONCAM_SIDE",
-				"VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_OFFSET",
-				"VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_X",
-				"VAR_CINEMATIC_ACTIONCAM_FOCUS_Y",
-				"VAR_CINEMATIC_VIGNETTE",
-				"VAR_CINEMATIC_VIGNETTE_GRADIENT"
-			}
-
-			for i = 1, #variables do
-				NS[variables[i]] = preset[i + offset]
-			end
-		end
-
-		function NS:SetDynamicCinematicVariables()
-			-- 1 = NONE
-			-- 2 = FULL
-			-- 3 = BALANCED
-			-- 4 = CUSTOM
-
-			if addon.Cinematic and addon.Cinematic.Variables.Active then
-				return
-			end
-
-			if DB_GLOBAL.profile.INT_CINEMATIC_PRESET == 4 then
-				DB_GLOBAL.profile.INT_CINEMATIC = true
-
-				NS:SetToProfileCinematicVariables()
-			elseif DB_GLOBAL.profile.INT_CINEMATIC_PRESET > 1 then
-				DB_GLOBAL.profile.INT_CINEMATIC = true
-
-				NS:SetToPresetCinematicVariables(NS.CINEMATIC_PROFILES[DB_GLOBAL.profile.INT_CINEMATIC_PRESET])
-			else
-				DB_GLOBAL.profile.INT_CINEMATIC = false
-			end
-		end
-
-		function NS:PreventSetVariableDuringCinematicMode(name, value)
-			if addon.Interaction.Variables.Active or addon.Cinematic.Variables.Active then
-				return
-			end
-
-			DB_GLOBAL.profile[name] = value
-		end
-	end
-end
-
---------------------------------
--- MAIN
---------------------------------
-
-do
-	--------------------------------
-	-- VARIABLES
-	--------------------------------
-
-	local defaults = {
+	NS.DEFAULTS_GLOBAL = {
 		profile = {
 			-- SESSION
 			LastLoadedSession = nil,
@@ -359,19 +143,229 @@ do
 		},
 	}
 
-	local defaults_library = {
+	NS.DEFAULTS_LOCAL = {
 		profile = {
 			READABLE = {}
 		}
 	}
+end
 
+--------------------------------
+-- CINEMATIC
+--------------------------------
+
+do
+	--------------------------------
+	-- VARIABLES
+	--------------------------------
+
+	do -- CONSTANTS
+		NS.VAR_CINEMATIC_ZOOM = nil
+		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MIN = nil
+		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MAX = nil
+		NS.VAR_CINEMATIC_ZOOM_PITCH = nil
+		NS.VAR_CINEMATIC_ZOOM_PITCH_LEVEL = nil
+		NS.VAR_CINEMATIC_ZOOM_FOV = nil
+		NS.VAR_CINEMATIC_PAN = nil
+		NS.VAR_CINEMATIC_PAN_SPEED = nil
+		NS.VAR_CINEMATIC_ACTIONCAM = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_SIDE = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_X = nil
+		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y = nil
+		NS.VAR_CINEMATIC_VIGNETTE = nil
+		NS.VAR_CINEMATIC_VIGNETTE_GRADIENT = nil
+
+		NS.CINEMATIC_PROFILE_FULL =
+		{
+			true, -- ZOOM
+			0, -- ZOOM / MIN DISTANCE
+			10, -- ZOOM / MAX DISTANCE
+			false, -- ZOOM / PITCH
+			10, -- ZOOM / PITCH / LEVEL
+			true, -- ZOOM / FOV
+			false, -- PAN
+			.25, -- PAN / SPEED
+			true, -- ACTIONCAM
+			false, -- ACTIONCAM / SIDE VIEW
+			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
+			true, -- ACTIONCAM / OFFSET
+			10, -- ACTIONCAM / OFFSET / STRENGTH
+			true, -- ACTIONCAM / FOCUS
+			1, -- ACTIONCAM / FOCUS / STRENGTH
+			true, -- ACTIONCAM / FOCUS / X
+			false, -- ACTIONCAM / FOCUS / Y
+			true, -- VIGNETTE
+			true, -- VIGNETTE / GRADIENT
+		}
+
+		NS.CINEMATIC_PROFILE_BALANCED =
+		{
+			false, -- ZOOM
+			0, -- ZOOM / MIN DISTANCE
+			10, -- ZOOM / MAX DISTANCE
+			false, -- ZOOM / PITCH
+			10, -- ZOOM / PITCH / LEVEL
+			false, -- ZOOM / FOV
+			false, -- PAN
+			.25, -- PAN / SPEED
+			true, -- ACTIONCAM
+			false, -- ACTIONCAM / SIDE VIEW
+			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
+			true, -- ACTIONCAM / OFFSET
+			10, -- ACTIONCAM / OFFSET / STRENGTH
+			false, -- ACTIONCAM / FOCUS
+			1, -- ACTIONCAM / FOCUS / STRENGTH
+			false, -- ACTIONCAM / FOCUS / X
+			false, -- ACTIONCAM / FOCUS / Y
+			true, -- VIGNETTE
+			true, -- VIGNETTE / GRADIENT
+		}
+
+		NS.CINEMATIC_PROFILES = {
+			nil,                  -- NONE
+			NS.CINEMATIC_PROFILE_FULL, -- FULL
+			NS.CINEMATIC_PROFILE_BALANCED, -- BALANCED
+			nil                   -- CUSTOM
+		}
+	end
+
+	--------------------------------
+	-- FUNCTIONS
+	--------------------------------
+
+	do
+		function NS:SetToProfileCinematicVariables()
+			local offset = 0
+
+			local variables = {
+				"VAR_CINEMATIC_ZOOM",
+				"VAR_CINEMATIC_ZOOM_DISTANCE_MIN",
+				"VAR_CINEMATIC_ZOOM_DISTANCE_MAX",
+				"VAR_CINEMATIC_ZOOM_PITCH",
+				"VAR_CINEMATIC_ZOOM_PITCH_LEVEL",
+				"VAR_CINEMATIC_ZOOM_FOV",
+				"VAR_CINEMATIC_PAN",
+				"VAR_CINEMATIC_PAN_SPEED",
+				"VAR_CINEMATIC_ACTIONCAM",
+				"VAR_CINEMATIC_ACTIONCAM_SIDE",
+				"VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_OFFSET",
+				"VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_X",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_Y",
+				"VAR_CINEMATIC_VIGNETTE",
+				"VAR_CINEMATIC_VIGNETTE_GRADIENT"
+			}
+
+			local profile = {
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MIN,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_DISTANCE_MAX,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_PITCH_LEVEL,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ZOOM_FOV,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_PAN,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_PAN_SPEED,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_SIDE_STRENGTH,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_X,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_ACTIONCAM_FOCUS_Y,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE,
+				NS.DB_GLOBAL.profile.INT_CINEMATIC_VIGNETTE_GRADIENT
+			}
+
+			for i = 1, #variables do
+				NS[variables[i]] = profile[i + offset]
+			end
+		end
+
+		function NS:SetToPresetCinematicVariables(preset)
+			local offset = 0
+
+			local variables = {
+				"VAR_CINEMATIC_ZOOM",
+				"VAR_CINEMATIC_ZOOM_DISTANCE_MIN",
+				"VAR_CINEMATIC_ZOOM_DISTANCE_MAX",
+				"VAR_CINEMATIC_ZOOM_PITCH",
+				"VAR_CINEMATIC_ZOOM_PITCH_LEVEL",
+				"VAR_CINEMATIC_ZOOM_FOV",
+				"VAR_CINEMATIC_PAN",
+				"VAR_CINEMATIC_PAN_SPEED",
+				"VAR_CINEMATIC_ACTIONCAM",
+				"VAR_CINEMATIC_ACTIONCAM_SIDE",
+				"VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_OFFSET",
+				"VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_X",
+				"VAR_CINEMATIC_ACTIONCAM_FOCUS_Y",
+				"VAR_CINEMATIC_VIGNETTE",
+				"VAR_CINEMATIC_VIGNETTE_GRADIENT"
+			}
+
+			for i = 1, #variables do
+				NS[variables[i]] = preset[i + offset]
+			end
+		end
+
+		function NS:SetDynamicCinematicVariables()
+			-- 1 = NONE
+			-- 2 = FULL
+			-- 3 = BALANCED
+			-- 4 = CUSTOM
+
+			if addon.Cinematic and addon.Cinematic.Variables.Active then
+				return
+			end
+
+			if NS.DB_GLOBAL.profile.INT_CINEMATIC_PRESET == 4 then
+				NS.DB_GLOBAL.profile.INT_CINEMATIC = true
+
+				NS:SetToProfileCinematicVariables()
+			elseif NS.DB_GLOBAL.profile.INT_CINEMATIC_PRESET > 1 then
+				NS.DB_GLOBAL.profile.INT_CINEMATIC = true
+
+				NS:SetToPresetCinematicVariables(NS.CINEMATIC_PROFILES[NS.DB_GLOBAL.profile.INT_CINEMATIC_PRESET])
+			else
+				NS.DB_GLOBAL.profile.INT_CINEMATIC = false
+			end
+		end
+
+		function NS:PreventSetVariableDuringCinematicMode(name, value)
+			if addon.Interaction.Variables.Active or addon.Cinematic.Variables.Active then
+				return
+			end
+
+			NS.DB_GLOBAL.profile[name] = value
+		end
+	end
+end
+
+--------------------------------
+-- MAIN
+--------------------------------
+
+do
 	--------------------------------
 	-- INITIALIZE
 	--------------------------------
 
 	function NS:OnInitialize()
-		DB_GLOBAL = AceDB:New("InteractionDB", defaults, true)
-		DB_LOCAL = AceDB:New("InteractionLibraryDB", defaults_library, true)
+		NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
+		NS.DB_LOCAL = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL, true)
 
 		NS:SetDynamicCinematicVariables()
 	end
@@ -398,8 +392,8 @@ do
 	end
 
 	function NS:ResetSettings()
-		DB_GLOBAL = NS.CopyTable(defaults)
-		InteractionDB = NS.CopyTable(defaults)
+		NS.DB_GLOBAL = NS.CopyTable(NS.DEFAULTS_GLOBAL)
+		InteractionDB = NS.CopyTable(NS.DEFAULTS_GLOBAL)
 	end
 end
 

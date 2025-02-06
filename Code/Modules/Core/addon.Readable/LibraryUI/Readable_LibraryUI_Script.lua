@@ -14,8 +14,8 @@ function NS.LibraryUI.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	NS.Variables.LIBRARY_LOCAL = DB_LOCAL.profile.READABLE
-	NS.Variables.LIBRARY_GLOBAL = DB_GLOBAL.profile.INT_GLOBAL_LIBRARY.READABLE
+	NS.Variables.LIBRARY_LOCAL = addon.Database.DB_LOCAL.profile.READABLE
+	NS.Variables.LIBRARY_GLOBAL = addon.Database.DB_GLOBAL.profile.INT_GLOBAL_LIBRARY.READABLE
 
 	local Callback = NS.Script
 	local LibraryCallback = NS.LibraryUI.Script
@@ -927,18 +927,6 @@ function NS.LibraryUI.Script:Load()
 						GlobalDB[name] = data
 					end
 				end
-			end
-
-			function Test(type)
-				if type == "global" then
-					LibraryCallback:SetToGlobal()
-				else
-					LibraryCallback:SetToLocal()
-				end
-			end
-
-			function Test2()
-				LibraryCallback:AddCharacterToGlobal()
 			end
 		end
 	end

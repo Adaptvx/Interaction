@@ -19,8 +19,8 @@ end
 do -- CONSTANTS
 	NS.PATH = "Interface/AddOns/Interaction/"
 
-	NS.VERSION_STRING = "0.0.4"
-	NS.VERSION_NUMBER = 000004 -- XX.XX.XX
+	NS.VERSION_STRING = "0.0.5"
+	NS.VERSION_NUMBER = 000005 -- XX.XX.XX
 	NS.IS_CLASSIC = select(4, GetBuildInfo()) < 110000
 	NS.IS_CLASSIC_ERA = select(4, GetBuildInfo()) < 20000
 
@@ -52,7 +52,7 @@ end
 
 do
 	C_Timer.After(NS.INIT_DELAY_1, function()
-		NS.Platform = DB_GLOBAL.profile.INT_PLATFORM
+		NS.Platform = addon.Database.DB_GLOBAL.profile.INT_PLATFORM
 	end)
 end
 

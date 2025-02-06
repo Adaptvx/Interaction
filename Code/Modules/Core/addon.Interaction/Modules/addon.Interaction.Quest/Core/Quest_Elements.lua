@@ -564,6 +564,10 @@ function NS.Elements:Load()
 								-- Lua Taint?
 								-- Blizzard GameTooltip Code
 
+								local rewardType = NS.Script:GetQuestRewardType(Button.Type, Button.Index)
+
+								--------------------------------
+
 								GameTooltip:SetOwner(Button, "ANCHOR_TOPRIGHT", 0, 0);
 
 								if (Button.Type == "spell") then
@@ -577,10 +581,10 @@ function NS.Elements:Load()
 									else
 										GameTooltip:SetSpellByID(Button.Callback.rewardSpellID)
 									end
-								elseif (Button.Callback.objectType == "item") then
+								elseif (rewardType == "item") then
 									GameTooltip:SetQuestItem(Button.Callback.type, Button.Callback:GetID())
 									GameTooltip_ShowCompareItem(GameTooltip)
-								elseif (Button.Callback.objectType == "currency") then
+								elseif (rewardType == "currency") then
 									GameTooltip:SetQuestCurrency(Button.Callback.type, Button.Callback:GetID())
 								end
 
@@ -786,9 +790,7 @@ function NS.Elements:Load()
 					local function UpdateSize()
 						frame:SetWidth(Frame.ScrollChildFrame:GetWidth() * (customWidthModifier or 1))
 
-						local fontName, fontSize, fontFlags = frame:GetFont()
-						local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
-						local _, textHeight = AdaptiveAPI:GetStringSize(frame:GetText(), fontName, fontSize, fontFlags, justifyH, justifyV, frame:GetWidth())
+						local _, textHeight = AdaptiveAPI:GetStringSize(frame, frame:GetWidth())
 						frame:SetHeight(textHeight)
 					end
 					UpdateSize()

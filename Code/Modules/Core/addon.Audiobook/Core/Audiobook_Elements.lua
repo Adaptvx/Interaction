@@ -198,8 +198,7 @@ function NS.Elements:Load()
 
 								---------------------------------
 
-								local string = Frame.Content.Text.Index.Text:GetText()
-								local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(string, AdaptiveAPI.Fonts.Content_Light, 15, "", "LEFT", "MIDDLE", nil, nil)
+								local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(Frame.Content.Text.Index.Text, nil, nil)
 								local width = (PADDING / 2) + stringWidth + (PADDING / 2)
 
 								---------------------------------
@@ -261,9 +260,8 @@ function NS.Elements:Load()
 
 					do -- EVENTS
 						local function UpdateSize()
-							local text = Frame.TextPreviewFrame.Content.Text:GetText()
 							local maxWidth = Frame.Content:GetWidth() * .75
-							local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(text, AdaptiveAPI.Fonts.Content_Light, 12.5, "", "LEFT", "TOP", maxWidth, nil)
+							local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(Frame.TextPreviewFrame.Content.Text, maxWidth, nil)
 
 							--------------------------------
 

@@ -154,7 +154,7 @@ function NS.Script:Load()
 		--------------------------------
 
 		local function Update()
-			if DB_GLOBAL.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
+			if addon.Database.DB_GLOBAL.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
 				if not NS.Variables.SetElementsActive then
 					Callback:SetElements()
 				end

@@ -23,7 +23,7 @@ function NS.Variables:Load()
 		NS.Variables.ID = nil
 		NS.Variables.QuestID = nil
 
-		NS.Variables.AudioEnable = DB_GLOBAL.profile.INT_WAYPOINT_AUDIO
+		NS.Variables.AudioEnable = addon.Database.DB_GLOBAL.profile.INT_WAYPOINT_AUDIO
 	end
 
 	do -- CONSTANTS
@@ -46,7 +46,7 @@ function NS.Variables:Load()
 
 	do
 		CallbackRegistry:Add("SETTINGS_CHANGED", function()
-			NS.Variables.AudioEnable = DB_GLOBAL.profile.INT_WAYPOINT_AUDIO
+			NS.Variables.AudioEnable = addon.Database.DB_GLOBAL.profile.INT_WAYPOINT_AUDIO
 		end, 2)
 	end
 end

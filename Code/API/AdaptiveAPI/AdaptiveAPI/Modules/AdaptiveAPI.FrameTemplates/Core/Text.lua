@@ -35,110 +35,110 @@ do
 
 		--------------------------------
 
-		local RecommendedColor = false
+		local isRecommendedColor = false
 
 		--------------------------------
 
-        local Parent = CreateFrame("Frame", name or nil, parent)
-		Parent:SetAllPoints(parent)
+		local Parent = CreateFrame("Frame", name or nil, parent)
+		Parent:SetAllPoints(parent, true)
 
 		local Frame = CreateFrame("Frame", name or nil, Parent)
-		Frame:SetAllPoints(Parent)
-
-		local HTML
-		local Label
+		Frame:SetAllPoints(Parent, true)
 
 		--------------------------------
 
-		Label = Frame:CreateFontString(name or nil, "OVERLAY")
-		if createHtml then
-			local _, fontHeight, _ = Label:GetFont()
-			if fontHeight <= 0 then
-				fontHeight = DB_GLOBAL.profile.INT_CONTENT_SIZE
+		do -- TEXT
+			Frame.Text = Frame:CreateFontString(name or nil, "OVERLAY")
+
+			if fontFile then
+				Frame.Text:SetFont(fontFile, 11, "")
 			end
 
-			--------------------------------
+			if textSize then
+				Frame.Text:SetFont(fontFile, textSize, "")
+			end
 
-			HTML = CreateFrame("SimpleHTML", (name and name .. "HTML") or nil, Frame)
-			HTML:SetFont("P", QuestFont:GetFont(), fontHeight, "")
-			HTML:SetFont("H1", AdaptiveAPI.Fonts.Title_Medium, 48, "")
-			HTML:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
-			HTML:SetFont("H3", AdaptiveAPI.Fonts.Title_Medium, 28, "")
-			HTML:SetTextColor("P", textColor.r, textColor.g, textColor.b)
-			HTML:SetTextColor("H1", textColor.r, textColor.g, textColor.b)
-			HTML:SetTextColor("H2", textColor.r, textColor.g, textColor.b)
-			HTML:SetTextColor("H3", textColor.r, textColor.g, textColor.b)
+			if alignH then
+				Frame.Text:SetJustifyH(alignH)
+			end
 
-			--------------------------------
+			if alignV then
+				Frame.Text:SetJustifyV(alignV)
+			end
 
-			local function UpdateFormatting()
-				local _, fontHeight, _ = Label:GetFont()
+			if textColor then
+				Frame.Text:SetTextColor(textColor.r, textColor.g, textColor.b)
+			end
+		end
+
+		do -- HTML
+			if createHtml then
+				local _, fontHeight, _ = Frame.Text:GetFont()
 				if fontHeight <= 0 then
-					fontHeight = DB_GLOBAL.profile.INT_CONTENT_SIZE
+					fontHeight = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
 				end
 
 				--------------------------------
 
-				HTML:SetFont("P", QuestFont:GetFont(), fontHeight, "")
-				HTML:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
+				Frame.Html = CreateFrame("SimpleHTML", (name and name .. "HTML") or nil, Frame)
+				Frame.Html:SetFont("P", QuestFont:GetFont(), fontHeight, "")
+				Frame.Html:SetFont("H1", AdaptiveAPI.Fonts.Title_Medium, 48, "")
+				Frame.Html:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
+				Frame.Html:SetFont("H3", AdaptiveAPI.Fonts.Title_Medium, 28, "")
+				Frame.Html:SetTextColor("P", textColor.r, textColor.g, textColor.b)
+				Frame.Html:SetTextColor("H1", textColor.r, textColor.g, textColor.b)
+				Frame.Html:SetTextColor("H2", textColor.r, textColor.g, textColor.b)
+				Frame.Html:SetTextColor("H3", textColor.r, textColor.g, textColor.b)
 
 				--------------------------------
 
-				if AdaptiveAPI:FindString(Label:GetText(), "<HTML>") then
-					HTML:SetSize(Label:GetWidth() * 1.5, Label:GetStringHeight())
-					HTML:SetScale(.625)
-					HTML:SetPoint("TOP", Label)
+				local function UpdateFormatting()
+					local _, fontHeight, _ = Frame.Text:GetFont()
+					if fontHeight <= 0 then
+						fontHeight = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
+					end
 
-					local text = Label:GetText()
-					local formattedText = text:gsub('<IMG src="Interface\\Common\\spacer.->', '')
+					--------------------------------
 
-					HTML:SetText(formattedText)
+					Frame.Html:SetFont("P", QuestFont:GetFont(), fontHeight, "")
+					Frame.Html:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
 
-					HTML:SetAlpha(1)
-					Label:SetAlpha(0)
-				else
-					HTML:SetAlpha(0)
-					Label:SetAlpha(1)
+					--------------------------------
+
+					if AdaptiveAPI:FindString(Frame.Text:GetText(), "<HTML>") then
+						Frame.Html:SetSize(Frame.Text:GetWidth() * 1.5, Frame.Text:GetStringHeight())
+						Frame.Html:SetScale(.625)
+						Frame.Html:SetPoint("TOP", Frame.Text)
+
+						local text = Frame.Text:GetText()
+						local formattedText = text:gsub('<IMG src="Interface\\Common\\spacer.->', '')
+
+						Frame.Html:SetText(formattedText)
+
+						Frame.Html:SetAlpha(1)
+						Frame.Text:SetAlpha(0)
+					else
+						Frame.Html:SetAlpha(0)
+						Frame.Text:SetAlpha(1)
+					end
 				end
+
+				hooksecurefunc(Frame.Text, "SetText", UpdateFormatting)
+				hooksecurefunc(Frame.Text, "SetFont", UpdateFormatting)
 			end
-
-			hooksecurefunc(Label, "SetText", UpdateFormatting)
-			hooksecurefunc(Label, "SetFont", UpdateFormatting)
-		end
-
-		--------------------------------
-
-		if fontFile then
-			Label:SetFont(fontFile, 11, "")
-		end
-
-		if textSize then
-			Label:SetFont(fontFile, textSize, "")
-		end
-
-		if alignH then
-			Label:SetJustifyH(alignH)
-		end
-
-		if alignV then
-			Label:SetJustifyV(alignV)
-		end
-
-		if textColor then
-			Label:SetTextColor(textColor.r, textColor.g, textColor.b)
 		end
 
 		--------------------------------
 
 		local function UpdateTheme()
 			if textColor == AdaptiveAPI.RGB_RECOMMENDED or textColor == AdaptiveAPI.NativeCallback.Theme.RGB_RECOMMENDED then
-				RecommendedColor = true
+				isRecommendedColor = true
 			end
 
 			--------------------------------
 
-			if RecommendedColor then
-				Label:SetTextColor(AdaptiveAPI.RGB_RECOMMENDED.r, AdaptiveAPI.RGB_RECOMMENDED.g, AdaptiveAPI.RGB_RECOMMENDED.b)
+			if isRecommendedColor then
+				Frame.Text:SetTextColor(AdaptiveAPI.RGB_RECOMMENDED.r, AdaptiveAPI.RGB_RECOMMENDED.g, AdaptiveAPI.RGB_RECOMMENDED.b)
 			end
 		end
 
@@ -147,6 +147,6 @@ do
 
 		--------------------------------
 
-		return Label
+		return Frame.Text
 	end
 end

@@ -255,6 +255,31 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		do -- UTILITIES
+			local TYPE_ITEM = 0
+			local TYPE_CURRENCY = 1
+
+			function Callback:GetQuestRewardType(type, index)
+				local questItemInfoType = GetQuestItemInfoLootType and GetQuestItemInfoLootType(type, index) or 0
+
+				--------------------------------
+
+				if questItemInfoType == TYPE_ITEM then
+					local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, index)
+
+					if #name <= 1 then
+						return "currency"
+					else
+						return "item"
+					end
+				end
+
+				if questItemInfoType == TYPE_CURRENCY then
+					return "currency"
+				end
+			end
+		end
+
 		do -- BUTTONS
 			do -- GET
 				Frame.GetButtons_Choice = function()
@@ -438,7 +463,7 @@ function NS.Script:Load()
 					local CALLBACK_LABEL = _G[callbacks[i]:GetDebugName() .. "Name"]
 					local CALLBACK_ICON = callbacks[i].Icon
 					local CALLBACK_COUNT_LABEL = _G[callbacks[i]:GetDebugName() .. "Count"]
-					local numCallbackCount = callbacks[i].count
+					local numCallbackCount = callbacks[i].count or 0
 
 					--------------------------------
 
@@ -660,6 +685,10 @@ function NS.Script:Load()
 
 			Frame.SetData = function()
 				do -- TEXT
+					if not QuestFrame:IsVisible() then
+						return
+					end
+
 					local TITLE = QuestInfoTitleHeader
 					local TITLE_PROGRESS = QuestProgressTitleText
 					local HEADER_OBJECTIVES = QuestInfoObjectivesHeader
@@ -972,9 +1001,6 @@ function NS.Script:Load()
 		end
 
 		do -- QUALITY
-			local TYPE_ITEM = 0
-			local TYPE_CURRENCY = 1
-
 			local itemIndex = 1
 			local currencyIndex = 1
 
@@ -1019,7 +1045,7 @@ function NS.Script:Load()
 					end
 				elseif type == "required" then
 					if not addon.Variables.IS_CLASSIC then -- Retail
-						local currencyInfo = C_QuestOffer.GetQuestRequiredCurrencyInfo(type, currencyIndex)
+						local currencyInfo = C_QuestOffer.GetQuestRequiredCurrencyInfo(currencyIndex)
 
 						--------------------------------
 
@@ -1047,12 +1073,12 @@ function NS.Script:Load()
 			end
 
 			local function ParseType(type, index)
-				local questItemInfoType = GetQuestItemInfoLootType and GetQuestItemInfoLootType(type, index) or 0
+				local rewardType = Callback:GetQuestRewardType(type, index)
 				local resultQuality
 
 				--------------------------------
 
-				if questItemInfoType == TYPE_ITEM then
+				if rewardType == "item" then
 					local name, _, _, quality, _, _ = GetQuestItem(type)
 					resultQuality = quality
 
@@ -1067,7 +1093,7 @@ function NS.Script:Load()
 					return resultQuality
 				end
 
-				if questItemInfoType == TYPE_CURRENCY then
+				if rewardType == "currency" then
 					resultQuality = GetQuestCurrency(type)
 
 					--------------------------------
@@ -1129,7 +1155,7 @@ function NS.Script:Load()
 				if not Frame.hidden then
 					Frame:Show()
 				end
-			end, .075)
+			end, .025)
 
 			--------------------------------
 
@@ -1209,13 +1235,13 @@ function NS.Script:Load()
 					if not Frame.hidden then
 						Frame.SetData()
 					end
-				end, .025)
+				end, 0)
 			end
 
 			do -- UPDATE
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					Frame.UpdateAll()
-				end, .275)
+				end, .225)
 			end
 
 			--------------------------------
@@ -1377,7 +1403,7 @@ function NS.Script:Load()
 		Settings_ThemeUpdate()
 
 		local function Settings_UIDirection()
-			local Settings_UIDirection = DB_GLOBAL.profile.INT_UIDIRECTION
+			local Settings_UIDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
 
 			local offsetY = 0
 			local screenWidth = addon.API:GetScreenWidth()
@@ -1429,8 +1455,8 @@ function NS.Script:Load()
 				[4] = .725,
 			}
 
-			local widthModifier = presetWidthModifier[DB_GLOBAL.profile.INT_QUESTFRAME_SIZE]
-			local sizeModifier = presetSizeModifier[DB_GLOBAL.profile.INT_QUESTFRAME_SIZE]
+			local widthModifier = presetWidthModifier[addon.Database.DB_GLOBAL.profile.INT_QUESTFRAME_SIZE]
+			local sizeModifier = presetSizeModifier[addon.Database.DB_GLOBAL.profile.INT_QUESTFRAME_SIZE]
 			local defaultSize = { x = 625 * widthModifier, y = 625 }
 			local targetSize = { x = defaultSize.x * sizeModifier, y = defaultSize.y * sizeModifier }
 
@@ -1477,9 +1503,9 @@ function NS.Script:Load()
 		--------------------------------
 
 		Frame:SetScript("OnMouseUp", function(self, button)
-			if DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
+			if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
 				InteractionDialogFrame.ReturnToPreviousDialog()
-			elseif DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
+			elseif addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
 				InteractionDialogFrame.ReturnToPreviousDialog()
 			end
 		end)

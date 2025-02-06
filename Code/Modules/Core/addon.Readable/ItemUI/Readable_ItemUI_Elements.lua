@@ -29,8 +29,8 @@ function NS.ItemUI.Elements:Load()
 
 			--------------------------------
 
-			local TEXT_SIZE_ITEM = DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
-			local TEXT_SIZE_BOOK = DB_GLOBAL.profile.INT_CONTENT_SIZE * .75
+			local TEXT_SIZE_ITEM = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
+			local TEXT_SIZE_BOOK = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE * .75
 
 			do -- TOOLTIP FRAME
 				ReadableUIFrame.TooltipFrame = CreateFrame("Frame", "$parent.TooltipFrame", ReadableUIFrame)
@@ -241,7 +241,7 @@ function NS.ItemUI.Elements:Load()
 						end
 
 						do -- TEXT
-							ReadableUIFrame.ItemFrame.ScrollFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollChild, addon.Theme.RGB_BLACK, DB_GLOBAL.profile.INT_CONTENT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+							ReadableUIFrame.ItemFrame.ScrollFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollChild, addon.Theme.RGB_BLACK, addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
 							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetSize(ReadableUIFrame.ItemFrame.ScrollChild:GetWidth(), 5000)
 							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetPoint("TOP", ReadableUIFrame.ItemFrame.ScrollChild)
 						end
