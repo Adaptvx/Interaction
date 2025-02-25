@@ -1,10 +1,10 @@
-## Interface: 40401
+## Interface: 40402
 ## Title: Interaction
 ## Notes: Immersive lore and quest add-on.
 ## Notes-ruRU: Захватывающий аддон к сюжету и заданиям.
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.0.5
+## Version: 0.0.6
 ## SavedVariables: InteractionDB
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI
@@ -25,8 +25,7 @@ Code/Foundation/Load.xml
 # API
 # --------------------------------
 
-Code/API/API.lua
-Code/API/AdaptiveAPI/AdaptiveAPI/Load.xml
+Code/API/Load.xml
 
 # --------------------------------
 # Modules

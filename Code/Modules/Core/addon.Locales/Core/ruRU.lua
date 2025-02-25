@@ -1,6 +1,7 @@
 -- Localization and translation ZamestoTV
 
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -86,7 +87,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Скрыть пользовательский интерфейс"
 		L["Checkbox - Hide UI - Tooltip"] = "Скрывает пользовательский интерфейс во время взаимодействия с НПС.\n\nПо умолчанию: Вкл."
 		L["Range - Cinematic"] = "Эффекты камеры"
-		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: СБАЛАНСИРОВАННЫЙ."
+		L["Range - Cinematic - Tooltip"] = "Эффекты камеры во время взаимодействия.\n\nПо умолчанию: ВСЕ."
 		L["Range - Cinematic - None"] = "НЕТ"
 		L["Range - Cinematic - Full"] = "ВСЕ"
 		L["Range - Cinematic - Balanced"] = "СБАЛАНСИРОВАННЫЙ"
@@ -304,7 +305,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " перетащить.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " Закрыть."
+		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " перетащить.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " Закрыть."
 	end
 
 	--------------------------------

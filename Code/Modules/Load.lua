@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -14,7 +15,6 @@ function NS:Load()
 		addon.Locales:Load()
 
 		addon.BlizzardFrames:Load()
-		addon.BlizzardGameTooltip:Load()
 		addon.BlizzardSettings:Load()
 		addon.BlizzardSound:Load()
 		addon.BlizzardMinimapIcon:Load()
@@ -26,6 +26,7 @@ function NS:Load()
 		addon.ConsoleVariables:Load()
 		addon.ContextIcon:Load()
 		addon.ControlGuide:Load()
+		addon.GameTooltip:Load()
 		addon.HideUI:Load()
 		addon.PlayerStatusBar:Load()
 		addon.Input:Load()

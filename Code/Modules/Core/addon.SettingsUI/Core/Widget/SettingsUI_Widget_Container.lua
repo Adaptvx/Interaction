@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -33,17 +34,17 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		local function UpdateTheme()
 			if addon.Theme.IsDarkTheme then
 				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark.png"
-				Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+				Frame.TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED
 				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_DarkTheme
 			else
 				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory.png"
-				Frame.TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+				Frame.TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED
 				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_LightTheme
 			end
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 0)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 0)
 	end
 
 	do -- TOOLTIP
@@ -59,7 +60,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			end
 
 			if tooltipText then
-				if Frame:IsVisible() and addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
+				if Frame:IsVisible() and addon.API.Main:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
 					if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
 						local text = tooltipText
 						if tooltipTextDynamic and tooltipTextDynamic() then
@@ -101,14 +102,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		end
 
 		if background or tooltipText then
-			Frame.hoverFrame = AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame,
-				function()
-					Frame.Enter()
-				end,
-				function()
-					Frame.Leave()
-				end
-				, nil, nil)
+			Frame.hoverFrame = addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = function() Frame.Enter() end, leaveCallback = function() Frame.Leave() end })
 		end
 	end
 
@@ -120,12 +114,12 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 				-- FRAME
 				for x = 1, subcategory do
-					Frame["Icon" .. x], Frame["IconTexture" .. x] = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, Frame:GetFrameStrata(), Frame.TEXTURE_Subcategory)
+					Frame["Icon" .. x], Frame["IconTexture" .. x] = addon.API.FrameTemplates:CreateTexture(Frame, Frame:GetFrameStrata(), Frame.TEXTURE_Subcategory)
 					Frame["Icon" .. x]:SetSize(height or 45, height or 52.5)
 					Frame["Icon" .. x]:SetPoint("LEFT", Frame, 7.5 + (INDENTATION) * (x - 1), 0)
 
 					-- THEME
-					addon.API:RegisterThemeUpdate(function()
+					addon.API.Main:RegisterThemeUpdate(function()
 						Frame["IconTexture" .. x]:SetTexture(Frame.TEXTURE_Subcategory)
 					end, 5)
 				end
@@ -144,14 +138,14 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 		do -- BACKGROUND
 			if background then
-				Frame.Background, Frame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
+				Frame.Background, Frame.backgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
 				Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
 				Frame.Background:SetPoint("CENTER", Frame)
 				Frame.Background:SetFrameLevel(0)
 				Frame.Background:SetAlpha(0)
 
 				-- THEME
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					Frame.backgroundTexture:SetVertexColor(Frame.COLOR_Background.r, Frame.COLOR_Background.g, Frame.COLOR_Background.b, Frame.COLOR_Background.a)
 				end, 5)
 			end
@@ -160,7 +154,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		do -- TEXT
 			local Padding = 10
 
-			Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+			Frame.Text = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
 			Frame.Text:SetSize(Frame.Container:GetWidth() - 150 - Padding, Frame.Container:GetHeight())
 			Frame.Text:SetPoint("LEFT", Frame.Container, Padding / 2, 0)
 			Frame.Text:SetAlpha(.75)

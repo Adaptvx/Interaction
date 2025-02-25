@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Input
@@ -43,7 +44,7 @@ function NS.Script:Load()
 			end
 
 			local function PreventInput()
-				addon.API:PreventInput(Callback.KeybindFrame)
+				addon.API.Main:PreventInput(Callback.KeybindFrame)
 			end
 
 			--------------------------------
@@ -159,7 +160,7 @@ function NS.Script:Load()
 						if (Checks.IsQuest) and (result) then
 							do -- Progress
 								if GetMatchingKey(key, NS.Variables.Key_Progress) then
-									local isAutoAccept = addon.API:IsAutoAccept()
+									local isAutoAccept = addon.API.Main:IsAutoAccept()
 
 									--------------------------------
 
@@ -435,6 +436,10 @@ function NS.Script:Load()
 				end
 
 				function Callback:Input_Gamepad(_, key)
+					local result = true
+
+					--------------------------------
+
 					UpdateChecks()
 
 					--------------------------------
@@ -448,44 +453,50 @@ function NS.Script:Load()
 
 								--------------------------------
 
-								if GetMatchingKey(key, NS.Variables.Key_ScrollUp) then
+								if (GetMatchingKey(key, NS.Variables.Key_ScrollUp)) and (result) then
 									if Callback:Nav_ScrollUp() then
 										PreventInput()
+										result = false
 									end
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_ScrollDown) then
+								if (GetMatchingKey(key, NS.Variables.Key_ScrollDown)) and (result) then
 									if Callback:Nav_ScrollDown() then
 										PreventInput()
+										result = false
 									end
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_MoveUp) then
+								if (GetMatchingKey(key, NS.Variables.Key_MoveUp)) and (result) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
 									Callback:Nav_MoveUp()
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_MoveLeft) then
+								if (GetMatchingKey(key, NS.Variables.Key_MoveLeft)) and (result) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
 									Callback:Nav_MoveLeft()
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_MoveRight) then
+								if (GetMatchingKey(key, NS.Variables.Key_MoveRight)) and (result) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
 									Callback:Nav_MoveRight()
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_MoveDown) then
+								if (GetMatchingKey(key, NS.Variables.Key_MoveDown)) and (result) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
@@ -500,16 +511,18 @@ function NS.Script:Load()
 
 								--------------------------------
 
-								if GetMatchingKey(key, NS.Variables.Key_Interact) then
+								if (GetMatchingKey(key, NS.Variables.Key_Interact)) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
 									Callback:Nav_Interact()
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract3) then
+								if (GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract3)) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
@@ -518,8 +531,9 @@ function NS.Script:Load()
 									end
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract2) then
+								if (GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract2)) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
@@ -528,8 +542,9 @@ function NS.Script:Load()
 									end
 								end
 
-								if GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract1) then
+								if (GetMatchingKey(key, NS.Variables.Key_Settings_SpecialInteract1)) then
 									PreventInput()
+									result = false
 
 									--------------------------------
 
@@ -547,8 +562,9 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									if GetMatchingKey(key, NS.Variables.Key_Settings_Toggle) and (IsInteraction or IsReadableUI or IsSettings) then
+									if (GetMatchingKey(key, NS.Variables.Key_Settings_Toggle) and (IsInteraction or IsReadableUI or IsSettings)) and (result) then
 										PreventInput()
+										result = false
 
 										--------------------------------
 
@@ -575,9 +591,10 @@ function NS.Script:Load()
 
 									--------------------------------
 
-									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabUp) then
+									if (GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabUp)) and (result) then
 										if Callback.CurrentNavigationSession == "SETTING" then
 											PreventInput()
+											result = false
 
 											--------------------------------
 
@@ -599,9 +616,10 @@ function NS.Script:Load()
 										end
 									end
 
-									if GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabDown) then
+									if (GetMatchingKey(key, NS.Variables.Key_Settings_ChangeTabDown)) and (result) then
 										if Callback.CurrentNavigationSession == "SETTING" then
 											PreventInput()
+											result = false
 
 											--------------------------------
 
@@ -630,8 +648,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				-- INPUT
-				do
+				do -- INPUT
 					local IsRepeating = false
 					local RepeatDelay = .5
 					local RepeatInterval = .125
@@ -788,14 +805,14 @@ function NS.Script:Load()
 				--------------------------------
 
 				local function Background()
-					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "hint-background.png", "$parent.Background")
+					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "hint-background.png", "$parent.Background")
 					Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
 					Frame.Background:SetPoint("CENTER", Frame)
 					Frame.Background:SetFrameLevel(99)
 				end
 
 				local function Image()
-					Frame.Image, Frame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
+					Frame.Image, Frame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
 					Frame.Image:SetSize(Frame:GetWidth(), Frame:GetHeight())
 					Frame.Image:SetPoint("CENTER", Frame)
 					Frame.Image:SetFrameLevel(100)
@@ -855,8 +872,8 @@ function NS.Script:Load()
 			Callback.Hint:Show()
 			Callback.Hint.hidden = false
 
-			AdaptiveAPI.Animation:Fade(Callback.Hint, .5, 0, 1, nil, function() return Callback.Hint.hidden end)
-			AdaptiveAPI.Animation:Move(Callback.Hint, .5, "BOTTOM", -75, -Callback.Hint:GetHeight() - 12.5, "y", AdaptiveAPI.Animation.EaseExpo, function() return Callback.Hint.hidden end)
+			addon.API.Animation:Fade(Callback.Hint, .5, 0, 1, nil, function() return Callback.Hint.hidden end)
+			addon.API.Animation:Move(Callback.Hint, .5, "BOTTOM", -75, -Callback.Hint:GetHeight() - 12.5, "y", addon.API.Animation.EaseExpo, function() return Callback.Hint.hidden end)
 		end
 
 		Callback.Hint.HideWithAnimation = function()
@@ -867,8 +884,8 @@ function NS.Script:Load()
 			end, .5)
 			Callback.Hint.hidden = true
 
-			AdaptiveAPI.Animation:Fade(Callback.Hint, .5, Callback.Hint:GetAlpha(), 0, nil, function() return not Callback.Hint.hidden end)
-			AdaptiveAPI.Animation:Move(Callback.Hint, .5, "BOTTOM", -Callback.Hint:GetHeight() - 12.5, -75, "y", AdaptiveAPI.Animation.EaseExpo, function() return not Callback.Hint.hidden end)
+			addon.API.Animation:Fade(Callback.Hint, .5, Callback.Hint:GetAlpha(), 0, nil, function() return not Callback.Hint.hidden end)
+			addon.API.Animation:Move(Callback.Hint, .5, "BOTTOM", -Callback.Hint:GetHeight() - 12.5, -75, "y", addon.API.Animation.EaseExpo, function() return not Callback.Hint.hidden end)
 		end
 	end
 
@@ -1200,7 +1217,7 @@ function NS.Script:Load()
 				local ScrollRangeY = NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScrollRange()
 				local ScrollRangeX = NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScrollRange()
 
-				if ((NS.Variables.CurrentFrame.Input_Axis == "y" and (CurrentScrollY < 0 or CurrentScrollY > ScrollRangeY)) or (NS.Variables.CurrentFrame.Input_Axis == "x" and (CurrentScrollX < 0 or CurrentScrollX > ScrollRangeX))) then
+				if ((NS.Variables.CurrentFrame.Input_Axis == "y" and (CurrentScrollY <= 0) or (NS.Variables.CurrentFrame.Input_Axis == "x" and (CurrentScrollX < 0 or CurrentScrollX > ScrollRangeX)))) then
 					Result = false
 				else
 					Result = true
@@ -1210,9 +1227,9 @@ function NS.Script:Load()
 
 				if Result then
 					if NS.Variables.CurrentFrame.Input_Axis == "y" then
-						NS.Variables.CurrentFrame.Input_ScrollFrame:SetVerticalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScroll() - 50)
+						NS.Variables.CurrentFrame.Input_ScrollFrame:SetVerticalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScroll() - NS.Variables.CurrentFrame.Input_ScrollFrame.stepSize, true)
 					elseif NS.Variables.CurrentFrame.Input_Axis == "x" then
-						NS.Variables.CurrentFrame.Input_ScrollFrame:SetHorizontalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScroll() - 50)
+						NS.Variables.CurrentFrame.Input_ScrollFrame:SetHorizontalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScroll() - NS.Variables.CurrentFrame.Input_ScrollFrame.stepSize, true)
 					end
 
 					--------------------------------
@@ -1239,7 +1256,7 @@ function NS.Script:Load()
 				local ScrollRangeY = NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScrollRange()
 				local ScrollRangeX = NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScrollRange()
 
-				if ((NS.Variables.CurrentFrame.Input_Axis == "y" and (CurrentScrollY < 0 or CurrentScrollY > ScrollRangeY)) or (NS.Variables.CurrentFrame.Input_Axis == "x" and (CurrentScrollX < 0 or CurrentScrollX > ScrollRangeX))) then
+				if ((NS.Variables.CurrentFrame.Input_Axis == "y" and (CurrentScrollY >= ScrollRangeY)) or (NS.Variables.CurrentFrame.Input_Axis == "x" and (CurrentScrollX < 0 or CurrentScrollX > ScrollRangeX))) then
 					Result = false
 				else
 					Result = true
@@ -1249,9 +1266,9 @@ function NS.Script:Load()
 
 				if Result then
 					if NS.Variables.CurrentFrame.Input_Axis == "y" then
-						NS.Variables.CurrentFrame.Input_ScrollFrame:SetVerticalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScroll() + 50)
+						NS.Variables.CurrentFrame.Input_ScrollFrame:SetVerticalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetVerticalScroll() + NS.Variables.CurrentFrame.Input_ScrollFrame.stepSize, true)
 					elseif NS.Variables.CurrentFrame.Input_Axis == "x" then
-						NS.Variables.CurrentFrame.Input_ScrollFrame:SetHorizontalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScroll() + 50)
+						NS.Variables.CurrentFrame.Input_ScrollFrame:SetHorizontalScroll(NS.Variables.CurrentFrame.Input_ScrollFrame:GetHorizontalScroll() + NS.Variables.CurrentFrame.Input_ScrollFrame.stepSize, true)
 					end
 
 					--------------------------------
@@ -1276,10 +1293,12 @@ function NS.Script:Load()
 		function Callback:UpdateScrollFramePosition(scrollFrame, selectedFrame, axis)
 			local point, relativeTo, relativePoint, offsetX, offsetY = selectedFrame:GetPoint()
 
+			--------------------------------
+
 			if axis == "x" then
-				AdaptiveAPI.Animation:SetHorizontalScrollTo(scrollFrame, scrollFrame:GetHorizontalScroll(), (math.min(scrollFrame:GetHorizontalScrollRange(), math.max(0, offsetX - scrollFrame:GetWidth() / 2))))
+				scrollFrame:SetHorizontalScroll((math.min(scrollFrame:GetHorizontalScrollRange(), math.max(0, offsetX - scrollFrame:GetWidth() / 2))), true)
 			elseif axis == "y" then
-				AdaptiveAPI.Animation:SetVerticalScrollTo(scrollFrame, scrollFrame:GetVerticalScroll(), (math.min(scrollFrame:GetVerticalScrollRange(), math.max(0, math.abs(offsetY) - scrollFrame:GetHeight() / 2))))
+				scrollFrame:SetVerticalScroll((math.min(scrollFrame:GetVerticalScrollRange(), math.max(0, math.abs(offsetY) - scrollFrame:GetHeight() / 2))), true)
 			end
 		end
 	end

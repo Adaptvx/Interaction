@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.PromptText
@@ -50,7 +51,7 @@ function NS.Script:Load()
 			--------------------------------
 
 
-            AdaptiveAPI:SetVisibility(InteractionTextPromptFrame.ButtonArea.Button1, (buttonText and buttonCallback))
+            addon.API.FrameUtil:SetVisibility(InteractionTextPromptFrame.ButtonArea.Button1, (buttonText and buttonCallback))
             if buttonText and buttonCallback then
                 InteractionTextPromptFrame.ButtonArea.Button1:SetText(buttonText)
                 InteractionTextPromptFrame.ButtonArea.Button1.Callback = buttonCallback
@@ -86,11 +87,11 @@ function NS.Script:Load()
             InteractionTextPromptFrame:Show()
             InteractionTextPromptFrame.hidden = false
 
-            AdaptiveAPI.Animation:Fade(InteractionTextPromptFrame, .25, 0, 1, nil, function() return InteractionTextPromptFrame.hidden end)
+            addon.API.Animation:Fade(InteractionTextPromptFrame, .25, 0, 1, nil, function() return InteractionTextPromptFrame.hidden end)
             if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
-                AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
+                addon.API.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", addon.API.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
             else
-                AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", AdaptiveAPI.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
+                addon.API.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", -25, 0, "y", addon.API.Animation.EaseExpo, function() return InteractionTextPromptFrame.hidden end)
             end
         end
 
@@ -100,11 +101,11 @@ function NS.Script:Load()
             end, .5)
             InteractionTextPromptFrame.hidden = true
 
-            AdaptiveAPI.Animation:Fade(InteractionTextPromptFrame, .25, InteractionTextPromptFrame:GetAlpha(), 0, nil, function() return not InteractionTextPromptFrame.hidden end)
+            addon.API.Animation:Fade(InteractionTextPromptFrame, .25, InteractionTextPromptFrame:GetAlpha(), 0, nil, function() return not InteractionTextPromptFrame.hidden end)
             if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
-                AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
+                addon.API.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", addon.API.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
             else
-                AdaptiveAPI.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
+                addon.API.Animation:Move(InteractionTextPromptFrame, .5, "CENTER", 0, -25, "y", addon.API.Animation.EaseExpo, function() return not InteractionTextPromptFrame.hidden end)
             end
         end
     end

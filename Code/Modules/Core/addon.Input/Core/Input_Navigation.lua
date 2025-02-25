@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Input
@@ -20,8 +21,7 @@ function NS.Navigation:Load()
 	-- EVENTS
 	--------------------------------
 
-	-- READABLE
-	do
+	do -- READABLE
 		if (NS.Variables.IsController or NS.Variables.SimulateController) then
 			CallbackRegistry:Add("START_READABLE", function()
 				local Frame = InteractionReadableUIFrame
@@ -386,8 +386,7 @@ function NS.Navigation:Load()
 		end
 	end
 
-	-- QUEST FRMAE
-	do
+	do -- QUEST FRMAE
 		if (NS.Variables.IsController or NS.Variables.SimulateController) then
 			CallbackRegistry:Add("QUEST_DATA_READY", function()
 				local Frame = InteractionQuestFrame
@@ -538,8 +537,7 @@ function NS.Navigation:Load()
 		end
 	end
 
-	-- SETTINGS
-	do
+	do -- SETTINGS
 		function Callback:Settings_SpecialInteractFunc1(Type, Frame)
 			if Type == "Checkbox" then
 				Frame.Checkbox:Click()
@@ -895,8 +893,7 @@ function NS.Navigation:Load()
 		end
 	end
 
-	-- PROMPT
-	do
+	do -- PROMPT
 		if (NS.Variables.IsController or NS.Variables.SimulateController) then
 			CallbackRegistry:Add("START_PROMPT", function()
 
@@ -908,8 +905,7 @@ function NS.Navigation:Load()
 		end
 	end
 
-	-- GOSSIP FRAME
-	do
+	do -- GOSSIP FRAME
 		if (NS.Variables.IsController or NS.Variables.SimulateController) then
 			CallbackRegistry:Add("UPDATE_GOSSIP_READY", function()
 				local Frame = InteractionGossipFrame
@@ -980,8 +976,7 @@ function NS.Navigation:Load()
 		end
 	end
 
-	-- EVENTS
-	do
+	do -- EVENTS
 		function Callback:StartGamepadControl()
 			if NS.Variables.IsControllerEnabled then
 				InteractionFrame.PreventMouse:Show()

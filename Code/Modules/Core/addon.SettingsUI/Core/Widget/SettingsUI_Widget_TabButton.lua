@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -43,7 +44,7 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 				TextHighlightColor = addon.Theme.Settings.Text_Highlight_LightMode
 			end
 
-			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.Button, {
+			addon.API.FrameTemplates.Styles:UpdateButton(Frame.Button, {
 				customColor = DefaultColor,
 				customHighlightColor = HighlightColor,
 				customActiveColor = ActiveColor,
@@ -59,10 +60,10 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
-		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.Button, {
-			defaultTexture = AdaptiveAPI.PATH .. "empty",
+		addon.API.FrameTemplates.Styles:Button(Frame.Button, {
+			defaultTexture = addon.API.Util.PATH .. "empty",
 			playAnimation = false,
 			color = DefaultColor,
 			highlightColor = HighlightColor,
@@ -80,22 +81,22 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 		do -- TEXT
 			Frame.Button.Text = Frame.Button:GetFontString()
 			Frame.Button.Text:SetSize(Frame.Button:GetWidth() - NS.Variables:RATIO(6), Frame.Button:GetWidth() - NS.Variables:RATIO(6))
-			Frame.Button.Text:SetFont(AdaptiveAPI.Fonts.Content_Light, 17.5, "")
+			Frame.Button.Text:SetFont(addon.API.Fonts.Content_Light, 17.5, "")
 			Frame.Button.Text:SetJustifyH("LEFT")
 			Frame.Button.Text:SetJustifyV("MIDDLE")
 		end
 
 		do -- ICON
-			Frame.Button.Left_Icon, Frame.Button.Left_IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.leftIcon")
+			Frame.Button.Left_Icon, Frame.Button.Left_IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.leftIcon")
 			Frame.Button.Left_Icon:SetSize(35, 35)
 			Frame.Button.Left_Icon:SetPoint("LEFT", Frame.Button, 12.5, 0)
-			Frame.Button.Right_Icon, Frame.Button.Right_IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.rightIcon")
+			Frame.Button.Right_Icon, Frame.Button.Right_IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Button, Frame.Button:GetFrameStrata(), nil, "$parent.rightIcon")
 			Frame.Button.Right_Icon:SetSize(35, 35)
 			Frame.Button.Right_Icon:SetPoint("RIGHT", Frame.Button, -12.5, 0)
 
 			--------------------------------
 
-			addon.API:RegisterThemeUpdate(function()
+			addon.API.Main:RegisterThemeUpdate(function()
 				local TEXTURE_LEFT
 				local TEXTURE_RIGHT
 

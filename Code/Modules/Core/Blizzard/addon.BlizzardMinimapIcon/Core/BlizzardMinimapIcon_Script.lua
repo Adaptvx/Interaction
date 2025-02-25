@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.BlizzardMinimapIcon
@@ -23,8 +24,8 @@ function NS.Script:Load()
 
 	do
 		function NS.Script:OnTooltipShow(tooltip)
-			local numEntries_local = AdaptiveAPI:tnum(addon.Readable.Variables.LIBRARY_LOCAL)
-			local numEntries_global = AdaptiveAPI:tnum(addon.Readable.Variables.LIBRARY_GLOBAL)
+			local numEntries_local = addon.API.Util:tnum(addon.Readable.Variables.LIBRARY_LOCAL)
+			local numEntries_global = addon.API.Util:tnum(addon.Readable.Variables.LIBRARY_GLOBAL)
 
 			local text_title = L["MinimapIcon - Tooltip - Title"]
 			local text_entries_local

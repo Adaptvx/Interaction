@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.AlertNotification
@@ -42,36 +43,22 @@ function NS.Elements:Load()
 
 			do -- NOTIFICATION
 				do -- BACKGROUND
-					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-					Frame.Background:SetSize(Frame:GetWidth() + 25, Frame:GetHeight() + 25)
-					Frame.Background:SetPoint("CENTER", Frame)
+					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+					Frame.Background:SetPoint("TOPLEFT", Frame, -12.5, 12.5)
+					Frame.Background:SetPoint("BOTTOMRIGHT", Frame, 12.5, -12.5)
 					Frame.Background:SetFrameStrata("FULLSCREEN")
 					Frame.Background:SetFrameLevel(49)
 					Frame.BackgroundTexture:SetVertexColor(.5, .5, .5)
-
-					--------------------------------
-
-					hooksecurefunc(Frame, "SetWidth", function()
-						Frame.Background:SetWidth(Frame:GetWidth() + 25)
-					end)
-
-					hooksecurefunc(Frame, "SetHeight", function()
-						Frame.Background:SetHeight(Frame:GetHeight() + 25)
-					end)
-
-					hooksecurefunc(Frame, "SetSize", function()
-						Frame.Background:SetSize(Frame:GetWidth() + 25, Frame:GetHeight() + 25)
-					end)
 				end
 
 				do -- TEXT
-					Frame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame, TextColorPreset, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+					Frame.Text = addon.API.FrameTemplates:CreateText(Frame, TextColorPreset, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
 					Frame.Text:SetSize(Frame:GetWidth() - Frame:GetHeight(), Frame:GetHeight())
 					Frame.Text:SetPoint("LEFT", Frame, Frame:GetHeight(), 0)
 				end
 
 				do -- IMAGE
-					Frame.Image, Frame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "checked.png")
+					Frame.Image, Frame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "checked.png")
 					Frame.Image:SetSize(Frame:GetHeight(), Frame:GetHeight())
 					Frame.Image:SetPoint("LEFT", Frame)
 					Frame.Image:SetFrameStrata("FULLSCREEN")
@@ -91,7 +78,7 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- BACKGROUND
-					Frame.Flare.Background, Frame.Flare.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Flare, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "flare.png")
+					Frame.Flare.Background, Frame.Flare.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Flare, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "flare.png")
 					Frame.Flare.Background:SetSize(Frame.Flare:GetWidth(), Frame.Flare:GetHeight())
 					Frame.Flare.Background:SetPoint("CENTER", Frame.Flare)
 					Frame.Flare.Background:SetAlpha(1)

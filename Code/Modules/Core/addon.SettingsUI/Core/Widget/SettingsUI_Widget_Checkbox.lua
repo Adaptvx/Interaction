@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -22,17 +23,17 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 
 		local function UpdateTheme()
 			if addon.Theme.IsDarkTheme then
-				TEXTURE_Check = AdaptiveAPI.PATH .. "Elements/check-light.png"
-				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-dark.png"
+				TEXTURE_Check = addon.API.Util.PATH .. "Elements/check-light.png"
+				TEXTURE_CheckHighlight = addon.API.Util.PATH .. "Elements/check-dark.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_DarkTheme
 			else
 				TEXTURE_Check = addon.Variables.PATH .. "Art/Settings/check-dark.png"
-				TEXTURE_CheckHighlight = AdaptiveAPI.PATH .. "Elements/check-light.png"
+				TEXTURE_CheckHighlight = addon.API.Util.PATH .. "Elements/check-light.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_LightTheme
 			end
 
 			if Frame.Checkbox then
-				AdaptiveAPI.FrameTemplates:UpdateCheckboxTheme(Frame.Checkbox, {
+				addon.API.FrameTemplates:UpdateCheckboxTheme(Frame.Checkbox, {
 					checkTexture = TEXTURE_Check,
 					checkHighlightTexture = TEXTURE_CheckHighlight,
 					defaultColor = COLOR_Default
@@ -41,11 +42,11 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
 		--------------------------------
 
-		Frame.Checkbox = AdaptiveAPI.FrameTemplates:CreateCheckbox(Frame.Container, Frame:GetFrameStrata(), {
+		Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame.Container, Frame:GetFrameStrata(), {
 			scale = .425,
 			customColor = COLOR_Default,
 			callbackFunction = setFunc

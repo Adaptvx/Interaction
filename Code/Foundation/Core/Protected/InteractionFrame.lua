@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -30,18 +31,18 @@ function NS:Load()
 		do -- CREATE ELEMENTS
 			do -- FRAME
 				InteractionFrame = CreateFrame("Frame", "InteractionFrame", nil)
-				InteractionFrame:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+				InteractionFrame:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 				InteractionFrame:SetPoint("CENTER", nil)
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					InteractionFrame:SetScale(addon.API.UIScale)
+					InteractionFrame:SetScale(addon.API.Main.UIScale)
 				end, .1)
 
 				--------------------------------
 
 				do -- PREVENT MOUSE
 					InteractionFrame.PreventMouse = CreateFrame("Frame")
-					InteractionFrame.PreventMouse:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+					InteractionFrame.PreventMouse:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 					InteractionFrame.PreventMouse:SetPoint("CENTER", UIParent)
 					InteractionFrame.PreventMouse:SetFrameStrata("FULLSCREEN_DIALOG")
 					InteractionFrame.PreventMouse:SetFrameLevel(999)
@@ -172,13 +173,13 @@ function NS:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, .99, 0, nil, function() return not Frame.ThemeTransition end)
+			addon.API.Animation:Fade(Frame, .125, .99, 0, nil, function() return not Frame.ThemeTransition end)
 
 			--------------------------------
 
 			C_Timer.After(.5, function()
 				if Frame.ThemeTransition then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return not Frame.ThemeTransition end)
+					addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return not Frame.ThemeTransition end)
 
 					--------------------------------
 

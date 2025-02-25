@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.BlizzardFrames
@@ -154,7 +155,7 @@ function NS.Script:Load()
 		--------------------------------
 
 		local function Update()
-			if addon.Database.DB_GLOBAL.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API:CanShowUIAndHideElements() then
+			if addon.Database.DB_GLOBAL.profile.INT_HIDEUI and not UIParent:IsVisible() and addon.API.Main:CanShowUIAndHideElements() then
 				if not NS.Variables.SetElementsActive then
 					Callback:SetElements()
 				end
@@ -178,6 +179,6 @@ function NS.Script:Load()
 		Events:SetScript("OnEvent", Update)
 	end
 
-	AdaptiveAPI:UnregisterFrame(GossipFrame)
-	AdaptiveAPI:UnregisterFrame(QuestFrame)
+	addon.API.Util:UnregisterFrame(GossipFrame)
+	addon.API.Util:UnregisterFrame(QuestFrame)
 end

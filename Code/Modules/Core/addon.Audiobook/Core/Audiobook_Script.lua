@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Audiobook
@@ -51,7 +52,7 @@ function NS.Script:Load()
 			end
 		end)
 
-		AdaptiveAPI:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true, true)
+		addon.API.Util:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true, true)
 	end
 
 	--------------------------------
@@ -82,7 +83,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				if AdaptiveAPI:FindString(text, "HTML") then
+				if addon.API.Util:FindString(text, "HTML") then
 					text = Callback:RemoveHTML(text)
 				end
 
@@ -102,7 +103,7 @@ function NS.Script:Load()
 						local line = string
 						local quotation = false
 						for i = 1, #quotationStrings do
-							if AdaptiveAPI:FindString(segment, quotationStrings[i].string) then
+							if addon.API.Util:FindString(segment, quotationStrings[i].string) then
 								quotation = true
 								break
 							end
@@ -480,10 +481,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
-			AdaptiveAPI.Animation:Scale(Frame.Background, .25, .875, 1, nil, AdaptiveAPI.Animation.EaseSine)
-			AdaptiveAPI.Animation:Fade(Frame.Content, .25, 0, 1)
-			AdaptiveAPI.Animation:Scale(Frame.Content, .25, 1.05, 1, nil, AdaptiveAPI.Animation.EaseSine)
+			addon.API.Animation:Fade(Frame, .125, 0, 1)
+			addon.API.Animation:Scale(Frame.Background, .25, .875, 1, nil, addon.API.Animation.EaseSine)
+			addon.API.Animation:Fade(Frame.Content, .25, 0, 1)
+			addon.API.Animation:Scale(Frame.Content, .25, 1.05, 1, nil, addon.API.Animation.EaseSine)
 		end
 
 		Frame.HideWithAnimation = function()
@@ -498,10 +499,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
-			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, AdaptiveAPI.Animation.EaseSine)
-			AdaptiveAPI.Animation:Fade(Frame.Content, .125, Frame.Content:GetAlpha(), 0)
-			AdaptiveAPI.Animation:Scale(Frame.Content, .25, Frame.Content:GetScale(), 1.125, nil, AdaptiveAPI.Animation.EaseSine)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
+			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, addon.API.Animation.EaseSine)
+			addon.API.Animation:Fade(Frame.Content, .125, Frame.Content:GetAlpha(), 0)
+			addon.API.Animation:Scale(Frame.Content, .25, Frame.Content:GetScale(), 1.125, nil, addon.API.Animation.EaseSine)
 		end
 
 		Frame.TextPreviewFrame.ShowWithAnimation = function()
@@ -513,7 +514,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame, .125, 0, 1, nil, function() return Frame.TextPreviewFrame.hidden end)
+			addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, 0, 1, nil, function() return Frame.TextPreviewFrame.hidden end)
 		end
 
 		Frame.TextPreviewFrame.HideWithAnimation = function()
@@ -529,12 +530,12 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame, .125, Frame.TextPreviewFrame:GetAlpha(), 0, nil, function() return not Frame.TextPreviewFrame.hidden end)
+			addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, Frame.TextPreviewFrame:GetAlpha(), 0, nil, function() return not Frame.TextPreviewFrame.hidden end)
 		end
 
 		Frame.TextPreviewFrame.NewTextAnimation = function()
-			AdaptiveAPI.Animation:Fade(Frame.TextPreviewFrame.Content.Text, .5, 0, 1)
-			AdaptiveAPI.Animation:Move(Frame.TextPreviewFrame.Content.Text, .375, "CENTER", 25, 0, "y")
+			addon.API.Animation:Fade(Frame.TextPreviewFrame.Content.Text, .5, 0, 1)
+			addon.API.Animation:Move(Frame.TextPreviewFrame.Content.Text, .375, "CENTER", 25, 0, "y")
 		end
 	end
 

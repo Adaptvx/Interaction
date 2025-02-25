@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest
@@ -81,14 +82,14 @@ end
 --------------------------------
 
 do
-	addon.API:RegisterThemeUpdate(function()
+	addon.API.Main:RegisterThemeUpdate(function()
 		if addon.Theme.IsDarkTheme then
-			NS.Variables.THEME.INSCRIBED_BACKGROUND = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+			NS.Variables.THEME.INSCRIBED_BACKGROUND = addon.API.Presets.NINESLICE_INSCRIBED
+            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = addon.API.Presets.NINESLICE_INSCRIBED
 			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
 		else
-			NS.Variables.THEME.INSCRIBED_BACKGROUND = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
-            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = AdaptiveAPI.Presets.NINESLICE_INSCRIBED
+			NS.Variables.THEME.INSCRIBED_BACKGROUND = addon.API.Presets.NINESLICE_INSCRIBED
+            NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = addon.API.Presets.NINESLICE_INSCRIBED
 			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
 		end
 	end, 0)

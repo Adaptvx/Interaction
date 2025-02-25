@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest.Target
@@ -109,8 +110,8 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
-				AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -100, -75, "y")
+				addon.API.Animation:Fade(Frame, .25, 0, 1)
+				addon.API.Animation:Move(Frame, 1, "TOPLEFT", -100, -75, "y")
 			end
 		end
 
@@ -149,8 +150,8 @@ function NS.Script:Load()
 					Frame:SetAlpha(0)
 					Frame:SetPoint(point, relativeTo, offsetX, offsetY)
 				else
-					AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
-					AdaptiveAPI.Animation:Move(Frame, 1, "TOPLEFT", -75, -100, "y")
+					addon.API.Animation:Fade(Frame, .125, 1, 0)
+					addon.API.Animation:Move(Frame, 1, "TOPLEFT", -75, -100, "y")
 				end
 			end
 		end

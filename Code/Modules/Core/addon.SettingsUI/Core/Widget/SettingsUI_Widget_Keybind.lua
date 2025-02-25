@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -16,7 +17,7 @@ function NS.Widgets:CreateKeybindButton(parent, getFunc, setFunc, enableFunc, su
 	--------------------------------
 
 	do -- KEYBIND
-		Frame.KeybindButton = AdaptiveAPI.FrameTemplates:CreateKeybindButton(Frame.Container, Frame:GetFrameStrata(), {
+		Frame.KeybindButton = addon.API.FrameTemplates:CreateKeybindButton(Frame.Container, Frame:GetFrameStrata(), {
 			getFunc = getFunc,
 			setFunc = setFunc,
 			enableFunc = enableFunc
@@ -36,14 +37,14 @@ function NS.Widgets:CreateKeybindButton(parent, getFunc, setFunc, enableFunc, su
 			end
 
 			if Frame.KeybindButton then
-				AdaptiveAPI.FrameTemplates:UpdateKeybindButtonTheme(Frame.KeybindButton, {
+				addon.API.FrameTemplates:UpdateKeybindButtonTheme(Frame.KeybindButton, {
 					defaultColor = COLOR_Default
 				})
 			end
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
 		--------------------------------
 

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Prompt
@@ -27,7 +28,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKDROP
-				Frame.Backdrop, Frame.BackdropTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
+				Frame.Backdrop, Frame.BackdropTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
 				Frame.Backdrop:SetSize(500, 500)
 				Frame.Backdrop:SetPoint("CENTER", Frame)
 				Frame.Backdrop:SetFrameStrata("FULLSCREEN_DIALOG")
@@ -36,18 +37,18 @@ function NS.Elements:Load()
 			end
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 128, .575, "$parent.Background")
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 128, .575, "$parent.Background")
 				Frame.Background:SetPoint("CENTER", Frame)
 				Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
 				Frame.Background:SetFrameLevel(50)
 
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					local TEXTURE_Background
 
 					if addon.Theme.IsDarkTheme then
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02
+						TEXTURE_Background = addon.API.Presets.NINESLICE_STYLISED_SCROLL_02
 					else
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL
+						TEXTURE_Background = addon.API.Presets.NINESLICE_STYLISED_SCROLL
 					end
 
 					Frame.BackgroundTexture:SetTexture(TEXTURE_Background)
@@ -70,13 +71,13 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- TEXT
-					Frame.Content.TextArea.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.TextArea, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+					Frame.Content.TextArea.Text = addon.API.FrameTemplates:CreateText(Frame.Content.TextArea, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
 					Frame.Content.TextArea.Text:SetAllPoints(Frame.Content.TextArea)
 				end
 
 				do -- BUTTONS
 					do -- BUTTON 1
-						Frame.Content.ButtonArea.Button1 = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
+						Frame.Content.ButtonArea.Button1 = addon.API.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = nil,
@@ -92,7 +93,7 @@ function NS.Elements:Load()
 					end
 
 					do -- BUTTON 2
-						Frame.Content.ButtonArea.Button2 = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
+						Frame.Content.ButtonArea.Button2 = addon.API.FrameTemplates:CreateCustomButton(Frame.Content.ButtonArea, Frame.Content.ButtonArea:GetWidth() / 2 - NS.Variables.PADDING, NS.Variables.BUTTON_HEIGHT, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = nil,
@@ -113,7 +114,7 @@ function NS.Elements:Load()
 
 			do -- EVENTS
 				local function UpdateLayout()
-					local _, textHeight = AdaptiveAPI:GetStringSize(Frame.Content.TextArea.Text)
+					local _, textHeight = addon.API.Util:GetStringSize(Frame.Content.TextArea.Text)
 
 					local textAreaHeight = textHeight
 					local buttonAreaHeight = NS.Variables.BUTTON_HEIGHT

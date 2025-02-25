@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.BlizzardSettings
@@ -23,29 +24,29 @@ function NS.Script:Load()
 
 	do
 		Frame.Content.Title:SetScript("OnEnter", function()
-			AdaptiveAPI.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), .75)
-			-- AdaptiveAPI.Animation:Scale(Frame.Content.Title.Background, .75, Frame.Content.Title.Background:GetWidth(), Frame.Content.Title:GetWidth() * 1.125, "x", AdaptiveAPI.Animation.EaseExpo)
+			addon.API.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), .75)
+			-- addon.API.Animation:Scale(Frame.Content.Title.Background, .75, Frame.Content.Title.Background:GetWidth(), Frame.Content.Title:GetWidth() * 1.125, "x", addon.API.Animation.EaseExpo)
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Content.Shortcut, .125, Frame.Content.Shortcut:GetAlpha(), .25)
+			addon.API.Animation:Fade(Frame.Content.Shortcut, .125, Frame.Content.Shortcut:GetAlpha(), .25)
 		end)
 
 		Frame.Content.Title:SetScript("OnLeave", function()
-			AdaptiveAPI.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), 1)
-			-- AdaptiveAPI.Animation:Scale(Frame.Content.Title.Background, .5, Frame.Content.Title.Background:GetWidth(), Frame.Content.Title:GetWidth(), "x", AdaptiveAPI.Animation.EaseExpo)
+			addon.API.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), 1)
+			-- addon.API.Animation:Scale(Frame.Content.Title.Background, .5, Frame.Content.Title.Background:GetWidth(), Frame.Content.Title:GetWidth(), "x", addon.API.Animation.EaseExpo)
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Content.Shortcut, .125, Frame.Content.Shortcut:GetAlpha(), 1)
+			addon.API.Animation:Fade(Frame.Content.Shortcut, .125, Frame.Content.Shortcut:GetAlpha(), 1)
 		end)
 
 		Frame.Content.Title:SetScript("OnMouseDown", function()
-			AdaptiveAPI.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), .5)
+			addon.API.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), .5)
 		end)
 
 		Frame.Content.Title:SetScript("OnMouseUp", function()
-			AdaptiveAPI.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), 1)
+			addon.API.Animation:Fade(Frame.Content.Title, .125, Frame.Content.Title:GetAlpha(), 1)
 
 			--------------------------------
 
@@ -82,27 +83,27 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Border, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
-			AdaptiveAPI.Animation:Scale(Frame.Border, 1, 50, Frame:GetHeight(), "y", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
+			addon.API.Animation:Fade(Frame.Border, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
+			addon.API.Animation:Scale(Frame.Border, 1, 50, Frame:GetHeight(), "y", addon.API.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 
 			--------------------------------
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:Fade(Frame.Background, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
+				addon.API.Animation:Fade(Frame.Background, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					AdaptiveAPI.Animation:Fade(Frame.Content.Title, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
-					AdaptiveAPI.Animation:Scale(Frame.Content.Title.Background, 1, 50, Frame.Content.Title:GetWidth(), "x", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
+					addon.API.Animation:Fade(Frame.Content.Title, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
+					addon.API.Animation:Scale(Frame.Content.Title.Background, 1, 50, Frame.Content.Title:GetWidth(), "x", addon.API.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 				end, .1)
 
                 addon.Libraries.AceTimer:ScheduleTimer(function()
 					Frame.Content.Title.Text:SetAlpha(0)
-					AdaptiveAPI.Animation:Fade(Frame.Content.Title.Text, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
+					addon.API.Animation:Fade(Frame.Content.Title.Text, .25, 0, 1, nil, function() return not Frame:IsVisible() end)
 				end, .3)
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					Frame.Content.Shortcut.Text:SetAlpha(0)
-					AdaptiveAPI.Animation:Fade(Frame.Content.Shortcut.Text, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
+					addon.API.Animation:Fade(Frame.Content.Shortcut.Text, .5, 0, 1, nil, function() return not Frame:IsVisible() end)
 				end, .325)
 			end, .125)
 		end
@@ -125,9 +126,9 @@ function NS.Script:Load()
 			local Shortcut
 
 			if addon.Input.Variables.IsController then
-				Shortcut = AdaptiveAPI:InlineIcon(NS.Variables.PATH .. "shortcut-controller.png", 25, 25, 0, 0) .. L["BlizzardSettings - Shortcut - Controller"]
+				Shortcut = addon.API.Util:InlineIcon(NS.Variables.PATH .. "shortcut-controller.png", 25, 25, 0, 0) .. L["BlizzardSettings - Shortcut - Controller"]
 			else
-				Shortcut = AdaptiveAPI:InlineIcon(NS.Variables.PATH .. "shortcut-pc.png", 40, 130, 0, 0)
+				Shortcut = addon.API.Util:InlineIcon(NS.Variables.PATH .. "shortcut-pc.png", 40, 130, 0, 0)
 			end
 
 			addon.BlizzardSettings:Set(L["BlizzardSettings - Title"], Shortcut)

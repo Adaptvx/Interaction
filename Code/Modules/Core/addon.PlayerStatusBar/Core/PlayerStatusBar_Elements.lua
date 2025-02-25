@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.PlayerStatusBar
@@ -17,7 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionPlayerStatusBarFrame = CreateFrame("Frame", "$parent.InteractionPlayerStatusBarFrame", InteractionFrame)
-			InteractionPlayerStatusBarFrame:SetSize(addon.API:GetScreenWidth(), 10)
+			InteractionPlayerStatusBarFrame:SetSize(addon.API.Main:GetScreenWidth(), 10)
 			InteractionPlayerStatusBarFrame:SetPoint("BOTTOM", UIParent)
 			InteractionPlayerStatusBarFrame:SetFrameStrata("FULLSCREEN")
 			InteractionPlayerStatusBarFrame:SetFrameLevel(2)
@@ -31,7 +32,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Background, 256, 1, "$parent.Background")
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Background, 256, 1, "$parent.Background")
 				Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
 				Frame.Background:SetPoint("CENTER", Frame)
 				Frame.Background:SetFrameStrata("FULLSCREEN")
@@ -39,7 +40,7 @@ function NS.Elements:Load()
 			end
 
 			do -- NOTCH
-				Frame.Notch, Frame.NotchTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Notch, "$parent.Notch")
+				Frame.Notch, Frame.NotchTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Notch, "$parent.Notch")
 				Frame.Notch:SetSize(Frame:GetHeight() - Padding, Frame:GetHeight() - Padding)
 				Frame.Notch:SetPoint("LEFT", Frame, Padding, 0)
 				Frame.Notch:SetFrameStrata("FULLSCREEN")
@@ -48,7 +49,7 @@ function NS.Elements:Load()
 			end
 
 			do -- PROGRESS BAR
-				Frame.Progress = AdaptiveAPI.FrameTemplates:CreateAdvancedProgressBar(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Progress, NS.Variables.TEXTURE_Flare, 0, 0, "$parent.Progress")
+				Frame.Progress = addon.API.FrameTemplates:CreateAdvancedProgressBar(Frame, "FULLSCREEN", NS.Variables.TEXTURE_Progress, NS.Variables.TEXTURE_Flare, 0, 0, "$parent.Progress")
 				Frame.Progress:SetSize(Frame:GetWidth() - (Padding / 2) - (Frame.Notch:GetWidth()), Frame:GetHeight() - Padding)
 				Frame.Progress:SetPoint("LEFT", Frame, (Padding / 2) + (Frame.Notch:GetWidth()), 0)
 				Frame.Progress:SetFrameStrata("FULLSCREEN")

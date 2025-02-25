@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.BlizzardSettings
@@ -28,7 +29,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", NS.Variables.PATH .. "background.png")
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", NS.Variables.PATH .. "background.png")
 				Frame.Background:SetAllPoints(Frame, true)
 				Frame.Background:SetFrameStrata("HIGH")
 				Frame.Background:SetFrameLevel(1)
@@ -36,7 +37,7 @@ function NS.Elements:Load()
 			end
 
 			do -- BORDER
-				Frame.Border, Frame.BorderTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "HIGH", NS.Variables.PATH .. "border.png")
+				Frame.Border, Frame.BorderTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", NS.Variables.PATH .. "border.png")
 				Frame.Border:SetPoint("TOPLEFT", Frame, 0, 0)
 				Frame.Border:SetPoint("BOTTOMLEFT", Frame, 1, 0)
 				Frame.Border:SetFrameStrata("HIGH")
@@ -62,7 +63,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- BACKGROUND
-						Frame.Content.Title.Background, Frame.Content.Title.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Content.Title, "HIGH", NS.Variables.PATH .. "content-background.png")
+						Frame.Content.Title.Background, Frame.Content.Title.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.Title, "HIGH", NS.Variables.PATH .. "content-background.png")
 						Frame.Content.Title.Background:SetSize(Frame.Content.Title:GetWidth(), Frame.Content.Title:GetHeight())
 						Frame.Content.Title.Background:SetPoint("CENTER", Frame.Content.Title)
 						Frame.Content.Title.Background:SetFrameStrata("HIGH")
@@ -70,7 +71,7 @@ function NS.Elements:Load()
 					end
 
 					do -- TEXT
-						Frame.Content.Title.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.Title, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
+						Frame.Content.Title.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Title, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
 						Frame.Content.Title.Text:SetSize(Frame.Content.Title:GetWidth(), Frame.Content.Title:GetHeight())
 						Frame.Content.Title.Text:SetPoint("CENTER", Frame.Content.Title)
 					end
@@ -86,7 +87,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- TEXT
-						Frame.Content.Shortcut.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.Shortcut, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Bold, "$parent.Text")
+						Frame.Content.Shortcut.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Shortcut, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Bold, "$parent.Text")
 						Frame.Content.Shortcut.Text:SetSize(Frame.Content.Shortcut:GetWidth(), Frame.Content.Shortcut:GetHeight())
 						Frame.Content.Shortcut.Text:SetPoint("CENTER", Frame.Content.Shortcut)
 					end

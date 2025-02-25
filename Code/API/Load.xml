@@ -1,0 +1,16 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Load -->
+	<Script file="Load.lua"/>
+
+	<!-- Core -->
+	<Script file="Core/Fonts.lua"/>
+	<Script file="Core/Main.lua"/>
+	<Script file="Core/Util.lua"/>
+	<Script file="Core/FrameUtil.lua"/>
+	<Script file="Core/Presets.lua"/>
+	<Script file="Core/Animation.lua"/>
+
+	<!-- Modules -->
+	<Include file="Modules/addon.API.FrameTemplates/Load.xml"/>
+</Ui>

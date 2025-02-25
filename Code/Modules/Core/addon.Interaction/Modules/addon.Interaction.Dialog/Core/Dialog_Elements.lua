@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Dialog
@@ -25,19 +26,19 @@ function NS.Elements:Load()
 
 			do -- STYLE DIALOG
 				do -- BACKGROUND
-					InteractionDialogFrame.DialogBackground, InteractionDialogFrame.DialogBackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", nil, 50, .575)
+					InteractionDialogFrame.DialogBackground, InteractionDialogFrame.DialogBackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", nil, 50, .575)
 					InteractionDialogFrame.DialogBackground:SetSize(InteractionDialogFrame:GetWidth(), InteractionDialogFrame:GetHeight())
 					InteractionDialogFrame.DialogBackground:SetPoint("CENTER", InteractionDialogFrame, 0, 0)
 					InteractionDialogFrame.DialogBackground:SetFrameStrata("LOW")
 					InteractionDialogFrame.DialogBackground:SetFrameLevel(0)
 
-					addon.API:RegisterThemeUpdate(function()
+					addon.API.Main:RegisterThemeUpdate(function()
 						local TooltipTexture
 
 						if addon.Theme.IsDarkTheme_Dialog then
-							TooltipTexture = AdaptiveAPI.Presets.NINESLICE_TOOLTIP_02
+							TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP_02
 						else
-							TooltipTexture = AdaptiveAPI.Presets.NINESLICE_TOOLTIP
+							TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP
 						end
 
 						InteractionDialogFrame.DialogBackgroundTexture:SetTexture(TooltipTexture)
@@ -45,14 +46,14 @@ function NS.Elements:Load()
 				end
 
 				do -- TAIL
-					InteractionDialogFrame.DialogBackground.Tail, InteractionDialogFrame.DialogBackground.TailTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionDialogFrame, "LOW", nil)
+					InteractionDialogFrame.DialogBackground.Tail, InteractionDialogFrame.DialogBackground.TailTexture = addon.API.FrameTemplates:CreateTexture(InteractionDialogFrame, "LOW", nil)
 					InteractionDialogFrame.DialogBackground.Tail:SetParent(InteractionDialogFrame.DialogBackground)
 					InteractionDialogFrame.DialogBackground.Tail:SetSize(22, 22 * 1.07)
 					InteractionDialogFrame.DialogBackground.Tail:SetPoint("BOTTOM", InteractionDialogFrame.DialogBackground, -10, -17)
 					InteractionDialogFrame.DialogBackground.Tail:SetFrameStrata("LOW")
 					InteractionDialogFrame.DialogBackground.Tail:SetFrameLevel(1)
 
-					addon.API:RegisterThemeUpdate(function()
+					addon.API.Main:RegisterThemeUpdate(function()
 						local TEXTURE_Background
 
 						if addon.Theme.IsDarkTheme_Dialog then
@@ -67,37 +68,29 @@ function NS.Elements:Load()
 			end
 
 			do -- STYLE SCROLL
-				InteractionDialogFrame.ScrollBackground, InteractionDialogFrame.ScrollBackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", nil, 128, .25, "$parent.Background")
-				InteractionDialogFrame.ScrollBackground:SetSize(InteractionDialogFrame.DialogBackground:GetWidth() + 7.5, InteractionDialogFrame.DialogBackground:GetHeight() + 7.5)
-				InteractionDialogFrame.ScrollBackground:SetPoint("CENTER", InteractionDialogFrame.DialogBackground)
+				InteractionDialogFrame.ScrollBackground, InteractionDialogFrame.ScrollBackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", nil, 128, .25, "$parent.Background")
+				InteractionDialogFrame.ScrollBackground:SetPoint("TOPLEFT", InteractionDialogFrame.DialogBackground, -3.25, 3.25)
+				InteractionDialogFrame.ScrollBackground:SetPoint("BOTTOMRIGHT", InteractionDialogFrame.DialogBackground, 3.25, -3.25)
 				InteractionDialogFrame.ScrollBackground:SetFrameStrata("LOW")
 				InteractionDialogFrame.ScrollBackground:SetFrameLevel(0)
 
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					local ScrollTexture
 
 					if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
-						ScrollTexture = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02
+						ScrollTexture = addon.API.Presets.NINESLICE_STYLISED_SCROLL_02
 					else
-						ScrollTexture = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL
+						ScrollTexture = addon.API.Presets.NINESLICE_STYLISED_SCROLL
 					end
 
 					InteractionDialogFrame.ScrollBackgroundTexture:SetTexture(ScrollTexture)
 				end, 5)
 
-				hooksecurefunc(InteractionDialogFrame.DialogBackground, "SetWidth", function()
-					InteractionDialogFrame.ScrollBackground:SetWidth(InteractionDialogFrame.DialogBackground:GetWidth() + 7.5)
-				end)
-
-				hooksecurefunc(InteractionDialogFrame.DialogBackground, "SetHeight", function()
-					InteractionDialogFrame.ScrollBackground:SetHeight(InteractionDialogFrame.DialogBackground:GetHeight() + 7.5)
-				end)
-
 				InteractionDialogFrame.ScrollBackground:Hide()
 			end
 
 			do -- STYLE RUSTIC
-				InteractionDialogFrame.RusticBackground, InteractionDialogFrame.RusticBackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.RusticBackground")
+				InteractionDialogFrame.RusticBackground, InteractionDialogFrame.RusticBackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.RusticBackground")
 				InteractionDialogFrame.RusticBackground:SetSize(InteractionDialogFrame.DialogBackground:GetWidth() + 55, InteractionDialogFrame.DialogBackground:GetHeight() + 55)
 				InteractionDialogFrame.RusticBackground:SetPoint("CENTER", InteractionDialogFrame)
 				InteractionDialogFrame.RusticBackground:SetFrameStrata("LOW")
@@ -125,13 +118,13 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- TEXT
-					InteractionDialogFrame.Title.Label = AdaptiveAPI.FrameTemplates:CreateText(
+					InteractionDialogFrame.Title.Label = addon.API.FrameTemplates:CreateText(
 						InteractionDialogFrame.Title,
 						{ r = 1, g = 1, b = 1 },
 						15,
 						"CENTER",
 						"MIDDLE",
-						AdaptiveAPI.Fonts.Content_Light,
+						addon.API.Fonts.Content_Light,
 						"$parent.Label"
 					)
 					InteractionDialogFrame.Title.Label:SetPoint("TOP", InteractionDialogFrame.DialogBackground, 0, NS.Variables:RATIO(.5) + NS.Variables:RATIO(1.5))
@@ -140,7 +133,7 @@ function NS.Elements:Load()
 				end
 
 				do -- PROGRESS BAR
-					InteractionDialogFrame.Title.Progress, InteractionDialogFrame.Title.ProgressTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "BACKGROUND", AdaptiveAPI.Presets.BASIC_SQUARE, 25, 1, "$parent.Progress")
+					InteractionDialogFrame.Title.Progress, InteractionDialogFrame.Title.ProgressTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "BACKGROUND", addon.API.Presets.BASIC_SQUARE, 25, 1, "$parent.Progress")
 					InteractionDialogFrame.Title.Progress:SetParent(InteractionDialogFrame.Title)
 					InteractionDialogFrame.Title.Progress:SetSize(150, 8)
 					InteractionDialogFrame.Title.Progress:SetPoint("TOP", InteractionDialogFrame.DialogBackground, 0, NS.Variables:RATIO(2.5))
@@ -148,7 +141,7 @@ function NS.Elements:Load()
 					InteractionDialogFrame.Title.Progress:SetFrameLevel(1)
 					InteractionDialogFrame.Title.ProgressTexture:SetVertexColor(.1, .1, .1, .75)
 
-					AdaptiveAPI:AnchorToCenter(InteractionDialogFrame.Title.Progress)
+					addon.API.FrameUtil:AnchorToCenter(InteractionDialogFrame.Title.Progress)
 
 					InteractionDialogFrame.Title.Progress:SetScript("OnEnter", function()
 						InteractionDialogFrame.Title.ProgressTexture:SetVertexColor(.25, .25, .25, .75)
@@ -165,7 +158,7 @@ function NS.Elements:Load()
 						InteractionDialogFrame.Title.Progress.Bar:SetParent(InteractionDialogFrame.Title.Progress)
 						InteractionDialogFrame.Title.Progress.Bar:SetSize(InteractionDialogFrame.Title.Progress:GetWidth(), InteractionDialogFrame.Title.Progress:GetHeight() - 4)
 						InteractionDialogFrame.Title.Progress.Bar:SetPoint("CENTER", InteractionDialogFrame.Title.Progress, 0, 0)
-						InteractionDialogFrame.Title.Progress.Bar:SetStatusBarTexture(AdaptiveAPI.Presets.BASIC_SQUARE)
+						InteractionDialogFrame.Title.Progress.Bar:SetStatusBarTexture(addon.API.Presets.BASIC_SQUARE)
 						InteractionDialogFrame.Title.Progress.Bar:SetStatusBarColor(.5, .5, .5, 1)
 						InteractionDialogFrame.Title.Progress.Bar:SetFrameStrata("BACKGROUND")
 						InteractionDialogFrame.Title.Progress.Bar:SetFrameLevel(2)
@@ -190,14 +183,14 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- MEASUREMENT
-						InteractionDialogFrame.Content.Measurement = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+						InteractionDialogFrame.Content.Measurement = addon.API.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
 						InteractionDialogFrame.Content.Measurement:SetPoint("CENTER", InteractionDialogFrame.DialogBackground, 0, 0)
 						InteractionDialogFrame.Content.Measurement:SetSize(InteractionDialogFrame:GetWidth(), 500)
 						InteractionDialogFrame.Content.Measurement:SetAlpha(0)
 					end
 
 					do -- LABEL
-						InteractionDialogFrame.Content.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light)
+						InteractionDialogFrame.Content.Label = addon.API.FrameTemplates:CreateText(InteractionDialogFrame.Content, { r = 1, g = 1, b = 1 }, TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
 						InteractionDialogFrame.Content.Label:SetPoint("CENTER", InteractionDialogFrame.DialogBackground, 0, 0)
 						InteractionDialogFrame.Content.Label:SetSize(InteractionDialogFrame:GetWidth(), 75)
 						InteractionDialogFrame.Content.Label:SetShadowOffset(0, 0)

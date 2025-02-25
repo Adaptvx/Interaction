@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest
@@ -142,10 +143,10 @@ function NS.Script:Load()
 
 			if isWarbandComplete then
 				Frame.TitleHeader.MouseResponder:EnableMouse(true)
-				AdaptiveAPI:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0, true)
+				addon.API.Util:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0, true)
 			else
 				Frame.TitleHeader.MouseResponder:EnableMouse(false)
-				AdaptiveAPI:RemoveTooltip(Frame.TitleHeader.MouseResponder)
+				addon.API.Util:RemoveTooltip(Frame.TitleHeader.MouseResponder)
 			end
 
 			--------------------------------
@@ -260,22 +261,26 @@ function NS.Script:Load()
 			local TYPE_CURRENCY = 1
 
 			function Callback:GetQuestRewardType(type, index)
-				local questItemInfoType = GetQuestItemInfoLootType and GetQuestItemInfoLootType(type, index) or 0
+				if type == "spell" then
+					return "spell"
+				else
+					local questItemInfoType = GetQuestItemInfoLootType and GetQuestItemInfoLootType(type, index) or 0
 
-				--------------------------------
+					--------------------------------
 
-				if questItemInfoType == TYPE_ITEM then
-					local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, index)
+					if questItemInfoType == TYPE_ITEM then
+						local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, index)
 
-					if #name <= 1 then
-						return "currency"
-					else
-						return "item"
+						if #name <= 1 then
+							return "currency"
+						else
+							return "item"
+						end
 					end
-				end
 
-				if questItemInfoType == TYPE_CURRENCY then
-					return "currency"
+					if questItemInfoType == TYPE_CURRENCY then
+						return "currency"
+					end
 				end
 			end
 		end
@@ -409,19 +414,23 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- TEXT
-						Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						if CALLBACK_LABEL then
+							Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						end
 					end
 
 					do -- ICON
-						if CALLBACK_ICON:GetAtlas() then
-							Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
-						else
-							Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+						if CALLBACK_ICON then
+							if CALLBACK_ICON:GetAtlas() then
+								Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
+							else
+								Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+							end
 						end
 					end
 
 					do -- COUNT
-						if numCallbackCount > 1 then
+						if CALLBACK_COUNT_LABEL and numCallbackCount and numCallbackCount > 1 then
 							Buttons[i].Image.Text:Show()
 							Buttons[i].Image.Text.Label:SetTextColor(CALLBACK_COUNT_LABEL:GetTextColor())
 							Buttons[i].Image.Text.Label:SetText(numCallbackCount)
@@ -468,19 +477,23 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- TEXT
-						Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						if CALLBACK_LABEL then
+							Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						end
 					end
 
 					do -- ICON
-						if CALLBACK_ICON:GetAtlas() then
-							Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
-						else
-							Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+						if CALLBACK_ICON then
+							if CALLBACK_ICON:GetAtlas() then
+								Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
+							else
+								Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+							end
 						end
 					end
 
 					do -- COUNT
-						if numCallbackCount > 1 then
+						if CALLBACK_COUNT_LABEL and numCallbackCount and numCallbackCount > 1 then
 							Buttons[i].Image.Text:Show()
 							Buttons[i].Image.Text.Label:SetTextColor(CALLBACK_COUNT_LABEL:GetTextColor())
 							Buttons[i].Image.Text.Label:SetText(numCallbackCount)
@@ -527,19 +540,23 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- TEXT
-						Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						if CALLBACK_LABEL then
+							Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						end
 					end
 
 					do -- ICON
-						if CALLBACK_ICON:GetAtlas() then
-							Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
-						else
-							Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+						if CALLBACK_ICON then
+							if CALLBACK_ICON:GetAtlas() then
+								Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
+							else
+								Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+							end
 						end
 					end
 
 					do -- COUNT
-						if numCallbackCount and numCallbackCount > 1 then
+						if CALLBACK_COUNT_LABEL and numCallbackCount and numCallbackCount > 1 then
 							Buttons[i].Image.Text:Show()
 							Buttons[i].Image.Text.Label:SetTextColor(CALLBACK_COUNT_LABEL:GetTextColor())
 							Buttons[i].Image.Text.Label:SetText(numCallbackCount)
@@ -586,19 +603,23 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- TEXT
-						Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						if CALLBACK_LABEL then
+							Buttons[i].Label:SetText(CALLBACK_LABEL:GetText())
+						end
 					end
 
 					do -- ICON
-						if CALLBACK_ICON:GetAtlas() then
-							Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
-						else
-							Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+						if CALLBACK_ICON then
+							if CALLBACK_ICON:GetAtlas() then
+								Buttons[i].Image.IconTexture:SetAtlas(CALLBACK_ICON:GetAtlas())
+							else
+								Buttons[i].Image.IconTexture:SetTexture(CALLBACK_ICON:GetTexture())
+							end
 						end
 					end
 
 					do -- COUNT
-						if numCallbackCount > 1 then
+						if CALLBACK_COUNT_LABEL and numCallbackCount and numCallbackCount > 1 then
 							Buttons[i].Image.Text:Show()
 							Buttons[i].Image.Text.Label:SetTextColor(CALLBACK_COUNT_LABEL:GetTextColor())
 							Buttons[i].Image.Text.Label:SetText(numCallbackCount)
@@ -625,7 +646,7 @@ function NS.Script:Load()
 				for f1 = 1, frame:GetNumChildren() do
 					local _frameIndex1 = select(f1, frame:GetChildren())
 
-					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestInfoItem") and _frameIndex1:IsVisible() and _frameIndex1:GetPoint() and _frameIndex1.type == type then
+					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "QuestInfoItem") and _frameIndex1:IsVisible() and _frameIndex1:GetPoint() and _frameIndex1.type == type then
 						table.insert(results, _frameIndex1)
 					end
 				end
@@ -644,7 +665,7 @@ function NS.Script:Load()
 				for f1 = 1, frame:GetNumChildren() do
 					local _frameIndex1 = select(f1, frame:GetChildren())
 
-					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "QuestProgressItem") and not AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "Highlight") and _frameIndex1:IsVisible() and _frameIndex1.type == "required" then
+					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "QuestProgressItem") and not addon.API.Util:FindString(_frameIndex1:GetDebugName(), "Highlight") and _frameIndex1:IsVisible() and _frameIndex1.type == "required" then
 						table.insert(results, _frameIndex1)
 					end
 				end
@@ -664,14 +685,14 @@ function NS.Script:Load()
 				for f1 = 1, frame:GetNumChildren() do
 					local _frameIndex1 = select(f1, frame:GetChildren())
 
-					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
+					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
 						table.insert(results, _frameIndex1)
 					end
 				end
 				for f1 = 1, frame:GetNumRegions() do
 					local _frameIndex1 = select(f1, frame:GetRegions())
 
-					if AdaptiveAPI:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
+					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
 						title = _frameIndex1
 					end
 				end
@@ -703,8 +724,12 @@ function NS.Script:Load()
 					local storylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(GetQuestID()) and C_QuestLine.GetQuestLineInfo(GetQuestID()).questLineName) or (addon.Variables.IS_CLASSIC and nil)
 					local experience = UnitLevel("player") < GetMaxPlayerLevel() and GetRewardXP() or nil
 					local experiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
-					local gold, silver, copper = AdaptiveAPI:FormatMoney(GetRewardMoney())
+					local gold, silver, copper = addon.API.Util:FormatMoney(GetRewardMoney())
 					local honor = GetRewardHonor()
+
+					if addon.Variables.IS_CLASSIC and GetClassicExpansionLevel() >= 3 then
+						honor = honor / 100
+					end
 
 					--------------------------------
 
@@ -725,7 +750,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							if TITLE:IsVisible() then
-								Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(TITLE:GetText(), true))
+								Frame.Title:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE:GetText(), true))
 
 								--------------------------------
 
@@ -741,7 +766,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							Frame.Title:SetText(AdaptiveAPI:RemoveAtlasMarkup(TITLE_PROGRESS:GetText(), true))
+							Frame.Title:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE_PROGRESS:GetText(), true))
 
 							--------------------------------
 
@@ -776,7 +801,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							if experience and experience > 0 then
-								Frame.Rewards_Experience.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/xp.png", 25, 25, 0, 0) .. " " .. AdaptiveAPI:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
+								Frame.Rewards_Experience.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/xp.png", 25, 25, 0, 0) .. " " .. addon.API.Util:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
 							end
 						end
 
@@ -791,15 +816,15 @@ function NS.Script:Load()
 								--------------------------------
 
 								if gold > 0 then
-									_gold = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. gold .. "|r" .. " "
+									_gold = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. gold .. "|r" .. " "
 								end
 
 								if silver > 0 then
-									_silver = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. silver .. "|r" .. " "
+									_silver = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. silver .. "|r" .. " "
 								end
 
 								if copper > 0 then
-									_copper = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. copper .. "|r" .. " "
+									_copper = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. copper .. "|r" .. " "
 								end
 
 								--------------------------------
@@ -814,7 +839,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							if honor > 0 then
-								Frame.Rewards_Honor.Text:SetText(AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. honor .. "|r")
+								Frame.Rewards_Honor.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. addon.API.Util:FormatNumber(honor) .. "|r")
 							end
 						end
 
@@ -910,15 +935,15 @@ function NS.Script:Load()
 					-- Can't seem to query if the quest log is full - C_QuestLog.GetNumQuestWatches() returns values
 					-- higher than C_QuestLog.GetMaxNumQuestsCanAccept() even though it is still within the limit?
 					local isQuestLogFull = false -- (select(2, C_QuestLog.GetNumQuestWatches()) >= C_QuestLog.GetMaxNumQuestsCanAccept())
-					local isAutoAccept = addon.API:IsAutoAccept()
+					local isAutoAccept = addon.API.Main:IsAutoAccept()
 
 					--------------------------------
 
-					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.CompleteButton, BUTTON_COMPLETE:IsVisible())
-					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.ContinueButton, BUTTON_CONTINUE:IsVisible() and BUTTON_CONTINUE:IsEnabled())
-					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.AcceptButton, BUTTON_ACCEPT:IsVisible())
-					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.DeclineButton, BUTTON_DECLINE:IsVisible())
-					AdaptiveAPI:SetVisibility(Frame.ButtonContainer.GoodbyeButton, not BUTTON_DECLINE:IsVisible())
+					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.CompleteButton, BUTTON_COMPLETE:IsVisible())
+					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.ContinueButton, BUTTON_CONTINUE:IsVisible() and BUTTON_CONTINUE:IsEnabled())
+					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.AcceptButton, BUTTON_ACCEPT:IsVisible())
+					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.DeclineButton, BUTTON_DECLINE:IsVisible())
+					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.GoodbyeButton, not BUTTON_DECLINE:IsVisible())
 
 					--------------------------------
 
@@ -963,9 +988,9 @@ function NS.Script:Load()
 						--------------------------------
 
 						if frame:IsEnabled() then
-							addon.API:SetButtonToPlatform(frame, frame.Text, keybindVariable)
+							addon.API.Main:SetButtonToPlatform(frame, frame.Text, keybindVariable)
 						else
-							addon.API:SetButtonToPlatform(frame, frame.Text, "")
+							addon.API.Main:SetButtonToPlatform(frame, frame.Text, "")
 						end
 					end
 
@@ -1100,6 +1125,10 @@ function NS.Script:Load()
 
 					return resultQuality
 				end
+
+				if rewardType == "spell" then
+					return Enum.ItemQuality.Common
+				end
 			end
 
 			local function ResetIndex()
@@ -1145,6 +1174,10 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		Frame.ShowWithAnimation_StopEvent = function(sessionID)
+			return Frame.hidden or Frame.showWithAnimation_sessionID ~= sessionID
+		end
+
 		Frame.ShowWithAnimation = function()
 			if not Frame.hidden then
 				return
@@ -1169,6 +1202,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
+			local showWithAnimation_sessionID = math.random(1, 9999999)
+			Frame.showWithAnimation_sessionID = showWithAnimation_sessionID
+
+			--------------------------------
+
 			Frame.ScrollFrame:SetVerticalScroll(0)
 
 			--------------------------------
@@ -1184,18 +1222,18 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.ContextIcon.Label, .5, 0, 1, nil, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.ContextIcon, .5, 5, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+			addon.API.Animation:Fade(Frame.ContextIcon.Label, .5, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+			addon.API.Animation:Scale(Frame.ContextIcon, .5, 5, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 			do -- BACKGROUND
-				AdaptiveAPI.Animation:Fade(Frame.Background, .375, 0, 1, nil, function() return Frame.hidden end)
+				addon.API.Animation:Fade(Frame.Background, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 			end
 
 			do -- CONTENT
-				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.hidden end)
-					AdaptiveAPI.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.hidden end)
+				if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
+					addon.API.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+					addon.API.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 					--------------------------------
 
@@ -1205,8 +1243,8 @@ function NS.Script:Load()
 					--------------------------------
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if not Frame.hidden then
-							AdaptiveAPI.Animation:Fade(Frame.ScrollFrame, .375, 0, 1, nil, function() return Frame.hidden end)
+						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
+							addon.API.Animation:Fade(Frame.ScrollFrame, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
@@ -1217,8 +1255,8 @@ function NS.Script:Load()
 					end, .05)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if not Frame.hidden then
-							AdaptiveAPI.Animation:Fade(Frame.ButtonContainer, .5, 0, 1, AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
+						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
+							addon.API.Animation:Fade(Frame.ButtonContainer, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
@@ -1232,10 +1270,10 @@ function NS.Script:Load()
 
 			do -- SET
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if not Frame.hidden then
+					if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 						Frame.SetData()
 					end
-				end, 0)
+				end, .1)
 			end
 
 			do -- UPDATE
@@ -1247,6 +1285,10 @@ function NS.Script:Load()
 			--------------------------------
 
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Show)
+		end
+
+		Frame.HideWithAnimation_StopEvent = function()
+			return not Frame.hidden
 		end
 
 		Frame.HideWithAnimation = function(stopSession)
@@ -1283,17 +1325,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .175, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.ContextIcon.Label, .175, Frame.ContextIcon.Label:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.ContextIcon, 2.5, Frame.ContextIcon:GetScale(), 2.75, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
-
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if addon.Variables.Platform > 1 then
-					addon.BlizzardGameTooltip.Script:StopCustom()
-				end
-			end, .375)
+			addon.API.Animation:Fade(Frame, .175, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Fade(Frame.ContextIcon.Label, .175, Frame.ContextIcon.Label:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Scale(Frame.ContextIcon, 2.5, Frame.ContextIcon:GetScale(), 2.75, nil, addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
 
 			--------------------------------
 
@@ -1317,23 +1351,21 @@ function NS.Script:Load()
 
 	do
 		InteractionQuestFrame.UpdateGameTooltip = function()
-			local IsRewardButton = (GameTooltip.RewardButton)
+			local IsRewardButton = (InteractionFrame.GameTooltip.RewardButton)
 			local IsFrame = (Frame:IsVisible())
 
 			if IsFrame and IsRewardButton then
-				GameTooltip.reward = true
-				GameTooltip.bypass = true
+				InteractionFrame.GameTooltip.reward = true
+				InteractionFrame.GameTooltip.bypass = true
 
-				addon.BlizzardGameTooltip.Script:StartCustom()
+				InteractionFrame.GameTooltip:SetAnchorType("ANCHOR_NONE")
+				InteractionFrame.GameTooltip:ClearAllPoints()
+				InteractionFrame.GameTooltip:SetPoint("TOP", InteractionFrame.GameTooltip.RewardButton, 0, InteractionFrame.GameTooltip:GetHeight() + 12.5)
+			elseif not IsFrame and InteractionFrame.GameTooltip.reward then
+				InteractionFrame.GameTooltip.reward = false
+				InteractionFrame.GameTooltip.bypass = false
 
-				GameTooltip:SetAnchorType("ANCHOR_NONE")
-				GameTooltip:ClearAllPoints()
-				GameTooltip:SetPoint("TOP", GameTooltip.RewardButton, 0, GameTooltip:GetHeight() + 12.5)
-			elseif not IsFrame and GameTooltip.reward then
-				GameTooltip.reward = false
-				GameTooltip.bypass = false
-
-				GameTooltip:Hide()
+				InteractionFrame.GameTooltip:Hide()
 			end
 		end
 	end
@@ -1375,16 +1407,16 @@ function NS.Script:Load()
 				--------------------------------
 
 				if Frame.focused then
-					AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
+					addon.API.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
 				else
-					AdaptiveAPI.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return Frame.focused end)
+					addon.API.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return Frame.focused end)
 				end
 			else
 				InteractionQuestParent:SetAlpha(1)
 			end
 		end
 
-		AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame, Frame.Enter, Frame.Leave, nil, nil, { x = 175, y = 175 })
+		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.Enter, leaveCallback = Frame.Leave }, { x = 175, y = 175 })
 
 		CallbackRegistry:Add("START_DIALOG", Frame.UpdateFocus, 0)
 		CallbackRegistry:Add("STOP_DIALOG", Frame.UpdateFocus, 0)
@@ -1406,7 +1438,7 @@ function NS.Script:Load()
 			local Settings_UIDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
 
 			local offsetY = 0
-			local screenWidth = addon.API:GetScreenWidth()
+			local screenWidth = addon.API.Main:GetScreenWidth()
 			local frameWidth = Frame:GetWidth()
 			local dialogMaxWidth = 350
 			local quarterWidth = (screenWidth - dialogMaxWidth) / 2

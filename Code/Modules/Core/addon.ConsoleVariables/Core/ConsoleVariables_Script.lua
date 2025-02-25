@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.ConsoleVariables
@@ -29,7 +30,7 @@ function NS.Script:Load()
 
 	function NS.Script:SetCVarsFromList(list)
 		for cvar, value in pairs(list) do
-			AdaptiveAPI:SetCVar(cvar, value)
+			addon.API.Util:SetCVar(cvar, value)
 		end
 	end
 

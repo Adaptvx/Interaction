@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Cinematic.Effects
@@ -53,16 +54,6 @@ function NS.Script:Load()
 				end
 			end
 		end
-
-		do -- GRADIENT
-			Frame.Gradient.UpdateSize = function()
-				Frame.MouseResponders.Left:SetSize(750, UIParent:GetHeight())
-				Frame.MouseResponders.Left:SetPoint("LEFT", Frame.MouseResponders)
-
-				Frame.MouseResponders.Right:SetSize(750, UIParent:GetHeight())
-				Frame.MouseResponders.Right:SetPoint("RIGHT", Frame.MouseResponders)
-			end
-		end
 	end
 
 	--------------------------------
@@ -80,7 +71,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 1, nil, function() return Frame.Gradient.hidden end)
+				addon.API.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 1, nil, function() return Frame.Gradient.hidden end)
 			end
 
 			Frame.Gradient.HideWithAnimation = function()
@@ -97,7 +88,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 0, nil, function() return not Frame.Gradient.hidden end)
+				addon.API.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 0, nil, function() return not Frame.Gradient.hidden end)
 			end
 		end
 	end
@@ -141,14 +132,14 @@ function NS.Script:Load()
 		-- 		--------------------------------
 
 		-- 		if Frame.Gradient.focused then
-		-- 			AdaptiveAPI.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), 1, nil, function() return not Frame.Gradient.focused end)
+		-- 			addon.API.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), 1, nil, function() return not Frame.Gradient.focused end)
 		-- 		else
-		-- 			AdaptiveAPI.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), .5, nil, function() return Frame.Gradient.focused end)
+		-- 			addon.API.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), .5, nil, function() return Frame.Gradient.focused end)
 		-- 		end
 		-- 	end
 
-		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Left, function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Enter() end end, function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Leave() end end)
-		-- 	AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Right, function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Enter() end end, function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Leave() end end)
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Left, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Leave() end end })
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Right, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Leave() end end })
 		-- end
 	end
 
@@ -164,10 +155,6 @@ function NS.Script:Load()
 				elseif addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then
 					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH .. "Art/Gradient/gradient-right-fullscreen.png")
 				end
-
-				--------------------------------
-
-				Frame.Gradient.UpdateSize()
 			end
 			Settings_UIDirection()
 

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Waypoint
@@ -29,7 +30,7 @@ function NS.Script:Load()
 
 			if not isWaypointVisible or bypass then
 				if sfx or sfx == nil then
-					AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Line, 2, 50, 1000, "y")
+					addon.API.Animation:Scale(InteractionWaypointFrame.Line, 2, 50, 1000, "y")
 
 					--------------------------------
 
@@ -38,7 +39,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.GlowAnimation, .25, 1, 0)
+						addon.API.Animation:Fade(InteractionWaypointFrame.GlowAnimation, .25, 1, 0)
 					end
 
 					--------------------------------
@@ -292,7 +293,7 @@ function NS.Script:Load()
 									InteractionPinpointFrame.Background:SetSize(InteractionPinpointFrame.Label:GetStringWidth() + 25, InteractionPinpointFrame.Label:GetStringHeight() + 25)
 								end
 
-								InteractionWaypointFrame.Distance:SetText(AdaptiveAPI:FormatNumber(navDistance) .. " yds")
+								InteractionWaypointFrame.Distance:SetText(addon.API.Util:FormatNumber(string.format("%.0f", navDistance)) .. " yds")
 							end
 						else -- OUT OF VIEW
 							if
@@ -372,19 +373,19 @@ function NS.Script:Load()
 							--------------------------------
 
 							-- ALPHA -- SuperTrackedFrame
-							-- AdaptiveAPI.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
+							-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
 
 							-- ALPHA -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
+							addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
 
 							-- SCALE -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
 
 							-- POSITION -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.BLOCKED_HEIGHT, "y")
+							addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.BLOCKED_HEIGHT, "y")
 
 							-- ALPHA -- InteractionPinpointFrame.Line
-							AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
+							addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
 
 							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
 							InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
@@ -429,19 +430,19 @@ function NS.Script:Load()
 							--------------------------------
 
 							-- ALPHA -- SuperTrackedFrame
-							-- AdaptiveAPI.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
+							-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
 
 							-- ALPHA -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
+							addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
 
 							-- SCALE -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
 
 							-- POSITION -- InteractionPinpointFrame
-							AdaptiveAPI.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
+							addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
 
 							-- ALPHA -- InteractionPinpointFrame.Line
-							AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 1)
+							addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 1)
 
 							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
 							InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "content.png")
@@ -482,19 +483,19 @@ function NS.Script:Load()
 							--------------------------------
 
 							-- ALPHA -- SuperTrackedFrame
-							AdaptiveAPI.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 0)
+							addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 0)
 
 							-- ALPHA -- InteractionPinpointFrame
-							-- AdaptiveAPI.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
+							-- addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
 
 							-- SCALE -- InteractionPinpointFrame
-							-- AdaptiveAPI.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
+							-- addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
 
 							-- POSITION -- InteractionPinpointFrame
-							-- AdaptiveAPI.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
+							-- addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
 
 							-- ALPHA -- InteractionPinpointFrame.Line
-							-- AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
+							-- addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
 
 							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
 							-- InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
@@ -561,16 +562,16 @@ function NS.Script:Load()
 							InteractionWaypointFrame.Distance:Show()
 
 							-- ALPHA -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 1)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 1)
 
 							-- SCALE -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
 
 							-- ALPHA -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), .75)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), .75)
 
 							-- SCALE -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
 						end
 
 						if (not C_Navigation.WasClampedToScreen()) then
@@ -617,16 +618,16 @@ function NS.Script:Load()
 							InteractionWaypointFrame.Distance:Show()
 
 							-- ALPHA -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 0)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 0)
 
 							-- SCALE -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
 
 							-- ALPHA -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 0)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 0)
 
 							-- SCALE -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
 						end
 
 						if (not C_Navigation.WasClampedToScreen()) then
@@ -684,16 +685,16 @@ function NS.Script:Load()
 							InteractionWaypointFrame.Distance:Show()
 
 							-- ALPHA -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), .75)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), .75)
 
 							-- SCALE -- InteractionWaypointFrame.Distance
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1)
 
 							-- ALPHA -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 1)
+							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 1)
 
 							-- SCALE -- InteractionWaypointFrame.Line
-							AdaptiveAPI.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
+							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
 
 							-- [ADDON]
 							-- Show Waypoint Animation
@@ -732,7 +733,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				InteractionPinpointFrame.Shine.Play()
-				AdaptiveAPI.Animation:Fade(SuperTrackedFrame, .25, 0, 1)
+				addon.API.Animation:Fade(SuperTrackedFrame, .25, 0, 1)
 			end
 		end
 
@@ -744,18 +745,18 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(SuperTrackedFrame, .25, 1, 0)
-				AdaptiveAPI.Animation:Move(InteractionPinpointFrame, .5, "CENTER", NS.Variables.DEFAULT_HEIGHT, NS.Variables.ANIMATION_HEIGHT, "y")
+				addon.API.Animation:Fade(SuperTrackedFrame, .25, 1, 0)
+				addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", NS.Variables.DEFAULT_HEIGHT, NS.Variables.ANIMATION_HEIGHT, "y")
 			end
 		end
 
 		InteractionPinpointFrame.Shine.Play = function()
-			AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Shine, .25, 0, 1, AdaptiveAPI.Animation.EaseExpo)
+			addon.API.Animation:Fade(InteractionPinpointFrame.Shine, .25, 0, 1, addon.API.Animation.EaseExpo)
 
 			--------------------------------
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:Fade(InteractionPinpointFrame.Shine, .25, 1, 0, AdaptiveAPI.Animation.EaseSine)
+				addon.API.Animation:Fade(InteractionPinpointFrame.Shine, .25, 1, 0, addon.API.Animation.EaseSine)
 			end, .125)
 		end
 	end

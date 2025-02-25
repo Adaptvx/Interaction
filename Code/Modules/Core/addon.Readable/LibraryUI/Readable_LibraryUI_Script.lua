@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Readable
@@ -112,66 +113,57 @@ function NS.LibraryUI.Script:Load()
 
 			--------------------------------
 
-			local function Top()
+			do -- TOP
 				if Current > Min then
-					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
-						return
-					end
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = false
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Show()
-
-					--------------------------------
-
-					AdaptiveAPI.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, .25, 0, 1, AdaptiveAPI.Animation.EaseQuad, function() return LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden end)
-				else
 					if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
-						return
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = false
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Show()
+
+						--------------------------------
+
+						addon.API.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, .25, 0, 1, addon.API.Animation.EaseQuad, function() return LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden end)
 					end
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
-							LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Hide()
-						end
-					end, .25)
-
-					--------------------------------
-
-					AdaptiveAPI.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, .25, LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:GetAlpha(), 0, AdaptiveAPI.Animation.EaseQuad, function() return not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden end)
-				end
-			end
-
-			local function Bottom()
-				if Current < Max then
-					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
-						return
-					end
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = false
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Show()
-
-					--------------------------------
-
-					AdaptiveAPI.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, .25, 0, 1, AdaptiveAPI.Animation.EaseQuad, function() return LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden end)
 				else
-					if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
-						return
+					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = true
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
+								LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Hide()
+							end
+						end, .25)
+
+						--------------------------------
+
+						addon.API.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, .25, LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:GetAlpha(), 0, addon.API.Animation.EaseQuad, function() return not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden end)
 					end
-					LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
-							LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Hide()
-						end
-					end, .25)
-
-					--------------------------------
-
-					AdaptiveAPI.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, .25, LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:GetAlpha(), 0, AdaptiveAPI.Animation.EaseQuad, function() return not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden end)
 				end
 			end
 
-			--------------------------------
+			do -- BOTTOM
+				if Current < Max then
+					if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = false
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Show()
 
-			Top()
-			Bottom()
+						--------------------------------
+
+						addon.API.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, .25, 0, 1, addon.API.Animation.EaseQuad, function() return LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden end)
+					end
+				else
+					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
+						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = true
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
+								LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Hide()
+							end
+						end, .25)
+
+						--------------------------------
+
+						addon.API.Animation:Fade(LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, .25, LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:GetAlpha(), 0, addon.API.Animation.EaseQuad, function() return not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden end)
+					end
+				end
+			end
 		end
 	end
 
@@ -185,7 +177,7 @@ function NS.LibraryUI.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(LibraryUI, .5, 0, 1, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
+			addon.API.Animation:Fade(LibraryUI, .5, 0, 1, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
 		end
 
 		LibraryUI.HideWithAnimation = function()
@@ -195,7 +187,7 @@ function NS.LibraryUI.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(LibraryUI, .5, LibraryUI:GetAlpha(), 0, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
+			addon.API.Animation:Fade(LibraryUI, .5, LibraryUI:GetAlpha(), 0, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
 		end
 	end
 
@@ -270,11 +262,11 @@ function NS.LibraryUI.Script:Load()
 
 			function LibraryCallback:GetAllFilteredEntries()
 				local Group_Letters = LibraryCallback:GetAllTypeEntries("Letter")
-				local Alphabetical_Letters = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Letters, "Title")
+				local Alphabetical_Letters = addon.API.Util:SortListByAlphabeticalOrder(Group_Letters, "Title")
 				local Group_Books = LibraryCallback:GetAllTypeEntries("Book")
-				local Alphabetical_Books = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Books, "Title")
+				local Alphabetical_Books = addon.API.Util:SortListByAlphabeticalOrder(Group_Books, "Title")
 				local Group_Slates = LibraryCallback:GetAllTypeEntries("Stone")
-				local Alphabetical_Slates = AdaptiveAPI:SortListByAlphabeticalOrder(Group_Slates, "Title")
+				local Alphabetical_Slates = addon.API.Util:SortListByAlphabeticalOrder(Group_Slates, "Title")
 
 				local Group_Combined = {}
 
@@ -302,31 +294,31 @@ function NS.LibraryUI.Script:Load()
 					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetVerticalScroll(0)
 
 					-- TITLE
-					Entries = AdaptiveAPI:FilterListByVariable(LibraryCallback:GetAllEntries(), "Title", SearchText, true, false)
+					Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Title", SearchText, true, false)
 
 					-- ZONE
 					if #Entries == 0 then
-						Entries = AdaptiveAPI:FilterListByVariable(LibraryCallback:GetAllEntries(), "Zone", SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Zone", SearchText, true, false)
 					end
 
 					-- NUM PAGES
 					if #Entries == 0 then
-						Entries = AdaptiveAPI:FilterListByVariable(LibraryCallback:GetAllEntries(), "NumPages", SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "NumPages", SearchText, true, false)
 					end
 
 					-- IS ADDED FROM BAGS
 					if #Entries == 0 then
 						local Text = SearchText
 
-						if AdaptiveAPI:FindString("added from bags", string.lower(Text)) then
-							Entries = AdaptiveAPI:FilterListByVariable(LibraryCallback:GetAllEntries(), "IsItemInInventory", SearchText, true, false)
+						if addon.API.Util:FindString("added from bags", string.lower(Text)) then
+							Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "IsItemInInventory", SearchText, true, false)
 						end
 					end
 
 					-- CONTENT
 					if #Entries == 0 then
-						Entries = AdaptiveAPI:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, function(item)
-							if AdaptiveAPI:FindString(string.lower(item.Content[1]), string.lower(SearchText)) then
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, function(item)
+							if addon.API.Util:FindString(string.lower(item.Content[1]), string.lower(SearchText)) then
 								return true
 							end
 
@@ -334,7 +326,7 @@ function NS.LibraryUI.Script:Load()
 						end)
 					end
 
-					Entries = AdaptiveAPI:SortListByAlphabeticalOrder(Entries, "Title")
+					Entries = addon.API.Util:SortListByAlphabeticalOrder(Entries, "Title")
 				end
 
 				--------------------------------
@@ -344,7 +336,7 @@ function NS.LibraryUI.Script:Load()
 				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checked
 				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checked
 
-				local TypeList = AdaptiveAPI:FilterListByVariable(Entries, nil, nil, nil, nil, function(item)
+				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, function(item)
 					local Result
 
 					local Type = item.Type
@@ -577,7 +569,7 @@ function NS.LibraryUI.Script:Load()
 						--------------------------------
 
 						if playAnimation or playAnimation == nil then
-							AdaptiveAPI.Animation:Fade(Buttons[i], .125 + (.075 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
+							addon.API.Animation:Fade(Buttons[i], .125 + (.075 * i), 0, .75, nil, function() return not Buttons[i]:IsVisible() end)
 						else
 							Buttons[i]:SetAlpha(.75)
 						end
@@ -647,7 +639,7 @@ function NS.LibraryUI.Script:Load()
 						if #TooltipText > 100 then
 							TooltipText = string.sub(TooltipText, 1, 100) .. "..."
 						end
-						if AdaptiveAPI:FindString(TooltipText, "<HTML>") then
+						if addon.API.Util:FindString(TooltipText, "<HTML>") then
 							TooltipText = nil
 						end
 
@@ -670,9 +662,9 @@ function NS.LibraryUI.Script:Load()
 						--------------------------------
 
 						if TooltipText then
-							AdaptiveAPI:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5, true)
+							addon.API.Util:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5, true)
 						else
-							AdaptiveAPI:RemoveTooltip(Buttons[i])
+							addon.API.Util:RemoveTooltip(Buttons[i])
 						end
 					end
 				end
@@ -789,7 +781,7 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:DeleteFromLibrary(ID)
-				local Entry = AdaptiveAPI:FindIndexInTable(NS.Variables.LibraryDB, ID)
+				local Entry = addon.API.Util:FindKeyPositionInTable(NS.Variables.LibraryDB, ID)
 
 				if Entry then
 					InteractionPromptFrame.Set(L["Readable - Library - Prompt - Delete"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
@@ -845,7 +837,7 @@ function NS.LibraryUI.Script:Load()
 				local compressed = addon.Libraries.LibDeflate:CompressDeflate(serialized)
 				local encoded = addon.Libraries.LibDeflate:EncodeForPrint(compressed)
 
-				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export"] .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy.png", 25, 100, 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export"] .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy.png", 25, 100, 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 			end
 
 			function LibraryCallback:Import(string)
@@ -946,7 +938,7 @@ function NS.LibraryUI.Script:Load()
 
 		-- SetButtons on ThemeUpdate
 		addon.Libraries.AceTimer:ScheduleTimer(function()
-			addon.API:RegisterThemeUpdate(function()
+			addon.API.Main:RegisterThemeUpdate(function()
 				if Frame.LibraryUIFrame:IsVisible() then
 					LibraryCallback:SetPageButtons()
 				end

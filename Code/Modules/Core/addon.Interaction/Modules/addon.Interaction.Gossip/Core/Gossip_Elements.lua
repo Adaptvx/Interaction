@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip
@@ -17,7 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionGossipParent = CreateFrame("Frame", "InteractionGossipParent", InteractionFrame)
-			InteractionGossipParent:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+			InteractionGossipParent:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 			InteractionGossipParent:SetPoint("CENTER", nil)
 			InteractionGossipParent:SetFrameStrata("FULLSCREEN")
 
@@ -41,7 +42,7 @@ function NS.Elements:Load()
 
 			do -- BUTTONS
 				do -- GOODBYE BUTTON
-					Frame.GoodbyeButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame, Frame:GetWidth() - 20, 27.5, "FULLSCREEN", {
+					Frame.GoodbyeButton = addon.API.FrameTemplates:CreateCustomButton(Frame, Frame:GetWidth() - 125, 27.5, "FULLSCREEN", {
 						defaultTexture = "",
 						highlightTexture = "",
 						edgeSize = 25,
@@ -54,16 +55,17 @@ function NS.Elements:Load()
 					}, "$parent.GoodbyeButton")
 					Frame.GoodbyeButton:SetPoint("CENTER", Frame) -- Modified later in Gossip_Script.lua
 					Frame.GoodbyeButton:SetText(L["InteractionGossipFrame - Close"])
-					addon.API:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
+					addon.API.FrameUtil:SetDynamicSize(Frame.GoodbyeButton, Frame, -125)
+					addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 
 					Frame.GoodbyeButton:SetAlpha(.5)
 
 					--------------------------------
 
 					do -- BACKGROUND
-						Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-						Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, -62.5, 25)
-						Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, 62.5, -25)
+						Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+						Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, 62.5, 25)
+						Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, -62.5, -25)
 						Frame.GoodbyeButton.Background:SetAlpha(.5)
 						Frame.GoodbyeButton.BackgroundTexture:SetAlpha(1)
 					end
@@ -71,18 +73,13 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- PARALLAX
-						AdaptiveAPI:AnchorToCenter(Frame.GoodbyeButton)
+						addon.API.FrameUtil:AnchorToCenter(Frame.GoodbyeButton)
 
-						Frame.GoodbyeButton.API_ButtonTextFrame.AdaptiveAPI_Animation_Parallax_Weight = 2.5
-						AdaptiveAPI.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
+						Frame.GoodbyeButton.API_ButtonTextFrame.API_Animation_Parallax_Weight = 2.5
+						addon.API.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
 					end
 
 					do -- EVENTS
-						local function UpdateSize()
-							Frame.GoodbyeButton:SetSize(Frame:GetWidth() - 125, 27.5)
-						end
-						UpdateSize()
-
 						local function UpdateBackground()
 							if NS.Variables.NumCurrentButtons < 1 then
 								Frame.GoodbyeButton.Background:Show()
@@ -90,22 +87,19 @@ function NS.Elements:Load()
 								Frame.GoodbyeButton.Background:Hide()
 							end
 						end
-						UpdateBackground()
 
-						hooksecurefunc(Frame, "SetWidth", UpdateSize)
-						hooksecurefunc(Frame, "SetHeight", UpdateSize)
-						hooksecurefunc(Frame, "SetSize", UpdateSize)
+						UpdateBackground()
 
 						CallbackRegistry:Add("GOSSIP_DATA_LOADED", UpdateBackground, 0)
 
 						--------------------------------
 
 						Frame.GoodbyeButton:HookScript("OnEnter", function()
-							AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .75)
+							addon.API.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .75)
 						end)
 
 						Frame.GoodbyeButton:HookScript("OnLeave", function()
-							AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .5)
+							addon.API.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .5)
 						end)
 					end
 				end
@@ -154,7 +148,7 @@ function NS.Elements:Load()
 								C_GossipInfo.SelectAvailableQuest(button.OptionID)
 							elseif button.OptionType == "active" then
 								C_GossipInfo.SelectActiveQuest(button.OptionID)
-                            elseif button.OptionType == "option" then
+							elseif button.OptionType == "option" then
 								if not button.OptionID then
 									C_GossipInfo.SelectOptionByIndex(button.OrderIndex)
 								else
@@ -215,15 +209,16 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- ICON
-						button.Icon, button.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH .. "Art/Icons/logo.png", "$parent.Icon")
+						button.Icon, button.IconTexture = addon.API.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH .. "Art/Icons/logo.png", "$parent.Icon")
 						button.Icon:SetSize(17.5, 17.5)
 						button.Icon:SetFrameStrata("FULLSCREEN")
 						button.Icon:SetFrameLevel(2)
 					end
 
 					do -- LABEL
-						button.Label = AdaptiveAPI.FrameTemplates:CreateText(button, { r = 1, g = 1, b = 1 }, 14, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+						button.Label = addon.API.FrameTemplates:CreateText(button, { r = 1, g = 1, b = 1 }, 14, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
 						button.Label:SetHeight(button:GetHeight())
+						addon.API.FrameUtil:SetDynamicSize(button.Label, button, nil, 0)
 
 						--------------------------------
 
@@ -232,26 +227,19 @@ function NS.Elements:Load()
 
 					do -- STANDALONE
 						button.Standalone = CreateFrame("Frame", "$parent.Standalone", button)
-						button.Standalone:SetWidth(button:GetWidth() + 35)
 						button.Standalone:SetPoint("CENTER", button)
 						button.Standalone:SetFrameStrata("FULLSCREEN")
 						button.Standalone:SetFrameLevel(0)
-
-						--------------------------------
-
-						hooksecurefunc(button, "SetHeight", function()
-							button.Standalone:SetHeight(button:GetHeight())
-							button.Standalone.Background:SetHeight(button.Standalone:GetHeight() + 2.5)
-						end)
+						addon.API.FrameUtil:SetDynamicSize(button.Standalone, button, -35, 0)
 
 						--------------------------------
 
 						do -- BACKGROUND
-							button.Standalone.Background, button.Standalone.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(button.Standalone, "FULLSCREEN", nil, { left = 128, top = 128, right = 128, bottom = 128 }, .0875, "$parent.Background", Enum.UITextureSliceMode.Stretched)
-							button.Standalone.Background:SetWidth(button.Standalone:GetWidth())
+							button.Standalone.Background, button.Standalone.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(button.Standalone, "FULLSCREEN", nil, { left = 128, top = 128, right = 128, bottom = 128 }, .0875, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 							button.Standalone.Background:SetPoint("CENTER", button.Standalone)
 							button.Standalone.Background:SetFrameStrata("FULLSCREEN")
 							button.Standalone.Background:SetFrameLevel(1)
+							addon.API.FrameUtil:SetDynamicSize(button.Standalone.Background, button.Standalone, 0, -2.5)
 
 							--------------------------------
 
@@ -302,14 +290,14 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- BACKGROUND
-							button.Keybind.Background, button.Keybind.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(button.Keybind, "MEDIUM", NS.Variables.PATH .. "key-background.png", 50, 1, "$parent.Background")
+							button.Keybind.Background, button.Keybind.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(button.Keybind, "MEDIUM", NS.Variables.PATH .. "key-background.png", 50, 1, "$parent.Background")
 							button.Keybind.Background:SetAllPoints(button.Keybind)
 							button.Keybind.Background:SetFrameStrata("FULLSCREEN")
 							button.Keybind.Background:SetFrameLevel(2)
 
 							--------------------------------
 
-							addon.API:RegisterThemeUpdate(function()
+							addon.API.Main:RegisterThemeUpdate(function()
 								local TEXTURE_Background
 
 								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
@@ -323,7 +311,7 @@ function NS.Elements:Load()
 						end
 
 						do -- LABEL
-							button.Keybind.Label = AdaptiveAPI.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+							button.Keybind.Label = addon.API.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light)
 							button.Keybind.Label:SetSize(30, 30)
 							button.Keybind.Label:SetPoint("CENTER", button.Keybind)
 						end
@@ -454,7 +442,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								do -- BUTTON
-									AdaptiveAPI.Animation:Fade(button, .05, .75, 1, nil, function() return not button.selected end)
+									addon.API.Animation:Fade(button, .05, .75, 1, nil, function() return not button.selected end)
 								end
 
 								do -- STATE
@@ -507,7 +495,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								do -- BUTTON
-									AdaptiveAPI.Animation:Fade(button, .05, 1, 1, nil, function() return button.selected end)
+									addon.API.Animation:Fade(button, .05, 1, 1, nil, function() return button.selected end)
 								end
 
 								do -- STATE
@@ -538,7 +526,7 @@ function NS.Elements:Load()
 
 						button.MouseDown = function(skipAnimation)
 							if not skipAnimation then
-								AdaptiveAPI.Animation:Fade(button, .125, 1, .75)
+								addon.API.Animation:Fade(button, .125, 1, .75)
 							else
 								button:SetAlpha(.75)
 							end
@@ -558,8 +546,8 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						button.Standalone.Background.AdaptiveAPI_Animation_Parallax_Weight = 2.5
-						AdaptiveAPI.Animation:AddParallax(button.Standalone.Background, button, function() return true end, function() return button.selected end, addon.Input.Variables.IsController)
+						button.Standalone.Background.API_Animation_Parallax_Weight = 2.5
+						addon.API.Animation:AddParallax(button.Standalone.Background, button, function() return true end, function() return button.selected end, addon.Input.Variables.IsController)
 
 						--------------------------------
 

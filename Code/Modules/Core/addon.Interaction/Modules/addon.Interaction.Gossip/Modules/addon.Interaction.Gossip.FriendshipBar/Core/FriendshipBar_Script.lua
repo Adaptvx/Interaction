@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.FriendshipBar
@@ -21,6 +22,113 @@ function NS.Script:Load()
 	local BlizzardFriendshipBar; if not addon.Variables.IS_CLASSIC then BlizzardFriendshipBar = GossipFrame.FriendshipStatusBar else BlizzardFriendshipBar = NPCFriendshipStatusBar end
 
 	--------------------------------
+	-- FUNCTIONS (TOOLTIP)
+	--------------------------------
+
+	local ReputationTooltip_Retail = {}
+	local ReputationTooltip_Classic = {}
+
+	do -- RETAIL
+		-- Blizzard_UIPanels_Game -> Mainline -> ReputationFrame.lua
+
+		local function TryAppendAccountReputationLineToTooltip(tooltip, factionID)
+			if not tooltip or not factionID or not C_Reputation.IsAccountWideReputation(factionID) then
+				return;
+			end
+
+			local wrapText = false;
+			GameTooltip_AddColoredLine(tooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR, wrapText);
+		end
+
+		function ReputationTooltip_Retail:ShowFriendshipReputationTooltip(factionID, anchor, canClickForOptions)
+			local friendshipData = C_GossipInfo.GetFriendshipReputation(factionID);
+			if not friendshipData or friendshipData.friendshipFactionID < 0 then
+				return;
+			end
+
+			InteractionFrame.GameTooltip:SetOwner(self, anchor);
+			local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(friendshipData.friendshipFactionID);
+			if rankInfo.maxLevel > 0 then
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name.." ("..rankInfo.currentLevel.." / "..rankInfo.maxLevel..")", HIGHLIGHT_FONT_COLOR);
+			else
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name, HIGHLIGHT_FONT_COLOR);
+			end
+
+			TryAppendAccountReputationLineToTooltip(InteractionFrame.GameTooltip, factionID);
+
+			GameTooltip_AddBlankLineToTooltip(InteractionFrame.GameTooltip)
+			InteractionFrame.GameTooltip:AddLine(friendshipData.text, nil, nil, nil, true);
+			if friendshipData.nextThreshold then
+				local current = friendshipData.standing - friendshipData.reactionThreshold;
+				local max = friendshipData.nextThreshold - friendshipData.reactionThreshold;
+				local wrapText = true;
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction.." ("..current.." / "..max..")", wrapText);
+			else
+				local wrapText = true;
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction, wrapText);
+			end
+
+			-- This tooltip code is shared between Gossips (no click functionality) and the Reputation UI (can click button for options)
+			if canClickForOptions then
+				GameTooltip_AddBlankLineToTooltip(InteractionFrame.GameTooltip);
+				GameTooltip_AddInstructionLine(InteractionFrame.GameTooltip, REPUTATION_BUTTON_TOOLTIP_CLICK_INSTRUCTION);
+			end
+
+			InteractionFrame.GameTooltip:Show();
+		end
+	end
+
+	do -- CLASSIC
+		-- Blizzard_UIPanels_Game -> Mainline -> ReputationFrame.lua
+
+		-- local function TryAppendAccountReputationLineToTooltip(tooltip, factionID)
+		-- 	if not tooltip or not factionID or not C_Reputation.IsAccountWideReputation(factionID) then
+		-- 		return;
+		-- 	end
+
+		-- 	local wrapText = false;
+		-- 	GameTooltip_AddColoredLine(tooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR, wrapText);
+		-- end
+
+		function ReputationTooltip_Classic:ShowFriendshipReputationTooltip(factionID, anchor, canClickForOptions)
+			local friendshipData = C_GossipInfo.GetFriendshipReputation(factionID);
+			if not friendshipData or friendshipData.friendshipFactionID < 0 then
+				return;
+			end
+
+			InteractionFrame.GameTooltip:SetOwner(self, anchor);
+			local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(friendshipData.friendshipFactionID);
+			if rankInfo.maxLevel > 0 then
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name.." ("..rankInfo.currentLevel.." / "..rankInfo.maxLevel..")", HIGHLIGHT_FONT_COLOR);
+			else
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name, HIGHLIGHT_FONT_COLOR);
+			end
+
+			-- TryAppendAccountReputationLineToTooltip(InteractionFrame.GameTooltip, factionID);
+
+			GameTooltip_AddBlankLineToTooltip(InteractionFrame.GameTooltip)
+			InteractionFrame.GameTooltip:AddLine(friendshipData.text, nil, nil, nil, true);
+			if friendshipData.nextThreshold then
+				local current = friendshipData.standing - friendshipData.reactionThreshold;
+				local max = friendshipData.nextThreshold - friendshipData.reactionThreshold;
+				local wrapText = true;
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction.." ("..current.." / "..max..")", wrapText);
+			else
+				local wrapText = true;
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction, wrapText);
+			end
+
+			-- This tooltip code is shared between Gossips (no click functionality) and the Reputation UI (can click button for options)
+			if canClickForOptions then
+				GameTooltip_AddBlankLineToTooltip(InteractionFrame.GameTooltip);
+				GameTooltip_AddInstructionLine(InteractionFrame.GameTooltip, REPUTATION_BUTTON_TOOLTIP_CLICK_INSTRUCTION);
+			end
+
+			InteractionFrame.GameTooltip:Show();
+		end
+	end
+
+	--------------------------------
 	-- FUNCTIONS (FRAME)
 	--------------------------------
 
@@ -36,7 +144,7 @@ function NS.Script:Load()
 
 			Frame.Progress.Bar:SetValue(0)
 			Frame.Progress.Bar:SetMinMaxValues(Min, Max)
-			AdaptiveAPI.Animation:SetProgressTo(Frame.Progress.Bar, NewValue, 1)
+			addon.API.Animation:SetProgressTo(Frame.Progress.Bar, NewValue, 1)
 
 			--------------------------------
 
@@ -66,13 +174,13 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .125, 0, 1, nil, StopEvent())
-			AdaptiveAPI.Animation:Fade(Frame.Progress, .125, 0, 1, nil, StopEvent())
-			AdaptiveAPI.Animation:Fade(Frame.Image, .125, 0, 1, nil, StopEvent())
+			addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, 0, 1, nil, StopEvent())
+			addon.API.Animation:Fade(Frame.Progress, .125, 0, 1, nil, StopEvent())
+			addon.API.Animation:Fade(Frame.Image, .125, 0, 1, nil, StopEvent())
 		end
 
 		Frame.HideWithAnimation = function()
-			AdaptiveAPI.Animation:Fade(InteractionFriendshipBarFrame, .125, InteractionFriendshipBarFrame:GetAlpha(), 0)
+			addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, InteractionFriendshipBarFrame:GetAlpha(), 0)
 
 			--------------------------------
 
@@ -89,13 +197,9 @@ function NS.Script:Load()
 	do
 		Parent:SetScript("OnEnter", function()
 			if not addon.Variables.IS_CLASSIC then
-				ReputationEntryMixin.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame.TooltipParent, BlizzardFriendshipBar.friendshipFactionID, "ANCHOR_BOTTOM", false)
-
-				addon.BlizzardGameTooltip.Script:StartCustom()
+				ReputationTooltip_Retail.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame.TooltipParent, BlizzardFriendshipBar.friendshipFactionID, "ANCHOR_BOTTOM", false)
 			else
-				ShowFriendshipReputationTooltip(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
-
-				addon.BlizzardGameTooltip.Script:StartCustom()
+				ReputationTooltip_Classic(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
 			end
 		end)
 

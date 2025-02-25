@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
@@ -53,7 +54,7 @@ function NS.Util:Load()
 
 			InteractionFrame.INT_CameraPitch:SetScript("OnUpdate", function()
 				local Current = GetTime() - Start
-				local Pitch = AdaptiveAPI.Animation.EaseOutSine(Current, 88, level, duration)
+				local Pitch = addon.API.Animation.EaseOutSine(Current, 88, level, duration)
 
 				if Current >= duration then
 					ConsoleExec("pitchlimit " .. level)
@@ -89,7 +90,7 @@ function NS.Util:Load()
 
 			InteractionFrame.INT_CameraYaw:SetScript("OnUpdate", function()
 				local Current = GetTime() - Start
-				local Yaw = AdaptiveAPI.Animation.EaseInOutSine(Current, 0, duration / 6, duration)
+				local Yaw = addon.API.Animation.EaseInOutSine(Current, 0, duration / 6, duration)
 
 				--------------------------------
 
@@ -148,7 +149,7 @@ function NS.Util:Load()
 			InteractionFrame.INT_CameraFieldOfView:SetScript("OnUpdate", function()
 				local Current = GetTime() - Start
 				local StartFov = tonumber(GetCVar("cameraFov"))
-				local New = AdaptiveAPI.Animation.EaseOutSine(Current, StartFov, level, duration)
+				local New = addon.API.Animation.EaseOutSine(Current, StartFov, level, duration)
 
 				--------------------------------
 
@@ -203,14 +204,14 @@ function NS.Util:Load()
 				local Offset
 				if StartOffset < level then
 					if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
-						Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
+						Offset = addon.API.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
 					else
-						Offset = AdaptiveAPI.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
+						Offset = addon.API.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
 					end
 				elseif StartOffset > level then
-					Offset = AdaptiveAPI.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
+					Offset = addon.API.Animation.EaseOutExpo(Current, 0, EndOffset, duration) + StartOffset
 				else
-					Offset = AdaptiveAPI.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
+					Offset = addon.API.Animation.EaseExpo(Current, 0, EndOffset, duration) + StartOffset
 				end
 
 				--------------------------------
@@ -272,7 +273,7 @@ function NS.Util:Load()
 
 			InteractionFrame.INT_FocusInteract:SetScript("OnUpdate", function()
 				local Current = GetTime() - Start
-				local Offset = AdaptiveAPI.Animation.EaseOutSine(Current, 0, level, duration)
+				local Offset = addon.API.Animation.EaseOutSine(Current, 0, level, duration)
 
 				--------------------------------
 

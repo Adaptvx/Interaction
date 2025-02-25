@@ -2,6 +2,7 @@
 -- Languages with no translations will default to this:
 
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -83,7 +84,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Hide UI"
 		L["Checkbox - Hide UI - Tooltip"] = "Hides UI during NPC interaction.\n\nDefault: On."
 		L["Range - Cinematic"] = "Camera Effects"
-		L["Range - Cinematic - Tooltip"] = "Camera effects during interaction.\n\nDefault: Balanced."
+		L["Range - Cinematic - Tooltip"] = "Camera effects during interaction.\n\nDefault: Full."
 		L["Range - Cinematic - None"] = "NONE"
 		L["Range - Cinematic - Full"] = "FULL"
 		L["Range - Cinematic - Balanced"] = "BALANCED"
@@ -301,7 +302,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
+		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
 	end
 
 	--------------------------------

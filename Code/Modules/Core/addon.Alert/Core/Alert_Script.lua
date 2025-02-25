@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Alert
@@ -29,7 +30,7 @@ function NS.Script:Load()
 			Frame.ImageTexture:SetTexture(image)
 			Frame.Title.Text:SetText(text)
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI:SetFontSize(Frame.Title.Text, textSize)
+				addon.API.Util:SetFontSize(Frame.Title.Text, textSize)
 			end, 0)
 
 			--------------------------------
@@ -71,25 +72,25 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Image, .125, 0, 1, nil, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.Image, .375, 5, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
+			addon.API.Animation:Fade(Frame.Image, .125, 0, 1, nil, function() return Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Image, .375, 5, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.hidden end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame.Image, 1, 1, .5, nil, function() return Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Image, 1, 1, .5, nil, function() return Frame.hidden end)
 				end
 			end, .125)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame.Background, .25, 0, 1, nil, function() return Frame.hidden end)
-					AdaptiveAPI.Animation:Scale(Frame.Background, 1, 50, Frame:GetWidth(), "x", AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Background, .25, 0, 1, nil, function() return Frame.hidden end)
+					addon.API.Animation:Scale(Frame.Background, 1, 50, Frame:GetWidth(), "x", addon.API.Animation.EaseExpo, function() return Frame.hidden end)
 				end
 			end, .125)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame.Title, .25, 0, 1, nil, function() return Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Title, .25, 0, 1, nil, function() return Frame.hidden end)
 				end
 			end, .2)
 
@@ -111,9 +112,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .5, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.BackgroundTexture, .5, Frame.BackgroundTexture:GetWidth(), 125, "x", AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.Image, .5, Frame.Image:GetScale(), .75, nil, AdaptiveAPI.Animation.EaseSine, function() return not Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .5, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			addon.API.Animation:Scale(Frame.BackgroundTexture, .5, Frame.BackgroundTexture:GetWidth(), 125, "x", addon.API.Animation.EaseExpo, function() return not Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Image, .5, Frame.Image:GetScale(), .75, nil, addon.API.Animation.EaseSine, function() return not Frame.hidden end)
 		end
 	end
 

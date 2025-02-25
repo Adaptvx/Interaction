@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -17,7 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionSettingsParent = CreateFrame("Frame", "$parent.SettingsParent", InteractionFrame)
-			InteractionSettingsParent:SetSize(addon.API:GetScreenWidth(), addon.API:GetScreenHeight())
+			InteractionSettingsParent:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 			InteractionSettingsParent:SetPoint("CENTER", nil)
 			InteractionSettingsParent:SetFrameStrata("FULLSCREEN")
 
@@ -27,14 +28,16 @@ function NS.Elements:Load()
 			InteractionSettingsFrame:SetFrameStrata("FULLSCREEN_DIALOG")
 			InteractionSettingsFrame:SetMovable(true)
 
+			local Frame = InteractionSettingsFrame
+
 			--------------------------------
 
 			do -- BACKGROUND
-				InteractionSettingsFrame.Background, InteractionSettingsFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionSettingsFrame, "FULLSCREEN_DIALOG", nil, 350, .375, "$parent.Background")
-				InteractionSettingsFrame.Background:SetSize(InteractionSettingsFrame:GetWidth() + NS.Variables:RATIO(4), InteractionSettingsFrame:GetHeight() + NS.Variables:RATIO(4))
-				InteractionSettingsFrame.Background:SetPoint("CENTER", InteractionSettingsFrame)
-				InteractionSettingsFrame.Background:EnableMouse(true)
-				InteractionSettingsFrame.Background:SetFrameLevel(2)
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 350, .375, "$parent.Background")
+				Frame.Background:SetSize(Frame:GetWidth() + NS.Variables:RATIO(4), Frame:GetHeight() + NS.Variables:RATIO(4))
+				Frame.Background:SetPoint("CENTER", Frame)
+				Frame.Background:EnableMouse(true)
+				Frame.Background:SetFrameLevel(2)
 
 				--------------------------------
 
@@ -47,47 +50,47 @@ function NS.Elements:Load()
 						BackgroundTexture = NS.Variables.SETTINGS_PATH .. "background-nineslice-light.png"
 					end
 
-					InteractionSettingsFrame.BackgroundTexture:SetTexture(BackgroundTexture)
+					Frame.BackgroundTexture:SetTexture(BackgroundTexture)
 				end
 
 				UpdateTheme()
-				addon.API:RegisterThemeUpdate(UpdateTheme, 5)
+				addon.API.Main:RegisterThemeUpdate(UpdateTheme, 5)
 			end
 
 			do -- MOVERS
-				InteractionSettingsFrame.Mover = CreateFrame("Frame", "InteractionSettingsFrame.Mover", InteractionSettingsFrame)
-				InteractionSettingsFrame.Mover:SetSize(InteractionSettingsFrame.Background:GetWidth(), 125)
-				InteractionSettingsFrame.Mover:SetPoint("TOP", InteractionSettingsFrame.Background)
-				InteractionSettingsFrame.Mover:EnableMouse(true)
-				InteractionSettingsFrame.Mover:SetFrameLevel(3)
+				Frame.Mover = CreateFrame("Frame", "Frame.Mover", Frame)
+				Frame.Mover:SetSize(Frame.Background:GetWidth(), 125)
+				Frame.Mover:SetPoint("TOP", Frame.Background)
+				Frame.Mover:EnableMouse(true)
+				Frame.Mover:SetFrameLevel(3)
 
 				--------------------------------
 
-				InteractionSettingsFrame.Mover:SetScript("OnMouseDown", function()
-					InteractionSettingsFrame.moving = true
-					InteractionSettingsFrame:StartMoving(true)
+				Frame.Mover:SetScript("OnMouseDown", function()
+					Frame.moving = true
+					Frame:StartMoving(true)
 
 					NS.Script:MoveActive()
 				end)
 
-				InteractionSettingsFrame.Mover:SetScript("OnMouseUp", function()
-					InteractionSettingsFrame.moving = false
-					InteractionSettingsFrame:StopMovingOrSizing()
+				Frame.Mover:SetScript("OnMouseUp", function()
+					Frame.moving = false
+					Frame:StopMovingOrSizing()
 
 					NS.Script:MoveDisabled()
 				end)
 			end
 
 			do -- CONTENT
-				InteractionSettingsFrame.Container = CreateFrame("Frame", "InteractionSettingsFrame.Container", InteractionSettingsFrame.Background)
-				InteractionSettingsFrame.Container:SetSize(InteractionSettingsFrame:GetWidth(), InteractionSettingsFrame:GetHeight())
-				InteractionSettingsFrame.Container:SetPoint("CENTER", InteractionSettingsFrame.Background)
-				InteractionSettingsFrame.Container:SetFrameLevel(3)
+				Frame.Container = CreateFrame("Frame", "Frame.Container", Frame.Background)
+				Frame.Container:SetSize(Frame:GetWidth(), Frame:GetHeight())
+				Frame.Container:SetPoint("CENTER", Frame.Background)
+				Frame.Container:SetFrameLevel(3)
 
 				--------------------------------
 
 				local function CreateScrollFrame(parent)
-					local frame, scrollChildFrame = AdaptiveAPI.FrameTemplates:CreateScrollFrame(parent, "vertical")
+					local frame, scrollChildFrame = addon.API.FrameTemplates:CreateScrollFrame(parent, { direction = "vertical", smoothScrollingRatio = 5 }, "$parent.ScrollFrame", "$parent.ScrollChildFrame")
 					frame.ScrollBar:Hide()
 
 					return frame, scrollChildFrame
@@ -114,21 +117,21 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- DIVIDER
-					InteractionSettingsFrame.Divider = CreateFrame("Frame", "$parent.Divider", InteractionSettingsFrame.Container)
-					InteractionSettingsFrame.Divider:SetSize(DIVIDER_WIDTH, DIVIDER_HEIGHT)
-					InteractionSettingsFrame.Divider:SetPoint("LEFT", InteractionSettingsFrame.Container, DIVIDER_POS.x, DIVIDER_POS.y)
-					InteractionSettingsFrame.Divider:SetFrameLevel(3)
+					Frame.Divider = CreateFrame("Frame", "$parent.Divider", Frame.Container)
+					Frame.Divider:SetSize(DIVIDER_WIDTH, DIVIDER_HEIGHT)
+					Frame.Divider:SetPoint("LEFT", Frame.Container, DIVIDER_POS.x, DIVIDER_POS.y)
+					Frame.Divider:SetFrameLevel(3)
 
 					--------------------------------
 
 					do -- BACKGROUND
-						InteractionSettingsFrame.Divider.Background, InteractionSettingsFrame.Divider.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionSettingsFrame.Divider, "FULLSCREEN_DIALOG", nil, "$parent.Background")
-						InteractionSettingsFrame.Divider.Background:SetAllPoints(InteractionSettingsFrame.Divider, true)
-						InteractionSettingsFrame.Divider.Background:SetFrameLevel(3)
+						Frame.Divider.Background, Frame.Divider.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Divider, "FULLSCREEN_DIALOG", nil, "$parent.Background")
+						Frame.Divider.Background:SetAllPoints(Frame.Divider, true)
+						Frame.Divider.Background:SetFrameLevel(3)
 
 						--------------------------------
 
-						addon.API:RegisterThemeUpdate(function()
+						addon.API.Main:RegisterThemeUpdate(function()
 							local TEXTURE_Background
 
 							if addon.Theme.IsDarkTheme then
@@ -137,35 +140,35 @@ function NS.Elements:Load()
 								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "divider-vertical-light.png"
 							end
 
-							InteractionSettingsFrame.Divider.BackgroundTexture:SetTexture(TEXTURE_Background)
+							Frame.Divider.BackgroundTexture:SetTexture(TEXTURE_Background)
 						end, 5)
 					end
 				end
 
 				do -- PRIMARY
-					InteractionSettingsFrame.Content = CreateFrame("Frame", "$parent.Content", InteractionSettingsFrame.Container)
-					InteractionSettingsFrame.Content:SetSize(PRIMARY_WIDTH - PADDING, CONTENT_HEIGHT)
-					InteractionSettingsFrame.Content:SetPoint("RIGHT", InteractionSettingsFrame.Container, -PADDING / 2, 0)
-					InteractionSettingsFrame.Content:SetFrameLevel(3)
+					Frame.Content = CreateFrame("Frame", "$parent.Content", Frame.Container)
+					Frame.Content:SetSize(PRIMARY_WIDTH - PADDING, CONTENT_HEIGHT)
+					Frame.Content:SetPoint("RIGHT", Frame.Container, -PADDING / 2, 0)
+					Frame.Content:SetFrameLevel(3)
 
 					--------------------------------
 
 					do -- HEADER
-						InteractionSettingsFrame.Content.Header = CreateFrame("Frame", "$parent.Header", InteractionSettingsFrame.Content)
-						InteractionSettingsFrame.Content.Header:SetSize(PRIMARY_WIDTH, HEADER_HEIGHT)
-						InteractionSettingsFrame.Content.Header:SetPoint("TOP", InteractionSettingsFrame.Content, 0, 0)
-						InteractionSettingsFrame.Content.Header:SetFrameLevel(4)
+						Frame.Content.Header = CreateFrame("Frame", "$parent.Header", Frame.Content)
+						Frame.Content.Header:SetSize(PRIMARY_WIDTH, HEADER_HEIGHT)
+						Frame.Content.Header:SetPoint("TOP", Frame.Content, 0, 0)
+						Frame.Content.Header:SetFrameLevel(4)
 
 						--------------------------------
 
 						do -- BACKGROUND
-							InteractionSettingsFrame.Content.Header.Background, InteractionSettingsFrame.Content.Header.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionSettingsFrame.Content.Header, "FULLSCREEN_DIALOG", AdaptiveAPI.Presets.NINESLICE_INSCRIBED, 50, 3.75, "$parent.Background")
-							InteractionSettingsFrame.Content.Header.Background:SetAllPoints(InteractionSettingsFrame.Content.Header, true)
-							InteractionSettingsFrame.Content.Header.Background:SetFrameLevel(3)
+							Frame.Content.Header.Background, Frame.Content.Header.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Content.Header, "FULLSCREEN_DIALOG", addon.API.Presets.NINESLICE_INSCRIBED, 50, 3.75, "$parent.Background")
+							Frame.Content.Header.Background:SetAllPoints(Frame.Content.Header, true)
+							Frame.Content.Header.Background:SetFrameLevel(3)
 
 							--------------------------------
 
-							addon.API:RegisterThemeUpdate(function()
+							addon.API.Main:RegisterThemeUpdate(function()
 								local COLOR_Background
 
 								if addon.Theme.IsDarkTheme then
@@ -174,27 +177,27 @@ function NS.Elements:Load()
 									COLOR_Background = addon.Theme.Settings.Header_Background_LightTheme
 								end
 
-								InteractionSettingsFrame.Content.Header.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
+								Frame.Content.Header.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
 							end, 5)
 						end
 
 						do -- CONTENT
-							InteractionSettingsFrame.Content.Header.Content = CreateFrame("Frame", "$parent.Content", InteractionSettingsFrame.Content.Header)
-							InteractionSettingsFrame.Content.Header.Content:SetSize(InteractionSettingsFrame.Content.Header:GetWidth() - NS.Variables:RATIO(7), InteractionSettingsFrame.Content.Header:GetHeight() - NS.Variables:RATIO(7))
-							InteractionSettingsFrame.Content.Header.Content:SetPoint("CENTER", InteractionSettingsFrame.Content.Header)
-							InteractionSettingsFrame.Content.Header.Content:SetFrameLevel(5)
+							Frame.Content.Header.Content = CreateFrame("Frame", "$parent.Content", Frame.Content.Header)
+							Frame.Content.Header.Content:SetSize(Frame.Content.Header:GetWidth() - NS.Variables:RATIO(7), Frame.Content.Header:GetHeight() - NS.Variables:RATIO(7))
+							Frame.Content.Header.Content:SetPoint("CENTER", Frame.Content.Header)
+							Frame.Content.Header.Content:SetFrameLevel(5)
 
 							--------------------------------
 
 							do -- DIVIDER
-								InteractionSettingsFrame.Content.Header.Content.Divider, InteractionSettingsFrame.Content.Header.Content.DividerTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionSettingsFrame.Content.Header.Content, "FULLSCREEN_DIALOG", AdaptiveAPI.Presets.NINESLICE_INSCRIBED, 50, 1, "$parent.Divider")
-								InteractionSettingsFrame.Content.Header.Content.Divider:SetSize(NS.Variables:RATIO(10), InteractionSettingsFrame.Content.Header.Content:GetHeight())
-								InteractionSettingsFrame.Content.Header.Content.Divider:SetPoint("LEFT", InteractionSettingsFrame.Content.Header.Content, 0, 0)
-								InteractionSettingsFrame.Content.Header.Content.Divider:SetFrameLevel(5)
+								Frame.Content.Header.Content.Divider, Frame.Content.Header.Content.DividerTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Content.Header.Content, "FULLSCREEN_DIALOG", addon.API.Presets.NINESLICE_INSCRIBED, 50, 1, "$parent.Divider")
+								Frame.Content.Header.Content.Divider:SetSize(NS.Variables:RATIO(10), Frame.Content.Header.Content:GetHeight())
+								Frame.Content.Header.Content.Divider:SetPoint("LEFT", Frame.Content.Header.Content, 0, 0)
+								Frame.Content.Header.Content.Divider:SetFrameLevel(5)
 
 								--------------------------------
 
-								addon.API:RegisterThemeUpdate(function()
+								addon.API.Main:RegisterThemeUpdate(function()
 									local COLOR_Background
 
 									if addon.Theme.IsDarkTheme then
@@ -203,27 +206,27 @@ function NS.Elements:Load()
 										COLOR_Background = addon.Theme.Settings.Header_Divider_LightTheme
 									end
 
-									InteractionSettingsFrame.Content.Header.Content.DividerTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
+									Frame.Content.Header.Content.DividerTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
 								end, 5)
 							end
 
 							do -- TITLE
-								InteractionSettingsFrame.Content.Header.Content.Title = AdaptiveAPI.FrameTemplates:CreateText(InteractionSettingsFrame.Content.Header, addon.Theme.RGB_RECOMMENDED, 17.5, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Title")
-								InteractionSettingsFrame.Content.Header.Content.Title:SetSize(InteractionSettingsFrame.Content.Header.Content:GetWidth(), InteractionSettingsFrame.Content.Header.Content:GetHeight())
-								InteractionSettingsFrame.Content.Header.Content.Title:SetPoint("LEFT", InteractionSettingsFrame.Content.Header.Content, NS.Variables:RATIO(8), 0)
+								Frame.Content.Header.Content.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Header, addon.Theme.RGB_RECOMMENDED, 17.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
+								Frame.Content.Header.Content.Title:SetSize(Frame.Content.Header.Content:GetWidth(), Frame.Content.Header.Content:GetHeight())
+								Frame.Content.Header.Content.Title:SetPoint("LEFT", Frame.Content.Header.Content, NS.Variables:RATIO(8), 0)
 							end
 
 							do -- BUTTONS
-								InteractionSettingsFrame.Content.Header.Content.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", InteractionSettingsFrame.Content.Header.Content)
-								InteractionSettingsFrame.Content.Header.Content.ButtonContainer:SetSize(InteractionSettingsFrame.Content.Header.Content:GetWidth(), InteractionSettingsFrame.Content.Header.Content:GetHeight())
-								InteractionSettingsFrame.Content.Header.Content.ButtonContainer:SetPoint("CENTER", InteractionSettingsFrame.Content.Header.Content)
+								Frame.Content.Header.Content.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", Frame.Content.Header.Content)
+								Frame.Content.Header.Content.ButtonContainer:SetSize(Frame.Content.Header.Content:GetWidth(), Frame.Content.Header.Content:GetHeight())
+								Frame.Content.Header.Content.ButtonContainer:SetPoint("CENTER", Frame.Content.Header.Content)
 
 								--------------------------------
 
 								do -- CLOSE
-									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionSettingsFrame.Content.Header.Content.ButtonContainer, NS.Variables:RATIO(5), InteractionSettingsFrame.Content.Header.Content.ButtonContainer:GetHeight(), "FULLSCREEN_DIALOG", {
-										defaultTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED,
-										highlightTexture = AdaptiveAPI.Presets.NINESLICE_INSCRIBED,
+									Frame.Content.Header.Content.ButtonContainer.CloseButton = addon.API.FrameTemplates:CreateCustomButton(Frame.Content.Header.Content.ButtonContainer, NS.Variables:RATIO(5), Frame.Content.Header.Content.ButtonContainer:GetHeight(), "FULLSCREEN_DIALOG", {
+										defaultTexture = addon.API.Presets.NINESLICE_INSCRIBED,
+										highlightTexture = addon.API.Presets.NINESLICE_INSCRIBED,
 										edgeSize = 50,
 										scale = 1,
 										theme = nil,
@@ -232,11 +235,11 @@ function NS.Elements:Load()
 										customHighlightColor = nil,
 										customActiveColor = nil,
 									}, "$parent.CloseButton")
-									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:SetPoint("RIGHT", InteractionSettingsFrame.Content.Header.Content.ButtonContainer)
-									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:SetFrameStrata("FULLSCREEN_DIALOG")
-									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:SetFrameLevel(6)
+									Frame.Content.Header.Content.ButtonContainer.CloseButton:SetPoint("RIGHT", Frame.Content.Header.Content.ButtonContainer)
+									Frame.Content.Header.Content.ButtonContainer.CloseButton:SetFrameStrata("FULLSCREEN_DIALOG")
+									Frame.Content.Header.Content.ButtonContainer.CloseButton:SetFrameLevel(6)
 
-									addon.API:RegisterThemeUpdate(function()
+									addon.API.Main:RegisterThemeUpdate(function()
 										local COLOR_Default
 										local COLOR_Highlight
 
@@ -248,26 +251,26 @@ function NS.Elements:Load()
 											COLOR_Highlight = addon.Theme.Settings.Header_CloseButton_Highlight_LightTheme
 										end
 
-										AdaptiveAPI.FrameTemplates.Styles:UpdateButton(InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton, {
+										addon.API.FrameTemplates.Styles:UpdateButton(Frame.Content.Header.Content.ButtonContainer.CloseButton, {
 											customColor = COLOR_Default,
 											customHighlightColor = COLOR_Highlight
 										})
 									end, 3)
 
-									InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:SetScript("OnClick", function()
+									Frame.Content.Header.Content.ButtonContainer.CloseButton:SetScript("OnClick", function()
 										NS.Script:HideSettingsUI()
 									end)
 
 									--------------------------------
 
 									do -- IMAGE
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image, InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton, "FULLSCREEN", AdaptiveAPI.PATH .. "Elements/close.png", "$parent.Image")
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetSize(InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8), InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8))
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetPoint("CENTER", InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton)
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameStrata("FULLSCREEN_DIALOG")
-										InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameLevel(7)
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image, Frame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.Header.Content.ButtonContainer.CloseButton, "FULLSCREEN", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetSize(Frame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8), Frame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8))
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetPoint("CENTER", Frame.Content.Header.Content.ButtonContainer.CloseButton)
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameStrata("FULLSCREEN_DIALOG")
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameLevel(7)
 
-										addon.API:RegisterThemeUpdate(function()
+										addon.API.Main:RegisterThemeUpdate(function()
 											local COLOR_Default
 
 											if addon.Theme.IsDarkTheme then
@@ -276,7 +279,7 @@ function NS.Elements:Load()
 												COLOR_Default = addon.Theme.Settings.Header_CloseButton_Image_LightTheme
 											end
 
-											InteractionSettingsFrame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture:SetVertexColor(COLOR_Default.r, COLOR_Default.g, COLOR_Default.b, COLOR_Default.a)
+											Frame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture:SetVertexColor(COLOR_Default.r, COLOR_Default.g, COLOR_Default.b, COLOR_Default.a)
 										end, 5)
 									end
 								end
@@ -287,23 +290,23 @@ function NS.Elements:Load()
 					do -- SCROLL FRAME
 						local PADDING_SCROLLBAR = NS.Variables:RATIO(8)
 
-						InteractionSettingsFrame.Content.ScrollFrame, InteractionSettingsFrame.Content.ScrollChildFrame = CreateScrollFrame(InteractionSettingsFrame.Content)
-						InteractionSettingsFrame.Content.ScrollFrame:SetSize(PRIMARY_CONTENT_WIDTH - PADDING_SCROLLBAR, InteractionSettingsFrame.Content:GetHeight() - InteractionSettingsFrame.Content.Header:GetHeight() - NS.Variables:RATIO(9))
-						InteractionSettingsFrame.Content.ScrollFrame:SetPoint("TOP", InteractionSettingsFrame.Content, -PADDING_SCROLLBAR, -InteractionSettingsFrame.Content.Header:GetHeight() - NS.Variables:RATIO(9))
-						InteractionSettingsFrame.Content.ScrollFrame:SetFrameLevel(3)
+						Frame.Content.ScrollFrame, Frame.Content.ScrollChildFrame = CreateScrollFrame(Frame.Content)
+						Frame.Content.ScrollFrame:SetSize(PRIMARY_CONTENT_WIDTH - PADDING_SCROLLBAR, Frame.Content:GetHeight() - Frame.Content.Header:GetHeight() - NS.Variables:RATIO(9))
+						Frame.Content.ScrollFrame:SetPoint("TOP", Frame.Content, -PADDING_SCROLLBAR, -Frame.Content.Header:GetHeight() - NS.Variables:RATIO(9))
+						Frame.Content.ScrollFrame:SetFrameLevel(3)
 
 						--------------------------------
 
-						InteractionSettingsFrame.Content.ScrollFrame.tabPool = {}
-						InteractionSettingsFrame.Content.ScrollFrame.CreateTab = function(index)
+						Frame.Content.ScrollFrame.tabPool = {}
+						Frame.Content.ScrollFrame.CreateTab = function(index)
 							local Tab = CreateFrame("Frame")
-							Tab:SetParent(InteractionSettingsFrame.Content.ScrollChildFrame)
-							Tab:SetSize(InteractionSettingsFrame.Content.ScrollFrame:GetWidth(), 1)
-							Tab:SetPoint("TOP", InteractionSettingsFrame.Content.ScrollChildFrame)
+							Tab:SetParent(Frame.Content.ScrollChildFrame)
+							Tab:SetSize(Frame.Content.ScrollFrame:GetWidth(), 1)
+							Tab:SetPoint("TOP", Frame.Content.ScrollChildFrame)
 
 							--------------------------------
 
-							table.insert(InteractionSettingsFrame.Content.ScrollFrame.tabPool, index, Tab)
+							table.insert(Frame.Content.ScrollFrame.tabPool, index, Tab)
 
 							--------------------------------
 
@@ -313,19 +316,19 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- SCROLL BAR
-							InteractionSettingsFrame.Content.ScrollFrame.Scrollbar = AdaptiveAPI.FrameTemplates:CreateScrollbar(InteractionSettingsFrame.Content.ScrollFrame, "FULLSCREEN_DIALOG", {
-								scrollFrame = InteractionSettingsFrame.Content.ScrollFrame,
-								scrollChildFrame = InteractionSettingsFrame.Content.ScrollChildFrame,
+							Frame.Content.ScrollFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.Content.ScrollFrame, "FULLSCREEN_DIALOG", {
+								scrollFrame = Frame.Content.ScrollFrame,
+								scrollChildFrame = Frame.Content.ScrollChildFrame,
 								sizeX = 5,
-								sizeY = InteractionSettingsFrame.Content.ScrollFrame:GetHeight(),
+								sizeY = Frame.Content.ScrollFrame:GetHeight(),
 								theme = nil,
 								isHorizontal = false,
 							}, "$parent.Scrollbar")
-							InteractionSettingsFrame.Content.ScrollFrame.Scrollbar:SetPoint("RIGHT", InteractionSettingsFrame.Content.ScrollFrame, (InteractionSettingsFrame.Content.ScrollFrame.Scrollbar:GetWidth() / 2) + (NS.Variables:RATIO(6)), 0)
+							Frame.Content.ScrollFrame.Scrollbar:SetPoint("RIGHT", Frame.Content.ScrollFrame, (Frame.Content.ScrollFrame.Scrollbar:GetWidth() / 2) + (NS.Variables:RATIO(6)), 0)
 
 							--------------------------------
 
-							addon.API:RegisterThemeUpdate(function()
+							addon.API.Main:RegisterThemeUpdate(function()
 								local COLOR_Default
 								local COLOR_Highlight
 								local COLOR_Default_Thumb
@@ -343,7 +346,7 @@ function NS.Elements:Load()
 									COLOR_Highlight_Thumb = addon.Theme.Settings.Element_Default_LightTheme
 								end
 
-								AdaptiveAPI.FrameTemplates:UpdateScrollbarTheme(InteractionSettingsFrame.Content.ScrollFrame.Scrollbar, {
+								addon.API.FrameTemplates:UpdateScrollbarTheme(Frame.Content.ScrollFrame.Scrollbar, {
 									customColor = COLOR_Default,
 									customHighlightColor = COLOR_Highlight,
 									customThumbColor = COLOR_Default_Thumb,
@@ -355,56 +358,43 @@ function NS.Elements:Load()
 				end
 
 				do -- SECONDARY
-					InteractionSettingsFrame.Sidebar = CreateFrame("Frame", "$parent.Sidebar", InteractionSettingsFrame.Container)
-					InteractionSettingsFrame.Sidebar:SetSize(SECONDARY_WIDTH - PADDING, CONTENT_HEIGHT)
-					InteractionSettingsFrame.Sidebar:SetPoint("LEFT", InteractionSettingsFrame.Container)
-					InteractionSettingsFrame.Sidebar:SetFrameLevel(3)
+					Frame.Sidebar = CreateFrame("Frame", "$parent.Sidebar", Frame.Container)
+					Frame.Sidebar:SetSize(SECONDARY_WIDTH - PADDING, CONTENT_HEIGHT)
+					Frame.Sidebar:SetPoint("LEFT", Frame.Container)
+					Frame.Sidebar:SetFrameLevel(3)
 
 					--------------------------------
 
 					do -- LEGEND
-						InteractionSettingsFrame.Sidebar.Legend, InteractionSettingsFrame.Sidebar.LegendScrollChildFrame = CreateScrollFrame(InteractionSettingsFrame.Container)
-						InteractionSettingsFrame.Sidebar.Legend:SetSize(InteractionSettingsFrame.Sidebar:GetWidth(), InteractionSettingsFrame.Sidebar:GetHeight())
-						InteractionSettingsFrame.Sidebar.Legend:SetPoint("CENTER", InteractionSettingsFrame.Sidebar)
-						InteractionSettingsFrame.Sidebar.Legend:SetFrameLevel(3)
-						InteractionSettingsFrame.Sidebar.LegendScrollChildFrame:SetWidth(InteractionSettingsFrame.Sidebar.Legend:GetWidth())
+						Frame.Sidebar.Legend, Frame.Sidebar.LegendScrollChildFrame = CreateScrollFrame(Frame.Container)
+						Frame.Sidebar.Legend:SetSize(Frame.Sidebar:GetWidth(), Frame.Sidebar:GetHeight())
+						Frame.Sidebar.Legend:SetPoint("CENTER", Frame.Sidebar)
+						Frame.Sidebar.Legend:SetFrameLevel(3)
+						Frame.Sidebar.LegendScrollChildFrame:SetWidth(Frame.Sidebar.Legend:GetWidth())
 
 						--------------------------------
 
 						do -- GAMEPAD
-							InteractionSettingsFrame.Sidebar.Legend.GamePad = CreateFrame("Frame", "$parent.GamePad", InteractionSettingsFrame.Sidebar.Legend)
-							InteractionSettingsFrame.Sidebar.Legend.GamePad:SetSize(InteractionSettingsFrame.Sidebar.Legend:GetSize())
-							InteractionSettingsFrame.Sidebar.Legend.GamePad:SetPoint("CENTER", InteractionSettingsFrame.Sidebar.Legend)
-							InteractionSettingsFrame.Sidebar.Legend.GamePad:SetFrameLevel(4)
-
-							hooksecurefunc(InteractionSettingsFrame.Sidebar.Legend, "SetWidth", function(self, width)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad:SetWidth(width)
-							end)
-
-							hooksecurefunc(InteractionSettingsFrame.Sidebar.Legend, "SetHeight", function(self, height)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad:SetHeight(height)
-							end)
-
-							hooksecurefunc(InteractionSettingsFrame.Sidebar.Legend, "SetSize", function(self, width, height)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad:SetSize(width, height)
-							end)
+							Frame.Sidebar.Legend.GamePad = CreateFrame("Frame", "$parent.GamePad", Frame.Sidebar.Legend)
+							Frame.Sidebar.Legend.GamePad:SetAllPoints(Frame.Sidebar.Legend)
+							Frame.Sidebar.Legend.GamePad:SetFrameLevel(4)
 
 							--------------------------------
 
 							do -- TOP
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Top = CreateFrame("Frame", "$parent.Top", InteractionSettingsFrame.Sidebar.Legend.GamePad)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:SetSize(InteractionSettingsFrame.Sidebar.Legend.GamePad:GetWidth(), 50)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:SetPoint("TOP", InteractionSettingsFrame.Sidebar.Legend.GamePad, 0, InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:GetHeight() + NS.Variables:RATIO(8))
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:SetFrameLevel(5)
+								Frame.Sidebar.Legend.GamePad.Top = CreateFrame("Frame", "$parent.Top", Frame.Sidebar.Legend.GamePad)
+								Frame.Sidebar.Legend.GamePad.Top:SetSize(Frame.Sidebar.Legend.GamePad:GetWidth(), 50)
+								Frame.Sidebar.Legend.GamePad.Top:SetPoint("TOP", Frame.Sidebar.Legend.GamePad, 0, Frame.Sidebar.Legend.GamePad.Top:GetHeight() + NS.Variables:RATIO(8))
+								Frame.Sidebar.Legend.GamePad.Top:SetFrameLevel(5)
 
 								--------------------------------
 
 								do -- ICON
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Top.Icon, InteractionSettingsFrame.Sidebar.Legend.GamePad.Top.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionSettingsFrame.Sidebar.Legend.GamePad.Top, "FULLSCREEN_DIALOG", nil, "$parent.Icon")
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Top.Icon:SetSize(InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:GetHeight(), InteractionSettingsFrame.Sidebar.Legend.GamePad.Top:GetHeight())
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Top.Icon:SetPoint("CENTER", InteractionSettingsFrame.Sidebar.Legend.GamePad.Top)
+									Frame.Sidebar.Legend.GamePad.Top.Icon, Frame.Sidebar.Legend.GamePad.Top.IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Sidebar.Legend.GamePad.Top, "FULLSCREEN_DIALOG", nil, "$parent.Icon")
+									Frame.Sidebar.Legend.GamePad.Top.Icon:SetSize(Frame.Sidebar.Legend.GamePad.Top:GetHeight(), Frame.Sidebar.Legend.GamePad.Top:GetHeight())
+									Frame.Sidebar.Legend.GamePad.Top.Icon:SetPoint("CENTER", Frame.Sidebar.Legend.GamePad.Top)
 
-									addon.API:RegisterThemeUpdate(function()
+									addon.API.Main:RegisterThemeUpdate(function()
 										local TEXTURE
 
 										if addon.Theme.IsDarkTheme then
@@ -413,25 +403,25 @@ function NS.Elements:Load()
 											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-LB-Up.png"
 										end
 
-										InteractionSettingsFrame.Sidebar.Legend.GamePad.Top.IconTexture:SetTexture(TEXTURE)
+										Frame.Sidebar.Legend.GamePad.Top.IconTexture:SetTexture(TEXTURE)
 									end, 5)
 								end
 							end
 
 							do -- BOTTOM
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom = CreateFrame("Frame", "$parent.Bottom", InteractionSettingsFrame.Sidebar.Legend.GamePad)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:SetSize(InteractionSettingsFrame.Sidebar.Legend.GamePad:GetWidth(), 50)
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:SetPoint("BOTTOM", InteractionSettingsFrame.Sidebar.Legend.GamePad, 0, -InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:GetHeight() - NS.Variables:RATIO(8))
-								InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:SetFrameLevel(5)
+								Frame.Sidebar.Legend.GamePad.Bottom = CreateFrame("Frame", "$parent.Bottom", Frame.Sidebar.Legend.GamePad)
+								Frame.Sidebar.Legend.GamePad.Bottom:SetSize(Frame.Sidebar.Legend.GamePad:GetWidth(), 50)
+								Frame.Sidebar.Legend.GamePad.Bottom:SetPoint("BOTTOM", Frame.Sidebar.Legend.GamePad, 0, -Frame.Sidebar.Legend.GamePad.Bottom:GetHeight() - NS.Variables:RATIO(8))
+								Frame.Sidebar.Legend.GamePad.Bottom:SetFrameLevel(5)
 
 								--------------------------------
 
 								do -- ICON
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom.Icon, InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom.IconTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom, "FULLSCREEN_DIALOG", nil, "$parent.Icon")
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom.Icon:SetSize(InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:GetHeight(), InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom:GetHeight())
-									InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom.Icon:SetPoint("CENTER", InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom)
+									Frame.Sidebar.Legend.GamePad.Bottom.Icon, Frame.Sidebar.Legend.GamePad.Bottom.IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Sidebar.Legend.GamePad.Bottom, "FULLSCREEN_DIALOG", nil, "$parent.Icon")
+									Frame.Sidebar.Legend.GamePad.Bottom.Icon:SetSize(Frame.Sidebar.Legend.GamePad.Bottom:GetHeight(), Frame.Sidebar.Legend.GamePad.Bottom:GetHeight())
+									Frame.Sidebar.Legend.GamePad.Bottom.Icon:SetPoint("CENTER", Frame.Sidebar.Legend.GamePad.Bottom)
 
-									addon.API:RegisterThemeUpdate(function()
+									addon.API.Main:RegisterThemeUpdate(function()
 										local TEXTURE
 
 										if addon.Theme.IsDarkTheme then
@@ -440,7 +430,7 @@ function NS.Elements:Load()
 											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-RB-Down.png"
 										end
 
-										InteractionSettingsFrame.Sidebar.Legend.GamePad.Bottom.IconTexture:SetTexture(TEXTURE)
+										Frame.Sidebar.Legend.GamePad.Bottom.IconTexture:SetTexture(TEXTURE)
 									end, 5)
 								end
 							end
@@ -454,60 +444,60 @@ function NS.Elements:Load()
 
 				--------------------------------
 
-				InteractionSettingsFrame.Tooltip = CreateFrame("Frame", "$parent.Tooltip", InteractionSettingsFrame)
-				InteractionSettingsFrame.Tooltip:SetSize(NS.Variables:RATIO(1.5), NS.Variables:RATIO(1.5))
-				InteractionSettingsFrame.Tooltip:SetPoint("RIGHT", InteractionSettingsFrame, InteractionSettingsFrame.Tooltip:GetWidth() + NS.Variables:RATIO(5), 0)
-				InteractionSettingsFrame.Tooltip:SetFrameStrata("FULLSCREEN_DIALOG")
-				InteractionSettingsFrame.Tooltip:SetFrameLevel(99)
+				Frame.Tooltip = CreateFrame("Frame", "$parent.Tooltip", Frame)
+				Frame.Tooltip:SetSize(NS.Variables:RATIO(1.5), NS.Variables:RATIO(1.5))
+				Frame.Tooltip:SetPoint("RIGHT", Frame, Frame.Tooltip:GetWidth() + NS.Variables:RATIO(5), 0)
+				Frame.Tooltip:SetFrameStrata("FULLSCREEN_DIALOG")
+				Frame.Tooltip:SetFrameLevel(99)
 
-				InteractionSettingsFrame.Tooltip:SetScript("OnUpdate", function()
-					InteractionSettingsFrame.Tooltip.Content.Text:ClearAllPoints()
+				Frame.Tooltip:SetScript("OnUpdate", function()
+					Frame.Tooltip.Content.Text:ClearAllPoints()
 
-					if InteractionSettingsFrame.Tooltip.Content.Image:IsVisible() then
-						InteractionSettingsFrame.Tooltip:SetHeight(Padding + InteractionSettingsFrame.Tooltip.Content.Image:GetHeight() + Padding / 2 + InteractionSettingsFrame.Tooltip.Content.Text:GetStringHeight() + Padding)
-						InteractionSettingsFrame.Tooltip.Content.Text:SetPoint("TOP", InteractionSettingsFrame.Tooltip.Content, 0, -InteractionSettingsFrame.Tooltip.Content.Image:GetHeight() - Padding / 2)
+					if Frame.Tooltip.Content.Image:IsVisible() then
+						Frame.Tooltip:SetHeight(Padding + Frame.Tooltip.Content.Image:GetHeight() + Padding / 2 + Frame.Tooltip.Content.Text:GetStringHeight() + Padding)
+						Frame.Tooltip.Content.Text:SetPoint("TOP", Frame.Tooltip.Content, 0, -Frame.Tooltip.Content.Image:GetHeight() - Padding / 2)
 					else
-						InteractionSettingsFrame.Tooltip:SetHeight(Padding + InteractionSettingsFrame.Tooltip.Content.Text:GetStringHeight() + Padding)
-						InteractionSettingsFrame.Tooltip.Content.Text:SetPoint("TOP", InteractionSettingsFrame.Tooltip.Content, 0, 0)
+						Frame.Tooltip:SetHeight(Padding + Frame.Tooltip.Content.Text:GetStringHeight() + Padding)
+						Frame.Tooltip.Content.Text:SetPoint("TOP", Frame.Tooltip.Content, 0, 0)
 					end
 
-					InteractionSettingsFrame.Tooltip.Background:SetSize(InteractionSettingsFrame.Tooltip:GetWidth(), InteractionSettingsFrame.Tooltip:GetHeight())
-					InteractionSettingsFrame.Tooltip.Content:SetSize(InteractionSettingsFrame.Tooltip:GetWidth() - Padding * 2, InteractionSettingsFrame.Tooltip:GetHeight() - Padding * 2)
+					Frame.Tooltip.Background:SetSize(Frame.Tooltip:GetWidth(), Frame.Tooltip:GetHeight())
+					Frame.Tooltip.Content:SetSize(Frame.Tooltip:GetWidth() - Padding * 2, Frame.Tooltip:GetHeight() - Padding * 2)
 				end)
 
 				--------------------------------
 
 				do -- BACKGROUND
-					InteractionSettingsFrame.Tooltip.Background, InteractionSettingsFrame.Tooltip.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionSettingsFrame.Tooltip, "FULLSCREEN_DIALOG", nil, 256, .175, "$parent.Background")
-					InteractionSettingsFrame.Tooltip.Background:SetSize(InteractionSettingsFrame.Tooltip:GetWidth(), InteractionSettingsFrame.Tooltip:GetHeight())
-					InteractionSettingsFrame.Tooltip.Background:SetPoint("CENTER", InteractionSettingsFrame.Tooltip)
-					InteractionSettingsFrame.Tooltip.Background:SetFrameLevel(98)
+					Frame.Tooltip.Background, Frame.Tooltip.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Tooltip, "FULLSCREEN_DIALOG", nil, 256, .175, "$parent.Background")
+					Frame.Tooltip.Background:SetSize(Frame.Tooltip:GetWidth(), Frame.Tooltip:GetHeight())
+					Frame.Tooltip.Background:SetPoint("CENTER", Frame.Tooltip)
+					Frame.Tooltip.Background:SetFrameLevel(98)
 				end
 
 				do -- CONTENT
-					InteractionSettingsFrame.Tooltip.Content = CreateFrame("Frame", "$parent.Content", InteractionSettingsFrame.Tooltip)
-					InteractionSettingsFrame.Tooltip.Content:SetSize(InteractionSettingsFrame.Tooltip:GetWidth() - Padding * 2, InteractionSettingsFrame.Tooltip:GetHeight() - Padding * 2)
-					InteractionSettingsFrame.Tooltip.Content:SetPoint("CENTER", InteractionSettingsFrame.Tooltip)
-					InteractionSettingsFrame.Tooltip.Content:SetFrameLevel(100)
+					Frame.Tooltip.Content = CreateFrame("Frame", "$parent.Content", Frame.Tooltip)
+					Frame.Tooltip.Content:SetSize(Frame.Tooltip:GetWidth() - Padding * 2, Frame.Tooltip:GetHeight() - Padding * 2)
+					Frame.Tooltip.Content:SetPoint("CENTER", Frame.Tooltip)
+					Frame.Tooltip.Content:SetFrameLevel(100)
 				end
 
 				do -- IMAGE
-					InteractionSettingsFrame.Tooltip.Content.Image, InteractionSettingsFrame.Tooltip.Content.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionSettingsFrame.Tooltip.Content, "FULLSCREEN_DIALOG", nil, "$parent.Image")
-					InteractionSettingsFrame.Tooltip.Content.Image:SetPoint("TOP", InteractionSettingsFrame.Tooltip.Content)
-					InteractionSettingsFrame.Tooltip.Content.Image:SetFrameLevel(102)
+					Frame.Tooltip.Content.Image, Frame.Tooltip.Content.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Tooltip.Content, "FULLSCREEN_DIALOG", nil, "$parent.Image")
+					Frame.Tooltip.Content.Image:SetPoint("TOP", Frame.Tooltip.Content)
+					Frame.Tooltip.Content.Image:SetFrameLevel(102)
 
 					--------------------------------
 
 					do -- BACKGROUND
-						InteractionSettingsFrame.Tooltip.Content.Image.Background, InteractionSettingsFrame.Tooltip.Content.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionSettingsFrame.Tooltip.Content.Image, "FULLSCREEN_DIALOG", NS.Variables.SETTINGS_PATH .. "tooltip-image-background.png", 50, 1, "$parent.Background")
-						InteractionSettingsFrame.Tooltip.Content.Image.Background:SetSize(InteractionSettingsFrame.Tooltip.Content.Image:GetWidth() + NS.Variables:RATIO(9.5), InteractionSettingsFrame.Tooltip.Content.Image:GetHeight() + NS.Variables:RATIO(9.5))
-						InteractionSettingsFrame.Tooltip.Content.Image.Background:SetPoint("CENTER", InteractionSettingsFrame.Tooltip.Content.Image)
-						InteractionSettingsFrame.Tooltip.Content.Image.Background:SetFrameLevel(101)
-						InteractionSettingsFrame.Tooltip.Content.Image.Background:SetAlpha(.25)
+						Frame.Tooltip.Content.Image.Background, Frame.Tooltip.Content.Image.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Tooltip.Content.Image, "FULLSCREEN_DIALOG", NS.Variables.SETTINGS_PATH .. "tooltip-image-background.png", 50, 1, "$parent.Background")
+						Frame.Tooltip.Content.Image.Background:SetPoint("TOPLEFT", Frame.Tooltip.Content.Image, -2.5, 2.5)
+						Frame.Tooltip.Content.Image.Background:SetPoint("BOTTOMRIGHT", Frame.Tooltip.Content.Image, 2.5, -2.5)
+						Frame.Tooltip.Content.Image.Background:SetFrameLevel(101)
+						Frame.Tooltip.Content.Image.Background:SetAlpha(.25)
 
 						--------------------------------
 
-						addon.API:RegisterThemeUpdate(function()
+						addon.API.Main:RegisterThemeUpdate(function()
 							local TEXTURE_Background
 
 							if addon.Theme.IsDarkTheme then
@@ -516,28 +506,14 @@ function NS.Elements:Load()
 								TEXTURE_Background = NS.Variables.SETTINGS_PATH .. "tooltip-image-background.png"
 							end
 
-							InteractionSettingsFrame.Tooltip.Content.Image.BackgroundTexture:SetTexture(TEXTURE_Background)
+							Frame.Tooltip.Content.Image.BackgroundTexture:SetTexture(TEXTURE_Background)
 						end, 5)
-
-						--------------------------------
-
-						hooksecurefunc(InteractionSettingsFrame.Tooltip.Content.Image, "SetWidth", function()
-							InteractionSettingsFrame.Tooltip.Content.Image.Background:SetWidth(InteractionSettingsFrame.Tooltip.Content.Image:GetWidth() + 5)
-						end)
-
-						hooksecurefunc(InteractionSettingsFrame.Tooltip.Content.Image, "SetHeight", function()
-							InteractionSettingsFrame.Tooltip.Content.Image.Background:SetHeight(InteractionSettingsFrame.Tooltip.Content.Image:GetHeight() + 5)
-						end)
-
-						hooksecurefunc(InteractionSettingsFrame.Tooltip.Content.Image, "SetSize", function()
-							InteractionSettingsFrame.Tooltip.Content.Image.Background:SetSize(InteractionSettingsFrame.Tooltip.Content.Image:GetWidth() + 5, InteractionSettingsFrame.Tooltip.Content.Image:GetHeight() + 5)
-						end)
 					end
 				end
 
 				do -- TEXT
-					InteractionSettingsFrame.Tooltip.Content.Text = AdaptiveAPI.FrameTemplates:CreateText(InteractionSettingsFrame.Tooltip.Content, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
-					InteractionSettingsFrame.Tooltip.Content.Text:SetSize(InteractionSettingsFrame.Tooltip.Content:GetWidth(), 250)
+					Frame.Tooltip.Content.Text = addon.API.FrameTemplates:CreateText(Frame.Tooltip.Content, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+					Frame.Tooltip.Content.Text:SetSize(Frame.Tooltip.Content:GetWidth(), 250)
 				end
 
 				--------------------------------
@@ -546,20 +522,20 @@ function NS.Elements:Load()
 					local TEXTURE_Background
 
 					if addon.Theme.IsDarkTheme then
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL_02
+						TEXTURE_Background = addon.API.Presets.NINESLICE_STYLISED_SCROLL_02
 					else
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_STYLISED_SCROLL
+						TEXTURE_Background = addon.API.Presets.NINESLICE_STYLISED_SCROLL
 					end
 
-					InteractionSettingsFrame.Tooltip.BackgroundTexture:SetTexture(TEXTURE_Background)
+					Frame.Tooltip.BackgroundTexture:SetTexture(TEXTURE_Background)
 				end
 
 				UpdateTheme()
-				addon.API:RegisterThemeUpdate(UpdateTheme, 5)
+				addon.API.Main:RegisterThemeUpdate(UpdateTheme, 5)
 
 				--------------------------------
 
-				InteractionSettingsFrame.Tooltip:Hide()
+				Frame.Tooltip:Hide()
 			end
 		end
 	end

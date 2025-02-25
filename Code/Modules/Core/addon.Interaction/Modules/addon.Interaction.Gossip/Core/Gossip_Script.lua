@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip
@@ -50,7 +51,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame, .125, 1, 0)
+				addon.API.Animation:Fade(Frame, .125, 1, 0)
 			end
 
 			local function Finish()
@@ -67,7 +68,7 @@ function NS.Script:Load()
 					Frame.ShowButtonsWithAnimation()
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						AdaptiveAPI.Animation:Fade(Frame, .125, 0, 1)
+						addon.API.Animation:Fade(Frame, .125, 0, 1)
 					end, .125)
 				end
 
@@ -510,10 +511,10 @@ function NS.Script:Load()
 							end
 
 							do -- TRIGGER ICON
-								text = (string.gsub(text, L["GossipData - Trigger - Quest"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+								text = (string.gsub(text, L["GossipData - Trigger - Quest"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
 							end
 
 							--------------------------------
@@ -647,7 +648,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local screenWidth = addon.API:GetScreenWidth()
+			local screenWidth = addon.API.Main:GetScreenWidth()
 			local frameWidth = 325
 			local dialogMaxWidth = 350
 
@@ -693,7 +694,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				if Frame:GetAlpha() < .1 then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return NPC ~= UnitName("npc") or NPC == "" or Frame.hidden end)
+					addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return NPC ~= UnitName("npc") or NPC == "" or Frame.hidden end)
 				end
 
 				--------------------------------
@@ -739,17 +740,17 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(button, .25, 0, 1, nil, function()
+				addon.API.Animation:Fade(button, .25, 0, 1, nil, function()
 					if not button:IsVisible() or Frame.hidden then
 						isValid = false; return true
 					end
 				end)
-				AdaptiveAPI.Animation:Fade(button.Label, .25, 0, 1, nil, function()
+				addon.API.Animation:Fade(button.Label, .25, 0, 1, nil, function()
 					if not button:IsVisible() or Frame.hidden then
 						isValid = false; return true
 					end
 				end)
-				AdaptiveAPI.Animation:Move(button.Standalone.Background, .5, "CENTER", START_POSITION, 0, "y", AdaptiveAPI.Animation.EaseSine, function()
+				addon.API.Animation:Move(button.Standalone.Background, .5, "CENTER", START_POSITION, 0, "y", addon.API.Animation.EaseSine, function()
 					if not button:IsVisible() or Frame.hidden then
 						isValid = false; return true
 					end
@@ -762,12 +763,12 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Fade(Frame.GoodbyeButton, .5, 0, .5, nil, function()
+					addon.API.Animation:Fade(Frame.GoodbyeButton, .5, 0, .5, nil, function()
 						if Frame.hidden then
 							isValid = false; return true
 						end
 					end)
-					AdaptiveAPI.Animation:Move(Frame.GoodbyeButton.API_ButtonTextFrame, .5, "CENTER", START_POSITION, 0, "y", AdaptiveAPI.Animation.EaseSine, function()
+					addon.API.Animation:Move(Frame.GoodbyeButton.API_ButtonTextFrame, .5, "CENTER", START_POSITION, 0, "y", addon.API.Animation.EaseSine, function()
 						if Frame.hidden then
 							isValid = false; return true
 						end
@@ -848,7 +849,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+				addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 			end
 		end
 	end
@@ -890,16 +891,16 @@ function NS.Script:Load()
 				--------------------------------
 
 				if Frame.focused then
-					AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
+					addon.API.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
 				else
-					AdaptiveAPI.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), .75, nil, function() return Frame.focused end)
+					addon.API.Animation:Fade(InteractionGossipParent, .25, InteractionGossipParent:GetAlpha(), .75, nil, function() return Frame.focused end)
 				end
 			else
 				InteractionGossipParent:SetAlpha(1)
 			end
 		end
 
-		AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame, Frame.Enter, Frame.Leave)
+		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.Enter, leaveCallback = Frame.Leave })
 	end
 
 	--------------------------------
@@ -917,7 +918,7 @@ function NS.Script:Load()
 
 		local function Settings_ThemeUpdateAnimation()
 			if Frame:IsVisible() then
-				AdaptiveAPI.Animation:RemoveAllAnimationsFromFrame(Frame)
+				addon.API.Animation:RemoveAllAnimationsFromFrame(Frame)
 				if Frame.ThemeUpdateTimer then
 					addon.Libraries.AceTimer:CancelTimer(Frame.ThemeUpdateTimer)
 				end
@@ -925,12 +926,12 @@ function NS.Script:Load()
 				--------------------------------
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0)
+					addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0)
 
 					--------------------------------
 
 					Frame.ThemeUpdateTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-						AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
+						addon.API.Animation:Fade(Frame, .25, 0, 1)
 					end, .75)
 				end, .1)
 			end

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.ControlGuide
@@ -47,13 +48,13 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- TEXT
-							Element.Text = AdaptiveAPI.FrameTemplates:CreateText(Element, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+							Element.Text = addon.API.FrameTemplates:CreateText(Element, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
 							Element.Text:SetAllPoints(Element)
 							Element.Text:SetAlpha(.75)
 
 							--------------------------------
 
-							addon.API:SetButtonToPlatform(Element, Element.Text, "")
+							addon.API.Main:SetButtonToPlatform(Element, Element.Text, "")
 						end
 
 						do -- EVENTS

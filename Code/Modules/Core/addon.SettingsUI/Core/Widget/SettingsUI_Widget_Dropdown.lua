@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -16,7 +17,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 	--------------------------------
 
 	do -- DROPDOWN
-		Frame.Dropdown = AdaptiveAPI.FrameTemplates:CreateDropdown(InteractionSettingsFrame, Frame.Container, Frame:GetFrameStrata(), {
+		Frame.Dropdown = addon.API.FrameTemplates:CreateDropdown(InteractionSettingsFrame, Frame.Container, Frame:GetFrameStrata(), {
 			valuesFunc = optionsTable,
 			openListFunc = openListFunc,
 			closeListFunc = closeListFunc,
@@ -63,7 +64,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 				COLOR_LIST_ElementHighlightText = addon.Theme.Settings.Element_Default_LightTheme
 			end
 
-			AdaptiveAPI.FrameTemplates:UpdateDropdownTheme(Frame.Dropdown, {
+			addon.API.FrameTemplates:UpdateDropdownTheme(Frame.Dropdown, {
 				defaultColor = COLOR_Default,
 				highlightColor = COLOR_Highlight,
 				defaultTextColor = COLOR_DefaultText,
@@ -77,7 +78,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
 		--------------------------------
 
@@ -86,7 +87,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 		--------------------------------
 
 		InteractionSettingsFrame.Content.ScrollFrame:HookScript("OnMouseWheel", function(self, delta)
-			if not addon.API:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
+			if not addon.API.Main:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
 				if Frame.Dropdown.List:IsVisible() then
 					Frame.Dropdown.List.HideList()
 					Frame.Dropdown.Leave()

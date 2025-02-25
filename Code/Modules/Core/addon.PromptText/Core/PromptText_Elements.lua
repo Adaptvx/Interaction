@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.PromptText
@@ -31,20 +32,20 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 75, 1, "$parent.Background")
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 75, 1, "$parent.Background")
 				Frame.Background:SetSize(Frame:GetWidth() + 25, Frame:GetHeight() + 25)
 				Frame.Background:SetPoint("CENTER", Frame)
 				Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
 				Frame.Background:SetFrameLevel(99)
 				Frame.BackgroundTexture:SetVertexColor(.1, .1, .1, .975)
 
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					local TEXTURE_Background
 
 					if addon.Theme.IsDarkTheme then
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT
+						TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT
 					else
-						TEXTURE_Background = AdaptiveAPI.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT
+						TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT
 					end
 
 					Frame.BackgroundTexture:SetTexture(TEXTURE_Background)
@@ -81,14 +82,14 @@ function NS.Elements:Load()
 
 				do -- TITLE
 					do -- TEXT
-						Frame.TitleArea.Title = AdaptiveAPI.FrameTemplates:CreateText(Frame.TitleArea, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Title")
+						Frame.TitleArea.Title = addon.API.FrameTemplates:CreateText(Frame.TitleArea, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
 						Frame.TitleArea.Title:SetSize(Frame.TitleArea:GetWidth(), Frame.TitleArea:GetHeight())
 						Frame.TitleArea.Title:SetPoint("CENTER", Frame.TitleArea)
 					end
 
 					do -- BUTTONS
 						do -- CLOSE
-							Frame.TitleArea.CloseButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.TitleArea, 25, 25, "FULLSCREEN_DIALOG", {
+							Frame.TitleArea.CloseButton = addon.API.FrameTemplates:CreateCustomButton(Frame.TitleArea, 25, 25, "FULLSCREEN_DIALOG", {
 								defaultTexture = NS.Variables.NINESLICE_HEAVY,
 								highlightTexture = NS.Variables.NINESLICE_HIGHLIGHT,
 								edgeSize = 25,
@@ -108,7 +109,7 @@ function NS.Elements:Load()
 							---------------------------------
 
 							do -- IMAGE
-								Frame.TitleArea.CloseButton.Image, Frame.TitleArea.CloseButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.TitleArea.CloseButton, "FULLSCREEN_DIALOG", AdaptiveAPI.PATH .. "Elements/close.png", "$parent.Image")
+								Frame.TitleArea.CloseButton.Image, Frame.TitleArea.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.TitleArea.CloseButton, "FULLSCREEN_DIALOG", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
 								Frame.TitleArea.CloseButton.Image:SetSize(Frame.TitleArea.CloseButton:GetWidth() - 10, Frame.TitleArea.CloseButton:GetHeight() - 10)
 								Frame.TitleArea.CloseButton.Image:SetPoint("CENTER", Frame.TitleArea.CloseButton)
 								Frame.TitleArea.CloseButton.Image:SetAlpha(.5)
@@ -121,7 +122,7 @@ function NS.Elements:Load()
 					Frame.InputArea.InputBox = CreateFrame("EditBox", "$parent.InputBox", Frame.InputArea)
 					Frame.InputArea.InputBox:SetSize(Frame.InputArea:GetWidth(), Frame.InputArea:GetHeight())
 					Frame.InputArea.InputBox:SetPoint("TOP", Frame.InputArea)
-					Frame.InputArea.InputBox:SetFont(AdaptiveAPI.Fonts.Content_Light, 12.5, "")
+					Frame.InputArea.InputBox:SetFont(addon.API.Fonts.Content_Light, 12.5, "")
 					Frame.InputArea.InputBox:SetTextColor(addon.Theme.RGB_WHITE.r, addon.Theme.RGB_WHITE.g, addon.Theme.RGB_WHITE.b)
 					Frame.InputArea.InputBox:SetMultiLine(true)
 					Frame.InputArea.InputBox:SetAutoFocus(false)
@@ -134,14 +135,14 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- HINT
-						Frame.InputArea.InputBox.Hint = AdaptiveAPI.FrameTemplates:CreateText(Frame.InputArea.InputBox, addon.Theme.RGB_WHITE, 12.5, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Hint")
+						Frame.InputArea.InputBox.Hint = addon.API.FrameTemplates:CreateText(Frame.InputArea.InputBox, addon.Theme.RGB_WHITE, 12.5, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Hint")
 						Frame.InputArea.InputBox.Hint:SetSize(Frame.InputArea.InputBox:GetSize())
 						Frame.InputArea.InputBox.Hint:SetPoint("TOP", Frame.InputArea.InputBox)
 						Frame.InputArea.InputBox.Hint:SetAlpha(.75)
 					end
 
 					do -- SCROLL BAR
-						Frame.InputArea.Scrollbar = AdaptiveAPI.FrameTemplates:CreateScrollbar(Frame.InputArea, "FULLSCREEN_DIALOG", {
+						Frame.InputArea.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.InputArea, "FULLSCREEN_DIALOG", {
 							scrollFrame = Frame.InputArea,
 							scrollChildFrame = Frame.InputArea.InputBox,
 							sizeX = 5,
@@ -183,7 +184,7 @@ function NS.Elements:Load()
 
 				do -- BUTTONS
 					do -- BUTTON 1
-						Frame.ButtonArea.Button1 = AdaptiveAPI.FrameTemplates:CreateCustomButton(Frame.ButtonArea, Frame.ButtonArea:GetWidth() - Padding, Frame.ButtonArea:GetHeight() / 2, "FULLSCREEN_DIALOG", {
+						Frame.ButtonArea.Button1 = addon.API.FrameTemplates:CreateCustomButton(Frame.ButtonArea, Frame.ButtonArea:GetWidth() - Padding, Frame.ButtonArea:GetHeight() / 2, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = 25,

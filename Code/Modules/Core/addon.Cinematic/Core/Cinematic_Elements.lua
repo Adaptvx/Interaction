@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
@@ -30,7 +31,7 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- TEXTURE
-					InteractionFrame.CinematicMode.Vignette.Texture, _ = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionFrame.CinematicMode.Vignette, "BACKGROUND", AdaptiveAPI.Presets.NINESLICE_VIGNETTE_DARK, 256, 1)
+					InteractionFrame.CinematicMode.Vignette.Texture, _ = addon.API.FrameTemplates:CreateNineSlice(InteractionFrame.CinematicMode.Vignette, "BACKGROUND", addon.API.Presets.NINESLICE_VIGNETTE_DARK, 256, 1)
 					InteractionFrame.CinematicMode.Vignette.Texture:SetAllPoints(InteractionFrame.CinematicMode.Vignette, true)
 					InteractionFrame.CinematicMode.Vignette.Texture:SetAlpha(.5)
 					InteractionFrame.CinematicMode.Vignette.Texture:SetScale(1)

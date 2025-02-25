@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.FriendshipBar
@@ -17,7 +18,7 @@ function NS.Elements:Load()
 	do -- CREATE ELEMENTS
         InteractionFriendshipBarParent = CreateFrame("Frame", "$parent.InteractionFriendshipBarParent", InteractionFrame)
         InteractionFriendshipBarParent:SetSize(350, 50)
-        InteractionFriendshipBarParent:SetPoint("TOP", UIParent, 0, -(addon.API:GetScreenHeight() * .025))
+        InteractionFriendshipBarParent:SetPoint("TOP", UIParent, 0, -(addon.API.Main:GetScreenHeight() * .025))
         InteractionFriendshipBarParent:SetFrameStrata("FULLSCREEN")
         InteractionFriendshipBarParent:SetFrameLevel(99)
         InteractionFriendshipBarParent:Hide()
@@ -29,7 +30,7 @@ function NS.Elements:Load()
         InteractionFriendshipBarFrame:SetFrameStrata("FULLSCREEN")
         InteractionFriendshipBarFrame:SetFrameLevel(1)
 
-        AdaptiveAPI.Animation:AddParallax(InteractionFriendshipBarFrame, InteractionFriendshipBarParent, function() return true end, function() return false end, addon.Input.Variables.IsController)
+        addon.API.Animation:AddParallax(InteractionFriendshipBarFrame, InteractionFriendshipBarParent, function() return true end, function() return false end, addon.Input.Variables.IsController)
 
         --------------------------------
 
@@ -58,14 +59,14 @@ function NS.Elements:Load()
             --------------------------------
 
 			do -- BACKGROUND
-                Frame.Image.Background, Frame.Image.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", NS.Variables.PATH .. "image-background.png", "$parent.Background")
+                Frame.Image.Background, Frame.Image.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", NS.Variables.PATH .. "image-background.png", "$parent.Background")
                 Frame.Image.Background:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
                 Frame.Image.Background:SetPoint("CENTER", Frame.Image)
                 Frame.Image.Background:SetFrameLevel(6)
             end
 
 			do -- IMAGE
-                Frame.Image.Image, Frame.Image.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", nil, "$parent.Image")
+                Frame.Image.Image, Frame.Image.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", nil, "$parent.Image")
                 Frame.Image.Image:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
                 Frame.Image.Image:SetPoint("CENTER", Frame.Image)
                 Frame.Image.Image:SetFrameLevel(7)
@@ -82,7 +83,7 @@ function NS.Elements:Load()
             --------------------------------
 
 			do -- BACKGROUND
-                Frame.Progress.Background, Frame.Progress.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "background.png", "$parent.Background")
+                Frame.Progress.Background, Frame.Progress.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "background.png", "$parent.Background")
                 Frame.Progress.Background:SetSize(Frame.Progress:GetWidth(), Frame.Progress:GetHeight())
                 Frame.Progress.Background:SetPoint("CENTER", Frame.Progress)
                 Frame.Progress.Background:SetFrameStrata("FULLSCREEN")
@@ -90,7 +91,7 @@ function NS.Elements:Load()
             end
 
 			do -- PROGRESS BAR
-                Frame.Progress.Bar = AdaptiveAPI.FrameTemplates:CreateAdvancedProgressBar(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "bar.png", NS.Variables.PATH .. "flare.png", 8, 0, "$parent.Bar")
+                Frame.Progress.Bar = addon.API.FrameTemplates:CreateAdvancedProgressBar(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "bar.png", NS.Variables.PATH .. "flare.png", 8, 0, "$parent.Bar")
                 Frame.Progress.Bar:SetSize(Frame.Progress:GetWidth() - 25, Frame.Progress:GetHeight() - 25)
                 Frame.Progress.Bar:SetPoint("CENTER", Frame.Progress.Background)
                 Frame.Progress.Bar:SetFrameStrata("FULLSCREEN")

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction
@@ -27,7 +28,7 @@ function NS.Script:Load()
 
 		function NS.Script:IsNewQuestNPC(hideSameNPC)
 			local IsSameQuestNPC = (not hideSameNPC or hideSameNPC == nil) and (UnitName("questnpc") == NS.Variables.LastQuestNPC)
-			local IsStaticNPC = (AdaptiveAPI:FindItemInInventory(UnitName("questnpc")))
+			local IsStaticNPC = (addon.API.Util:FindItemInInventory(UnitName("questnpc")))
 			NS.Variables.LastQuestNPC = UnitName("questnpc")
 
 			if (IsStaticNPC) and not (IsSameQuestNPC) and (NS.Variables.Active) then
@@ -496,9 +497,9 @@ function NS.Script:Load()
 						local Shortcut
 
 						if addon.Input.Variables.IsController then
-							Shortcut = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-controller.png", 25, 25, 0, 0) .. L["Alert - Open Settings"]
+							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-controller.png", 25, 25, 0, 0) .. L["Alert - Open Settings"]
 						else
-							Shortcut = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-pc.png", 25, 75, 0, 0) .. L["Alert - Open Settings"]
+							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-pc.png", 25, 75, 0, 0) .. L["Alert - Open Settings"]
 						end
 
 						--------------------------------

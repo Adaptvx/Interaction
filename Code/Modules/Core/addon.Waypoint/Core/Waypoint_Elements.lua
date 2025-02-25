@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Waypoint
@@ -31,13 +32,13 @@ function NS.Elements:Load()
 
 			do -- PINPOINT
 				do -- BACKGROUND
-					InteractionPinpointFrame.Background, InteractionPinpointFrame.backgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "content.png", 25, .5, "$parent.Background")
+					InteractionPinpointFrame.Background, InteractionPinpointFrame.backgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "content.png", 25, .5, "$parent.Background")
 					InteractionPinpointFrame.Background:SetSize(InteractionPinpointFrame:GetWidth(), InteractionPinpointFrame:GetHeight())
 					InteractionPinpointFrame.Background:SetPoint("CENTER", InteractionPinpointFrame)
 				end
 
 				do -- LINE
-					InteractionPinpointFrame.Line, InteractionPinpointFrame.LineTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "line-up.png", "$parent.Line")
+					InteractionPinpointFrame.Line, InteractionPinpointFrame.LineTexture = addon.API.FrameTemplates:CreateTexture(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "line-up.png", "$parent.Line")
 					InteractionPinpointFrame.Line:SetSize(NS.Variables.LINE_WIDTH, NS.Variables.LINE_HEIGHT)
 
 					--------------------------------
@@ -48,18 +49,17 @@ function NS.Elements:Load()
 
 					--------------------------------
 
-					hooksecurefunc(InteractionPinpointFrame.Background, "SetHeight", UpdateLinePosition)
-					hooksecurefunc(InteractionPinpointFrame.Background, "SetSize", UpdateLinePosition)
+					InteractionPinpointFrame.Background:HookScript("OnSizeChanged", UpdateLinePosition)
 				end
 
 				do -- SHINE
-					InteractionPinpointFrame.Shine, InteractionPinpointFrame.ShineTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(InteractionPinpointFrame.Background, "HIGH", NS.Variables.PATH .. "content-add.png", 25, .5, "$parent.Shine")
+					InteractionPinpointFrame.Shine, InteractionPinpointFrame.ShineTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionPinpointFrame.Background, "HIGH", NS.Variables.PATH .. "content-add.png", 25, .5, "$parent.Shine")
 					InteractionPinpointFrame.Shine:SetAllPoints(InteractionPinpointFrame.Background, true)
 					InteractionPinpointFrame.ShineTexture:SetBlendMode("ADD")
 				end
 
 				do -- LABEL
-					InteractionPinpointFrame.Label = AdaptiveAPI.FrameTemplates:CreateText(InteractionPinpointFrame.Background, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
+					InteractionPinpointFrame.Label = addon.API.FrameTemplates:CreateText(InteractionPinpointFrame.Background, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
 					InteractionPinpointFrame.Label:SetSize(InteractionPinpointFrame:GetWidth() - 15, InteractionPinpointFrame:GetHeight() - 15)
 					InteractionPinpointFrame.Label:SetPoint("CENTER", InteractionPinpointFrame)
 				end
@@ -67,14 +67,14 @@ function NS.Elements:Load()
 
 			do -- WAYPOINT
 				do -- LINE
-					InteractionWaypointFrame.Line, InteractionWaypointFrame.LineTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionWaypointFrame, "BACKGROUND", NS.Variables.PATH .. "waypoint.png", "$parent.Line")
+					InteractionWaypointFrame.Line, InteractionWaypointFrame.LineTexture = addon.API.FrameTemplates:CreateTexture(InteractionWaypointFrame, "BACKGROUND", NS.Variables.PATH .. "waypoint.png", "$parent.Line")
 					InteractionWaypointFrame.Line:SetParent(InteractionWaypointFrame)
 					InteractionWaypointFrame.Line:SetSize(75, 1000)
 					InteractionWaypointFrame.Line:SetPoint("BOTTOM", InteractionWaypointFrame)
 				end
 
 				do -- GLOW
-					InteractionWaypointFrame.Glow, InteractionWaypointFrame.GlowTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionWaypointFrame, "BACKGROUND", NS.Variables.PATH .. "glow.png", "$parent.Glow")
+					InteractionWaypointFrame.Glow, InteractionWaypointFrame.GlowTexture = addon.API.FrameTemplates:CreateTexture(InteractionWaypointFrame, "BACKGROUND", NS.Variables.PATH .. "glow.png", "$parent.Glow")
 					InteractionWaypointFrame.Glow:SetParent(InteractionWaypointFrame)
 					InteractionWaypointFrame.Glow:SetSize(350, 350)
 					InteractionWaypointFrame.Glow:SetPoint("BOTTOM", InteractionWaypointFrame, 0, -175)
@@ -109,7 +109,7 @@ function NS.Elements:Load()
 				end
 
 				do -- GLOW ANIMATION
-					InteractionWaypointFrame.GlowAnimation = AdaptiveAPI.Animation:CreateSpriteSheet(InteractionWaypointFrame, NS.Variables.PATH .. "glow-flipbook.png", 4, 4, .00725, false)
+					InteractionWaypointFrame.GlowAnimation = addon.API.Animation:CreateSpriteSheet(InteractionWaypointFrame, NS.Variables.PATH .. "glow-flipbook.png", 4, 4, .00725, false)
 					InteractionWaypointFrame.GlowAnimation:SetParent(InteractionWaypointFrame)
 					InteractionWaypointFrame.GlowAnimation:SetSize(50, 50)
 					InteractionWaypointFrame.GlowAnimation:SetPoint("BOTTOM", InteractionWaypointFrame, 0, -25)
@@ -120,7 +120,7 @@ function NS.Elements:Load()
 				end
 
 				do -- DISTANCE
-					InteractionWaypointFrame.Distance = AdaptiveAPI.FrameTemplates:CreateText(InteractionWaypointFrame, { r = 1, g = .8, b = .1 }, 27.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Distance")
+					InteractionWaypointFrame.Distance = addon.API.FrameTemplates:CreateText(InteractionWaypointFrame, { r = 1, g = .8, b = .1 }, 27.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Distance")
 					InteractionWaypointFrame.Distance:SetParent(InteractionWaypointFrame)
 					InteractionWaypointFrame.Distance:SetSize(200, 200)
 					InteractionWaypointFrame.Distance:SetPoint("BOTTOM", InteractionWaypointFrame, 0, -125)

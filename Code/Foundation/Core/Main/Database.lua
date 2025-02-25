@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -94,7 +95,7 @@ do -- CONSTANTS
 
 			-- EFFECTS
 			INT_CINEMATIC = true,
-			INT_CINEMATIC_PRESET = 3,
+			INT_CINEMATIC_PRESET = 2,
 			INT_HIDEUI = true,
 
 			INT_CINEMATIC_ZOOM = false,

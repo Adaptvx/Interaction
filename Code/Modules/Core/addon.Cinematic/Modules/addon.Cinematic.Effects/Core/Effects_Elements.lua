@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Cinematic.Effects
@@ -37,10 +38,14 @@ function NS.Elements:Load()
 
 				do -- LEFT HALF
 					Frame.MouseResponders.Left = CreateFrame("Frame", "$parent.MouseResponders.Left_Half", Frame.MouseResponders)
+					Frame.MouseResponders.Left:SetPoint("TOPLEFT", UIParent, 0, 0)
+					Frame.MouseResponders.Left:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMLEFT", 750, 0)
 				end
 
 				do -- RIGHT HALF
 					Frame.MouseResponders.Right = CreateFrame("Frame", "$parent.MouseResponders.Right_Half", Frame.MouseResponders)
+					Frame.MouseResponders.Right:SetPoint("TOPLEFT", UIParent, -750, 0)
+					Frame.MouseResponders.Right:SetPoint("BOTTOMRIGHT", UIParent, 0, 0)
 				end
 			end
 
@@ -53,7 +58,7 @@ function NS.Elements:Load()
 				--------------------------------
 
 				do -- BACKGROUND
-					Frame.Gradient.Background, Frame.Gradient.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Gradient, "HIGH", nil, "$parent.Gradient")
+					Frame.Gradient.Background, Frame.Gradient.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Gradient, "HIGH", nil, "$parent.Gradient")
 					Frame.Gradient.Background:SetAllPoints(Frame.Gradient, true)
 					Frame.Gradient.Background:SetFrameStrata("HIGH")
 					Frame.Gradient.Background:SetFrameLevel(2)

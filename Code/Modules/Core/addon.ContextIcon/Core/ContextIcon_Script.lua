@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.ContextIcon
@@ -33,7 +34,7 @@ end
 
 local IsOnQuest = C_QuestLog.IsOnQuest or MissingAPI
 local IsReadyForTurnIn = C_QuestLog.ReadyForTurnIn or ReadyForTurnInMakeshiftAPI or MissingAPI
-local IsAutoAccept = addon.API.IsAutoAccept
+local IsAutoAccept = addon.API.Main.IsAutoAccept
 
 --------------------------------
 
@@ -52,7 +53,7 @@ function NS.Script:Load()
 		do -- UTILITIES
 			function Callback:ConvertToInlineIcon(name, isTexture)
 				local iconPath = isTexture and name or (NS.Variables.PATH .. name .. ".png")
-				return AdaptiveAPI:InlineIcon(iconPath, 16, 16, 0, 0)
+				return addon.API.Util:InlineIcon(iconPath, 16, 16, 0, 0)
 			end
 		end
 
@@ -218,7 +219,8 @@ function NS.Script:Load()
 					local isAvailable = (QuestFrameAcceptButton:IsVisible() or IsAutoAccept())
 					local isCompleted = (((questInfo.isComplete) or (IsReadyForTurnIn and IsReadyForTurnIn(questID))) and not isAvailable)
 					local isOnQuest = (((questInfo.isOnQuest) or (IsOnQuest and IsOnQuest(questID)) or questInfo.missingQuestID) and not isAvailable)
-					local isRecurring = (questInfo.frequency > FREQUENCY_DEFAULT)
+					-- local isRecurring = (questInfo.frequency > FREQUENCY_DEFAULT)
+					local isRecurring = false -- Classic frequency is inaccurate when using GetQuestLogTitle info...
 					local isDefault = (not isRecurring)
 
 					local isGroup = (QuestType == 1)

@@ -28,12 +28,12 @@ function NS:Load()
 
 	do
 		-- Adds a function to a callback category.
-		---@param name string
+		---@param id string
 		---@param func function
 		---@param priority? number: Higher priority runs later. Priority with -1 is ALWAYS run first. Default is run after .5s.
-		function NS:Add(name, func, priority)
-			if NS.callbacks[name] == nil then
-				NS.callbacks[name] = {}
+		function NS:Add(id, func, priority)
+			if NS.callbacks[id] == nil then
+				NS.callbacks[id] = {}
 			end
 
 			local callback = {
@@ -41,30 +41,25 @@ function NS:Load()
 				priority = priority
 			}
 
-			table.insert(NS.callbacks[name], callback)
+			table.insert(NS.callbacks[id], callback)
 		end
 
 		-- Triggers all functions in a callback category.
-		---@param name string
-		---@param arg1? any
-		---@param arg2? any
-		---@param arg3? any
-		---@param arg4? any
-		---@param arg5? any
-		function NS:Trigger(name, arg1, arg2, arg3, arg4, arg5)
-			if not NS.callbacks[name] then
+		---@param id string
+		function NS:Trigger(id, ...)
+			if not NS.callbacks[id] then
 				return
 			end
 
 			--------------------------------
 
-			table.sort(NS.callbacks[name], function(a, b)
+			table.sort(NS.callbacks[id], function(a, b)
 				return (a.priority or 0) < (b.priority or 0)
 			end)
 
-			for _, callback in ipairs(NS.callbacks[name]) do
+			for _, callback in ipairs(NS.callbacks[id]) do
 				local func = callback.func
-				func(arg1, arg2, arg3, arg4, arg5)
+				func(...)
 			end
 		end
 	end

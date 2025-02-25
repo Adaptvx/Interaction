@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Prompt
@@ -44,8 +45,8 @@ function NS.Script:Load()
 			InteractionPromptFrame.Content.ButtonArea.Button1:SetText(NS.Variables.Button1Text)
 			InteractionPromptFrame.Content.ButtonArea.Button2:SetText(NS.Variables.Button2Text)
 
-			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button1, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Accept))
-			addon.API:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button2, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Decline))
+			addon.API.Main:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button1, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Accept))
+			addon.API.Main:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button2, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Decline))
 
 			InteractionPromptFrame.Content.ButtonArea.Button1.SetActive(addon.Prompt.Button1Active)
 			InteractionPromptFrame.Content.ButtonArea.Button2.SetActive(addon.Prompt.Button2Active)
@@ -107,11 +108,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
-			AdaptiveAPI.Animation:Move(InteractionPromptFrame, .5, "TOP", 25, -35, "y", AdaptiveAPI.Animation.EaseExpo, function() return InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
+			addon.API.Animation:Move(InteractionPromptFrame, .5, "TOP", 25, -35, "y", addon.API.Animation.EaseExpo, function() return InteractionPromptFrame.hidden end)
 
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
 		end
 
 		InteractionPromptFrame.HideWithAnimation = function()
@@ -131,11 +132,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame, .25, InteractionPromptFrame:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
-			AdaptiveAPI.Animation:Move(InteractionPromptFrame, .5, "TOP", -35, 5, "y", AdaptiveAPI.Animation.EaseExpo, function() return not InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame, .25, InteractionPromptFrame:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
+			addon.API.Animation:Move(InteractionPromptFrame, .5, "TOP", -35, 5, "y", addon.API.Animation.EaseExpo, function() return not InteractionPromptFrame.hidden end)
 
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, InteractionPromptFrame.Content.ButtonArea.Button1:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
-			AdaptiveAPI.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, InteractionPromptFrame.Content.ButtonArea.Button2:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, InteractionPromptFrame.Content.ButtonArea.Button1:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
+			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, InteractionPromptFrame.Content.ButtonArea.Button2:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
 		end
 	end
 
@@ -188,7 +189,7 @@ function NS.Script:Load()
 
 				local FormattedText
 				if cost and cost > 0 then
-					local gold, silver, copper = AdaptiveAPI:FormatMoney(cost)
+					local gold, silver, copper = addon.API.Util:FormatMoney(cost)
 
 					--------------------------------
 
@@ -197,15 +198,15 @@ function NS.Script:Load()
 					--------------------------------
 
 					if gold > 0 then
-						text_gold = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
+						text_gold = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
 					end
 
 					if silver > 0 then
-						text_silver = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
+						text_silver = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
 					end
 
 					if copper > 0 then
-						text_copper = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
+						text_copper = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
 					end
 
 					--------------------------------

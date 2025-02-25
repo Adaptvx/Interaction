@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Audiobook
@@ -43,7 +44,7 @@ function NS.Elements:Load()
 				end
 
 				do -- BACKGROUND
-					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "background.png", 32, 2.5, "$parent.Background")
+					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "background.png", 32, 2.5, "$parent.Background")
 					Frame.Background:SetSize(Frame:GetWidth() + 125, Frame:GetHeight() + 125)
 					Frame.Background:SetPoint("CENTER", Frame)
 					Frame.Background:SetFrameStrata("FULLSCREEN")
@@ -67,12 +68,12 @@ function NS.Elements:Load()
 						Frame.Content.PlaybackButton:SetFrameStrata("FULLSCREEN")
 						Frame.Content.PlaybackButton:SetFrameLevel(53)
 
-						AdaptiveAPI:AnchorToCenter(Frame.Content.PlaybackButton)
+						addon.API.FrameUtil:AnchorToCenter(Frame.Content.PlaybackButton)
 
 						--------------------------------
 
 						do -- BACKGROUND
-							Frame.Content.PlaybackButton.Background, Frame.Content.PlaybackButton.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png", "$parent.Background")
+							Frame.Content.PlaybackButton.Background, Frame.Content.PlaybackButton.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png", "$parent.Background")
 							Frame.Content.PlaybackButton.Background:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, -5, 5)
 							Frame.Content.PlaybackButton.Background:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, 5, -5)
 							Frame.Content.PlaybackButton.Background:SetFrameStrata("FULLSCREEN")
@@ -82,7 +83,7 @@ function NS.Elements:Load()
 						do -- IMAGE
 							local IMAGE_PADDING = NS.Variables:RATIO(2.25)
 
-							Frame.Content.PlaybackButton.Image, Frame.Content.PlaybackButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-play.png", "$parent.Image")
+							Frame.Content.PlaybackButton.Image, Frame.Content.PlaybackButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-play.png", "$parent.Image")
 							Frame.Content.PlaybackButton.Image:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, IMAGE_PADDING, -IMAGE_PADDING)
 							Frame.Content.PlaybackButton.Image:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, -IMAGE_PADDING, IMAGE_PADDING)
 							Frame.Content.PlaybackButton.Image:SetFrameStrata("FULLSCREEN")
@@ -112,7 +113,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								Frame.Content.PlaybackButton:SetAlpha(.75)
-								AdaptiveAPI.Animation:Scale(Frame.Content.PlaybackButton, .25, Frame.Content.PlaybackButton:GetScale(), .875, nil, nil, function() return not Frame.Content.PlaybackButton.isMouseDown end)
+								addon.API.Animation:Scale(Frame.Content.PlaybackButton, .25, Frame.Content.PlaybackButton:GetScale(), .875, nil, nil, function() return not Frame.Content.PlaybackButton.isMouseDown end)
 							end
 
 							Frame.Content.PlaybackButton.MouseUp = function()
@@ -121,7 +122,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								Frame.Content.PlaybackButton:SetAlpha(1)
-								AdaptiveAPI.Animation:Scale(Frame.Content.PlaybackButton, .075, Frame.Content.PlaybackButton:GetScale(), 1, nil, nil, function() return Frame.Content.PlaybackButton.isMouseDown end)
+								addon.API.Animation:Scale(Frame.Content.PlaybackButton, .075, Frame.Content.PlaybackButton:GetScale(), 1, nil, nil, function() return Frame.Content.PlaybackButton.isMouseDown end)
 							end
 
 							Frame.Content.PlaybackButton:SetScript("OnEnter", Frame.Content.PlaybackButton.Enter)
@@ -146,7 +147,7 @@ function NS.Elements:Load()
 							local COLOR_Default = { r = 1, g = 1, b = 1, a = .25 }
 							local COLOR_Thumb = { r = 1, g = 1, b = 1, a = 1 }
 
-							AdaptiveAPI.FrameTemplates.Styles:Slider(Frame.Content.Slider, {
+							addon.API.FrameTemplates.Styles:Slider(Frame.Content.Slider, {
 								customColor = COLOR_Default,
 								customThumbColor = COLOR_Thumb,
 								grid = false
@@ -173,7 +174,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							do -- BACKGROUND
-								Frame.Content.Text.Index.Background, Frame.Content.Text.Index.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.Content.Text.Index, "FULLSCREEN", AdaptiveAPI.Presets.NINESLICE_INSCRIBED, 64, .5, "$parent.Background")
+								Frame.Content.Text.Index.Background, Frame.Content.Text.Index.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Content.Text.Index, "FULLSCREEN", addon.API.Presets.NINESLICE_INSCRIBED, 64, .5, "$parent.Background")
 								Frame.Content.Text.Index.Background:SetAllPoints(Frame.Content.Text.Index, true)
 								Frame.Content.Text.Index.BackgroundTexture:SetVertexColor(1, 1, 1, .125)
 								Frame.Content.Text.Index.Background:SetFrameStrata("FULLSCREEN")
@@ -181,13 +182,13 @@ function NS.Elements:Load()
 							end
 
 							do -- TEXT
-								Frame.Content.Text.Index.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.Text.Index, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+								Frame.Content.Text.Index.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Text.Index, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
 								Frame.Content.Text.Index.Text:SetAllPoints(Frame.Content.Text.Index, true)
 							end
 						end
 
 						do -- TITLE
-							Frame.Content.Text.Title = AdaptiveAPI.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Title")
+							Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
 							Frame.Content.Text.Title:SetHeight(Frame.Content.Text:GetHeight())
 							Frame.Content.Text.Title:SetPoint("LEFT", Frame.Content.Text, 0, 0)
 						end
@@ -198,7 +199,7 @@ function NS.Elements:Load()
 
 								---------------------------------
 
-								local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(Frame.Content.Text.Index.Text, nil, nil)
+								local stringWidth, stringHeight = addon.API.Util:GetStringSize(Frame.Content.Text.Index.Text, nil, nil)
 								local width = (PADDING / 2) + stringWidth + (PADDING / 2)
 
 								---------------------------------
@@ -222,7 +223,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- BACKGROUND
-						Frame.TextPreviewFrame.Background, Frame.TextPreviewFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame.TextPreviewFrame, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "background.png", 32, 1, "$parent.Background")
+						Frame.TextPreviewFrame.Background, Frame.TextPreviewFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.TextPreviewFrame, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "background.png", 32, 1, "$parent.Background")
 						Frame.TextPreviewFrame.Background:SetPoint("TOPLEFT", Frame.TextPreviewFrame, -35, 35)
 						Frame.TextPreviewFrame.Background:SetPoint("BOTTOMRIGHT", Frame.TextPreviewFrame, 35, -35)
 						Frame.TextPreviewFrame.Background:SetFrameStrata("FULLSCREEN")
@@ -240,28 +241,17 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- TEXT
-							Frame.TextPreviewFrame.Content.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.TextPreviewFrame.Content, addon.Theme.RGB_CHAT_MSG_SAY, 12.5, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+							Frame.TextPreviewFrame.Content.Text = addon.API.FrameTemplates:CreateText(Frame.TextPreviewFrame.Content, addon.Theme.RGB_CHAT_MSG_SAY, 12.5, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
 							Frame.TextPreviewFrame.Content.Text:SetSize(Frame.TextPreviewFrame.Content:GetSize())
 							Frame.TextPreviewFrame.Content.Text:SetPoint("CENTER", Frame.TextPreviewFrame.Content)
-
-							--------------------------------
-
-							do -- EVENTS
-								local function UpdateSize()
-									Frame.TextPreviewFrame.Content.Text:SetSize(Frame.TextPreviewFrame.Content:GetSize())
-								end
-
-								hooksecurefunc(Frame.TextPreviewFrame, "SetSize", UpdateSize)
-								hooksecurefunc(Frame.TextPreviewFrame, "SetWidth", UpdateSize)
-								hooksecurefunc(Frame.TextPreviewFrame, "SetHeight", UpdateSize)
-							end
+							addon.API.FrameUtil:SetDynamicSize(Frame.TextPreviewFrame.Content.Text, Frame.TextPreviewFrame.Content, 0, 0)
 						end
 					end
 
 					do -- EVENTS
 						local function UpdateSize()
 							local maxWidth = Frame.Content:GetWidth() * .75
-							local stringWidth, stringHeight = AdaptiveAPI:GetStringSize(Frame.TextPreviewFrame.Content.Text, maxWidth, nil)
+							local stringWidth, stringHeight = addon.API.Util:GetStringSize(Frame.TextPreviewFrame.Content.Text, maxWidth, nil)
 
 							--------------------------------
 
@@ -281,18 +271,18 @@ function NS.Elements:Load()
 
 			do -- CLICK EVENTS
 				Frame.Animation_DragStart = function()
-					AdaptiveAPI.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
-					AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .875, nil, AdaptiveAPI.Animation.EaseSine, function() return not Frame.moving or Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
+					addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .875, nil, addon.API.Animation.EaseSine, function() return not Frame.moving or Frame.hidden end)
 				end
 
 				Frame.Animation_DragStop = function()
-					AdaptiveAPI.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
-					AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
+					addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, addon.API.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
 				end
 
 				Frame.Animation_CloseStart = function()
-					AdaptiveAPI.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 0, nil, function() return Frame.moving or Frame.hidden end)
-					AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, AdaptiveAPI.Animation.EaseSine, function() return Frame.moving or Frame.hidden end)
+					addon.API.Animation:Fade(Frame.Content, .075, Frame.Content:GetAlpha(), 0, nil, function() return Frame.moving or Frame.hidden end)
+					addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, addon.API.Animation.EaseSine, function() return Frame.moving or Frame.hidden end)
 				end
 
 				Frame.Animation_CloseStop = function()

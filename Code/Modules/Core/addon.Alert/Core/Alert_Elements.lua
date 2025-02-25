@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Alert
@@ -31,45 +32,33 @@ function NS.Elements:Load()
 
 			do -- ELEMENTS
 				do -- IMAGE
-					Frame.Image, Frame.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
+					Frame.Image, Frame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", nil, "$parent.Image")
 					Frame.Image:SetPoint("CENTER", Frame)
 					Frame.Image:SetFrameStrata("FULLSCREEN_DIALOG")
 					Frame.Image:SetFrameLevel(49)
+					addon.API.FrameUtil:SetDynamicSize(Frame.Image, Frame, function(relativeWidth, relativeHeight) return relativeHeight * 1.75 end, function(relativeWidth, relativeHeight) return relativeHeight * 1.75 end)
 				end
 
 				do -- BACKGROUND
-					Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "background.png", "$parent.Background")
-					Frame.Background:SetPoint("CENTER", Frame)
+					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "background.png", "$parent.Background")
+					Frame.Background:SetAllPoints(Frame)
 					Frame.Background:SetFrameStrata("FULLSCREEN_DIALOG")
 					Frame.Background:SetFrameLevel(50)
 				end
 
 				do -- TITLE
 					Frame.Title = CreateFrame("Frame", "$parent.Title", Frame)
-					Frame.Title:SetPoint("CENTER", Frame)
+					Frame.Title:SetAllPoints(Frame)
 					Frame.Title:SetFrameStrata("FULLSCREEN_DIALOG")
 					Frame.Title:SetFrameLevel(51)
 
 					--------------------------------
 
 					do -- TEXT
-						Frame.Title.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
+						Frame.Title.Text = addon.API.FrameTemplates:CreateText(Frame.Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
 						Frame.Title.Text:SetAllPoints(Frame.Title, true)
 					end
 				end
-			end
-
-			do -- EVENTS
-				local function UpdateSize()
-					Frame.Image:SetSize(Frame:GetHeight() * 1.75, Frame:GetHeight() * 1.75)
-					Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
-					Frame.Title:SetSize(Frame:GetWidth(), Frame:GetHeight())
-				end
-				UpdateSize()
-
-				hooksecurefunc(Frame, "SetWidth", UpdateSize)
-				hooksecurefunc(Frame, "SetHeight", UpdateSize)
-				hooksecurefunc(Frame, "SetSize", UpdateSize)
 			end
 		end
 	end

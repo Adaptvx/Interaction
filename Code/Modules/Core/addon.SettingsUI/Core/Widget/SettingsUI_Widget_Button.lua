@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -34,7 +35,7 @@ function NS.Widgets:CreateButton(parent, setFunc, subcategory, tooltipText, tool
 				ActiveColor = addon.Theme.Settings.Element_Active_LightTheme
 			end
 
-			AdaptiveAPI.FrameTemplates.Styles:UpdateButton(Frame.Button, {
+			addon.API.FrameTemplates.Styles:UpdateButton(Frame.Button, {
 				color = DefaultColor,
 				highlightColor = HighlightColor,
 				activeColor = ActiveColor
@@ -42,9 +43,9 @@ function NS.Widgets:CreateButton(parent, setFunc, subcategory, tooltipText, tool
 		end
 
 		UpdateTheme()
-		addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
-		AdaptiveAPI.FrameTemplates.Styles:Button(Frame.Button, {
+		addon.API.FrameTemplates.Styles:Button(Frame.Button, {
 			edgeSize = 25,
 			scale = .25,
 			playAnimation = false,

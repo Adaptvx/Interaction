@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -43,8 +44,8 @@ function NS.Script:Load()
 			Frame.Tooltip:SetPoint("RIGHT", Frame.Tooltip.frame, 225, 0)
 
 			if not skipAnimation then
-				AdaptiveAPI.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 1, nil, function() return not Frame:IsVisible() end)
-				AdaptiveAPI.Animation:Move(Frame.Tooltip, .25, "RIGHT", startPos, endPos, "x", AdaptiveAPI.Animation.EaseExpo, function() return not Frame:IsVisible() end)
+				addon.API.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 1, nil, function() return not Frame:IsVisible() end)
+				addon.API.Animation:Move(Frame.Tooltip, .25, "RIGHT", startPos, endPos, "x", addon.API.Animation.EaseExpo, function() return not Frame:IsVisible() end)
 			else
 				Frame.Tooltip:SetAlpha(1)
 				Frame.Tooltip:SetPoint("RIGHT", Frame.Tooltip.frame, endPos, 0)
@@ -102,8 +103,8 @@ function NS.Script:Load()
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					if not Frame.Tooltip.frame then
-						AdaptiveAPI.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 0)
-						AdaptiveAPI.Animation:Move(Frame.Tooltip, .25, "RIGHT", endPos, startPos, "x", AdaptiveAPI.Animation.EaseExpo)
+						addon.API.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 0)
+						addon.API.Animation:Move(Frame.Tooltip, .25, "RIGHT", endPos, startPos, "x", addon.API.Animation.EaseExpo)
 					end
 				end, .1)
 			end
@@ -167,7 +168,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						AdaptiveAPI.Animation:Fade(tab, .25, 0, 1)
+						addon.API.Animation:Fade(tab, .25, 0, 1)
 					end
 
 					--------------------------------
@@ -391,11 +392,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.Background, .5, 2, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Background, .5, 2, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.hidden end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:Fade(Frame.Container, .5, 0, 1, nil, function() return Frame.hidden end)
+				addon.API.Animation:Fade(Frame.Container, .5, 0, 1, nil, function() return Frame.hidden end)
 			end, .325)
 		end
 
@@ -417,21 +418,21 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .25, 1, 0, nil, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Scale(Frame.Background, .5, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.Container, .125, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .25, 1, 0, nil, function() return not Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Background, .5, 1, .875, nil, addon.API.Animation.EaseExpo, function() return not Frame.hidden end)
+			addon.API.Animation:Fade(Frame.Container, .125, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 		end
 
 		function Callback:MoveActive()
-			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .975, nil, AdaptiveAPI.Animation.EaseExpo, function() return not Frame.moving or Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, function() return not Frame.moving or Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .975, nil, addon.API.Animation.EaseExpo, function() return not Frame.moving or Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, function() return not Frame.moving or Frame.hidden end)
+			addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
 		end
 
 		function Callback:MoveDisabled()
-			AdaptiveAPI.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
-			AdaptiveAPI.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
+			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, addon.API.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
+			addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
 		end
 	end
 

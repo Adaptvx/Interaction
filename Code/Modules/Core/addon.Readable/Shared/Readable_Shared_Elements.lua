@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Readable
@@ -29,7 +30,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/background.png", "$parent.Background")
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/background.png", "$parent.Background")
 				Frame.Background:SetSize(Frame:GetWidth() + NS.Variables.SCREEN_WIDTH * .25, Frame:GetHeight())
 				Frame.Background:SetPoint("CENTER", Frame, 0, 0)
 				Frame.Background:SetFrameStrata("FULLSCREEN")
@@ -37,7 +38,7 @@ function NS.Elements:Load()
 			end
 
 			do -- DISC
-				Frame.Disc, Frame.DiscTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/ring.png", "$parent.Disc")
+				Frame.Disc, Frame.DiscTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/ring.png", "$parent.Disc")
 				Frame.Disc:SetSize(Frame:GetWidth() - 100, Frame:GetHeight() - 100)
 				Frame.Disc:SetScale(1.125)
 				Frame.Disc:SetPoint("CENTER", Frame)
@@ -48,7 +49,7 @@ function NS.Elements:Load()
 
 			do -- BUTTONS
 				do -- TTS
-					InteractionReadableUIFrame.TTSButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
+					InteractionReadableUIFrame.TTSButton = addon.API.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
 						defaultTexture = NS.Variables.NINESLICE_HEAVY,
 						highlightTexture = NS.Variables.NINESLICE_Highlight,
 						edgeSize = 25,
@@ -67,7 +68,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- IMAGE
-						InteractionReadableUIFrame.TTSButton.Image, InteractionReadableUIFrame.TTSButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionReadableUIFrame.TTSButton, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/tts.png", "$parent.Image")
+						InteractionReadableUIFrame.TTSButton.Image, InteractionReadableUIFrame.TTSButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(InteractionReadableUIFrame.TTSButton, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Elements/tts.png", "$parent.Image")
 						InteractionReadableUIFrame.TTSButton.Image:SetSize(InteractionReadableUIFrame.TTSButton:GetWidth() - 10, InteractionReadableUIFrame.TTSButton:GetHeight() - 10)
 						InteractionReadableUIFrame.TTSButton.Image:SetPoint("CENTER", InteractionReadableUIFrame.TTSButton)
 						InteractionReadableUIFrame.TTSButton.Image:SetAlpha(.75)
@@ -75,7 +76,7 @@ function NS.Elements:Load()
 				end
 
 				do -- CLOSE
-					InteractionReadableUIFrame.CloseButton = AdaptiveAPI.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
+					InteractionReadableUIFrame.CloseButton = addon.API.FrameTemplates:CreateCustomButton(InteractionReadableUIFrame, 25, 25, "FULLSCREEN", {
 						defaultTexture = NS.Variables.NINESLICE_DEFAULT,
 						highlightTexture = NS.Variables.NINESLICE_Highlight,
 						edgeSize = 25,
@@ -91,7 +92,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- IMAGE
-						InteractionReadableUIFrame.CloseButton.Image, InteractionReadableUIFrame.CloseButton.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(InteractionReadableUIFrame.CloseButton, "FULLSCREEN", AdaptiveAPI.PATH .. "Elements/close.png", "$parent.Image")
+						InteractionReadableUIFrame.CloseButton.Image, InteractionReadableUIFrame.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(InteractionReadableUIFrame.CloseButton, "FULLSCREEN", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
 						InteractionReadableUIFrame.CloseButton.Image:SetSize(InteractionReadableUIFrame.CloseButton:GetWidth() - 10, InteractionReadableUIFrame.CloseButton:GetHeight() - 10)
 						InteractionReadableUIFrame.CloseButton.Image:SetPoint("CENTER", InteractionReadableUIFrame.CloseButton)
 						InteractionReadableUIFrame.CloseButton.Image:SetAlpha(.5)

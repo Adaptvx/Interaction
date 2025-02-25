@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -19,7 +20,7 @@ function NS.Widgets:CreateTitle(parent, isSubtitle, textSize, subcategory, toolt
         local offsetX = isSubtitle and 12.5 or 0
         local offsetY = 0
 
-		Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+		Frame.Label = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
 		Frame.Label:SetSize(width, height)
 		Frame.Label:SetPoint("LEFT", Frame.Container, offsetX, offsetY)
 		Frame.Label:SetAlpha(1)

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -35,7 +36,7 @@ do -- QUEST
 		do -- COLOR
 			do -- PRIMARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("726053")
+					local color = addon.API.Util:GetRGBFromHexColor("726053")
 
 					--------------------------------
 
@@ -43,7 +44,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("5A5A5A")
+					local color = addon.API.Util:GetRGBFromHexColor("5A5A5A")
 
 					--------------------------------
 
@@ -53,7 +54,7 @@ do -- QUEST
 
 			do -- SECONDARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("45382F")
+					local color = addon.API.Util:GetRGBFromHexColor("45382F")
 
 					--------------------------------
 
@@ -61,7 +62,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("414141")
+					local color = addon.API.Util:GetRGBFromHexColor("414141")
 
 					--------------------------------
 
@@ -71,7 +72,7 @@ do -- QUEST
 
 			do -- TERTIARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("362D26")
+					local color = addon.API.Util:GetRGBFromHexColor("362D26")
 
 					--------------------------------
 
@@ -79,7 +80,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("262626")
+					local color = addon.API.Util:GetRGBFromHexColor("262626")
 
 					--------------------------------
 
@@ -89,7 +90,7 @@ do -- QUEST
 
 			do -- HIGHLIGHT PRIMARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("7F7F7F")
+					local color = addon.API.Util:GetRGBFromHexColor("7F7F7F")
 
 					--------------------------------
 
@@ -97,7 +98,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("7F7F7F")
+					local color = addon.API.Util:GetRGBFromHexColor("7F7F7F")
 
 					--------------------------------
 
@@ -107,7 +108,7 @@ do -- QUEST
 
 			do -- HIGHLIGHT SECONDARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("585858")
+					local color = addon.API.Util:GetRGBFromHexColor("585858")
 
 					--------------------------------
 
@@ -115,7 +116,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("585858")
+					local color = addon.API.Util:GetRGBFromHexColor("585858")
 
 					--------------------------------
 
@@ -125,7 +126,7 @@ do -- QUEST
 
 			do -- HIGHLIGHT TERTIARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("3F3F3F")
+					local color = addon.API.Util:GetRGBFromHexColor("3F3F3F")
 
 					--------------------------------
 
@@ -133,7 +134,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("3F3F3F")
+					local color = addon.API.Util:GetRGBFromHexColor("3F3F3F")
 
 					--------------------------------
 
@@ -143,7 +144,7 @@ do -- QUEST
 
 			do -- INVALID PRIMARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF0000")
+					local color = addon.API.Util:GetRGBFromHexColor("FF0000")
 
 					--------------------------------
 
@@ -151,7 +152,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF0000")
+					local color = addon.API.Util:GetRGBFromHexColor("FF0000")
 
 					--------------------------------
 
@@ -161,7 +162,7 @@ do -- QUEST
 
 			do -- INVALID SECONDARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF6969")
+					local color = addon.API.Util:GetRGBFromHexColor("FF6969")
 
 					--------------------------------
 
@@ -169,7 +170,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF4545")
+					local color = addon.API.Util:GetRGBFromHexColor("FF4545")
 
 					--------------------------------
 
@@ -179,7 +180,7 @@ do -- QUEST
 
 			do -- INVALID TERTIARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFA2A2")
+					local color = addon.API.Util:GetRGBFromHexColor("FFA2A2")
 
 					--------------------------------
 
@@ -187,7 +188,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF6464")
+					local color = addon.API.Util:GetRGBFromHexColor("FF6464")
 
 					--------------------------------
 
@@ -197,7 +198,7 @@ do -- QUEST
 
 			do -- INVALID TINT
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFA2A2")
+					local color = addon.API.Util:GetRGBFromHexColor("FFA2A2")
 
 					--------------------------------
 
@@ -205,7 +206,7 @@ do -- QUEST
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FF6363")
+					local color = addon.API.Util:GetRGBFromHexColor("FF6363")
 
 					--------------------------------
 
@@ -216,8 +217,8 @@ do -- QUEST
 			do -- GRADIENT
 				do -- QUALITY
 					do -- POOR
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("9D9D9D")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("8C8C8C")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("9D9D9D")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("8C8C8C")
 
 						--------------------------------
 
@@ -226,8 +227,8 @@ do -- QUEST
 					end
 
 					do -- COMMON
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("B8B8B8")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("A0A0A0")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("B8B8B8")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("A0A0A0")
 
 						--------------------------------
 
@@ -236,8 +237,8 @@ do -- QUEST
 					end
 
 					do -- UNCOMMON
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("1EFF00")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("669C5F")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("1EFF00")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("669C5F")
 
 						--------------------------------
 
@@ -246,8 +247,8 @@ do -- QUEST
 					end
 
 					do -- RARE
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("0070DD")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("005FBC")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("0070DD")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("005FBC")
 
 						--------------------------------
 
@@ -256,8 +257,8 @@ do -- QUEST
 					end
 
 					do -- EPIC
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("A335EE")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("900EE9")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("A335EE")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("900EE9")
 
 						--------------------------------
 
@@ -266,8 +267,8 @@ do -- QUEST
 					end
 
 					do -- LEGENDARY
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("FF8000")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("FF962C")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("FF8000")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("FF962C")
 
 						--------------------------------
 
@@ -276,8 +277,8 @@ do -- QUEST
 					end
 
 					do -- ARTIFACT
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("E6CC80")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("C7B16E")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("E6CC80")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("C7B16E")
 
 						--------------------------------
 
@@ -286,8 +287,8 @@ do -- QUEST
 					end
 
 					do -- HEIRLOOM
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("00CCFF")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("3FAAC5")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("00CCFF")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("3FAAC5")
 
 						--------------------------------
 
@@ -296,8 +297,8 @@ do -- QUEST
 					end
 
 					do -- WOW TOKEN
-						local colorStart = AdaptiveAPI:GetRGBFromHexColor("00CCFF")
-						local colorEnd = AdaptiveAPI:GetRGBFromHexColor("3FAAC5")
+						local colorStart = addon.API.Util:GetRGBFromHexColor("00CCFF")
+						local colorEnd = addon.API.Util:GetRGBFromHexColor("3FAAC5")
 
 						--------------------------------
 
@@ -310,7 +311,7 @@ do -- QUEST
 			do -- TEXT
 				do -- QUALITY
 					do -- POOR
-						local color = AdaptiveAPI:GetRGBFromHexColor("B5B5B5")
+						local color = addon.API.Util:GetRGBFromHexColor("B5B5B5")
 
 						--------------------------------
 
@@ -318,7 +319,7 @@ do -- QUEST
 					end
 
 					do -- COMMON
-						local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+						local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 						--------------------------------
 
@@ -326,7 +327,7 @@ do -- QUEST
 					end
 
 					do -- UNCOMMON
-						local color = AdaptiveAPI:GetRGBFromHexColor("16BE00")
+						local color = addon.API.Util:GetRGBFromHexColor("16BE00")
 
 						--------------------------------
 
@@ -334,7 +335,7 @@ do -- QUEST
 					end
 
 					do -- RARE
-						local color = AdaptiveAPI:GetRGBFromHexColor("3099FF")
+						local color = addon.API.Util:GetRGBFromHexColor("3099FF")
 
 						--------------------------------
 
@@ -342,7 +343,7 @@ do -- QUEST
 					end
 
 					do -- EPIC
-						local color = AdaptiveAPI:GetRGBFromHexColor("C671FF")
+						local color = addon.API.Util:GetRGBFromHexColor("C671FF")
 
 						--------------------------------
 
@@ -350,7 +351,7 @@ do -- QUEST
 					end
 
 					do -- LEGENDARY
-						local color = AdaptiveAPI:GetRGBFromHexColor("FFB060")
+						local color = addon.API.Util:GetRGBFromHexColor("FFB060")
 
 						--------------------------------
 
@@ -358,7 +359,7 @@ do -- QUEST
 					end
 
 					do -- ARTIFACT
-						local color = AdaptiveAPI:GetRGBFromHexColor("FFDE7E")
+						local color = addon.API.Util:GetRGBFromHexColor("FFDE7E")
 
 						--------------------------------
 
@@ -366,7 +367,7 @@ do -- QUEST
 					end
 
 					do -- HEIRLOOM
-						local color = AdaptiveAPI:GetRGBFromHexColor("80D2E6")
+						local color = addon.API.Util:GetRGBFromHexColor("80D2E6")
 
 						--------------------------------
 
@@ -374,7 +375,7 @@ do -- QUEST
 					end
 
 					do -- WOW TOKEN
-						local color = AdaptiveAPI:GetRGBFromHexColor("80D2E6")
+						local color = addon.API.Util:GetRGBFromHexColor("80D2E6")
 
 						--------------------------------
 
@@ -409,7 +410,7 @@ do -- SETTINGS
 		do -- HEADER
 			do -- BACKGROUND
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("402014")
+					local color = addon.API.Util:GetRGBFromHexColor("402014")
 
 					--------------------------------
 
@@ -417,7 +418,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("272523")
+					local color = addon.API.Util:GetRGBFromHexColor("272523")
 
 					--------------------------------
 
@@ -427,7 +428,7 @@ do -- SETTINGS
 
 			do -- DIVIDER
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("674932")
+					local color = addon.API.Util:GetRGBFromHexColor("674932")
 
 					--------------------------------
 
@@ -435,7 +436,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -446,7 +447,7 @@ do -- SETTINGS
 			do -- CLOSE BUTTON
 				do -- DEFAULT
 					do -- LIGHT
-						local color = AdaptiveAPI:GetRGBFromHexColor("674932")
+						local color = addon.API.Util:GetRGBFromHexColor("674932")
 
 						--------------------------------
 
@@ -454,7 +455,7 @@ do -- SETTINGS
 					end
 
 					do -- DARK
-						local color = AdaptiveAPI:GetRGBFromHexColor("505050")
+						local color = addon.API.Util:GetRGBFromHexColor("505050")
 
 						--------------------------------
 
@@ -464,7 +465,7 @@ do -- SETTINGS
 
 				do -- HIGHLIGHT
 					do -- LIGHT
-						local color = AdaptiveAPI:GetRGBFromHexColor("90694B")
+						local color = addon.API.Util:GetRGBFromHexColor("90694B")
 
 						--------------------------------
 
@@ -472,7 +473,7 @@ do -- SETTINGS
 					end
 
 					do -- DARK
-						local color = AdaptiveAPI:GetRGBFromHexColor("353535")
+						local color = addon.API.Util:GetRGBFromHexColor("353535")
 
 						--------------------------------
 
@@ -484,7 +485,7 @@ do -- SETTINGS
 			do -- CLOSE BUTTON (IMAGE)
 				do -- DEFAULT
 					do -- LIGHT
-						local color = AdaptiveAPI:GetRGBFromHexColor("B18861")
+						local color = addon.API.Util:GetRGBFromHexColor("B18861")
 
 						--------------------------------
 
@@ -492,7 +493,7 @@ do -- SETTINGS
 					end
 
 					do -- DARK
-						local color = AdaptiveAPI:GetRGBFromHexColor("AAAAAA")
+						local color = addon.API.Util:GetRGBFromHexColor("AAAAAA")
 
 						--------------------------------
 
@@ -505,7 +506,7 @@ do -- SETTINGS
 		do -- ELEMENT
 			do -- DEFAULT
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("674932")
+					local color = addon.API.Util:GetRGBFromHexColor("674932")
 
 					--------------------------------
 
@@ -513,7 +514,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -523,7 +524,7 @@ do -- SETTINGS
 
 			do -- HIGHLIGHT
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("A07754")
+					local color = addon.API.Util:GetRGBFromHexColor("A07754")
 
 					--------------------------------
 
@@ -531,7 +532,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -541,7 +542,7 @@ do -- SETTINGS
 
 			do -- ACTIVE
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("402014")
+					local color = addon.API.Util:GetRGBFromHexColor("402014")
 
 					--------------------------------
 
@@ -549,7 +550,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -561,7 +562,7 @@ do -- SETTINGS
 		do -- TEXT
 			do -- DEFAULT
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("101010")
+					local color = addon.API.Util:GetRGBFromHexColor("101010")
 
 					--------------------------------
 
@@ -569,7 +570,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -579,7 +580,7 @@ do -- SETTINGS
 
 			do -- HIGHLIGHT
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("A07B54")
+					local color = addon.API.Util:GetRGBFromHexColor("A07B54")
 
 					--------------------------------
 
@@ -587,7 +588,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 
@@ -599,7 +600,7 @@ do -- SETTINGS
 		do -- COLOR
 			do -- PRIMARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("A07B54")
+					local color = addon.API.Util:GetRGBFromHexColor("A07B54")
 
 					--------------------------------
 
@@ -607,7 +608,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("505050")
+					local color = addon.API.Util:GetRGBFromHexColor("505050")
 
 					--------------------------------
 
@@ -617,7 +618,7 @@ do -- SETTINGS
 
 			do -- SECONDARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("402014")
+					local color = addon.API.Util:GetRGBFromHexColor("402014")
 
 					--------------------------------
 
@@ -625,7 +626,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("272523")
+					local color = addon.API.Util:GetRGBFromHexColor("272523")
 
 					--------------------------------
 
@@ -635,7 +636,7 @@ do -- SETTINGS
 
 			do -- TERTIARY
 				do -- LIGHT
-					local color = AdaptiveAPI:GetRGBFromHexColor("916843")
+					local color = addon.API.Util:GetRGBFromHexColor("916843")
 
 					--------------------------------
 
@@ -643,7 +644,7 @@ do -- SETTINGS
 				end
 
 				do -- DARK
-					local color = AdaptiveAPI:GetRGBFromHexColor("FFFFFF")
+					local color = addon.API.Util:GetRGBFromHexColor("FFFFFF")
 
 					--------------------------------
 

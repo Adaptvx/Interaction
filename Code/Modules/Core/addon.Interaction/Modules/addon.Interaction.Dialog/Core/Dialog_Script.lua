@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Dialog
@@ -223,7 +224,7 @@ function NS.Script:Load()
 		Frame.UpdateScrollDialog = function()
 			local interactTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
 			local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
-			local isItem = (AdaptiveAPI:FindItemInInventory(UnitName("npc") or "Empty Result") or AdaptiveAPI:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
+			local isItem = (addon.API.Util:FindItemInInventory(UnitName("npc") or "Empty Result") or addon.API.Util:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
 
 			--------------------------------
 
@@ -296,7 +297,7 @@ function NS.Script:Load()
 		end
 
 		local function DoesCurrentIndexAppearIn(table)
-			return (AdaptiveAPI:FindIndexInTableByValue(table, tostring(NS.Variables.Temp_CurrentIndex)))
+			return (addon.API.Util:FindValuePositionInTable(table, tostring(NS.Variables.Temp_CurrentIndex)))
 		end
 
 		function Callback:GetString()
@@ -397,7 +398,7 @@ function NS.Script:Load()
 
 					do -- SET
 						if isQuestFrameProgress then
-							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. AdaptiveAPI:RemoveAtlasMarkup(QuestProgressTitleText:GetText()) .. "|r")
+							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. addon.API.Util:RemoveAtlasMarkup(QuestProgressTitleText:GetText()) .. "|r")
 						elseif isGossip or isQuestFrameGreeting then
 							local name = UnitName("npc") or UnitName("questnpc")
 
@@ -409,15 +410,15 @@ function NS.Script:Load()
 								addon.Interaction.Script:Stop(true)
 							end
 						else
-							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. AdaptiveAPI:RemoveAtlasMarkup(QuestInfoTitleHeader:GetText()) .. "|r")
+							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. addon.API.Util:RemoveAtlasMarkup(QuestInfoTitleHeader:GetText()) .. "|r")
 						end
 					end
 				end
 
 				do -- SPECIAL DIALOG
-					local isEmoteStart = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], "<"))
-					local isEmoteEnd = (AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], ">"))
-					local isLastIndexEmoteEnd = (NS.Variables.Temp_CurrentIndex - 1 > 0 and AdaptiveAPI:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex - 1], ">"))
+					local isEmoteStart = (addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], "<"))
+					local isEmoteEnd = (addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], ">"))
+					local isLastIndexEmoteEnd = (NS.Variables.Temp_CurrentIndex - 1 > 0 and addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex - 1], ">"))
 
 					--------------------------------
 
@@ -468,7 +469,7 @@ function NS.Script:Load()
 				do -- PROGRESS BAR
 					if #NS.Variables.Temp_DialogStringList > 1 then
 						Frame.Title.Progress.Bar:SetMinMaxValues(0, #NS.Variables.Temp_DialogStringList)
-						AdaptiveAPI.Animation:SetProgressTo(Frame.Title.Progress.Bar, NS.Variables.Temp_CurrentIndex, .25, AdaptiveAPI.Animation.EaseExpo)
+						addon.API.Animation:SetProgressTo(Frame.Title.Progress.Bar, NS.Variables.Temp_CurrentIndex, .25, addon.API.Animation.EaseExpo)
 						Frame.Title.Progress.Bar:SetAlpha(1)
 					else
 						Frame.Title.Progress.Bar:SetMinMaxValues(0, 1)
@@ -697,8 +698,8 @@ function NS.Script:Load()
 						local dialogDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG
 						local mirrorQuest = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR
 
-						local screenWidth = addon.API:GetScreenWidth()
-						local screenHeight = addon.API:GetScreenHeight()
+						local screenWidth = addon.API.Main:GetScreenWidth()
+						local screenHeight = addon.API.Main:GetScreenHeight()
 						local questWidth = InteractionQuestFrame:GetWidth() + 50 -- Padding
 						local questHeight = InteractionQuestFrame:GetHeight() + 50 -- Padding
 						local dialogWidth = 375
@@ -868,8 +869,8 @@ function NS.Script:Load()
 					--------------------------------
 
 					local numCharsToShow = math.min(math.floor(timer / interval) + 1, textLength)
-					local current = AdaptiveAPI:GetSubstring(text, 1, numCharsToShow)
-					local remaining = AdaptiveAPI:GetSubstring(text, numCharsToShow + 1, textLength)
+					local current = addon.API.Util:GetSubstring(text, 1, numCharsToShow)
+					local remaining = addon.API.Util:GetSubstring(text, numCharsToShow + 1, textLength)
 					local new
 
 					--------------------------------
@@ -923,21 +924,21 @@ function NS.Script:Load()
 						else
 							local modifier = .2 + (addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
 							if not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-								color = AdaptiveAPI:SetHexColorFromModifierWithBase(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
+								color = addon.API.Util:SetHexColorFromModifierWithBase(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
 							else
-								color = AdaptiveAPI:SetHexColorFromModifier(AdaptiveAPI:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
+								color = addon.API.Util:SetHexColorFromModifier(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
 							end
 						end
 					end
 
 					do -- PAUSE
 						if usePausing then
-							local lastChar = AdaptiveAPI:GetSubstring(text, numCharsToShow, numCharsToShow)
+							local lastChar = addon.API.Util:GetSubstring(text, numCharsToShow, numCharsToShow)
 
 							--------------------------------
 
 							for char = 1, #pauseCharDB do
-								if AdaptiveAPI:FindString(pauseCharDB[char], lastChar) then
+								if addon.API.Util:FindString(pauseCharDB[char], lastChar) then
 									paused = true
 									break
 								end
@@ -1014,16 +1015,16 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
+				addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
 
 				if not NS.Variables.Temp_IsEmoteDialog and not NS.Variables.Temp_IsScrollDialog then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
-					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, .75, .75, 1, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Content.Measurement:GetText() ~= savedDialogText or isInvalidDialogTransition end)
+					addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
+					addon.API.Animation:Scale(Frame.DialogBackground, .75, .75, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.Content.Measurement:GetText() ~= savedDialogText or isInvalidDialogTransition end)
 				end
 			end
 
 			Frame.PreviousDialogAnimation = function()
-				AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1)
+				addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1)
 			end
 
 			Frame.InvalidDialogAnimation = function()
@@ -1039,8 +1040,8 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Scale(Frame.DialogBackground, 1, .95, 1)
-				AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, 1, .95, 1)
+				addon.API.Animation:Scale(Frame.DialogBackground, 1, .95, 1)
+				addon.API.Animation:Scale(Frame.ScrollBackground, 1, .95, 1)
 			end
 
 			Frame.ShowWithAnimation = function()
@@ -1070,25 +1071,25 @@ function NS.Script:Load()
 				--------------------------------
 
 				if not Frame.hidden then
-					AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
-					AdaptiveAPI.Animation:Fade(Frame.Title, .25, 0, 1)
+					addon.API.Animation:Fade(Frame, .25, 0, 1)
+					addon.API.Animation:Fade(Frame.Title, .25, 0, 1)
 
 					--------------------------------
 
 					if addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA > 0 then
-						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
+						addon.API.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
 					else
-						AdaptiveAPI.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
+						addon.API.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
 					end
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Fade(Frame.Content.Label, .5, 0, 1)
+					addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1)
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, 1, .25, 1)
-					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, 1, .25, 1)
+					addon.API.Animation:Scale(Frame.DialogBackground, 1, .25, 1)
+					addon.API.Animation:Scale(Frame.ScrollBackground, 1, .25, 1)
 				end
 			end
 
@@ -1111,9 +1112,9 @@ function NS.Script:Load()
 				--------------------------------
 
 				if not skipAnimation then
-					AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
-					AdaptiveAPI.Animation:Scale(Frame.DialogBackground, .25, Frame.DialogBackground:GetScale(), .925)
-					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, .25, Frame.ScrollBackground:GetScale(), .925)
+					addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
+					addon.API.Animation:Scale(Frame.DialogBackground, .25, Frame.DialogBackground:GetScale(), .925)
+					addon.API.Animation:Scale(Frame.ScrollBackground, .25, Frame.ScrollBackground:GetScale(), .925)
 				end
 			end
 
@@ -1121,15 +1122,15 @@ function NS.Script:Load()
 				if not Frame.ScrollBackground:IsVisible() then
 					Frame.ScrollBackground:Show()
 
-					AdaptiveAPI.Animation:Fade(Frame.ScrollBackground, .25, 0, 1)
-					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, .5, .75, 1)
+					addon.API.Animation:Fade(Frame.ScrollBackground, .25, 0, 1)
+					addon.API.Animation:Scale(Frame.ScrollBackground, .5, .75, 1)
 				end
 			end
 
 			Frame.ScrollBackground.HideWithAnimation = function()
 				if Frame.ScrollBackground:IsVisible() and Frame.ScrollBackground:GetAlpha() == 1 then
-					AdaptiveAPI.Animation:Fade(Frame.ScrollBackground, .5, 1, 0)
-					AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, .5, 1, .5)
+					addon.API.Animation:Fade(Frame.ScrollBackground, .5, 1, 0)
+					addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1, .5)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						Frame.ScrollBackground:Hide()
@@ -1147,8 +1148,8 @@ function NS.Script:Load()
 		local function Settings_ContentSize()
 			local TextSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
 
-			AdaptiveAPI:SetFontSize(Frame.Content.Measurement, TextSize)
-			AdaptiveAPI:SetFontSize(Frame.Content.Label, TextSize)
+			addon.API.Util:SetFontSize(Frame.Content.Measurement, TextSize)
+			addon.API.Util:SetFontSize(Frame.Content.Label, TextSize)
 
 			if Frame:IsVisible() and addon.Interaction.Variables.Active then
 				Frame.UpdateDialog()
@@ -1187,7 +1188,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:RemoveAllAnimationsFromFrame(Frame)
+				addon.API.Animation:RemoveAllAnimationsFromFrame(Frame)
 				if Frame.ThemeUpdateTimer then
 					addon.Libraries.AceTimer:CancelTimer(Frame.ThemeUpdateTimer)
 				end
@@ -1195,12 +1196,12 @@ function NS.Script:Load()
 				--------------------------------
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0)
+					addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0)
 
 					--------------------------------
 
 					Frame.ThemeUpdateTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-						AdaptiveAPI.Animation:Fade(Frame, .25, 0, 1)
+						addon.API.Animation:Fade(Frame, .25, 0, 1)
 					end, .75)
 				end, .1)
 			end
@@ -1222,23 +1223,23 @@ function NS.Script:Load()
 
 	do
 		Frame:SetScript("OnEnter", function()
-			AdaptiveAPI.Animation:Scale(Frame.Title.Progress, .5, 1, 1.125)
-			AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, .5, 1, 1.05)
+			addon.API.Animation:Scale(Frame.Title.Progress, .5, 1, 1.125)
+			addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1, 1.05)
 
-			AdaptiveAPI.Animation:Fade(Frame.DialogBackground, .125, 1, .75)
-			AdaptiveAPI.Animation:Fade(Frame.DialogBackground.Tail, .125, 1, .75)
-			AdaptiveAPI.Animation:Fade(Frame.ScrollBackground, .125, 1, .975)
+			addon.API.Animation:Fade(Frame.DialogBackground, .125, 1, .75)
+			addon.API.Animation:Fade(Frame.DialogBackground.Tail, .125, 1, .75)
+			addon.API.Animation:Fade(Frame.ScrollBackground, .125, 1, .975)
 
 			Frame.Content.Label.mouseOver = true
 		end)
 
 		Frame:SetScript("OnLeave", function()
-			AdaptiveAPI.Animation:Scale(Frame.Title.Progress, .5, 1.125, 1)
-			AdaptiveAPI.Animation:Scale(Frame.ScrollBackground, .5, 1.05, 1)
+			addon.API.Animation:Scale(Frame.Title.Progress, .5, 1.125, 1)
+			addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1.05, 1)
 
-			AdaptiveAPI.Animation:Fade(Frame.DialogBackground, .125, .75, 1)
-			AdaptiveAPI.Animation:Fade(Frame.DialogBackground.Tail, .125, .75, 1)
-			AdaptiveAPI.Animation:Fade(Frame.ScrollBackground, .125, .975, 1)
+			addon.API.Animation:Fade(Frame.DialogBackground, .125, .75, 1)
+			addon.API.Animation:Fade(Frame.DialogBackground.Tail, .125, .75, 1)
+			addon.API.Animation:Fade(Frame.ScrollBackground, .125, .975, 1)
 
 			Frame.Content.Label.mouseOver = false
 		end)

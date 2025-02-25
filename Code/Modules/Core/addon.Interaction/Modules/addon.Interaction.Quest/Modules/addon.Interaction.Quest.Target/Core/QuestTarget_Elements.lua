@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest.Target
@@ -30,7 +31,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				Frame.Background, Frame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", nil, 128, .75)
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", nil, 128, .75)
 				Frame.Background:SetPoint("TOPLEFT", Frame, -37.5, 37.5)
 				Frame.Background:SetPoint("BOTTOMRIGHT", Frame, 37.5, -37.5)
 				Frame.Background:SetFrameStrata("FULLSCREEN")
@@ -40,7 +41,7 @@ function NS.Elements:Load()
 
 				--------------------------------
 
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					local BackgroundTexture
 
 					if addon.Theme.IsDarkTheme then
@@ -54,7 +55,7 @@ function NS.Elements:Load()
 			end
 
 			do -- ART
-				Frame.Art, Frame.ArtTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", nil)
+				Frame.Art, Frame.ArtTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", nil)
 				Frame.Art:SetSize(Frame:GetWidth() - NS.Variables.CONTENT_PADDING, Frame:GetWidth() - NS.Variables.CONTENT_PADDING)
 				Frame.Art:SetPoint("TOP", Frame, 0, -NS.Variables.CONTENT_PADDING / 2)
 				Frame.Art:SetFrameStrata("FULLSCREEN")
@@ -64,7 +65,7 @@ function NS.Elements:Load()
 
 				--------------------------------
 
-				addon.API:RegisterThemeUpdate(function()
+				addon.API.Main:RegisterThemeUpdate(function()
 					local BackgroundTexture
 
 					if addon.Theme.IsDarkTheme then
@@ -80,13 +81,13 @@ function NS.Elements:Load()
 			do -- TEXT
 				local function SetAutoTextHeight(frame)
 					hooksecurefunc(frame, "SetText", function()
-						local _, height = AdaptiveAPI:GetStringSize(frame, frame:GetWidth(), nil)
+						local _, height = addon.API.Util:GetStringSize(frame, frame:GetWidth(), nil)
 						frame:SetHeight(height)
 					end)
 				end
 
 				do -- LABEL
-					Frame.Label = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 15, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Bold)
+					Frame.Label = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 15, "LEFT", "TOP", addon.API.Fonts.Content_Bold)
 					Frame.Label:SetSize(Frame.Art:GetWidth() - NS.Variables.CONTENT_PADDING, 25)
 
 					--------------------------------
@@ -95,7 +96,7 @@ function NS.Elements:Load()
 				end
 
 				do -- DESCRIPTION
-					Frame.Description = AdaptiveAPI.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+					Frame.Description = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
 					Frame.Description:SetSize(Frame.Art:GetWidth() - NS.Variables.CONTENT_PADDING, 135)
 					Frame.Description:SetAlpha(.5)
 

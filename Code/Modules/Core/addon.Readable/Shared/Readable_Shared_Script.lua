@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Readable
@@ -69,7 +70,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, nil)
+			addon.API.Animation:Fade(Frame, .5, 0, 1, nil)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				local RingScale
@@ -80,13 +81,13 @@ function NS.Script:Load()
 					RingScale = 1.125
 				end
 
-				AdaptiveAPI.Animation:Fade(Frame.Disc, .25, 0, .5, nil)
-				AdaptiveAPI.Animation:Scale(Frame.Disc, 1, RingScale + .125, RingScale, nil, nil, nil)
-				AdaptiveAPI.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, AdaptiveAPI.Animation.EaseExpo, nil)
+				addon.API.Animation:Fade(Frame.Disc, .25, 0, .5, nil)
+				addon.API.Animation:Scale(Frame.Disc, 1, RingScale + .125, RingScale, nil, nil, nil)
+				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, nil)
 			end, .25)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:StartRotate(Frame.DiscTexture, .125)
+				addon.API.Animation:StartRotate(Frame.DiscTexture, .125)
 			end, 2.5)
 
 			--------------------------------
@@ -148,12 +149,12 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:StopRotate(Frame.DiscTexture)
+				addon.API.Animation:StopRotate(Frame.DiscTexture)
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:Scale(Frame.Disc, 5, Frame.Disc:GetScale(), RingScale, nil, AdaptiveAPI.Animation.EaseExpo, StopEvent)
-				AdaptiveAPI.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, AdaptiveAPI.Animation.EaseExpo, StopEvent)
+				addon.API.Animation:Scale(Frame.Disc, 5, Frame.Disc:GetScale(), RingScale, nil, addon.API.Animation.EaseExpo, StopEvent)
+				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, StopEvent)
 			end, 0)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -167,7 +168,7 @@ function NS.Script:Load()
 			end, .5)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:StartRotate(Frame.DiscTexture, .125)
+				addon.API.Animation:StartRotate(Frame.DiscTexture, .125)
 			end, 1.5)
 
 			--------------------------------
@@ -190,9 +191,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
-			AdaptiveAPI.Animation:StopRotate(Frame.DiscTexture)
-			AdaptiveAPI.Animation:Rotate(Frame.DiscTexture, 1, 0, 1, AdaptiveAPI.Animation.EaseExpo, nil)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
+			addon.API.Animation:StopRotate(Frame.DiscTexture)
+			addon.API.Animation:Rotate(Frame.DiscTexture, 1, 0, 1, addon.API.Animation.EaseExpo, nil)
 
 			--------------------------------
 
@@ -332,7 +333,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI:WatchLocalVariable(NS.LibraryUI.Variables, "SelectedIndex", function()
+			addon.API.Util:WatchLocalVariable(NS.LibraryUI.Variables, "SelectedIndex", function()
 				CallbackRegistry:Trigger("LIBRARY_INDEX_CHANGED", NS.LibraryUI.Variables.SelectedIndex)
 			end)
 
@@ -354,8 +355,8 @@ function NS.Script:Load()
 						local Type = ItemTextGetMaterial()
 						local Title = ItemTextGetItem()
 						local NumPages, Content = ItemTextFrame.GetAllPages()
-						local IsItemInInventory = (AdaptiveAPI:FindItemInInventory(Title) ~= nil)
-						local ItemID, ItemLink = AdaptiveAPI:FindItemInInventory(Title)
+						local IsItemInInventory = (addon.API.Util:FindItemInInventory(Title) ~= nil)
+						local ItemID, ItemLink = addon.API.Util:FindItemInInventory(Title)
 						local PlayerName = { ["name"] = UnitName("player"), ["server"] = GetRealmName() }
 
 						NS.ItemUI.Script:SetData(ItemID, ItemLink, Type, Title, NumPages, Content, CurrentPage, IsItemInInventory, PlayerName)

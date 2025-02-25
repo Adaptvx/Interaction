@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.ControlGuide
@@ -87,7 +88,7 @@ function NS.Script:Load()
 						local isComplete = (QuestFrameCompleteQuestButton:IsEnabled() and QuestFrameCompleteQuestButton:IsVisible())
 						local isGoodbye = (isComplete or addon.Interaction.Variables.Type == "quest-progress")
 						local isDecline = (not isGoodbye)
-						local isAutoAccept = (addon.API:IsAutoAccept())
+						local isAutoAccept = (addon.API.Main:IsAutoAccept())
 						local isRewardSelection = (isComplete and addon.Interaction.Quest.Variables.Num_Choice > 1)
 						local isRewardSelectionValid = (isRewardSelection and addon.Interaction.Quest.Variables.ChoiceSelected)
 
@@ -203,8 +204,8 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					AdaptiveAPI.Animation:Fade(currentElement, .25, 0, 1, nil, function() return not currentElement:IsVisible() end)
-					AdaptiveAPI.Animation:Move(currentElement, .5, "LEFT", -12.5, 0, "y", nil, function() return not currentElement:IsVisible() end)
+					addon.API.Animation:Fade(currentElement, .25, 0, 1, nil, function() return not currentElement:IsVisible() end)
+					addon.API.Animation:Move(currentElement, .5, "LEFT", -12.5, 0, "y", nil, function() return not currentElement:IsVisible() end)
 				else
 					currentElement:Show()
 
@@ -216,7 +217,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				currentElement.Text:SetText(currentText)
-				addon.API:SetButtonToPlatform(currentElement, currentElement.Text, currentKeybindVariable)
+				addon.API.Main:SetButtonToPlatform(currentElement, currentElement.Text, currentKeybindVariable)
 			end
 
 			--------------------------------
@@ -239,7 +240,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.hidden end)
 		end
 
 		Frame.HideWithAnimation = function()
@@ -256,7 +257,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, function() return not Frame.hidden end)
 		end
 	end
 

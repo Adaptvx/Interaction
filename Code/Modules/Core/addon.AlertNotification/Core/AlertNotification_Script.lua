@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.AlertNotification
@@ -60,10 +61,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame.AnimationID ~= animationID end)
+			addon.API.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame.AnimationID ~= animationID end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				AdaptiveAPI.Animation:FadeText(Frame.Text, 1.5, 15, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.AnimationID ~= animationID end)
+				addon.API.Animation:FadeText(Frame.Text, 1.5, 15, 1, addon.API.Animation.EaseExpo, function() return Frame.AnimationID ~= animationID end)
 			end, .2)
 
 			--------------------------------
@@ -88,8 +89,8 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
-			AdaptiveAPI.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
+			addon.API.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
+			addon.API.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
 
 			--------------------------------
 
@@ -108,13 +109,13 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame.Flare, .125, 0, 1, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
-			AdaptiveAPI.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare.AnimationID ~= animationID end)
+			addon.API.Animation:Fade(Frame.Flare, .125, 0, 1, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
+			addon.API.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare.AnimationID ~= animationID end)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				if Frame.Flare.AnimationID == animationID then
-					AdaptiveAPI.Animation:Fade(Frame.Flare, 2, 1, 0, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
-					AdaptiveAPI.Animation:Scale(Frame.Flare, 2, 1, .875, nil, AdaptiveAPI.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
+					addon.API.Animation:Fade(Frame.Flare, 2, 1, 0, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
+					addon.API.Animation:Scale(Frame.Flare, 2, 1, .875, nil, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
 				end
 			end, .125)
 

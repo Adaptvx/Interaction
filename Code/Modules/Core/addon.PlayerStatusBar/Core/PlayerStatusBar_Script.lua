@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.PlayerStatusBar
@@ -34,11 +35,7 @@ function NS.Script:Load()
 
 		--------------------------------
 
-		AdaptiveAPI.FrameTemplates:CreateMouseResponder(Frame, function()
-			Frame.Enter()
-		end, function()
-			Frame.Leave()
-		end)
+		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = function() Frame.Enter() end, leaveCallback = function() Frame.Leave() end })
 	end
 
 	--------------------------------
@@ -80,7 +77,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, max, 1, AdaptiveAPI.Animation.EaseExpo)
+				addon.API.Animation:SetProgressTo(Frame.Progress, max, 1, addon.API.Animation.EaseExpo)
 
 				--------------------------------
 
@@ -90,10 +87,10 @@ function NS.Script:Load()
 					--------------------------------
 
 					Frame.Progress:SetValue(min)
-					AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, value, 1, AdaptiveAPI.Animation.EaseExpo)
+					addon.API.Animation:SetProgressTo(Frame.Progress, value, 1, addon.API.Animation.EaseExpo)
 				end, 1)
 			else
-				AdaptiveAPI.Animation:SetProgressTo(Frame.Progress, value, 1, AdaptiveAPI.Animation.EaseExpo)
+				addon.API.Animation:SetProgressTo(Frame.Progress, value, 1, addon.API.Animation.EaseExpo)
 			end
 			Callback.SavedLevel = level
 
@@ -103,7 +100,7 @@ function NS.Script:Load()
 			local tooltipLine2 = L["PlayerStatusBar - TooltipLine2"] .. (max - value)
 			local tooltipLine3 = L["PlayerStatusBar - TooltipLine3"] .. level
 
-			AdaptiveAPI:AddTooltip(Frame, tooltipLine1 .. "\n" .. tooltipLine2 .. "\n" .. tooltipLine3, "ANCHOR_TOP", 0, 10, true)
+			addon.API.Util:AddTooltip(Frame, tooltipLine1 .. "\n" .. tooltipLine2 .. "\n" .. tooltipLine3, "ANCHOR_TOP", 0, 10, true)
 		end
 	end
 
@@ -121,7 +118,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .5, 0, 1, AdaptiveAPI.Animation.EaseSine, function() return Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame.hidden end)
 		end
 
 		Frame.HideWithAnimation = function()
@@ -137,7 +134,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			AdaptiveAPI.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, AdaptiveAPI.Animation.EaseSine, function() return not Frame.hidden end)
+			addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, addon.API.Animation.EaseSine, function() return not Frame.hidden end)
 		end
 	end
 

@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
@@ -194,7 +195,7 @@ function NS.Script:Load()
 
 					local isIndoors = IsIndoors()
 					local isMounted = IsMounted()
-					local isShapeshiftForm = AdaptiveAPI:IsPlayerInShapeshiftForm()
+					local isShapeshiftForm = addon.API.Util:IsPlayerInShapeshiftForm()
 
 					if isMounted then
 						modifier = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 and .25 or 3.75
@@ -514,11 +515,11 @@ function NS.Script:Load()
 
 		do -- ANIMATION
 			InteractionFrame.CinematicMode.Vignette.ShowWithAnimation = function()
-				AdaptiveAPI.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .5, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 1)
+				addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .5, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 1)
 			end
 
 			InteractionFrame.CinematicMode.Vignette.HideWithAnimation = function()
-				AdaptiveAPI.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .25, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 0)
+				addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .25, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 0)
 			end
 		end
 	end
@@ -705,7 +706,7 @@ function NS.Script:Load()
 
 					local isIndoors = IsIndoors()
 					local isMounted = IsMounted()
-					local isShapeshiftForm = AdaptiveAPI:IsPlayerInShapeshiftForm()
+					local isShapeshiftForm = addon.API.Util:IsPlayerInShapeshiftForm()
 
 					if isMounted then
 						modifier = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 and .25 or 3.75

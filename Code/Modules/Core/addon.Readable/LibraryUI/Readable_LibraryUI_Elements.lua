@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.Readable
@@ -30,7 +31,7 @@ function NS.LibraryUI.Elements:Load()
 			--------------------------------
 
 			do -- BACKGROUND
-				LibraryUIFrame.Background, LibraryUIFrame.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/background-library.png", "$parent.Background")
+				LibraryUIFrame.Background, LibraryUIFrame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/background-library.png", "$parent.Background")
 				LibraryUIFrame.Background:SetSize(LibraryUIFrame:GetHeight(), LibraryUIFrame:GetHeight())
 				LibraryUIFrame.Background:SetScale(1.25)
 				LibraryUIFrame.Background:SetPoint("CENTER", LibraryUIFrame)
@@ -72,7 +73,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Title.Main.Text = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 30, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Title_Bold, "$parent.Text")
+							LibraryUIFrame.Content.Title.Main.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 30, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
 							LibraryUIFrame.Content.Title.Main.Text:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Text:SetPoint("TOP", LibraryUIFrame.Content.Title)
 							LibraryUIFrame.Content.Title.Main.Text:SetAlpha(.75)
@@ -85,7 +86,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Title.Main.Subtext = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Subtext")
+							LibraryUIFrame.Content.Title.Main.Subtext = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Subtext")
 							LibraryUIFrame.Content.Title.Main.Subtext:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Subtext:SetPoint("BOTTOM", LibraryUIFrame.Content.Title.Main)
 							LibraryUIFrame.Content.Title.Main.Subtext:SetAlpha(.5)
@@ -93,7 +94,7 @@ function NS.LibraryUI.Elements:Load()
 					end
 
 					do -- DIVIDER
-						LibraryUIFrame.Content.Title.Divider, LibraryUIFrame.Content.Title.DividerTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content.Title, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/divider-title.png", "$parent.Divider")
+						LibraryUIFrame.Content.Title.Divider, LibraryUIFrame.Content.Title.DividerTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.Title, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/divider-title.png", "$parent.Divider")
 						LibraryUIFrame.Content.Title.Divider:SetSize(LibraryUIFrame.Content.Title:GetWidth(), LibraryUIFrame.Content.Title:GetWidth() / 12.5)
 						LibraryUIFrame.Content.Title.Divider:SetPoint("BOTTOM", LibraryUIFrame.Content.Title, 0, 0)
 					end
@@ -126,7 +127,7 @@ function NS.LibraryUI.Elements:Load()
 
 						--------------------------------
 
-						LibraryUIFrame.Content.Sidebar.Search = AdaptiveAPI.FrameTemplates:CreateInputBox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
+						LibraryUIFrame.Content.Sidebar.Search = addon.API.FrameTemplates:CreateInputBox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
 							defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 							highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 							edgeSize = 128,
@@ -152,7 +153,7 @@ function NS.LibraryUI.Elements:Load()
 
 					do -- CATEGORIES
 						local function CreateCheckbox(callback, text, name)
-							local Checkbox = AdaptiveAPI.FrameTemplates:CreateAdvancedCheckbox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
+							local Checkbox = addon.API.FrameTemplates:CreateAdvancedCheckbox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
 								defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 								highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 								checkTexture = NS.Variables.TEXTURE_CHECK,
@@ -167,7 +168,7 @@ function NS.LibraryUI.Elements:Load()
 							Checkbox.Checkbox.Icon:SetAlpha(.5)
 							Checkbox.Label:SetAlpha(.5)
 
-							Checkbox.Detail = AdaptiveAPI.FrameTemplates:CreateText(Checkbox, addon.Theme.RGB_WHITE, 12.5, "RIGHT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Detail")
+							Checkbox.Detail = addon.API.FrameTemplates:CreateText(Checkbox, addon.Theme.RGB_WHITE, 12.5, "RIGHT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Detail")
 							Checkbox.Detail:SetSize(Checkbox:GetWidth(), 35)
 							Checkbox.Detail:SetPoint("RIGHT", Checkbox, -7.5, 0)
 							Checkbox.Detail:SetAlpha(.25)
@@ -188,7 +189,7 @@ function NS.LibraryUI.Elements:Load()
 						--------------------------------
 
 						do -- LABEL (SHOW)
-							LibraryUIFrame.Content.Sidebar.Label_Show = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.Sidebar, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label_Show")
+							LibraryUIFrame.Content.Sidebar.Label_Show = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Sidebar, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label_Show")
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth(), 35)
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetAlpha(.5)
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetText(L["Readable - Library - Show"])
@@ -241,7 +242,7 @@ function NS.LibraryUI.Elements:Load()
 
 					do -- BUTTONS
 						local function CreateButton(callback, text, name)
-							local Button = AdaptiveAPI.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.Sidebar, LibraryUIFrame.Content.Sidebar:GetWidth(), 35, "FULLSCREEN", {
+							local Button = addon.API.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.Sidebar, LibraryUIFrame.Content.Sidebar:GetWidth(), 35, "FULLSCREEN", {
 								defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 								highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 								edgeSize = 128,
@@ -280,7 +281,7 @@ function NS.LibraryUI.Elements:Load()
 				end
 
 				do -- DIVIDER
-					LibraryUIFrame.Content.Divider, LibraryUIFrame.Content.DividerTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/divider-sidebar.png", "$parent.Divider")
+					LibraryUIFrame.Content.Divider, LibraryUIFrame.Content.DividerTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/divider-sidebar.png", "$parent.Divider")
 					LibraryUIFrame.Content.Divider:SetSize(1, LibraryUIFrame.Content:GetHeight() - LibraryUIFrame.Content.Title:GetHeight())
 					LibraryUIFrame.Content.Divider:SetPoint("TOPLEFT", LibraryUIFrame.Content, LibraryUIFrame.Content.Sidebar:GetWidth() + PADDING - LibraryUIFrame.Content.Divider:GetWidth() / 2, -LibraryUIFrame.Content.Title:GetHeight() - PADDING)
 				end
@@ -310,7 +311,7 @@ function NS.LibraryUI.Elements:Load()
 						--------------------------------
 
 						do -- BACKGROUND
-							LibraryUIFrame.Content.ContentFrame.Index.Background, LibraryUIFrame.Content.ContentFrame.Index.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(LibraryUIFrame.Content.ContentFrame.Index, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/index-background-nineslice.png", 64, .25, "$parent.Background")
+							LibraryUIFrame.Content.ContentFrame.Index.Background, LibraryUIFrame.Content.ContentFrame.Index.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(LibraryUIFrame.Content.ContentFrame.Index, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/index-background-nineslice.png", 64, .25, "$parent.Background")
 							LibraryUIFrame.Content.ContentFrame.Index.Background:SetPoint("TOPLEFT", LibraryUIFrame.Content.ContentFrame.Index, -5, 5)
 							LibraryUIFrame.Content.ContentFrame.Index.Background:SetPoint("BOTTOMRIGHT", LibraryUIFrame.Content.ContentFrame.Index, 5, -5)
 							LibraryUIFrame.Content.ContentFrame.Index.Background:SetPoint("CENTER", LibraryUIFrame.Content.ContentFrame.Index)
@@ -329,7 +330,7 @@ function NS.LibraryUI.Elements:Load()
 							--------------------------------
 
 							do -- TEXT
-								LibraryUIFrame.Content.ContentFrame.Index.Content.Text = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.Index.Content, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Text")
+								LibraryUIFrame.Content.ContentFrame.Index.Content.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.Index.Content, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetPoint("CENTER", LibraryUIFrame.Content.ContentFrame.Index.Content)
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetText("1/2")
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetAlpha(.5)
@@ -337,7 +338,7 @@ function NS.LibraryUI.Elements:Load()
 
 							do -- BUTTONS
 								do -- PREVIOUS PAGE
-									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage = AdaptiveAPI.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.ContentFrame.Index.Content, LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), "FULLSCREEN", {
+									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage = addon.API.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.ContentFrame.Index.Content, LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), "FULLSCREEN", {
 										defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 										highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 										edgeSize = 128,
@@ -371,7 +372,7 @@ function NS.LibraryUI.Elements:Load()
 									--------------------------------
 
 									do -- IMAGE
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/previous.png", "$parent.Image")
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.ImageTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/previous.png", "$parent.Image")
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetPoint("TOPLEFT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, -2.5, 2.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetPoint("BOTTOMRIGHT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, 2.5, -2.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetScale(.75)
@@ -382,7 +383,7 @@ function NS.LibraryUI.Elements:Load()
 								end
 
 								do -- NEXT PAGE
-									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage = AdaptiveAPI.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.ContentFrame.Index.Content, LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), "FULLSCREEN", {
+									LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage = addon.API.FrameTemplates:CreateCustomButton(LibraryUIFrame.Content.ContentFrame.Index.Content, LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), LibraryUIFrame.Content.ContentFrame.Index.Content:GetHeight(), "FULLSCREEN", {
 										defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 										highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 										edgeSize = 128,
@@ -417,7 +418,7 @@ function NS.LibraryUI.Elements:Load()
 									--------------------------------
 
 									do -- IMAGE
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/next.png", "$parent.Image")
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.ImageTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/next.png", "$parent.Image")
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetPoint("TOPLEFT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, -2.5, 2.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetPoint("BOTTOMRIGHT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, 2.5, -2.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetScale(.75)
@@ -432,7 +433,7 @@ function NS.LibraryUI.Elements:Load()
 
 					do -- CONTENT FRAME
 						do -- SCROLL FRAME
-							LibraryUIFrame.Content.ContentFrame.ScrollFrame, LibraryUIFrame.Content.ContentFrame.ScrollChildFrame = AdaptiveAPI.FrameTemplates:CreateScrollFrame(LibraryUIFrame.Content.ContentFrame, "vertical")
+							LibraryUIFrame.Content.ContentFrame.ScrollFrame, LibraryUIFrame.Content.ContentFrame.ScrollChildFrame = addon.API.FrameTemplates:CreateScrollFrame(LibraryUIFrame.Content.ContentFrame, { direction = "vertical", smoothScrollingRatio = 5 }, "$parent.ScrollFrame", "$parent.ScrollChildFrame")
 							LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetWidth(LibraryUIFrame.Content.ContentFrame:GetWidth())
 							LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetPoint("TOP", LibraryUIFrame.Content.ContentFrame)
 
@@ -441,7 +442,7 @@ function NS.LibraryUI.Elements:Load()
 							do -- ELEMENTS
 								do -- SCROLL INDICATOR
 									do -- TOP
-										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_TopTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/content-scroll-indicator-top.png", "$parent.ScrollIndicator_Top")
+										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top, LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_TopTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/content-scroll-indicator-top.png", "$parent.ScrollIndicator_Top")
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:SetSize(LibraryUIFrame.Content.ContentFrame.ScrollFrame:GetWidth(), 50)
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:SetPoint("TOP", LibraryUIFrame.Content.ContentFrame.ScrollFrame, 0, 0)
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:SetFrameStrata("FULLSCREEN")
@@ -455,7 +456,7 @@ function NS.LibraryUI.Elements:Load()
 									end
 
 									do -- BOTTOM
-										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_BottomTexture = AdaptiveAPI.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/content-scroll-indicator-bottom.png", "$parent.ScrollIndicator_Bottom")
+										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom, LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_BottomTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/content-scroll-indicator-bottom.png", "$parent.ScrollIndicator_Bottom")
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:SetSize(LibraryUIFrame.Content.ContentFrame.ScrollFrame:GetWidth(), 50)
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:SetPoint("BOTTOM", LibraryUIFrame.Content.ContentFrame.ScrollFrame, 0, 0)
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:SetFrameStrata("FULLSCREEN")
@@ -470,7 +471,7 @@ function NS.LibraryUI.Elements:Load()
 								end
 
 								do -- LABEL
-									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label = AdaptiveAPI.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.ScrollFrame, addon.Theme.RGB_WHITE, 20, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light, "$parent.Label")
+									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.ScrollFrame, addon.Theme.RGB_WHITE, 20, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
 									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetAllPoints(LibraryUIFrame.Content.ContentFrame.ScrollFrame)
 									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetAlpha(.25)
 								end
@@ -480,7 +481,7 @@ function NS.LibraryUI.Elements:Load()
 
 									--------------------------------
 
-									LibraryUIFrame.Content.ContentFrame.Scrollbar = AdaptiveAPI.FrameTemplates:CreateScrollbar(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", {
+									LibraryUIFrame.Content.ContentFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", {
 										scrollFrame = LibraryUIFrame.Content.ContentFrame.ScrollFrame,
 										scrollChildFrame = LibraryUIFrame.Content.ContentFrame.ScrollChildFrame,
 										sizeX = 5,
@@ -516,6 +517,8 @@ function NS.LibraryUI.Elements:Load()
 
 								--------------------------------
 
+								table.insert(LibraryUIFrame.Content.ContentFrame.ScrollFrame.onSmoothScrollStartCallbacks, Update)
+								table.insert(LibraryUIFrame.Content.ContentFrame.ScrollFrame.onSmoothScrollDestinationCallbacks, Update)
 								hooksecurefunc(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "SetVerticalScroll", Update)
 							end
 						end
@@ -532,7 +535,7 @@ function NS.LibraryUI.Elements:Load()
 
 								--------------------------------
 
-								local Button         = CreateFrame("Frame", nil, parent)
+								local Button = CreateFrame("Frame", nil, parent)
 								Button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
 								Button:SetPoint("CENTER", parent)
 								Button:SetFrameStrata("FULLSCREEN")
@@ -547,11 +550,7 @@ function NS.LibraryUI.Elements:Load()
 								--------------------------------
 
 								do -- CLICK EVENTS
-									AdaptiveAPI.FrameTemplates:CreateMouseResponder(Button, function()
-										Button.Enter()
-									end, function()
-										Button.Leave()
-									end)
+									addon.API.FrameTemplates:CreateMouseResponder(Button, { enterCallback = function() Button.Enter() end, leaveCallback = function() Button.Leave() end })
 
 									Button.Enter = function()
 										if NS.LibraryUI.Variables.SelectedIndex == index then
@@ -651,46 +650,22 @@ function NS.LibraryUI.Elements:Load()
 								do -- ELEMENTS
 									do -- CONTENT
 										Button.Content = CreateFrame("Frame", "$parent.Content", Button)
-										Button.Content:SetSize(Button:GetSize())
 										Button.Content:SetPoint("CENTER", Button)
-
-										hooksecurefunc(Button, "SetSize", function()
-											Button.Content:SetSize(Button:GetSize())
-										end)
-
-										hooksecurefunc(Button, "SetWidth", function()
-											Button.Content:SetSize(Button:GetSize())
-										end)
-
-										hooksecurefunc(Button, "SetHeight", function()
-											Button.Content:SetSize(Button:GetSize())
-										end)
+										addon.API.FrameUtil:SetDynamicSize(Button.Content, Button, 0, 0)
 
 										--------------------------------
 
 										do -- BACKGROUND
-											Button.Content.Background, Button.Content.BackgroundTexture = AdaptiveAPI.FrameTemplates:CreateNineSlice(Button.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png", 64, .75, "$parent.Background", Enum.UITextureSliceMode.Stretched)
-											Button.Content.Background:SetSize(Button.Content:GetWidth() + 45, Button.Content:GetHeight() + 45)
+											Button.Content.Background, Button.Content.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Button.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png", 64, .75, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 											Button.Content.Background:SetPoint("CENTER", Button.Content)
 											Button.Content.Background:SetFrameStrata("FULLSCREEN")
 											Button.Content.Background:SetFrameLevel(1)
 											Button.Content.Background:SetAlpha(1)
-
-											hooksecurefunc(Button.Content.Background, "SetSize", function()
-												Button.Content.Background:SetSize(Button.Content:GetWidth() + 45, Button.Content:GetHeight() + 45)
-											end)
-
-											hooksecurefunc(Button.Content.Background, "SetWidth", function()
-												Button.Content.Background:SetSize(Button.Content:GetWidth() + 45, Button.Content:GetHeight() + 45)
-											end)
-
-											hooksecurefunc(Button.Content.Background, "SetHeight", function()
-												Button.Content.Background:SetSize(Button.Content:GetWidth() + 45, Button.Content:GetHeight() + 45)
-											end)
+											addon.API.FrameUtil:SetDynamicSize(Button.Content.Background, Button.Content, -45, -45)
 										end
 
 										do -- IMAGE
-											Button.Content.Image, Button.Content.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Content, "FULLSCREEN", nil, "$parent.Image")
+											Button.Content.Image, Button.Content.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content, "FULLSCREEN", nil, "$parent.Image")
 											Button.Content.Image:SetSize(Button.Content:GetHeight() * .75, Button.Content:GetHeight() * .75)
 											Button.Content.Image:SetPoint("LEFT", Button.Content, offset, 0)
 											Button.Content.Image:SetFrameStrata("FULLSCREEN")
@@ -714,7 +689,7 @@ function NS.LibraryUI.Elements:Load()
 											--------------------------------
 
 											do -- DETAIL
-												Button.Content.Text.Detail = AdaptiveAPI.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", AdaptiveAPI.Fonts.Content_Light, "$parent.Detail")
+												Button.Content.Text.Detail = addon.API.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Detail")
 												Button.Content.Text.Detail:SetSize(Button.Content.Text:GetSize())
 												Button.Content.Text.Detail:SetPoint("LEFT", Button.Content.Text)
 												Button.Content.Text.Detail:SetAlpha(.5)
@@ -722,7 +697,7 @@ function NS.LibraryUI.Elements:Load()
 											end
 
 											do -- TITLE
-												Button.Content.Text.Title = AdaptiveAPI.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", AdaptiveAPI.Fonts.Content_Light, "$parent.Title")
+												Button.Content.Text.Title = addon.API.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Title")
 												Button.Content.Text.Title:SetSize(Button.Content.Text:GetSize())
 												Button.Content.Text.Title:SetPoint("LEFT", Button.Content.Text)
 												Button.Content.Text.Title:SetAlpha(.75)
@@ -743,7 +718,7 @@ function NS.LibraryUI.Elements:Load()
 											--------------------------------
 
 											do -- OPEN
-												Button.Content.ButtonContainer.Button_Open = AdaptiveAPI.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
+												Button.Content.ButtonContainer.Button_Open = addon.API.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
 													defaultTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-nineslice.png",
 													highlightTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-highlighted-nineslice.png",
 													theme = 2,
@@ -766,7 +741,7 @@ function NS.LibraryUI.Elements:Load()
 												--------------------------------
 
 												do -- IMAGE
-													Button.Content.ButtonContainer.Button_Open.Image, Button.Content.ButtonContainer.Button_Open.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Open, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-open.png", "$parent.Image")
+													Button.Content.ButtonContainer.Button_Open.Image, Button.Content.ButtonContainer.Button_Open.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Open, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-open.png", "$parent.Image")
 													Button.Content.ButtonContainer.Button_Open.Image:SetAllPoints(Button.Content.ButtonContainer.Button_Open, true)
 													Button.Content.ButtonContainer.Button_Open.Image:SetFrameStrata(Button.Content.ButtonContainer.Button_Open:GetFrameStrata())
 													Button.Content.ButtonContainer.Button_Open.Image:SetFrameLevel(4)
@@ -779,7 +754,7 @@ function NS.LibraryUI.Elements:Load()
 											end
 
 											do -- DELETE
-												Button.Content.ButtonContainer.Button_Delete = AdaptiveAPI.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
+												Button.Content.ButtonContainer.Button_Delete = addon.API.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
 													defaultTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-nineslice.png",
 													highlightTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-highlighted-nineslice.png",
 													theme = 2,
@@ -802,7 +777,7 @@ function NS.LibraryUI.Elements:Load()
 												--------------------------------
 
 												do -- IMAGE
-													Button.Content.ButtonContainer.Button_Delete.Image, Button.Content.ButtonContainer.Button_Delete.ImageTexture = AdaptiveAPI.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Delete, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-delete.png", "$parent.Image")
+													Button.Content.ButtonContainer.Button_Delete.Image, Button.Content.ButtonContainer.Button_Delete.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Delete, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-delete.png", "$parent.Image")
 													Button.Content.ButtonContainer.Button_Delete.Image:SetAllPoints(Button.Content.ButtonContainer.Button_Delete, true)
 													Button.Content.ButtonContainer.Button_Delete.Image:SetFrameStrata(Button.Content.ButtonContainer.Button_Delete:GetFrameStrata())
 													Button.Content.ButtonContainer.Button_Delete.Image:SetFrameLevel(4)
@@ -837,9 +812,9 @@ function NS.LibraryUI.Elements:Load()
 
 										--------------------------------
 
-										AdaptiveAPI.Animation:Scale(Button.Content.Text, .25, Button.Content.Text:GetWidth(), TEXT_WIDTH * .875, "x", AdaptiveAPI.Animation.EaseExpo, Enter_StopEvent)
-										AdaptiveAPI.Animation:Fade(Button.Content.ButtonContainer, .25, Button.Content.ButtonContainer:GetAlpha(), 1, nil, Enter_StopEvent)
-										AdaptiveAPI.Animation:Move(Button.Content.ButtonContainer, .375, "RIGHT", -25, 0, "y", nil, Enter_StopEvent)
+										addon.API.Animation:Scale(Button.Content.Text, .25, Button.Content.Text:GetWidth(), TEXT_WIDTH * .875, "x", addon.API.Animation.EaseExpo, Enter_StopEvent)
+										addon.API.Animation:Fade(Button.Content.ButtonContainer, .25, Button.Content.ButtonContainer:GetAlpha(), 1, nil, Enter_StopEvent)
+										addon.API.Animation:Move(Button.Content.ButtonContainer, .375, "RIGHT", -25, 0, "y", nil, Enter_StopEvent)
 									end
 
 									Button.Leave_Animation = function()
@@ -853,9 +828,9 @@ function NS.LibraryUI.Elements:Load()
 
 										--------------------------------
 
-										AdaptiveAPI.Animation:Scale(Button.Content.Text, .125, Button.Content.Text:GetWidth(), TEXT_WIDTH, "x", nil, Leave_StopEvent)
-										AdaptiveAPI.Animation:Fade(Button.Content.ButtonContainer, .125, Button.Content.ButtonContainer:GetAlpha(), 0, nil, Leave_StopEvent)
-										AdaptiveAPI.Animation:Move(Button.Content.ButtonContainer, .125, "RIGHT", 0, -10, "y", nil, Leave_StopEvent)
+										addon.API.Animation:Scale(Button.Content.Text, .125, Button.Content.Text:GetWidth(), TEXT_WIDTH, "x", nil, Leave_StopEvent)
+										addon.API.Animation:Fade(Button.Content.ButtonContainer, .125, Button.Content.ButtonContainer:GetAlpha(), 0, nil, Leave_StopEvent)
+										addon.API.Animation:Move(Button.Content.ButtonContainer, .125, "RIGHT", 0, -10, "y", nil, Leave_StopEvent)
 									end
 
 									--------------------------------

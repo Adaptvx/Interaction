@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.HideUI
@@ -33,7 +34,7 @@ function NS.Script:Load()
 			if (bypass and not isHideUIActive) or (isInteractionActive and not isLastInteractionActive and not isHideUIActive) then
 				NS.Variables.Active = true
 
-				AdaptiveAPI.Animation:Fade(UIParent, .25, 1, 0, nil, function() return not NS.Variables.Active end)
+				addon.API.Animation:Fade(UIParent, .25, 1, 0, nil, function() return not NS.Variables.Active end)
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					local isHiddenUI = (UIParent:GetAlpha() <= .1)
@@ -73,7 +74,7 @@ function NS.Script:Load()
 			local isInteractionActive = (addon.Interaction.Variables.Active)
 			local isLastInteractionActive = (addon.Interaction.Variables.LastActive)
 
-			local canShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
+			local canShowUIAndHideElements = (addon.API.Main:CanShowUIAndHideElements())
 
 			if (bypass and isHideUIActive) or (not isInteractionActive and isLastInteractionActive and isHideUIActive) then
 				NS.Variables.Active = false
@@ -102,7 +103,7 @@ function NS.Script:Load()
 			if (bypass and not isWorldActive) or (isInteractionActive and not isLastInteractionActive and not isWorldActive) then
 				NS.Variables.WorldActive = true
 
-				-- AdaptiveAPI.Animation:Fade(WorldFrame, .25, WorldFrame:GetAlpha(), 0, nil, function() return not NS.Variables.WorldActive end)
+				-- addon.API.Animation:Fade(WorldFrame, .25, WorldFrame:GetAlpha(), 0, nil, function() return not NS.Variables.WorldActive end)
 				WorldFrame:SetAlpha(0)
 			end
 
@@ -130,7 +131,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				-- AdaptiveAPI.Animation:Fade(WorldFrame, .25, WorldFrame:GetAlpha(), 1, nil, function() return NS.Variables.WorldActive end)
+				-- addon.API.Animation:Fade(WorldFrame, .25, WorldFrame:GetAlpha(), 1, nil, function() return NS.Variables.WorldActive end)
 				WorldFrame:SetAlpha(1)
 			end
 
@@ -221,7 +222,7 @@ function NS.Script:Load()
 		do -- RESPONSE
 			local function Response()
 				local inCombatLockdown = (InCombatLockdown())
-				local canShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
+				local canShowUIAndHideElements = (addon.API.Main:CanShowUIAndHideElements())
 
 				local isHideUIActive = (NS.Variables.Active)
 
@@ -257,7 +258,7 @@ function NS.Script:Load()
 			PriorityResponseFrame:RegisterEvent("STOP_MOVIE")
 			PriorityResponseFrame:SetScript("OnEvent", function(self, event, ...)
 				local inCombatLockdown = (InCombatLockdown())
-				local canShowUIAndHideElements = (addon.API:CanShowUIAndHideElements())
+				local canShowUIAndHideElements = (addon.API.Main:CanShowUIAndHideElements())
 
 				local isInInstance = (IsInInstance())
 				local isInCinematicScene = (IsInCinematicScene())

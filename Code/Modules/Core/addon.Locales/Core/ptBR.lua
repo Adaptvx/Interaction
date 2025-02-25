@@ -1,5 +1,6 @@
 -- Localization and translation AKArenan
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 
@@ -85,7 +86,7 @@ local function Load()
 		L["Checkbox - Hide UI"] = "Ocultar a Interface"
 		L["Checkbox - Hide UI - Tooltip"] = "Oculta a interface durante a interação com o NPC.\n\nPadrão: Ligado."
 		L["Range - Cinematic"] = "Efeitos da Câmera"
-		L["Range - Cinematic - Tooltip"] = "Efeitos de câmera durante a interação.\n\nPadrão: EQUILIBRADO."
+		L["Range - Cinematic - Tooltip"] = "Efeitos de câmera durante a interação.\n\nPadrão: COMPLETO."
 		L["Range - Cinematic - None"] = "NENHUM"
 		L["Range - Cinematic - Full"] = "COMPLETO"
 		L["Range - Cinematic - Balanced"] = "EQUILIBRADO"
@@ -303,7 +304,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Audiobook - Action Tooltip"] = AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " para Arrastar.\n" .. AdaptiveAPI:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " para Fechar."
+		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " para Arrastar.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " para Fechar."
 	end
 
 	--------------------------------

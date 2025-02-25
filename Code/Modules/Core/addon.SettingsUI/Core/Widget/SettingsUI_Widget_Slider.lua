@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
@@ -43,16 +44,16 @@ function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFun
 					COLOR_Thumb = addon.Theme.Settings.Element_Default_LightTheme
 				end
 
-				AdaptiveAPI.FrameTemplates.Styles:UpdateSlider(Frame.SliderFrame.Slider, {
+				addon.API.FrameTemplates.Styles:UpdateSlider(Frame.SliderFrame.Slider, {
 					customColor = COLOR_Default,
 					customThumbColor = COLOR_Thumb
 				})
 			end
 
 			UpdateTheme()
-			addon.API:RegisterThemeUpdate(UpdateTheme, 3)
+			addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
-			AdaptiveAPI.FrameTemplates.Styles:Slider(Frame.SliderFrame.Slider, {
+			addon.API.FrameTemplates.Styles:Slider(Frame.SliderFrame.Slider, {
 				customColor = COLOR_Default,
 				customThumbColor = COLOR_Thumb,
 				grid = grid
@@ -64,7 +65,7 @@ function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFun
 		end
 
 		do -- TEXT
-			Frame.SliderFrame.Text = AdaptiveAPI.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 14, "CENTER", "MIDDLE", AdaptiveAPI.Fonts.Content_Light)
+			Frame.SliderFrame.Text = addon.API.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 14, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light)
 			Frame.SliderFrame.Text:SetSize(Frame.SliderFrame:GetWidth(), Frame.Container:GetHeight())
 			Frame.SliderFrame.Text:SetPoint("CENTER", Frame.SliderFrame, 0, 7.5)
 			Frame.SliderFrame.Text:SetAlpha(.75)
