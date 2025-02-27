@@ -193,7 +193,6 @@ function NS.Script:Load()
 
 							Frame.Model:SetCamera(0)
 							Frame.Model:SetPortraitZoom(1)
-							Frame.Model:SetPortraitZoom(.975)
 							Frame.Model:FreezeAnimation(0, 0, 0)
 							Frame.Model:SetModelAlpha(0)
 

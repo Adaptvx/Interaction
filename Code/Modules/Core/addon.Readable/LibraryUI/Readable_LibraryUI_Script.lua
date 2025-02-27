@@ -294,16 +294,16 @@ function NS.LibraryUI.Script:Load()
 					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetVerticalScroll(0)
 
 					-- TITLE
-					Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Title", SearchText, true, false)
+					Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Title", nil, SearchText, true, false)
 
 					-- ZONE
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Zone", SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Zone", nil, SearchText, true, false)
 					end
 
 					-- NUM PAGES
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "NumPages", SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "NumPages", nil, SearchText, true, false)
 					end
 
 					-- IS ADDED FROM BAGS
@@ -311,13 +311,13 @@ function NS.LibraryUI.Script:Load()
 						local Text = SearchText
 
 						if addon.API.Util:FindString("added from bags", string.lower(Text)) then
-							Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "IsItemInInventory", SearchText, true, false)
+							Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "IsItemInInventory", nil, SearchText, true, false)
 						end
 					end
 
 					-- CONTENT
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, function(item)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, nil, function(item)
 							if addon.API.Util:FindString(string.lower(item.Content[1]), string.lower(SearchText)) then
 								return true
 							end
@@ -336,7 +336,7 @@ function NS.LibraryUI.Script:Load()
 				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checked
 				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checked
 
-				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, function(item)
+				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, nil, function(item)
 					local Result
 
 					local Type = item.Type

@@ -148,6 +148,19 @@ do
 
 					return currentOffsetX
 				end
+
+				function Frame:ScrollToStart()
+					Frame:SetVerticalScroll(0)
+					Frame:SetHorizontalScroll(0)
+				end
+
+				function Frame:ScrollToEnd()
+					local maxPosition = Frame:GetMaxVerticalScroll()
+					Frame:SetVerticalScroll(maxPosition)
+
+					local maxPosition = Frame:GetMaxHorizontalScroll()
+					Frame:SetHorizontalScroll(maxPosition)
+				end
 			end
 
 			do -- SCROLLING
@@ -346,9 +359,9 @@ do
 
 		do -- ELEMENTS
 			do -- SCROLL BAR
-				Frame.scrollBar = CreateFrame("EventFrame", "ScrollBoxScrollBar", parent, "MinimalScrollBar")
-				Frame.scrollBar:SetPoint("TOPLEFT", Frame, "TOPRIGHT")
-				Frame.scrollBar:SetPoint("BOTTOMLEFT", Frame, "BOTTOMRIGHT")
+				Frame.ScrollBar = CreateFrame("EventFrame", "ScrollBoxScrollBar", parent, "MinimalScrollBar")
+				Frame.ScrollBar:SetPoint("TOPLEFT", Frame, "TOPRIGHT")
+				Frame.ScrollBar:SetPoint("BOTTOMLEFT", Frame, "BOTTOMRIGHT")
 			end
 
 			do -- SCROLL VIEW
@@ -360,7 +373,7 @@ do
 			Frame.dataProvider = CreateDataProvider()
 			Frame.ScrollView:SetDataProvider(Frame.dataProvider)
 
-			ScrollUtil.InitScrollBoxListWithScrollBar(Frame, Frame.scrollBar, Frame.ScrollView)
+			ScrollUtil.InitScrollBoxListWithScrollBar(Frame, Frame.ScrollBar, Frame.ScrollView)
 
 			Frame.ScrollView:SetElementInitializer(prefabTemplate, elementCallback)
 		end
@@ -385,9 +398,15 @@ do
 					return Frame:GetMaxVerticalScroll(factorVisibleExtent)
 				end
 
-				function Frame:SetData(data)
+				function Frame:SetData(data, resetPosition)
 					Frame.dataProvider:Flush()
 					Frame.dataProvider:InsertTable(data)
+
+					--------------------------------
+
+					if resetPosition then
+						Frame:ScrollToStart()
+					end
 				end
 
 				local function SetVerticalScroll_FirstElement(data)
@@ -409,11 +428,19 @@ do
 				end
 
 				function Frame:GetVerticalScroll()
-					return Frame:GetDerivedScrollOffset()
+					if #Frame.dataProvider.collection >= 1 then
+						return Frame:GetDerivedScrollOffset()
+					else
+						return 0
+					end
 				end
 
 				function Frame:GetMaxVerticalScroll(factorVisibleExtent)
-					return factorVisibleExtent and Frame.ScrollView:GetExtent() - Frame:GetVisibleExtent() or Frame.ScrollView:GetExtent()
+					if #Frame.dataProvider.collection >= 1 then
+						return factorVisibleExtent and Frame.ScrollView:GetExtent() - Frame:GetVisibleExtent() or Frame.ScrollView:GetExtent()
+					else
+						return 0
+					end
 				end
 
 				function Frame:ScrollToStart()

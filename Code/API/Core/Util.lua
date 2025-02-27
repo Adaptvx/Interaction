@@ -632,14 +632,23 @@ do
 		-- Sorts a list by numbers.
 		---@param list table
 		---@param variable string: variable to sort
+		---@param subVariable? string: variable of 'variable' to sort
 		---@param ascending? boolean: use ascending order
-		---@return new table
-		function addon.API.Util:SortListByNumber(list, variable, ascending)
+		---@return table
+		function addon.API.Util:SortListByNumber(list, variable, subVariable, ascending)
 			table.sort(list, function(a, b)
 				if ascending then
-					return a[variable] > b[variable]
+					if subVariable then
+						return a[variable][subVariable] > b[variable][subVariable]
+					else
+						return a[variable] > b[variable]
+					end
 				else
-					return b[variable] < a[variable]
+					if subVariable then
+						return b[variable][subVariable] < a[variable][subVariable]
+					else
+						return a[variable] < b[variable]
+					end
 				end
 			end)
 
@@ -651,14 +660,23 @@ do
 		-- Sorts a list by alphabetical order.
 		---@param list table
 		---@param variable string: variable to sort
-		---@param ascending? boolean: use descending order (Z-A)
-		---@return new table
-		function addon.API.Util:SortListByAlphabeticalOrder(list, variable, descending)
+		---@param subVariable? string: variable of 'variable' to sort
+		---@param descending? boolean: use descending order (Z-A)
+		---@return table
+		function addon.API.Util:SortListByAlphabeticalOrder(list, variable, subVariable, descending)
 			table.sort(list, function(a, b)
 				if descending then
-					return a[variable]:lower() > b[variable]:lower()
+					if subVariable then
+						return a[variable][subVariable]:lower() > b[variable][subVariable]:lower()
+					else
+						return a[variable]:lower() > b[variable]:lower()
+					end
 				else
-					return a[variable]:lower() < b[variable]:lower()
+					if subVariable then
+						return a[variable][subVariable]:lower() < b[variable][subVariable]:lower()
+					else
+						return a[variable]:lower() < b[variable]:lower()
+					end
 				end
 			end)
 
@@ -670,12 +688,13 @@ do
 		-- Filters a list by a variable.
 		---@param list table
 		---@param variable string: variable to filter
+		---@param subVariable? string: variable of 'variable' to filter
 		---@param value any: value to filter
 		---@param roughMatch? boolean: use rough matching
 		---@param caseSensitive? boolean: use case-sensitive matching
 		---@param customCheck? function
-		---@return new table
-		function addon.API.Util:FilterListByVariable(list, variable, value, roughMatch, caseSensitive, customCheck)
+		---@return table
+		function addon.API.Util:FilterListByVariable(list, variable, subVariable, value, roughMatch, caseSensitive, customCheck)
 			local filteredList = {}
 
 			--------------------------------
@@ -687,22 +706,46 @@ do
 					end
 				elseif roughMatch then
 					if caseSensitive or caseSensitive == nil then
-						if addon.API.Util:FindString(tostring(v[variable]), tostring(value)) then
-							table.insert(filteredList, v)
+						if subVariable then
+							if addon.API.Util:FindString(tostring(v[variable][subVariable]), tostring(value)) then
+								table.insert(filteredList, v)
+							end
+						else
+							if addon.API.Util:FindString(tostring(v[variable]), tostring(value)) then
+								table.insert(filteredList, v)
+							end
 						end
 					else
-						if addon.API.Util:FindString(string.lower(tostring(v[variable])), string.lower(tostring(value))) then
-							table.insert(filteredList, v)
+						if subVariable then
+							if addon.API.Util:FindString(string.lower(tostring(v[variable][subVariable])), string.lower(tostring(value))) then
+								table.insert(filteredList, v)
+							end
+						else
+							if addon.API.Util:FindString(string.lower(tostring(v[variable])), string.lower(tostring(value))) then
+								table.insert(filteredList, v)
+							end
 						end
 					end
 				else
 					if caseSensitive or caseSensitive == nil then
-						if v[variable] == value then
-							table.insert(filteredList, v)
+						if subVariable then
+							if v[variable][subVariable] == value then
+								table.insert(filteredList, v)
+							end
+						else
+							if v[variable] == value then
+								table.insert(filteredList, v)
+							end
 						end
 					else
-						if string.lower(tostring(v[variable])) == string.lower(tostring(value)) then
-							table.insert(filteredList, v)
+						if subVariable then
+							if string.lower(tostring(v[variable][subVariable])) == string.lower(tostring(value)) then
+								table.insert(filteredList, v)
+							end
+						else
+							if string.lower(tostring(v[variable])) == string.lower(tostring(value)) then
+								table.insert(filteredList, v)
+							end
 						end
 					end
 				end

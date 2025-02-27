@@ -152,49 +152,51 @@ do
 			--------------------------------
 
 			for i = 1, #Elements do
-				local element = Elements[i]
-
-				--------------------------------
-
-				if headerCallback and i == 1 then
-					headerCallback(frame, element)
-				end
-
-				if footerCallback and i == #Elements then
-					footerCallback(frame, element)
-				end
-
-				--------------------------------
-
-				element:ClearAllPoints()
-
-				if customOffset then
-					local offsetX, offsetY = customOffset(frame, element, direction, -offset)
+				if Elements[i]:IsShown() or not excludeHidden then
+					local element = Elements[i]
 
 					--------------------------------
 
-					element:SetPoint(point, frame.Content, offsetX, offsetY)
-				else
-					if direction == "vertical" then
-						element:SetPoint(point, frame.Content, 0, -offset)
-					else
-						element:SetPoint(point, frame.Content, offset, 0)
+					if headerCallback and i == 1 then
+						headerCallback(frame, element)
 					end
-				end
 
-				--------------------------------
-
-				if direction == "vertical" and element.GetHeight then
-					if i < #Elements then
-						offset = offset + element:GetHeight() + PADDING
-					else
-						offset = offset + element:GetHeight()
+					if footerCallback and i == #Elements then
+						footerCallback(frame, element)
 					end
-				elseif element.GetWidth then
-					if i < #Elements then
-						offset = offset + element:GetWidth() + PADDING
+
+					--------------------------------
+
+					element:ClearAllPoints()
+
+					if customOffset then
+						local offsetX, offsetY = customOffset(frame, element, direction, -offset)
+
+						--------------------------------
+
+						element:SetPoint(point, frame.Content, offsetX, offsetY)
 					else
-						offset = offset + element:GetWidth()
+						if direction == "vertical" then
+							element:SetPoint(point, frame.Content, 0, -offset)
+						else
+							element:SetPoint(point, frame.Content, offset, 0)
+						end
+					end
+
+					--------------------------------
+
+					if direction == "vertical" and element.GetHeight then
+						if i < #Elements then
+							offset = offset + element:GetHeight() + PADDING
+						else
+							offset = offset + element:GetHeight()
+						end
+					elseif element.GetWidth then
+						if i < #Elements then
+							offset = offset + element:GetWidth() + PADDING
+						else
+							offset = offset + element:GetWidth()
+						end
 					end
 				end
 			end
