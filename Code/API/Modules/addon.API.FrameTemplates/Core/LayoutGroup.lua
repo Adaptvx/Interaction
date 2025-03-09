@@ -33,20 +33,39 @@ do
 	---@param frame any
 	---@param data table
 	function NS:DefaultLayoutSort(frame, data)
-		local point, direction, resize, padding, distribute, excludeHidden, headerCallback, footerCallback, customOffset = data.point, data.direction, data.resize, data.padding, data.distribute, data.excludeHidden, data.headerCallback, data.footerCallback, data.customOffset
+		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, customOffset = data.point, data.direction, data.resize, data.padding, data.distribute, data.distributeResizeElements, data.excludeHidden, data.headerCallback, data.footerCallback, data.customOffset
 
 		--------------------------------
 
-		local Elements = frame.Sort_Elements
+		local FRAME_WIDTH = frame:GetWidth()
+		local FRAME_HEIGHT = frame:GetHeight()
+
+		local AllElements = frame.Sort_Elements
+		local Elements = {}
+		for i = 1, #AllElements do
+			if AllElements[i]:IsShown() or not excludeHidden then
+				table.insert(Elements, AllElements[i])
+			end
+		end
 
 		--------------------------------
 
 		if distribute then
+			if distributeResizeElements then
+				for i = 1, #Elements do
+					if direction == "vertical" then
+						Elements[i]:SetHeight((FRAME_HEIGHT / #Elements) - ((#Elements > 1) and padding / 2 or 0))
+					else
+						Elements[i]:SetWidth((FRAME_WIDTH / #Elements) - ((#Elements > 1) and padding / 2 or 0))
+					end
+				end
+			end
+
+			--------------------------------
+
 			if direction == "vertical" then
 				local numElements = 0
 				local totalElementsHeight = 0
-
-				--------------------------------
 
 				for i = 1, #Elements do
 					if Elements[i]:IsShown() or not excludeHidden then
@@ -64,84 +83,92 @@ do
 					end
 				end
 
-				local containerHeight = frame:GetHeight()
-				local gap = (containerHeight - totalElementsHeight) / (numElements + 1)
-
 				--------------------------------
 
-				local offset = gap
+				local containerHeight = frame:GetHeight()
+				local gap = (numElements > 1) and ((containerHeight - totalElementsHeight) / (numElements - 1)) or 0
+
+				local offset = 0
+				local elementIndex = 0
+
 				for i = 1, #Elements do
 					if Elements[i]:IsShown() or not excludeHidden then
 						local element = Elements[i]
+						elementIndex = elementIndex + 1
+
+						--------------------------------
+
 						element:ClearAllPoints()
 						element:SetPoint(point, frame.Content, 0, -offset)
 
 						--------------------------------
 
-						if headerCallback and i == 1 then
+						if headerCallback and elementIndex == 1 then
 							headerCallback(frame, element)
 						end
 
-						if footerCallback and i == numElements then
+						if footerCallback and elementIndex == numElements then
 							footerCallback(frame, element)
 						end
 
 						--------------------------------
 
 						if element.GetHeight then
-							offset = offset + element:GetHeight() + gap
+							offset = offset + element:GetHeight()
+						end
+
+						if elementIndex < numElements then
+							offset = offset + gap
 						end
 					end
 				end
-			else
-				local numElements = 0
+			elseif direction == "horizontal" then
+				local numElements = #Elements
 				local totalElementsWidth = 0
 
-				--------------------------------
-
 				for i = 1, #Elements do
-					if Elements[i]:IsShown() or not excludeHidden then
-						local element = Elements[i]
+					local element = Elements[i]
 
-						--------------------------------
+					--------------------------------
 
-						if element.GetWidth then
-							totalElementsWidth = totalElementsWidth + element:GetWidth()
-						end
-
-						--------------------------------
-
-						numElements = numElements + 1
+					if element.GetWidth then
+						totalElementsWidth = totalElementsWidth + element:GetWidth()
 					end
 				end
 
-				local containerWidth = frame:GetWidth()
-				local gap = (containerWidth - totalElementsWidth) / (#Elements + 1)
-
 				--------------------------------
 
-				local offset = gap
+				local containerWidth = frame:GetWidth()
+				local gap = (numElements > 1) and ((containerWidth - totalElementsWidth) / (numElements - 1)) or 0
+
+				local offset = 0
+
 				for i = 1, #Elements do
-					if Elements[i]:IsShown() or not excludeHidden then
-						local element = Elements[i]
-						element:ClearAllPoints()
-						element:SetPoint(point, frame.Content, offset, 0)
+					local element = Elements[i]
 
-						--------------------------------
+					--------------------------------
 
-						if headerCallback and i == 1 then
-							headerCallback(frame, element)
-						end
+					element:ClearAllPoints()
+					element:SetPoint(point, frame.Content, offset, 0)
 
-						if footerCallback and i == numElements then
-							footerCallback(frame, element)
-						end
+					--------------------------------
 
-						--------------------------------
+					if headerCallback and i == 1 then
+						headerCallback(frame, element)
+					end
 
-						if element.GetWidth then
-							offset = offset + element:GetWidth() + gap
-						end
+					if footerCallback and i == numElements then
+						footerCallback(frame, element)
+					end
+
+					--------------------------------
+
+					if element.GetWidth then
+						offset = offset + element:GetWidth()
+					end
+
+					if i < numElements then
+						offset = offset + gap
 					end
 				end
 			end
@@ -507,6 +534,7 @@ do
 	-- point (string)
 	-- direction (string) -> "vertical" or "horizontal"
 	-- resize (boolean)
+	-- resizeElements (boolean)
 	-- padding (number)
 	-- distribute (boolean)
 	-- headerCallback (function(frame, element))
@@ -519,7 +547,7 @@ do
 	---@param data table
 	---@param name string
 	function NS:CreateLayoutGroup(parent, data, name)
-		local point, direction, resize, padding, distribute, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data = data.point, data.direction, data.resize, data.padding, data.distribute, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data
+		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data = data.point, data.direction, data.resize, data.resizeElements, data.padding, data.distribute, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data
 
 		--------------------------------
 

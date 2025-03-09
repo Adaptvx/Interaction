@@ -30,7 +30,7 @@ do
 	---@param name string
 	---@param contentName string
 	function NS:CreateScrollFrame(parent, data, name, contentName)
-		local direction, stepSize, smoothScrollingRatio = data.direction, data.stepSize, data.smoothScrollingRatio
+		local direction, stepSize, smoothScrollingRatio, customContent = data.direction, data.stepSize, data.smoothScrollingRatio, data.customContent
 
 		--------------------------------
 
@@ -40,35 +40,53 @@ do
 
 		do -- ELEMENTS
 			do -- CONTENT
-				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
-				Frame.Content:SetAllPoints(Frame)
-				Frame.Content:SetClipsChildren(true)
+				Frame.API_Content = CreateFrame("Frame", "$parent.API_Content", Frame)
+				Frame.API_Content:SetAllPoints(Frame)
+				Frame.API_Content:SetClipsChildren(true)
 			end
 
 			do -- SCROLL CHILD CONTENT
-				Frame.Content.ScrollChildContentFrame = CreateFrame("Frame", contentName .. "Content", Frame.Content)
-				Frame.Content.ScrollChildContentFrame:SetPoint("TOP", Frame)
+				if not customContent then
+					Frame.API_Content.ScrollChildContentFrame = CreateFrame("Frame", contentName .. "ContentFrame", Frame.API_Content)
+					Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame)
 
-				--------------------------------
+					--------------------------------
 
-				if direction == "horizontal" then
-					addon.API.FrameUtil:SetDynamicSize(Frame.Content.ScrollChildContentFrame, Frame, nil, 0, true)
+					if direction == "horizontal" then
+						addon.API.FrameUtil:SetDynamicSize(Frame.API_Content.ScrollChildContentFrame, Frame, nil, 0, true)
+					else
+						addon.API.FrameUtil:SetDynamicSize(Frame.API_Content.ScrollChildContentFrame, Frame, 0, nil, true)
+					end
 				else
-					addon.API.FrameUtil:SetDynamicSize(Frame.Content.ScrollChildContentFrame, Frame, 0, nil, true)
+					Frame.API_Content.ScrollChildContentFrame = customContent
+					Frame.API_Content.ScrollChildContentFrame:ClearAllPoints()
+					Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame)
+
+					--------------------------------
+
+					if direction == "horizontal" then
+						addon.API.FrameUtil:SetDynamicSize(Frame.API_Content.ScrollChildContentFrame, Frame, nil, 0, true)
+					else
+						addon.API.FrameUtil:SetDynamicSize(Frame.API_Content.ScrollChildContentFrame, Frame, 0, nil, true)
+					end
 				end
 			end
 
 			do -- SCROLL CHILD
-				Frame.Content.ScrollChildFrame = CreateFrame("Frame", contentName, Frame.Content)
-				Frame.Content.ScrollChildFrame:SetPoint("TOP", Frame)
+				Frame.API_Content.ScrollChildFrame = CreateFrame("Frame", contentName, Frame.API_Content)
+				Frame.API_Content.ScrollChildFrame:SetPoint("TOP", Frame)
 
 				--------------------------------
 
-				addon.API.FrameUtil:SetDynamicSize(Frame.Content.ScrollChildFrame, Frame.Content.ScrollChildContentFrame, 0, 0)
+				addon.API.FrameUtil:SetDynamicSize(Frame.API_Content.ScrollChildFrame, Frame.API_Content.ScrollChildContentFrame, 0, 0)
 
 				--------------------------------
 
-				Frame:SetScrollChild(Frame.Content.ScrollChildFrame)
+				if not customContent then
+					Frame:SetScrollChild(Frame.API_Content.ScrollChildFrame)
+				else
+					Frame:SetScrollChild(Frame.API_Content.ScrollChildContentFrame)
+				end
 			end
 
 			do -- SCROLL BAR
@@ -90,11 +108,11 @@ do
 
 			do -- FUNCTIONS
 				function Frame:GetContentWidth()
-					return Frame.Content.ScrollChildFrame:GetWidth()
+					return Frame.API_Content.ScrollChildFrame:GetWidth()
 				end
 
 				function Frame:GetContentHeight()
-					return Frame.Content.ScrollChildFrame:GetHeight()
+					return Frame.API_Content.ScrollChildFrame:GetHeight()
 				end
 
 				function Frame:SetVerticalScroll(value, interpolate)
@@ -105,13 +123,13 @@ do
 					--------------------------------
 
 					if interpolate then
-						Frame.Content.ScrollChildFrame:ClearAllPoints()
-						Frame.Content.ScrollChildFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
+						Frame.API_Content.ScrollChildFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
 					else
-						Frame.Content.ScrollChildFrame:ClearAllPoints()
-						Frame.Content.ScrollChildFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
-						Frame.Content.ScrollChildContentFrame:ClearAllPoints()
-						Frame.Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
+						Frame.API_Content.ScrollChildFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
+						Frame.API_Content.ScrollChildContentFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, newScrollPosition)
 					end
 				end
 
@@ -123,18 +141,18 @@ do
 					--------------------------------
 
 					if interpolate then
-						Frame.Content.ScrollChildFrame:ClearAllPoints()
-						Frame.Content.ScrollChildFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
+						Frame.API_Content.ScrollChildFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
 					else
-						Frame.Content.ScrollChildFrame:ClearAllPoints()
-						Frame.Content.ScrollChildFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
-						Frame.Content.ScrollChildContentFrame:ClearAllPoints()
-						Frame.Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
+						Frame.API_Content.ScrollChildFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
+						Frame.API_Content.ScrollChildContentFrame:ClearAllPoints()
+						Frame.API_Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, newScrollPosition, 0)
 					end
 				end
 
 				function Frame:GetVerticalScroll()
-					local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.Content.ScrollChildContentFrame:GetPoint()
+					local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.API_Content.ScrollChildContentFrame:GetPoint()
 
 					--------------------------------
 
@@ -142,7 +160,7 @@ do
 				end
 
 				function Frame:GetHorizontalScroll()
-					local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.Content.ScrollChildContentFrame:GetPoint()
+					local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.API_Content.ScrollChildContentFrame:GetPoint()
 
 					--------------------------------
 
@@ -200,12 +218,12 @@ do
 					local isDestination = true
 
 					Frame:SetScript("OnUpdate", function(self, elapsed)
-						local targetPoint, targetRelativeTo, targetRelativePoint, targetOffsetX, targetOffsetY = Frame.Content.ScrollChildFrame:GetPoint()
+						local targetPoint, targetRelativeTo, targetRelativePoint, targetOffsetX, targetOffsetY = Frame.API_Content.ScrollChildFrame:GetPoint()
 
 						--------------------------------
 
 						if direction == "vertical" then
-							local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.Content.ScrollChildContentFrame:GetPoint()
+							local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.API_Content.ScrollChildContentFrame:GetPoint()
 
 							--------------------------------
 
@@ -215,7 +233,7 @@ do
 
 									--------------------------------
 
-									Frame.Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, targetOffsetY)
+									Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, targetOffsetY)
 
 									--------------------------------
 
@@ -257,7 +275,7 @@ do
 
 							--------------------------------
 
-							Frame.Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, newOffset)
+							Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame, 0, newOffset)
 
 							--------------------------------
 
@@ -271,7 +289,7 @@ do
 						end
 
 						if direction == "horizontal" then
-							local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.Content.ScrollChildContentFrame:GetPoint()
+							local currentPoint, currentRelativeTo, currentRelativePoint, currentOffsetX, currentOffsetY = Frame.API_Content.ScrollChildContentFrame:GetPoint()
 
 							--------------------------------
 
@@ -281,7 +299,7 @@ do
 
 									--------------------------------
 
-									Frame.Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, targetOffsetX, 0)
+									Frame.API_Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, targetOffsetX, 0)
 
 									--------------------------------
 
@@ -323,19 +341,19 @@ do
 
 							--------------------------------
 
-							Frame.Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, newOffset, 0)
+							Frame.API_Content.ScrollChildContentFrame:SetPoint("LEFT", Frame, newOffset, 0)
 						end
 					end)
 				else
-					Frame.Content.ScrollChildContentFrame:ClearAllPoints()
-					Frame.Content.ScrollChildContentFrame:SetPoint("TOP", Frame.Content.ScrollChildFrame, 0, 0)
+					Frame.API_Content.ScrollChildContentFrame:ClearAllPoints()
+					Frame.API_Content.ScrollChildContentFrame:SetPoint("TOP", Frame.API_Content.ScrollChildFrame, 0, 0)
 				end
 			end
 		end
 
 		--------------------------------
 
-		return Frame, Frame.Content.ScrollChildContentFrame
+		return Frame, Frame.API_Content.ScrollChildContentFrame
 	end
 
 	-- Create a scroll box using WowScrollBoxList. Variables: ~.ScrollBar (EventFrame), ~.ScrollView (ScrollBoxListLinearView), ~.dataProvider (DataProvider), ~:SetData(data)

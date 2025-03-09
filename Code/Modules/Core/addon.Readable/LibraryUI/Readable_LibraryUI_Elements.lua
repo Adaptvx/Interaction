@@ -114,7 +114,7 @@ function NS.LibraryUI.Elements:Load()
 
 					LibraryUIFrame.Content.Sidebar.Elements = {}
 
-					LibraryUIFrame.Content.Sidebar.AddElement = function(element)
+					function LibraryUIFrame.Content.Sidebar:AddElement(element)
 						table.insert(LibraryUIFrame.Content.Sidebar.Elements, element)
 					end
 
@@ -153,37 +153,56 @@ function NS.LibraryUI.Elements:Load()
 
 					do -- CATEGORIES
 						local function CreateCheckbox(callback, text, name)
-							local Checkbox = addon.API.FrameTemplates:CreateAdvancedCheckbox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
-								defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
-								highlightTexture = NS.Variables.NINESLICE_RUSTIC,
-								checkTexture = NS.Variables.TEXTURE_CHECK,
-								edgeSize = 128,
-								scale = .075,
-								labelText = text,
-								textColor = addon.Theme.RGB_WHITE,
-								callbackFunction = callback,
-							}, name)
-							Checkbox:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth(), 35)
-							Checkbox.Checkbox.BackgroundTexture:SetAlpha(.25)
-							Checkbox.Checkbox.Icon:SetAlpha(.5)
-							Checkbox.Label:SetAlpha(.5)
-
-							Checkbox.Detail = addon.API.FrameTemplates:CreateText(Checkbox, addon.Theme.RGB_WHITE, 12.5, "RIGHT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Detail")
-							Checkbox.Detail:SetSize(Checkbox:GetWidth(), 35)
-							Checkbox.Detail:SetPoint("RIGHT", Checkbox, -7.5, 0)
-							Checkbox.Detail:SetAlpha(.25)
+							local Frame = addon.API.FrameTemplates:CreateLayoutGroup(LibraryUIFrame.Content.Sidebar, { point = "LEFT", direction = "horizontal", resize = false, padding = PADDING / 2, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+							Frame:SetHeight(25)
+							addon.API.FrameUtil:SetDynamicSize(Frame, LibraryUIFrame.Content.Sidebar, 0, nil)
+							LibraryUIFrame.Content.Sidebar:AddElement(Frame)
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.AddElement(Checkbox)
+							do -- ELEMENTS
+								do -- CHECKBOX
+									Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame, "FULLSCREEN", {
+										defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
+										highlightTexture = NS.Variables.NINESLICE_RUSTIC,
+										checkTexture = NS.Variables.TEXTURE_CHECK,
+										edgeSize = 128,
+										scale = .075,
+										callbackFunction = callback
+									}, name)
+									addon.API.FrameUtil:SetDynamicSize(Frame.Checkbox, Frame, function(relativeWidth, relativeHeight) return relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
+									Frame:AddElement(Frame.Checkbox)
+
+									Frame.Checkbox.Checkbox.BackgroundTexture:SetAlpha(.5)
+									Frame.Checkbox.Checkbox.Icon:SetAlpha(.75)
+								end
+
+								do -- DETAIL
+									Frame.Detail = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Detail")
+									Frame.Detail:SetWidth(22.5)
+									addon.API.FrameUtil:SetDynamicSize(Frame.Detail, Frame, nil, function(relativeWidth, relativeHeight) return relativeHeight end)
+									Frame:AddElement(Frame.Detail)
+
+									Frame.Detail:SetAlpha(.5)
+								end
+
+								do -- LABEL
+									Frame.Label = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+									addon.API.FrameUtil:SetDynamicSize(Frame.Label, Frame, function(relativeWidth, relativeHeight) return relativeWidth - relativeHeight - PADDING - relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
+									Frame:AddElement(Frame.Label)
+
+									Frame.Label:SetAlpha(.375)
+								end
+							end
+
+							do -- SETUP
+								Frame.Label:SetText(text)
+								addon.SoundEffects:SetCheckbox(Frame.Checkbox, addon.SoundEffects.Readable_LibraryUI_Checkbox_Enter, addon.SoundEffects.Readable_LibraryUI_Checkbox_Leave, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseDown, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseUp)
+							end
 
 							--------------------------------
 
-							addon.SoundEffects:SetCheckbox(Checkbox, addon.SoundEffects.Readable_LibraryUI_Checkbox_Enter, addon.SoundEffects.Readable_LibraryUI_Checkbox_Leave, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseDown, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseUp)
-
-							--------------------------------
-
-							return Checkbox
+							return Frame
 						end
 
 						--------------------------------
@@ -535,7 +554,7 @@ function NS.LibraryUI.Elements:Load()
 
 								--------------------------------
 
-								local Button = CreateFrame("Frame", nil, parent)
+								local Button         = CreateFrame("Frame", nil, parent)
 								Button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
 								Button:SetPoint("CENTER", parent)
 								Button:SetFrameStrata("FULLSCREEN")

@@ -233,10 +233,11 @@ function NS.Elements:Load()
 
 					do -- CONTENT
 						Frame.TextPreviewFrame.Content = CreateFrame("Frame", "$parent.Content", Frame.TextPreviewFrame)
-						Frame.TextPreviewFrame.Content:SetAllPoints(Frame.TextPreviewFrame, true)
+						Frame.TextPreviewFrame.Content:SetPoint("CENTER", Frame.TextPreviewFrame)
 						Frame.TextPreviewFrame.Content:SetFrameStrata("FULLSCREEN")
 						Frame.TextPreviewFrame.Content:SetFrameLevel(51)
 						Frame.TextPreviewFrame.Content:SetClipsChildren(true)
+						addon.API.FrameUtil:SetDynamicSize(Frame.TextPreviewFrame.Content, Frame.TextPreviewFrame, 0, 0)
 
 						--------------------------------
 

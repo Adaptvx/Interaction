@@ -115,16 +115,16 @@ do
 		--------------------------------
 
 		do -- STATE UPDATES
-			Frame.UpdateChecked = function()
+			function Frame:UpdateChecked()
 				Frame.Checkbox.Icon:SetShown(Frame.Checked)
 			end
 
-			Frame.SetChecked = function(value)
+			function Frame:SetChecked(value)
 				Frame.Checked = value
 
 				--------------------------------
 
-				Frame.UpdateChecked()
+				Frame:UpdateChecked()
 			end
 		end
 
@@ -182,7 +182,7 @@ do
 			end
 
 			Frame.Click = function()
-				Frame.SetChecked(not Frame.Checked)
+				Frame:SetChecked(not Frame.Checked)
 
 				--------------------------------
 
@@ -227,163 +227,5 @@ do
 		if checkTexture then checkbox._CustomCheckTexture = checkTexture end
 		if checkHighlightTexture then checkbox._CustomCheckHighlightTexture = checkHighlightTexture end
 		if defaultColor then checkbox._CustomColor = defaultColor end
-	end
-
-	-- Creates an advanced checkbox.
-	--
-	-- Data Table
-	----
-	-- defaultTexture, highlightTexture, checkTexture,
-	-- edgeSize, scale, labelText, textColor, textSize, callbackFunction
-	---@param parent any
-	---@param frameStrata string
-	---@param data table
-	---@param name? string
-	function NS:CreateAdvancedCheckbox(parent, frameStrata, data, name)
-		local Frame = CreateFrame("Frame", name, parent)
-		Frame:SetFrameStrata(frameStrata)
-
-		--------------------------------
-
-		local defaultTexture, highlightTexture, checkTexture, edgeSize, scale,
-		labelText, textColor, textSize, callbackFunction =
-			data.defaultTexture, data.highlightTexture, data.checkTexture, data.edgeSize, data.scale,
-			data.labelText, data.textColor, data.textSize, data.callbackFunction
-
-		--------------------------------
-
-		local DefaultTexture = addon.API.Presets.NINESLICE_INSCRIBED_BORDER
-		local HighlightTexture = addon.API.Presets.NINESLICE_INSCRIBED
-		local CheckTexture = addon.API.Util.PATH .. "Elements/check.png"
-
-		--------------------------------
-
-		Frame.Checked = false
-
-		Frame.EnterCallbacks = {}
-		Frame.LeaveCallbacks = {}
-		Frame.MouseDownCallbacks = {}
-		Frame.MouseUpCallbacks = {}
-
-		--------------------------------
-
-		do -- ELEMENTS
-			do -- CHECKBOX
-				Frame.Checkbox = CreateFrame("Frame", "$parent.Checkbox", Frame)
-				Frame.Checkbox:SetPoint("LEFT", Frame)
-				Frame.Checkbox:SetFrameStrata(frameStrata)
-				addon.API.FrameUtil:SetDynamicSize(Frame.Checkbox, Frame, function(relativeWidth, relativeHeight) return relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
-
-				--------------------------------
-
-				do -- BACKGROUND
-					Frame.Checkbox.Background, Frame.Checkbox.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Checkbox, frameStrata, defaultTexture or DefaultTexture, edgeSize or 50, scale or 1, "$parent.Background")
-					Frame.Checkbox.Background:SetAllPoints(Frame.Checkbox)
-					Frame.Checkbox.Background:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 1)
-					Frame.Checkbox.Background:SetAlpha(.5)
-				end
-
-				do -- ICON
-					Frame.Checkbox.Icon, Frame.Checkbox.IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Checkbox, frameStrata, checkTexture or CheckTexture, "$parent.Icon")
-					Frame.Checkbox.Icon:SetPoint("TOPLEFT", Frame.Checkbox, 5, -5)
-					Frame.Checkbox.Icon:SetPoint("BOTTOMRIGHT", Frame.Checkbox, -5, 5)
-					Frame.Checkbox.Icon:SetFrameLevel(Frame.Checkbox:GetFrameLevel() + 2)
-				end
-			end
-
-			do -- LABEL
-				Frame.Label = addon.API.FrameTemplates:CreateText(Frame, { r = textColor.r, g = textColor.g, b = textColor.b }, textSize, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-				Frame.Label:SetText(labelText)
-			end
-		end
-
-		--------------------------------
-
-		do -- STATE UPDATES
-			Frame.UpdateChecked = function()
-				Frame.Checkbox.Icon:SetShown(Frame.Checked)
-			end
-
-			Frame.SetChecked = function(value)
-				Frame.Checked = value
-
-				--------------------------------
-
-				Frame.UpdateChecked()
-			end
-		end
-
-		do -- CLICK EVENTS
-			Frame.Enter = function()
-				Frame.Checkbox.Background:SetAlpha(1)
-				Frame.Checkbox.BackgroundTexture:SetTexture(highlightTexture or HighlightTexture)
-
-				--------------------------------
-
-				local enterCallbacks = Frame.EnterCallbacks
-
-				for callback = 1, #enterCallbacks do
-					enterCallbacks[callback]()
-				end
-			end
-
-			Frame.Leave = function()
-				Frame.Checkbox.Background:SetAlpha(.5)
-				Frame.Checkbox.BackgroundTexture:SetTexture(defaultTexture or DefaultTexture)
-
-				--------------------------------
-
-				local leaveCallbacks = Frame.LeaveCallbacks
-
-				for callback = 1, #leaveCallbacks do
-					leaveCallbacks[callback]()
-				end
-			end
-
-			Frame.MouseDown = function()
-				local mouseDownCallbacks = Frame.MouseDownCallbacks
-
-				for callback = 1, #mouseDownCallbacks do
-					mouseDownCallbacks[callback]()
-				end
-			end
-
-			Frame.Click = function()
-				Frame.SetChecked(not Frame.Checked)
-
-				--------------------------------
-
-				callbackFunction(Frame, Frame.Checked)
-
-				--------------------------------
-
-				local mouseUpCallbacks = Frame.MouseUpCallbacks
-
-				for callback = 1, #mouseUpCallbacks do
-					mouseUpCallbacks[callback]()
-				end
-			end
-
-			--------------------------------
-
-			Frame:SetScript("OnEnter", Frame.Enter)
-			Frame:SetScript("OnLeave", Frame.Leave)
-			Frame:SetScript("OnMouseDown", Frame.MouseDown)
-			Frame:SetScript("OnMouseUp", Frame.Click)
-		end
-
-		do -- EVENTS
-			local function UpdateSize()
-				Frame.Label:SetSize(Frame:GetWidth() - 5 - Frame.Checkbox:GetWidth() - 5, Frame:GetHeight())
-				Frame.Label:SetPoint("LEFT", Frame, 5 + Frame.Checkbox:GetWidth() + 5, 0)
-			end
-			UpdateSize()
-
-			Frame:HookScript("OnSizeChanged", UpdateSize)
-		end
-
-		--------------------------------
-
-		return Frame
 	end
 end

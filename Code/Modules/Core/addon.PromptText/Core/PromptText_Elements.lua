@@ -27,9 +27,7 @@ function NS.Elements:Load()
 
 			--------------------------------
 
-			local Padding = 10
-
-			--------------------------------
+			local PADDING = 10
 
 			do -- BACKGROUND
 				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN_DIALOG", nil, 75, 1, "$parent.Background")
@@ -184,7 +182,7 @@ function NS.Elements:Load()
 
 				do -- BUTTONS
 					do -- BUTTON 1
-						Frame.ButtonArea.Button1 = addon.API.FrameTemplates:CreateCustomButton(Frame.ButtonArea, Frame.ButtonArea:GetWidth() - Padding, Frame.ButtonArea:GetHeight() / 2, "FULLSCREEN_DIALOG", {
+						Frame.ButtonArea.Button1 = addon.API.FrameTemplates:CreateCustomButton(Frame.ButtonArea, Frame.ButtonArea:GetWidth() - PADDING, Frame.ButtonArea:GetHeight() / 2, "FULLSCREEN_DIALOG", {
 							defaultTexture = nil,
 							highlightTexture = nil,
 							edgeSize = 25,
@@ -195,7 +193,7 @@ function NS.Elements:Load()
 							customHighlightColor = nil,
 							customActiveColor = nil,
 						}, "$parent.Button1")
-						Frame.ButtonArea.Button1:SetPoint("LEFT", Frame.ButtonArea, Padding / 2, 0)
+						Frame.ButtonArea.Button1:SetPoint("LEFT", Frame.ButtonArea, PADDING / 2, 0)
 					end
 				end
 			end
@@ -203,9 +201,18 @@ function NS.Elements:Load()
 	end
 
 	--------------------------------
+	-- REFERENCES
+	--------------------------------
+
+	local Frame = InteractionTextPromptFrame
+	local Callback = NS.Script
+
+	--------------------------------
 	-- SETUP
 	--------------------------------
 
-	InteractionTextPromptFrame:Hide()
-	InteractionTextPromptFrame.hidden = true
+	do
+		Frame:Hide()
+		Frame.hidden = true
+	end
 end

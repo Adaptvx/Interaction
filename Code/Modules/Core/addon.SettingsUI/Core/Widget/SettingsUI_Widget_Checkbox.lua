@@ -57,7 +57,7 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 		--------------------------------
 
 		local function UpdateState()
-			Frame.Checkbox.SetChecked(getFunc())
+			Frame.Checkbox:SetChecked(getFunc())
 		end
 
 		--------------------------------

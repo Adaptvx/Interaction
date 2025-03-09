@@ -72,10 +72,10 @@ function NS.LibraryUI.Script:Load()
 			Frame.LibraryUIFrame.Content.Sidebar.Search:SetText("")
 			Frame.LibraryUIFrame.Content.Sidebar.Search:SetFocus(false)
 
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Book.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.SetChecked(true)
-			Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.SetChecked(false)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.Checkbox:SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Book.Checkbox:SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checkbox:SetChecked(true)
+			Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checkbox:SetChecked(false)
 		end
 
 		LibraryUI.Content.ContentFrame.ScrollFrame.RefreshLayout = function()
@@ -331,10 +331,10 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				local Type_Letter = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.Checked
-				local Type_Book = Frame.LibraryUIFrame.Content.Sidebar.Type_Book.Checked
-				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checked
-				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checked
+				local Type_Letter = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.Checkbox.Checked
+				local Type_Book = Frame.LibraryUIFrame.Content.Sidebar.Type_Book.Checkbox.Checked
+				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checkbox.Checked
+				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checkbox.Checked
 
 				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, nil, function(item)
 					local Result

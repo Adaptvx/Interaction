@@ -121,7 +121,7 @@ do
 
 		--------------------------------
 
-		do                                                                                       -- THEME
+		do -- THEME
 			local function UpdateTheme()
 				if (theme and theme == 2) or (theme == nil and addon.API.Util.NativeAPI:GetDarkTheme()) then -- DARK MODE
 					-- DROPDOWN
@@ -430,7 +430,7 @@ do
 								Element:SetHeight(HEIGHT_ELEMENT)
 								Element:SetPoint("CENTER", parent)
 								Element:SetFrameLevel(51)
-								addon.API.FrameUtil:SetDynamicSize(Element, parent, 0, nil)
+								addon.API.FrameUtil:SetDynamicSize(Element, parent, 0, nil, true)
 
 								--------------------------------
 
