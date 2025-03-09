@@ -244,8 +244,8 @@ local function Load()
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Особая благодарность ZamestoTV за перевод на русский язык!"
 		L["Title - Credits / AKArenan"] = "AKArenan | Переводчик на португальский (бразильский) язык"
 		L["Title - Credits / AKArenan - Tooltip"] = "Особая благодарность AKArenan за перевод на португальский (бразильский) язык!"
-		L["Title - Credits / El1as1989"] = "El1as1989 | Translator - Spanish"
-		L["Title - Credits / El1as1989 - Tooltip"] = "Special thanks to El1as1989 for the Spanish translations!"
+		L["Title - Credits / El1as1989"] = "El1as1989 | Переводчик на испанский язык"
+		L["Title - Credits / El1as1989 - Tooltip"] = "Особая благодарность El1as1989 за перевод на испанский язык!"
 	end
 
 	--------------------------------
