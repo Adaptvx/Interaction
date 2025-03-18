@@ -196,6 +196,8 @@ local function Load()
 		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Usar tecla de interação" .. addon.Theme.Settings.Tooltip_Text_Warning .. " A opção deve estar desativada para ajustar este atalho.|r"
 		L["Keybind - PC / Keybind / Quest Next Reward"] = "Próxima recompensa"
 		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Atalho para selecionar a próxima recompensa da missão.\n\nPadrão: TAB."
+		L["Keybind - PC / Keybind / Close"] = "Close"
+		L["Keybind - PC / Keybind / Close - Tooltip"] = "Keybind to close the current active Interaction window.\n\nDefault: ESCAPE."
 		L["Title - Controller"] = "Controle"
 		L["Title - Controller / Controller"] = "Controle"
 
@@ -254,19 +256,23 @@ local function Load()
 	do
 		do -- LIBRARY
 			-- PROMPTS
-			L["Readable - Library - Prompt - Delete"] = "Isso removerá permanentemente essa entrada da sua biblioteca. Você tem certeza que deseja continuar?."
+			L["Readable - Library - Prompt - Delete - Local"] = "This will permanently remove this entry from your PLAYER library."
+			L["Readable - Library - Prompt - Delete - Global"] = "This will permanently remove this entry from the WARBAND library."
 			L["Readable - Library - Prompt - Delete Button 1"] = "Remover"
 			L["Readable - Library - Prompt - Delete Button 2"] = "Cancelar"
 
-			L["Readable - Library - Prompt - Import"] = "Importar um estado salvo substituirá sua biblioteca atual. Você tem certeza que deseja continuar?."
+			L["Readable - Library - Prompt - Import - Local"] = "Importing a saved state will overwrite your PLAYER library."
+			L["Readable - Library - Prompt - Import - Global"] = "Importing a saved state will overwrite the WARBAND library."
 			L["Readable - Library - Prompt - Import Button 1"] = "Importar e Recarregar"
 			L["Readable - Library - Prompt - Import Button 2"] = "Cancelar"
 
-			L["Readable - Library - TextPrompt - Import"] = "Colar texto de dados"
+			L["Readable - Library - TextPrompt - Import - Local"] = "Import to Player Library"
+			L["Readable - Library - TextPrompt - Import - Global"] = "Import to Warband Library"
 			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Inserir texto de dados"
 			L["Readable - Library - TextPrompt - Import Button 1"] = "Importar"
 
-			L["Readable - Library - TextPrompt - Export"] = "Copiar dados para a área de transferência "
+			L["Readable - Library - TextPrompt - Export - Local"] = "Copy Player Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export - Global"] = "Copy Warband Data to Clipboard "
 			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Código de exportação inválido"
 
 			-- SIDEBAR
@@ -280,9 +286,9 @@ local function Load()
 			L["Readable - Library - Show only World"] = "Somente o mundo"
 
 			-- TITLE
-			L["Readable - Library - Name Text - Global Library"] = "Livraria Bando de Guerra"
-			L["Readable - Library - Name Text - Local Library - Subtext 1"] = ""
-			L["Readable - Library - Name Text - Local Library - Subtext 2"] = "'s Biblioteca"
+			L["Readable - Library - Name Text - Global"] = "Livraria Bando de Guerra"
+			L["Readable - Library - Name Text - Local - Subtext 1"] = ""
+			L["Readable - Library - Name Text - Local - Subtext 2"] = "'s Biblioteca"
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Mostrando "
 			L["Readable - Library - Showing Status Text - Subtext 2"] = " Itens"
 

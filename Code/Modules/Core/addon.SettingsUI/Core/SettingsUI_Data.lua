@@ -1751,6 +1751,32 @@ function NS.Data:Load()
 													addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD = val
 												end
 											end
+										},
+										Keybind_Close = {
+											name = L["Keybind - PC / Keybind / Close"],
+											tooltipImage = "",
+											tooltipText = L["Keybind - PC / Keybind / Close - Tooltip"],
+											tooltipTextDynamic = nil,
+											tooltipImageType = "Small",
+											type = "Keybind",
+											order = 23,
+											hidden = function() return false end,
+											locked = function() return addon.Interaction.Variables.Active end,
+											subcategory = 1,
+											category = Controls,
+											get = function() return addon.Database.DB_GLOBAL.profile.INT_KEY_CLOSE end,
+											setCriteria = function()
+												if not addon.Interaction.Variables.Active then
+													return true
+												else
+													return false
+												end
+											end,
+											set = function(_, val)
+												if not addon.Interaction.Variables.Active then
+													addon.Database.DB_GLOBAL.profile.INT_KEY_CLOSE = val
+												end
+											end
 										}
 									}
 								},
@@ -1759,14 +1785,14 @@ function NS.Data:Load()
 						Group_Controller = {
 							name = L["Title - Controller"],
 							type = "Group",
-							order = 23,
+							order = 24,
 							hidden = function() return addon.Database.DB_GLOBAL.profile.INT_PLATFORM == 1 end,
 							category = Controls,
 							args = {
 								-- Group_Controller_Controller = {
 								-- 	name = L["Title - Controller / Controller"],
 								-- 	type = "Group",
-								-- 	order = 24,
+								-- 	order = 25,
 								-- 	hidden = function() return false end,
 								-- 	category = Controls,
 								-- 	args = {
@@ -2118,7 +2144,7 @@ function NS.Data:Load()
 
 													addon.TextToSpeech.Script:StopSpeakingText()
 													addon.Libraries.AceTimer:ScheduleTimer(function()
-														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, Rate, Volume)
 													end, 0)
 												end
 											end,
@@ -2163,7 +2189,7 @@ function NS.Data:Load()
 
 													addon.TextToSpeech.Script:StopSpeakingText()
 													addon.Libraries.AceTimer:ScheduleTimer(function()
-														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, Rate, Volume)
 													end, 0)
 												end
 											end,
@@ -2735,6 +2761,7 @@ function NS.Data:Load()
 											--------------------------------
 
 											CallbackRegistry:Trigger("SETTING_CHANGED", frame)
+											CallbackRegistry:Trigger("KEYBIND_CHANGED", frame)
 										end
 									end,
 									function(...)

@@ -57,33 +57,37 @@ do -- MAIN
 
 		--------------------------------
 
-		function NS.Variables:UpdateKeybinds()
-			do -- MAIN
-				NS.Variables.Key_Close = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_CLOSE, [2] = "PAD2" }
-				NS.Variables.Key_Next = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_NEXT, [2] = "PADRTRIGGER" }
-				NS.Variables.Key_Previous = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PREVIOUS, [2] = "PADLTRIGGER" }
-				NS.Variables.Key_Prompt_Accept = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_ACCEPT, [2] = "PADLSHOULDER" }
-				NS.Variables.Key_Prompt_Decline = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_DECLINE, [2] = "PADRSHOULDER" }
-				NS.Variables.Key_Quest_NextReward = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD, [2] = "" }
-			end
+		do -- LOGIC
+			function NS.Variables:UpdateKeybinds()
+				do -- MAIN
+					NS.Variables.Key_Close = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_CLOSE, [2] = "PAD2" }
+					NS.Variables.Key_Next = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_NEXT, [2] = "PADRTRIGGER" }
+					NS.Variables.Key_Previous = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PREVIOUS, [2] = "PADLTRIGGER" }
+					NS.Variables.Key_Prompt_Accept = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_ACCEPT, [2] = "PADLSHOULDER" }
+					NS.Variables.Key_Prompt_Decline = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_DECLINE, [2] = "PADRSHOULDER" }
+					NS.Variables.Key_Quest_NextReward = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD, [2] = "" }
+				end
 
-			do -- INTERACT KEY
-				if addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY then
-					NS.Variables.Key_Skip = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
-					NS.Variables.Key_Progress = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
-				else
-					NS.Variables.Key_Skip = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
-					NS.Variables.Key_Progress = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
+				do -- INTERACT KEY
+					if addon.Database.DB_GLOBAL.profile.INT_USEINTERACTKEY then
+						NS.Variables.Key_Skip = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
+						NS.Variables.Key_Progress = { [1] = GetBindingKey("INTERACTTARGET"), [2] = GetBindingKey("INTERACTTARGET") }
+					else
+						NS.Variables.Key_Skip = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
+						NS.Variables.Key_Progress = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROGRESS, [2] = "PAD1" }
+					end
 				end
 			end
-		end
 
-		function NS.Variables:GetKeybindForPlatform(variable)
-			if addon.Variables.Platform == 1 then
-				return variable[1]
-			else
-				return variable[2]
+			function NS.Variables:GetKeybindForPlatform(variable)
+				if addon.Variables.Platform == 1 then
+					return variable[1]
+				else
+					return variable[2]
+				end
 			end
+
+			CallbackRegistry:Add("KEYBIND_CHANGED", NS.Variables.UpdateKeybinds, 0)
 		end
 	end
 end

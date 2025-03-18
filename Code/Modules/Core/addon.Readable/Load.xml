@@ -17,4 +17,9 @@
 	<Script file="LibraryUI/Readable_LibraryUI_Elements.lua"/>
 	<Script file="LibraryUI/Readable_LibraryUI_Script.lua"/>
 	<Script file="LibraryUI/Readable_LibraryUI_Variables.lua"/>
+
+	<!-- Prefabs -->
+	<Script file="Prefabs/Prefabs_Readable.lua"/>
+	<Script file="Prefabs/Prefabs_Readable_Templates_Mixin.lua"/>
+	<Include file="Prefabs/Prefabs_Readable_Templates.xml"/>
 </Ui>

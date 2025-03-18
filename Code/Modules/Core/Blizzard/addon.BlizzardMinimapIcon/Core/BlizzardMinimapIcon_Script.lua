@@ -39,17 +39,17 @@ function NS.Script:Load()
 				--------------------------------
 
 				if numEntries_local == 1 then
-					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local name = L["Readable - Library - Name Text - Local - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local - Subtext 2"]
 					local info = L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] .. numEntries_local .. L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"]
 
 					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
 				elseif numEntries_local > 1 then
-					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local name = L["Readable - Library - Name Text - Local - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local - Subtext 2"]
 					local info = L["MinimapIcon - Tooltip - Entries - Subtext 1"] .. numEntries_local .. L["MinimapIcon - Tooltip - Entries - Subtext 2"]
 
 					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
 				else
-					local name = L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"]
+					local name = L["Readable - Library - Name Text - Local - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local - Subtext 2"]
 					local info = L["MinimapIcon - Tooltip - Entries - Empty"]
 
 					text_entries_local = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
@@ -58,17 +58,17 @@ function NS.Script:Load()
 
 			do -- GLOBAL
 				if numEntries_global == 1 then
-					local name = L["Readable - Library - Name Text - Global Library"]
+					local name = L["Readable - Library - Name Text - Global"]
 					local info = L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] .. numEntries_global .. L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"]
 
 					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
 				elseif numEntries_global > 1 then
-					local name = L["Readable - Library - Name Text - Global Library"]
+					local name = L["Readable - Library - Name Text - Global"]
 					local info = L["MinimapIcon - Tooltip - Entries - Subtext 1"] .. numEntries_global .. L["MinimapIcon - Tooltip - Entries - Subtext 2"]
 
 					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
 				else
-					local name = L["Readable - Library - Name Text - Global Library"]
+					local name = L["Readable - Library - Name Text - Global"]
 					local info = L["MinimapIcon - Tooltip - Entries - Empty"]
 
 					text_entries_global = name .. ": " .. "|cffFFFFFF" .. info .. "|r"
@@ -79,7 +79,7 @@ function NS.Script:Load()
 
 			tooltip:AddLine(text_title)
 			tooltip:AddLine(text_entries_local)
-			-- tooltip:AddLine(text_entries_global)
+			tooltip:AddLine(text_entries_global)
 		end
 
 		function NS.Script:Show()

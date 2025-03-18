@@ -100,7 +100,7 @@ function NS.Script:Load()
 			local tooltipLine2 = L["PlayerStatusBar - TooltipLine2"] .. (max - value)
 			local tooltipLine3 = L["PlayerStatusBar - TooltipLine3"] .. level
 
-			addon.API.Util:AddTooltip(Frame, tooltipLine1 .. "\n" .. tooltipLine2 .. "\n" .. tooltipLine3, "ANCHOR_TOP", 0, 10, true)
+			addon.API.Util:AddTooltip(Frame, tooltipLine1 .. "\n" .. tooltipLine2 .. "\n" .. tooltipLine3, "ANCHOR_TOP", 0, 10)
 		end
 	end
 

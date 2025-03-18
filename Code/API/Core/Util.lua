@@ -464,12 +464,14 @@ do
 		--- @param locationX? number
 		--- @param locationY? number
 		--- @param customTooltip? boolean
-		function addon.API.Util:AddTooltip(frame, text, location, locationX, locationY, customTooltip, bypassMouseResponder)
+		function addon.API.Util:AddTooltip(frame, text, location, locationX, locationY, bypassMouseResponder, textWrao)
 			frame.showTooltip = true
 			frame.tooltipText = text
 			frame.tooltipActive = false
 
-			if frame.hookedFunc == nil then
+			--------------------------------
+
+			if not frame.hookedFunc then
 				frame.hookedFunc = true
 
 				--------------------------------
@@ -480,7 +482,7 @@ do
 					--------------------------------
 
 					InteractionFrame.GameTooltip:SetOwner(frame, location, locationX, locationY)
-					InteractionFrame.GameTooltip:SetText(frame.tooltipText, 1, 1, 1, 1, true)
+					InteractionFrame.GameTooltip:SetText(frame.tooltipText, 1, 1, 1, 1, textWrao or true)
 					InteractionFrame.GameTooltip:Show()
 				end
 
@@ -858,6 +860,24 @@ do
 			end
 
 			return length
+		end
+
+		-- Reverses a table.
+		---@param table table
+		---@return table table
+		function addon.API.Util:rt(table)
+			local reversed = {}
+			local len = #table
+
+			--------------------------------
+
+			for i = len, 1, -1 do
+				reversed[len - i + 1] = table[i]
+			end
+
+			--------------------------------
+
+			return reversed
 		end
 	end
 end

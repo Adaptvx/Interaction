@@ -56,20 +56,33 @@ function NS.Elements:Load()
             Frame.Image:SetFrameLevel(5)
 			Frame.Image:SetClipsChildren(true)
 
+			local Image = Frame.Image
+
             --------------------------------
 
 			do -- BACKGROUND
-                Frame.Image.Background, Frame.Image.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", NS.Variables.PATH .. "image-background.png", "$parent.Background")
-                Frame.Image.Background:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
-                Frame.Image.Background:SetPoint("CENTER", Frame.Image)
-                Frame.Image.Background:SetFrameLevel(6)
+                Image.Background, Image.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Image, "FULLSCREEN", NS.Variables.PATH .. "image-background.png", "$parent.Background")
+                Image.Background:SetSize(Image:GetWidth(), Image:GetHeight())
+                Image.Background:SetPoint("CENTER", Image)
+                Image.Background:SetFrameLevel(6)
             end
 
 			do -- IMAGE
-                Frame.Image.Image, Frame.Image.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, "FULLSCREEN", nil, "$parent.Image")
-                Frame.Image.Image:SetSize(Frame.Image:GetWidth(), Frame.Image:GetHeight())
-                Frame.Image.Image:SetPoint("CENTER", Frame.Image)
-                Frame.Image.Image:SetFrameLevel(7)
+                Image.Image, Image.ImageTexture = addon.API.FrameTemplates:CreateTexture(Image, "FULLSCREEN", nil, "$parent.Image")
+                Image.Image:SetSize(Image:GetWidth(), Image:GetHeight())
+                Image.Image:SetPoint("CENTER", Image)
+                Image.Image:SetFrameLevel(7)
+
+				--------------------------------
+
+				do -- MASK TEXTURE
+					Image.ImageTexture.Mask = Image.Image:CreateMaskTexture()
+					Image.ImageTexture.Mask:SetTexture(NS.Variables.PATH .. "image-mask.png")
+					Image.ImageTexture.Mask:SetPoint("CENTER", Image.Image)
+					addon.API.FrameUtil:SetDynamicSize(Image.ImageTexture.Mask, Image.Image, 10, 10)
+
+					Image.ImageTexture:AddMaskTexture(Image.ImageTexture.Mask)
+				end
             end
         end
 
@@ -80,27 +93,29 @@ function NS.Elements:Load()
             Frame.Progress:SetFrameStrata("FULLSCREEN")
             Frame.Progress:SetFrameLevel(1)
 
+			local Progress = Frame.Progress
+
             --------------------------------
 
 			do -- BACKGROUND
-                Frame.Progress.Background, Frame.Progress.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "background.png", "$parent.Background")
-                Frame.Progress.Background:SetSize(Frame.Progress:GetWidth(), Frame.Progress:GetHeight())
-                Frame.Progress.Background:SetPoint("CENTER", Frame.Progress)
-                Frame.Progress.Background:SetFrameStrata("FULLSCREEN")
-                Frame.Progress.Background:SetFrameLevel(2)
+                Progress.Background, Progress.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Progress, "FULLSCREEN", NS.Variables.PATH .. "background.png", "$parent.Background")
+                Progress.Background:SetSize(Progress:GetWidth(), Progress:GetHeight())
+                Progress.Background:SetPoint("CENTER", Progress)
+                Progress.Background:SetFrameStrata("FULLSCREEN")
+                Progress.Background:SetFrameLevel(2)
             end
 
 			do -- PROGRESS BAR
-                Frame.Progress.Bar = addon.API.FrameTemplates:CreateAdvancedProgressBar(Frame.Progress, "FULLSCREEN", NS.Variables.PATH .. "bar.png", NS.Variables.PATH .. "flare.png", 8, 0, "$parent.Bar")
-                Frame.Progress.Bar:SetSize(Frame.Progress:GetWidth() - 25, Frame.Progress:GetHeight() - 25)
-                Frame.Progress.Bar:SetPoint("CENTER", Frame.Progress.Background)
-                Frame.Progress.Bar:SetFrameStrata("FULLSCREEN")
-                Frame.Progress.Bar:SetFrameLevel(3)
+                Progress.Bar = addon.API.FrameTemplates:CreateAdvancedProgressBar(Progress, "FULLSCREEN", NS.Variables.PATH .. "bar.png", NS.Variables.PATH .. "flare.png", 8, 0, "$parent.Bar")
+                Progress.Bar:SetSize(Progress:GetWidth() - 25, Progress:GetHeight() - 25)
+                Progress.Bar:SetPoint("CENTER", Progress.Background)
+                Progress.Bar:SetFrameStrata("FULLSCREEN")
+                Progress.Bar:SetFrameLevel(3)
 
-                Frame.Progress.Bar.Flare:SetWidth(50)
-                Frame.Progress.Bar.Flare:SetHeight(Frame.Progress:GetHeight())
-                Frame.Progress.Bar.Flare:SetFrameStrata("FULLSCREEN_DIALOG")
-                Frame.Progress.Bar.Flare:SetFrameLevel(4)
+                Progress.Bar.Flare:SetWidth(50)
+                Progress.Bar.Flare:SetHeight(Progress:GetHeight())
+                Progress.Bar.Flare:SetFrameStrata("FULLSCREEN_DIALOG")
+                Progress.Bar.Flare:SetFrameLevel(4)
             end
         end
     end

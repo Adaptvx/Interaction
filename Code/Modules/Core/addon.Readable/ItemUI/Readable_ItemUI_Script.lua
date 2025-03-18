@@ -279,7 +279,7 @@ function NS.ItemUI.Script:Load()
 				local tooltipText = L["Readable - Tooltip - Change Page"]
 
 				if NS.ItemUI.Variables.NumPages > 1 then
-					addon.API.Util:AddTooltip(Frame.ReadableUIFrame.TooltipFrame, tooltipText, "ANCHOR_BOTTOM", 0, 50, true, true)
+					addon.API.Util:AddTooltip(Frame.ReadableUIFrame.TooltipFrame, tooltipText, "ANCHOR_BOTTOM", 0, 50, true)
 				else
 					addon.API.Util:RemoveTooltip(Frame.ReadableUIFrame.TooltipFrame)
 				end

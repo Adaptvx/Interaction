@@ -15,50 +15,37 @@ local NS = addon.Readable
 
 function NS:Load()
 	local function Modules()
-		local function Elements()
-			local function Shared()
+		do -- ELEMENTS
+			do -- SHARED
 				NS.Elements:Load()
 			end
 
-			local function ReadableUI()
+			do -- ITEM UI
 				NS.ItemUI.Elements:Load()
 			end
 
-			local function LibraryUI()
+			do -- LIBRARY UI
 				NS.LibraryUI.Elements:Load()
 			end
-
-			--------------------------------
-
-			Shared()
-			ReadableUI()
-			LibraryUI()
 		end
 
-		local function Script()
-			local function Shared()
+		do -- SCRIPT
+			do -- SHARED
 				NS.Script:Load()
 			end
 
-			local function ReadableUI()
+			do -- ITEM UI
 				NS.ItemUI.Script:Load()
 			end
 
-			local function LibraryUI()
+			do -- LIBRARY UI
 				NS.LibraryUI.Script:Load()
 			end
-
-			--------------------------------
-
-			Shared()
-			ReadableUI()
-			LibraryUI()
 		end
+	end
 
-		--------------------------------
-
-		Elements()
-		Script()
+	local function Prefabs()
+		NS.Prefabs:Load()
 	end
 
 	local function Misc()
@@ -86,6 +73,7 @@ function NS:Load()
 
 	--------------------------------
 
+	Prefabs()
 	Modules()
 	Misc()
 end

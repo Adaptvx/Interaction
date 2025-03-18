@@ -120,9 +120,64 @@ function NS.LibraryUI.Elements:Load()
 
 					--------------------------------
 
+					do -- TAB
+						LibraryUIFrame.Content.Sidebar.Tab = PrefabRegistry:Create("Readable.LibraryUI.SideBar.Tab.Frame", LibraryUIFrame.Content.Sidebar, "FULLSCREEN", 3, "$parent.Tab")
+						LibraryUIFrame.Content.Sidebar.Tab:SetHeight(50)
+						addon.API.FrameUtil:SetDynamicSize(LibraryUIFrame.Content.Sidebar.Tab, LibraryUIFrame.Content.Sidebar, 0, nil)
+						LibraryUIFrame.Content.Sidebar:AddElement(LibraryUIFrame.Content.Sidebar.Tab)
+
+						local Tab = LibraryUIFrame.Content.Sidebar.Tab
+
+						--------------------------------
+
+						do -- LAYOUT GROUP
+							local LayoutGroup = Tab.Content.Content.LayoutGroup
+
+							--------------------------------
+
+							do -- ELEMENTS
+								do -- BUTTON (CHARACTER)
+									local function Click()
+										NS.LibraryUI.Script:SetToLocal()
+									end
+
+									--------------------------------
+
+									LayoutGroup.Button_Local = PrefabRegistry:Create("Readable.LibraryUI.SideBar.Tab.Button.Image", LayoutGroup, Tab, 1, "FULLSCREEN", 4, "$parent.Button_Local")
+									LayoutGroup.Button_Local:SetFrameStrata("FULLSCREEN")
+									LayoutGroup.Button_Local:SetFrameLevel(4)
+									LayoutGroup.Button_Local:Set(addon.Variables.PATH .. "Art/Icons/personal.png", Click)
+									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Button_Local, LayoutGroup, nil, 0)
+
+									LayoutGroup:AddElement(LayoutGroup.Button_Local)
+								end
+
+								do -- BUTTON (WARBAND)
+									local function Click()
+										NS.LibraryUI.Script:SetToGlobal()
+									end
+
+									--------------------------------
+
+									LayoutGroup.Button_Global = PrefabRegistry:Create("Readable.LibraryUI.SideBar.Tab.Button.Image", LayoutGroup, Tab, 2, "FULLSCREEN", 4, "$parent.Button_Global")
+									LayoutGroup.Button_Global:SetFrameStrata("FULLSCREEN")
+									LayoutGroup.Button_Global:SetFrameLevel(4)
+									LayoutGroup.Button_Global:Set(addon.Variables.PATH .. "Art/Icons/warband.png", Click)
+									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Button_Global, LayoutGroup, nil, 0)
+
+									LayoutGroup:AddElement(LayoutGroup.Button_Global)
+								end
+							end
+						end
+
+						do -- SETUP
+							Tab:SelectButton(1)
+						end
+					end
+
 					do -- SEARCH
 						local function UpdateSearch(self)
-							NS.LibraryUI.Script:SetPageButtons(false)
+							NS.LibraryUI.Script:SetPageButtons(false, true)
 						end
 
 						--------------------------------
@@ -141,10 +196,7 @@ function NS.LibraryUI.Elements:Load()
 						}, "$parent.Search")
 						LibraryUIFrame.Content.Sidebar.Search:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth() - 20, 35)
 						LibraryUIFrame.Content.Sidebar.Search.BackgroundTexture:SetAlpha(.125)
-
-						--------------------------------
-
-						LibraryUIFrame.Content.Sidebar.AddElement(LibraryUIFrame.Content.Sidebar.Search)
+						LibraryUIFrame.Content.Sidebar:AddElement(LibraryUIFrame.Content.Sidebar.Search)
 
 						--------------------------------
 
@@ -153,52 +205,8 @@ function NS.LibraryUI.Elements:Load()
 
 					do -- CATEGORIES
 						local function CreateCheckbox(callback, text, name)
-							local Frame = addon.API.FrameTemplates:CreateLayoutGroup(LibraryUIFrame.Content.Sidebar, { point = "LEFT", direction = "horizontal", resize = false, padding = PADDING / 2, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
-							Frame:SetHeight(25)
-							addon.API.FrameUtil:SetDynamicSize(Frame, LibraryUIFrame.Content.Sidebar, 0, nil)
+							local Frame = PrefabRegistry:Create("Readable.LibraryUI.SideBar.Categories.Checkbox", LibraryUIFrame.Content.Sidebar, callback, text, "FULLSCREEN", 3, name)
 							LibraryUIFrame.Content.Sidebar:AddElement(Frame)
-
-							--------------------------------
-
-							do -- ELEMENTS
-								do -- CHECKBOX
-									Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame, "FULLSCREEN", {
-										defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
-										highlightTexture = NS.Variables.NINESLICE_RUSTIC,
-										checkTexture = NS.Variables.TEXTURE_CHECK,
-										edgeSize = 128,
-										scale = .075,
-										callbackFunction = callback
-									}, name)
-									addon.API.FrameUtil:SetDynamicSize(Frame.Checkbox, Frame, function(relativeWidth, relativeHeight) return relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
-									Frame:AddElement(Frame.Checkbox)
-
-									Frame.Checkbox.Checkbox.BackgroundTexture:SetAlpha(.5)
-									Frame.Checkbox.Checkbox.Icon:SetAlpha(.75)
-								end
-
-								do -- DETAIL
-									Frame.Detail = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Detail")
-									Frame.Detail:SetWidth(22.5)
-									addon.API.FrameUtil:SetDynamicSize(Frame.Detail, Frame, nil, function(relativeWidth, relativeHeight) return relativeHeight end)
-									Frame:AddElement(Frame.Detail)
-
-									Frame.Detail:SetAlpha(.5)
-								end
-
-								do -- LABEL
-									Frame.Label = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
-									addon.API.FrameUtil:SetDynamicSize(Frame.Label, Frame, function(relativeWidth, relativeHeight) return relativeWidth - relativeHeight - PADDING - relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
-									Frame:AddElement(Frame.Label)
-
-									Frame.Label:SetAlpha(.375)
-								end
-							end
-
-							do -- SETUP
-								Frame.Label:SetText(text)
-								addon.SoundEffects:SetCheckbox(Frame.Checkbox, addon.SoundEffects.Readable_LibraryUI_Checkbox_Enter, addon.SoundEffects.Readable_LibraryUI_Checkbox_Leave, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseDown, addon.SoundEffects.Readable_LibraryUI_Checkbox_MouseUp)
-							end
 
 							--------------------------------
 
@@ -215,12 +223,12 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Sidebar.AddElement(LibraryUIFrame.Content.Sidebar.Label_Show)
+							LibraryUIFrame.Content.Sidebar:AddElement(LibraryUIFrame.Content.Sidebar.Label_Show)
 						end
 
 						do -- CHECKBOX (LETTERS)
 							local function Click()
-								NS.LibraryUI.Script:SetPageButtons()
+								NS.LibraryUI.Script:SetPageButtons(false, true)
 							end
 
 							--------------------------------
@@ -230,7 +238,7 @@ function NS.LibraryUI.Elements:Load()
 
 						do -- CHECKBOX (BOOKS)
 							local function Click()
-								NS.LibraryUI.Script:SetPageButtons()
+								NS.LibraryUI.Script:SetPageButtons(false, true)
 							end
 
 							--------------------------------
@@ -240,7 +248,7 @@ function NS.LibraryUI.Elements:Load()
 
 						do -- CHECKBOX (SLATES)
 							local function Click()
-								NS.LibraryUI.Script:SetPageButtons()
+								NS.LibraryUI.Script:SetPageButtons(false, true)
 							end
 
 							--------------------------------
@@ -250,7 +258,7 @@ function NS.LibraryUI.Elements:Load()
 
 						do -- CHECKBOX (IN-WORLD)
 							local function Click()
-								NS.LibraryUI.Script:SetPageButtons()
+								NS.LibraryUI.Script:SetPageButtons(false, true)
 							end
 
 							--------------------------------
@@ -392,11 +400,11 @@ function NS.LibraryUI.Elements:Load()
 
 									do -- IMAGE
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.ImageTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/previous.png", "$parent.Image")
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetPoint("TOPLEFT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, -2.5, 2.5)
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetPoint("BOTTOMRIGHT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, 2.5, -2.5)
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetScale(.75)
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetPoint("CENTER", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage)
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetScale(.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetFrameStrata("FULLSCREEN")
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetFrameLevel(13)
+										addon.API.FrameUtil:SetDynamicSize(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage, 0, 0)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_PreviousPage.Image:SetAlpha(.325)
 									end
 								end
@@ -438,11 +446,11 @@ function NS.LibraryUI.Elements:Load()
 
 									do -- IMAGE
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.ImageTexture = addon.API.FrameTemplates:CreateTexture(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/next.png", "$parent.Image")
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetPoint("TOPLEFT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, -2.5, 2.5)
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetPoint("BOTTOMRIGHT", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, 2.5, -2.5)
-										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetScale(.75)
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetPoint("CENTER", LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage)
+										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetScale(.5)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetFrameStrata("FULLSCREEN")
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetFrameLevel(13)
+										addon.API.FrameUtil:SetDynamicSize(LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image, LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage, 0, 0)
 										LibraryUIFrame.Content.ContentFrame.Index.Content.Button_NextPage.Image:SetAlpha(.325)
 									end
 								end
@@ -508,7 +516,7 @@ function NS.LibraryUI.Elements:Load()
 										theme = 2,
 										isHorizontal = false,
 									}, "$parent.Scrollbar")
-									LibraryUIFrame.Content.ContentFrame.Scrollbar:SetPoint("RIGHT", LibraryUIFrame.Content.ContentFrame.ScrollFrame, PADDING, 0)
+									LibraryUIFrame.Content.ContentFrame.Scrollbar:SetPoint("LEFT", LibraryUIFrame.Content.ContentFrame.ScrollFrame, "RIGHT", PADDING / 2, 0)
 									LibraryUIFrame.Content.ContentFrame.Scrollbar.Thumb:SetAlpha(.5)
 									LibraryUIFrame.Content.ContentFrame.Scrollbar.Background:SetAlpha(.1)
 								end

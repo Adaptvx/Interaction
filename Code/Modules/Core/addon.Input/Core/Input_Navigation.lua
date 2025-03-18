@@ -189,43 +189,60 @@ function NS.Navigation:Load()
 				end
 
 				do -- SIDEBAR
+					-- TAB BUTTON (CHARACTER)
+					Callback:SetFrameRelatives({
+						["frame"] = Frame.Content.Sidebar.Tab.Buttons[1],
+						["relativeRight"] = Frame.Content.Sidebar.Tab.Buttons[2],
+						["relativeTop"] = Parent.CloseButton,
+						["relativeBottom"] = Frame.Content.Sidebar.Search,
+					})
+
+					-- TAB BUTTON (WARBAND)
+					Callback:SetFrameRelatives({
+						["frame"] = Frame.Content.Sidebar.Tab.Buttons[2],
+						["relativeLeft"] = Frame.Content.Sidebar.Tab.Buttons[1],
+						["relativeRight"] = Buttons[1],
+						["relativeTop"] = Parent.CloseButton,
+						["relativeBottom"] = Frame.Content.Sidebar.Search,
+					})
+
 					-- SEARCH
 					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Search,
 						["relativeRight"] = Buttons[1],
-						["relativeTop"] = Parent.CloseButton,
-						["relativeBottom"] = Frame.Content.Sidebar.Type_Letter,
+						["relativeTop"] = Frame.Content.Sidebar.Tab.Buttons[1],
+						["relativeBottom"] = Frame.Content.Sidebar.Type_Letter.Checkbox,
 					})
 
 					-- TYPE LETTER
 					Callback:SetFrameRelatives({
-						["frame"] = Frame.Content.Sidebar.Type_Letter,
+						["frame"] = Frame.Content.Sidebar.Type_Letter.Checkbox,
 						["relativeRight"] = Buttons[1],
 						["relativeTop"] = Frame.Content.Sidebar.Search,
-						["relativeBottom"] = Frame.Content.Sidebar.Type_Book,
+						["relativeBottom"] = Frame.Content.Sidebar.Type_Book.Checkbox,
 					})
 
 					-- TYPE BOOK
 					Callback:SetFrameRelatives({
-						["frame"] = Frame.Content.Sidebar.Type_Book,
+						["frame"] = Frame.Content.Sidebar.Type_Book.Checkbox,
 						["relativeRight"] = Buttons[1],
-						["relativeTop"] = Frame.Content.Sidebar.Type_Letter,
-						["relativeBottom"] = Frame.Content.Sidebar.Type_Slate,
+						["relativeTop"] = Frame.Content.Sidebar.Type_Letter.Checkbox,
+						["relativeBottom"] = Frame.Content.Sidebar.Type_Slate.Checkbox,
 					})
 
 					-- TYPE SLATE
 					Callback:SetFrameRelatives({
-						["frame"] = Frame.Content.Sidebar.Type_Slate,
+						["frame"] = Frame.Content.Sidebar.Type_Slate.Checkbox,
 						["relativeRight"] = Buttons[1],
-						["relativeTop"] = Frame.Content.Sidebar.Type_Book,
-						["relativeBottom"] = Frame.Content.Sidebar.Type_InWorld,
+						["relativeTop"] = Frame.Content.Sidebar.Type_Book.Checkbox,
+						["relativeBottom"] = Frame.Content.Sidebar.Type_InWorld.Checkbox,
 					})
 
 					-- TYPE IN WORLD
 					Callback:SetFrameRelatives({
-						["frame"] = Frame.Content.Sidebar.Type_InWorld,
+						["frame"] = Frame.Content.Sidebar.Type_InWorld.Checkbox,
 						["relativeRight"] = Buttons[1],
-						["relativeTop"] = Frame.Content.Sidebar.Type_Slate,
+						["relativeTop"] = Frame.Content.Sidebar.Type_Slate.Checkbox,
 						["relativeBottom"] = Frame.Content.Sidebar.Button_Export,
 					})
 
@@ -233,7 +250,7 @@ function NS.Navigation:Load()
 					Callback:SetFrameRelatives({
 						["frame"] = Frame.Content.Sidebar.Button_Export,
 						["relativeRight"] = Buttons[1],
-						["relativeTop"] = Frame.Content.Sidebar.Type_InWorld,
+						["relativeTop"] = Frame.Content.Sidebar.Type_InWorld.Checkbox,
 						["relativeBottom"] = Frame.Content.Sidebar.Button_Import,
 					})
 
@@ -260,6 +277,7 @@ function NS.Navigation:Load()
 									["relativeBottom"] = Buttons[button + 1],
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
 									["scrollChildFrame"] = Frame.Content.ContentFrame.ScrollChildFrame,
+									["preventManualScrolling"] = true,
 									["axis"] = "y",
 								})
 
@@ -295,6 +313,7 @@ function NS.Navigation:Load()
 									["relativeBottom"] = Frame.Content.ContentFrame.Index.Content.Button_PreviousPage,
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
 									["scrollChildFrame"] = Frame.Content.ContentFrame.ScrollChildFrame,
+									["preventManualScrolling"] = true,
 									["axis"] = "y",
 								})
 
@@ -330,6 +349,7 @@ function NS.Navigation:Load()
 									["relativeBottom"] = Buttons[button + 1],
 									["scrollFrame"] = Frame.Content.ContentFrame.ScrollFrame,
 									["scrollChildFrame"] = Frame.Content.ContentFrame.ScrollChildFrame,
+									["preventManualScrolling"] = true,
 									["axis"] = "y",
 								})
 

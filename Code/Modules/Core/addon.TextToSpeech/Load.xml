@@ -5,4 +5,5 @@
 
 	<!-- Core -->
 	<Script file="Core/TextToSpeech_Script.lua"/>
+	<Script file="Core/TextToSpeech_Variables.lua"/>
 </Ui>

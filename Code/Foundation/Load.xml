@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<!-- Priority -->
 	<Script file="Core/Utilities/CallbackRegistry.lua"/>
+	<Script file="Core/Utilities/PrefabRegistry.lua"/>
 	<Script file="Core/Main/EventListener.lua"/>
 	<Script file="Core/Main/Variables.lua"/>
 	<Script file="Core/Main/Database.lua"/>

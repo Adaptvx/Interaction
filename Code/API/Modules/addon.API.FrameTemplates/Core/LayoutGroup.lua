@@ -7,7 +7,7 @@ local CallbackRegistry = addon.CallbackRegistry
 --------------------------------
 
 do -- MAIN
-
+	NS.LayoutGroupSortHooks = {}
 end
 
 do -- CONSTANTS
@@ -492,6 +492,18 @@ do
 									maxHeight = offsetY
 								end
 							else
+								if isLastElementInList then
+									offsetY = offsetY + element:GetHeight() + padding
+
+									--------------------------------
+
+									if offsetY > maxHeight then
+										maxHeight = offsetY
+									end
+								end
+
+								--------------------------------
+
 								offsetX = offsetX + element:GetWidth() + padding
 
 								--------------------------------
@@ -524,6 +536,29 @@ do
 end
 
 --------------------------------
+-- HOOKS
+--------------------------------
+
+do
+	-- Adds the identifier name as a hook to call the sort function of a layout group. It can be called with [addon.API.FrameTemplates:LayoutGroupSortHooks_Call(id)]
+	---@param id string
+	---@param func function
+	function NS:LayoutGroupSortHooks_Add(id, func)
+		if NS.LayoutGroupSortHooks[id] == nil then
+			NS.LayoutGroupSortHooks[id] = func
+		end
+	end
+
+	-- Calls the sort function assigned with the identifier name.
+	---@param id string
+	function NS:LayoutGroupSortHooks_Call(id)
+		if NS.LayoutGroupSortHooks[id] then
+			NS.LayoutGroupSortHooks[id]()
+		end
+	end
+end
+
+--------------------------------
 -- TEMPLATES
 --------------------------------
 
@@ -543,11 +578,12 @@ do
 	-- customOffset (function(frame, element, direction, currentOffset))
 	-- customLayoutSort (string) -> string to match the function name
 	-- customLayoutSort_data (table)
+	-- customSortHookID (function(frame))
 	---@param parent any
 	---@param data table
 	---@param name string
 	function NS:CreateLayoutGroup(parent, data, name)
-		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data = data.point, data.direction, data.resize, data.resizeElements, data.padding, data.distribute, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data
+		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data, customSortHookID = data.point, data.direction, data.resize, data.padding, data.distribute, data.distributeResizeElements, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data, data.customSortHookID
 
 		--------------------------------
 
@@ -563,37 +599,45 @@ do
 		do -- LOGIC
 			Frame.Sort_Elements = {}
 
-			function Frame:Sort()
-				if customLayoutSort then
-					NS[customLayoutSort](self, Frame, data, customLayoutSort_data)
-				else
-					NS:DefaultLayoutSort(Frame, data)
+			--------------------------------
+
+			do -- FUNCTIONS
+				do -- SET
+					function Frame:Sort()
+						if customLayoutSort then
+							NS[customLayoutSort](self, Frame, data, customLayoutSort_data)
+						else
+							NS:DefaultLayoutSort(Frame, data)
+						end
+					end
+
+					function Frame:AddElement(element)
+						table.insert(Frame.Sort_Elements, element)
+
+						--------------------------------
+
+						if autoSort then
+							Frame:Sort()
+						end
+					end
+
+					function Frame:RemoveElement(element)
+						addon.API.Util:FindValuePositionInTable(Frame.Sort_Elements, element)
+
+						--------------------------------
+
+						if autoSort then
+							Frame:Sort()
+						end
+					end
 				end
 			end
 
-			function Frame:AddElement(element)
-				table.insert(Frame.Sort_Elements, element)
-
-				--------------------------------
-
-				if autoSort then
-					Frame:Sort()
+			do -- EVENTS
+				if customSortHookID then
+					NS:LayoutGroupSortHooks_Add(customSortHookID, Frame.Sort)
 				end
 			end
-
-			function Frame:RemoveElement(element)
-				addon.API.Util:FindValuePositionInTable(Frame.Sort_Elements, element)
-
-				--------------------------------
-
-				if autoSort then
-					Frame:Sort()
-				end
-			end
-		end
-
-		do -- EVENTS
-
 		end
 
 		--------------------------------

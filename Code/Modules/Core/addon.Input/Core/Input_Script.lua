@@ -1015,8 +1015,8 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local function Highlight()
-				local function Exit()
+			do -- HIGHLIGHT
+				do -- EXIT
 					local function Trigger(frame)
 						if frame then
 							Callback:Frame_Leave(frame)
@@ -1060,7 +1060,7 @@ function NS.Script:Load()
 					end
 				end
 
-				local function Enter()
+				do -- ENTER
 					local function Trigger(frame, ignorePreviousFrame)
 						if ignorePreviousFrame or frame ~= NS.Variables.PreviousFrame then
 							Callback:Frame_Enter(frame)
@@ -1081,14 +1081,9 @@ function NS.Script:Load()
 						end, 0)
 					end
 				end
-
-				--------------------------------
-
-				Exit()
-				Enter()
 			end
 
-			local function ScrollFramePosition()
+			do -- SCROLL FRAME POSITION
 				if Frame.Input_ScrollFrame and Frame.Input_ScrollChildFrame and Frame.Input_Axis and Frame.Input_PreventManualScrolling then
 					local ScrollFrame = new.Input_ScrollFrame
 					local Axis = new.Input_Axis
@@ -1096,11 +1091,6 @@ function NS.Script:Load()
 					Callback:UpdateScrollFramePosition(ScrollFrame, Frame, Axis)
 				end
 			end
-
-			--------------------------------
-
-			Highlight()
-			ScrollFramePosition()
 
 			--------------------------------
 

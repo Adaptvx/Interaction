@@ -203,11 +203,7 @@ do
 
 			Frame.KeyDown = function(self, key)
 				if Frame.IsKeybindMode then
-					if key == "ESCAPE" then
-						Frame.StopKeybindMode()
-					else
-						Frame.SetKeybind(key)
-					end
+					Frame.SetKeybind(key)
 				end
 			end
 

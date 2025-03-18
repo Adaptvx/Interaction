@@ -56,51 +56,132 @@ function NS.Elements:Load()
 					Frame.GoodbyeButton:SetPoint("CENTER", Frame) -- Modified later in Gossip_Script.lua
 					Frame.GoodbyeButton:SetText(L["InteractionGossipFrame - Close"])
 					addon.API.FrameUtil:SetDynamicSize(Frame.GoodbyeButton, Frame, -125)
-					addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 
 					Frame.GoodbyeButton:SetAlpha(.5)
+					addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 
 					--------------------------------
 
-					do -- BACKGROUND
-						Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-						Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, 62.5, 25)
-						Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, -62.5, -25)
-						Frame.GoodbyeButton.Background:SetAlpha(.5)
-						Frame.GoodbyeButton.BackgroundTexture:SetAlpha(1)
+					do -- ELEMENTS
+						do -- BACKGROUND
+							Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+							Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, 62.5, 25)
+							Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, -62.5, -25)
+							Frame.GoodbyeButton.Background:SetAlpha(.5)
+							Frame.GoodbyeButton.BackgroundTexture:SetAlpha(1)
+						end
 					end
 
-					--------------------------------
+					do -- ANIMATIONS
+						do -- ON ENTER
+							function Frame.GoodbyeButton:Animation_OnEnter_StopEvent()
+								return not Frame.GoodbyeButton.isMouseOver
+							end
 
-					do -- PARALLAX
-						addon.API.FrameUtil:AnchorToCenter(Frame.GoodbyeButton)
-
-						Frame.GoodbyeButton.API_ButtonTextFrame.API_Animation_Parallax_Weight = 2.5
-						addon.API.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
-					end
-
-					do -- EVENTS
-						local function UpdateBackground()
-							if NS.Variables.NumCurrentButtons < 1 then
-								Frame.GoodbyeButton.Background:Show()
-							else
-								Frame.GoodbyeButton.Background:Hide()
+							function Frame.GoodbyeButton:Animation_OnEnter()
+								addon.API.Animation:Fade(Frame.GoodbyeButton, .25, Frame.GoodbyeButton:GetAlpha(), .75, nil, Frame.GoodbyeButton.Animation_OnEnter_StopEvent)
 							end
 						end
 
-						UpdateBackground()
+						do -- ON LEAVE
+							function Frame.GoodbyeButton:Animation_OnLeave_StopEvent()
+								return Frame.GoodbyeButton.isMouseOver
+							end
 
-						CallbackRegistry:Add("GOSSIP_DATA_LOADED", UpdateBackground, 0)
+							function Frame.GoodbyeButton:Animation_OnLeave()
+								addon.API.Animation:Fade(Frame.GoodbyeButton, .25, Frame.GoodbyeButton:GetAlpha(), .5, nil, Frame.GoodbyeButton.Animation_OnLeave_StopEvent)
+							end
+						end
+
+						do -- ON MOUSE DOWN
+							function Frame.GoodbyeButton:Animation_OnMouseDown_StopEvent()
+								return not Frame.GoodbyeButton.isMouseDown
+							end
+
+							function Frame.GoodbyeButton:Animation_OnMouseDown()
+
+							end
+						end
+
+						do -- ON MOUSE UP
+							function Frame.GoodbyeButton:Animation_OnMouseUp_StopEvent()
+								return Frame.GoodbyeButton.isMouseDown
+							end
+
+							function Frame.GoodbyeButton:Animation_OnMouseUp()
+
+							end
+						end
+
+						do -- PARALLAX
+							Frame.GoodbyeButton.API_ButtonTextFrame.API_Animation_Parallax_Weight = 2.5
+
+							addon.API.FrameUtil:AnchorToCenter(Frame.GoodbyeButton)
+							addon.API.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
+						end
+					end
+
+					do -- LOGIC
+						Frame.GoodbyeButton.isMouseOver = false
+						Frame.GoodbyeButton.isMouseDown = false
 
 						--------------------------------
 
-						Frame.GoodbyeButton:HookScript("OnEnter", function()
-							addon.API.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .75)
-						end)
+						do -- FUNCTIONS
+							do -- LOGIC
+								local function Update()
+									do -- BACKGROUND
+										if NS.Variables.NumCurrentButtons < 1 then
+											Frame.GoodbyeButton.Background:Show()
+										else
+											Frame.GoodbyeButton.Background:Hide()
+										end
+									end
 
-						Frame.GoodbyeButton:HookScript("OnLeave", function()
-							addon.API.Animation:Fade(Frame.GoodbyeButton.Background, .25, Frame.GoodbyeButton.Background:GetAlpha(), .5)
-						end)
+									do -- KEYBIND
+										addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
+									end
+								end
+
+								CallbackRegistry:Add("GOSSIP_DATA_LOADED", Update, 0)
+							end
+						end
+
+						do -- EVENTS
+							function Frame.GoodbyeButton:Event_OnEnter()
+								Frame.GoodbyeButton.isMouseOver = true
+
+								--------------------------------
+
+								Frame.GoodbyeButton:Animation_OnEnter()
+							end
+
+							function Frame.GoodbyeButton:Event_OnLeave()
+								Frame.GoodbyeButton.isMouseOver = false
+
+								--------------------------------
+
+								Frame.GoodbyeButton:Animation_OnLeave()
+							end
+
+							function Frame.GoodbyeButton:Event_OnMouseDown()
+								Frame.GoodbyeButton.isMouseDown = true
+
+								--------------------------------
+
+								Frame.GoodbyeButton:Animation_OnMouseDown()
+							end
+
+							function Frame.GoodbyeButton:Event_OnMouseUp()
+								Frame.GoodbyeButton.isMouseDown = false
+
+								--------------------------------
+
+								Frame.GoodbyeButton:Animation_OnMouseUp()
+							end
+
+							addon.API.FrameTemplates:CreateMouseResponder(Frame.GoodbyeButton, { enterCallback = Frame.GoodbyeButton.Event_OnEnter, leaveCallback = Frame.GoodbyeButton.Event_OnLeave, mouseDownCallback = Frame.GoodbyeButton.Event_OnMouseDown, mouseUpCallback = Frame.GoodbyeButton.Event_OnMouseUp })
+						end
 					end
 				end
 			end

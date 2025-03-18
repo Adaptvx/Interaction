@@ -13,8 +13,10 @@ addon.Database = {}
 local NS = addon.Database
 
 do -- MAIN
-	NS.DB_GLOBAL = nil
-	NS.DB_LOCAL = nil
+	NS.DB_GLOBAL = nil -- Settings, config etc
+
+	NS.DB_GLOBAL_PERSISTENT = nil -- Persistent data (do not clear when wiping settings)
+	NS.DB_LOCAL_PERSISTENT = nil -- Persistent data (do not clear when wiping settings)
 end
 
 do -- CONSTANTS
@@ -38,13 +40,6 @@ do -- CONSTANTS
 			-- TIME
 			INT_TIME_DAY = 7,
 			INT_TIME_NIGHT = 22,
-
-			-- READABLE
-			INT_GLOBAL_LIBRARY = {
-				READABLE = {
-
-				}
-			},
 
 			-- PLAYBACK
 			INT_PLAYBACK_SPEED = 1,
@@ -144,7 +139,13 @@ do -- CONSTANTS
 		},
 	}
 
-	NS.DEFAULTS_LOCAL = {
+	NS.DEFAULTS_GLOBAL_PERSISTENT = {
+		profile = {
+			READABLE = {}
+		}
+	}
+
+	NS.DEFAULTS_LOCAL_PERSISTENT = {
 		profile = {
 			READABLE = {}
 		}
@@ -156,90 +157,82 @@ end
 --------------------------------
 
 do
-	--------------------------------
-	-- VARIABLES
-	--------------------------------
+	NS.VAR_CINEMATIC_ZOOM = nil
+	NS.VAR_CINEMATIC_ZOOM_DISTANCE_MIN = nil
+	NS.VAR_CINEMATIC_ZOOM_DISTANCE_MAX = nil
+	NS.VAR_CINEMATIC_ZOOM_PITCH = nil
+	NS.VAR_CINEMATIC_ZOOM_PITCH_LEVEL = nil
+	NS.VAR_CINEMATIC_ZOOM_FOV = nil
+	NS.VAR_CINEMATIC_PAN = nil
+	NS.VAR_CINEMATIC_PAN_SPEED = nil
+	NS.VAR_CINEMATIC_ACTIONCAM = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_SIDE = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_OFFSET = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_FOCUS = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_X = nil
+	NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y = nil
+	NS.VAR_CINEMATIC_VIGNETTE = nil
+	NS.VAR_CINEMATIC_VIGNETTE_GRADIENT = nil
 
-	do -- CONSTANTS
-		NS.VAR_CINEMATIC_ZOOM = nil
-		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MIN = nil
-		NS.VAR_CINEMATIC_ZOOM_DISTANCE_MAX = nil
-		NS.VAR_CINEMATIC_ZOOM_PITCH = nil
-		NS.VAR_CINEMATIC_ZOOM_PITCH_LEVEL = nil
-		NS.VAR_CINEMATIC_ZOOM_FOV = nil
-		NS.VAR_CINEMATIC_PAN = nil
-		NS.VAR_CINEMATIC_PAN_SPEED = nil
-		NS.VAR_CINEMATIC_ACTIONCAM = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_SIDE = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_SIDE_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_OFFSET_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_STRENGTH = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_X = nil
-		NS.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y = nil
-		NS.VAR_CINEMATIC_VIGNETTE = nil
-		NS.VAR_CINEMATIC_VIGNETTE_GRADIENT = nil
+	NS.CINEMATIC_PROFILE_FULL =
+	{
+		true, -- ZOOM
+		0, -- ZOOM / MIN DISTANCE
+		10, -- ZOOM / MAX DISTANCE
+		false, -- ZOOM / PITCH
+		10, -- ZOOM / PITCH / LEVEL
+		true, -- ZOOM / FOV
+		false, -- PAN
+		.25, -- PAN / SPEED
+		true, -- ACTIONCAM
+		false, -- ACTIONCAM / SIDE VIEW
+		.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
+		true, -- ACTIONCAM / OFFSET
+		10, -- ACTIONCAM / OFFSET / STRENGTH
+		true, -- ACTIONCAM / FOCUS
+		1, -- ACTIONCAM / FOCUS / STRENGTH
+		true, -- ACTIONCAM / FOCUS / X
+		false, -- ACTIONCAM / FOCUS / Y
+		true, -- VIGNETTE
+		true, -- VIGNETTE / GRADIENT
+	}
 
-		NS.CINEMATIC_PROFILE_FULL =
-		{
-			true, -- ZOOM
-			0, -- ZOOM / MIN DISTANCE
-			10, -- ZOOM / MAX DISTANCE
-			false, -- ZOOM / PITCH
-			10, -- ZOOM / PITCH / LEVEL
-			true, -- ZOOM / FOV
-			false, -- PAN
-			.25, -- PAN / SPEED
-			true, -- ACTIONCAM
-			false, -- ACTIONCAM / SIDE VIEW
-			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
-			true, -- ACTIONCAM / OFFSET
-			10, -- ACTIONCAM / OFFSET / STRENGTH
-			true, -- ACTIONCAM / FOCUS
-			1, -- ACTIONCAM / FOCUS / STRENGTH
-			true, -- ACTIONCAM / FOCUS / X
-			false, -- ACTIONCAM / FOCUS / Y
-			true, -- VIGNETTE
-			true, -- VIGNETTE / GRADIENT
-		}
+	NS.CINEMATIC_PROFILE_BALANCED =
+	{
+		false, -- ZOOM
+		0, -- ZOOM / MIN DISTANCE
+		10, -- ZOOM / MAX DISTANCE
+		false, -- ZOOM / PITCH
+		10, -- ZOOM / PITCH / LEVEL
+		false, -- ZOOM / FOV
+		false, -- PAN
+		.25, -- PAN / SPEED
+		true, -- ACTIONCAM
+		false, -- ACTIONCAM / SIDE VIEW
+		.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
+		true, -- ACTIONCAM / OFFSET
+		10, -- ACTIONCAM / OFFSET / STRENGTH
+		false, -- ACTIONCAM / FOCUS
+		1, -- ACTIONCAM / FOCUS / STRENGTH
+		false, -- ACTIONCAM / FOCUS / X
+		false, -- ACTIONCAM / FOCUS / Y
+		true, -- VIGNETTE
+		true, -- VIGNETTE / GRADIENT
+	}
 
-		NS.CINEMATIC_PROFILE_BALANCED =
-		{
-			false, -- ZOOM
-			0, -- ZOOM / MIN DISTANCE
-			10, -- ZOOM / MAX DISTANCE
-			false, -- ZOOM / PITCH
-			10, -- ZOOM / PITCH / LEVEL
-			false, -- ZOOM / FOV
-			false, -- PAN
-			.25, -- PAN / SPEED
-			true, -- ACTIONCAM
-			false, -- ACTIONCAM / SIDE VIEW
-			.75, -- ACTIONCAM / SIDE VIEW / STRENGTH
-			true, -- ACTIONCAM / OFFSET
-			10, -- ACTIONCAM / OFFSET / STRENGTH
-			false, -- ACTIONCAM / FOCUS
-			1, -- ACTIONCAM / FOCUS / STRENGTH
-			false, -- ACTIONCAM / FOCUS / X
-			false, -- ACTIONCAM / FOCUS / Y
-			true, -- VIGNETTE
-			true, -- VIGNETTE / GRADIENT
-		}
-
-		NS.CINEMATIC_PROFILES = {
-			nil,                  -- NONE
-			NS.CINEMATIC_PROFILE_FULL, -- FULL
-			NS.CINEMATIC_PROFILE_BALANCED, -- BALANCED
-			nil                   -- CUSTOM
-		}
-	end
+	NS.CINEMATIC_PROFILES = {
+		nil,                     -- NONE
+		NS.CINEMATIC_PROFILE_FULL, -- FULL
+		NS.CINEMATIC_PROFILE_BALANCED, -- BALANCED
+		nil                      -- CUSTOM
+	}
 
 	--------------------------------
-	-- FUNCTIONS
-	--------------------------------
 
-	do
+	do -- FUNCTIONS
 		function NS:SetToProfileCinematicVariables()
 			local offset = 0
 
@@ -360,13 +353,10 @@ end
 --------------------------------
 
 do
-	--------------------------------
-	-- INITIALIZE
-	--------------------------------
-
 	function NS:OnInitialize()
 		NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
-		NS.DB_LOCAL = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL, true)
+		NS.DB_GLOBAL_PERSISTENT = AceDB:New("InteractionLibraryDB_Global", NS.DEFAULTS_GLOBAL_PERSISTENT, true)
+		NS.DB_LOCAL_PERSISTENT = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL_PERSISTENT, true)
 
 		NS:SetDynamicCinematicVariables()
 	end

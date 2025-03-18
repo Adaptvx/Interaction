@@ -143,7 +143,7 @@ function NS.Script:Load()
 
 			if isWarbandComplete then
 				Frame.TitleHeader.MouseResponder:EnableMouse(true)
-				addon.API.Util:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0, true)
+				addon.API.Util:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0)
 			else
 				Frame.TitleHeader.MouseResponder:EnableMouse(false)
 				addon.API.Util:RemoveTooltip(Frame.TitleHeader.MouseResponder)

@@ -52,7 +52,7 @@ function NS.Script:Load()
 			end
 		end)
 
-		addon.API.Util:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true, true)
+		addon.API.Util:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true)
 	end
 
 	--------------------------------
@@ -156,7 +156,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					addon.TextToSpeech.Script:SpeakText(voice, line, Enum.VoiceTtsDestination.LocalPlayback, rate, volume)
+					addon.TextToSpeech.Script:SpeakText(voice, line, Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, rate, volume)
 				end, 0)
 			end
 
@@ -341,7 +341,7 @@ function NS.Script:Load()
 				end
 
 				local function Main()
-					local entry = addon.Database.DB_LOCAL.profile.READABLE[LibraryID]
+					local entry = addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE[LibraryID]
 
 					local itemID = entry.ItemID
 					local itemLink = entry.ItemLink

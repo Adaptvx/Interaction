@@ -17,37 +17,47 @@ function NS.Script:Load()
 
 	do
 		function NS.Script:SpeakText(voice, text, destination, rate, volume)
+			NS.Variables.IsPlaybackActive = true
+
+			--------------------------------
+
 			MuteSoundFile(4192839) -- TTS line break
 
 			--------------------------------
 
+			C_VoiceChat.StopSpeakingText()
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				C_VoiceChat.StopSpeakingText()
 				C_VoiceChat.SpeakText(voice, text, destination, rate, volume)
 			end, 0)
 		end
 
 		function NS.Script:StopSpeakingText()
+			NS.Variables.IsPlaybackActive = false
+
+			--------------------------------
+
 			C_VoiceChat.StopSpeakingText()
 
 			--------------------------------
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				UnmuteSoundFile(4192839) -- TTS line break
+				if not NS.Variables.IsPlaybackActive then
+					UnmuteSoundFile(4192839) -- TTS line break
+				end
 			end, .1)
 		end
 
 		function NS.Script:PlayConfiguredTTS(voice, text)
-			local IsTextToSpeech = addon.Database.DB_GLOBAL.profile.INT_TTS
+			local isEnabled = addon.Database.DB_GLOBAL.profile.INT_TTS
 
-			local Voice = (voice or 1) - 1
-			local Rate = addon.Database.DB_GLOBAL.profile.INT_TTS_SPEED * .725
-			local Volume = addon.Database.DB_GLOBAL.profile.INT_TTS_VOLUME
+			local voice = (voice or 1) - 1
+			local rate = addon.Database.DB_GLOBAL.profile.INT_TTS_SPEED * .725
+			local volume = addon.Database.DB_GLOBAL.profile.INT_TTS_VOLUME
 
 			--------------------------------
 
-			if IsTextToSpeech then
-				NS.Script:SpeakText(Voice, text, Enum.VoiceTtsDestination.LocalPlayback, Rate, Volume)
+			if isEnabled then
+				NS.Script:SpeakText(voice, text, Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, rate, volume)
 			end
 		end
 	end

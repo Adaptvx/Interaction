@@ -15,8 +15,8 @@ function NS.LibraryUI.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	NS.Variables.LIBRARY_LOCAL = addon.Database.DB_LOCAL.profile.READABLE
-	NS.Variables.LIBRARY_GLOBAL = addon.Database.DB_GLOBAL.profile.INT_GLOBAL_LIBRARY.READABLE
+	NS.Variables.LIBRARY_LOCAL = addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE
+	NS.Variables.LIBRARY_GLOBAL = addon.Database.DB_GLOBAL_PERSISTENT.profile.READABLE
 
 	local Callback = NS.Script
 	local LibraryCallback = NS.LibraryUI.Script
@@ -421,7 +421,7 @@ function NS.LibraryUI.Script:Load()
 
 					--------------------------------
 
-					if CurrentIndex >= StartIndex and CurrentIndex <= EndIndex then
+					if CurrentIndex > StartIndex and CurrentIndex <= EndIndex then
 						local CurrentEntry = Entries[title]
 
 						--------------------------------
@@ -449,19 +449,23 @@ function NS.LibraryUI.Script:Load()
 				return NS.LibraryUI.Variables.CurrentPage
 			end
 
+			function LibraryCallback:SetCurrentPage(page)
+				NS.LibraryUI.Variables.CurrentPage = page
+
+				--------------------------------
+
+				LibraryCallback:UpdatePageCounter()
+				LibraryCallback:SetPageButtons(true)
+			end
+
 			function LibraryCallback:NextPage()
 				local CurrentPage, Min, Max = LibraryCallback:GetMinMaxPages()
 
 				--------------------------------
 
 				if CurrentPage < Max then
-					NS.LibraryUI.Variables.CurrentPage = NS.LibraryUI.Variables.CurrentPage + 1
+					LibraryCallback:SetCurrentPage(CurrentPage + 1)
 				end
-
-				--------------------------------
-
-				LibraryCallback:UpdatePageCounter()
-				LibraryCallback:SetPageButtons(true)
 			end
 
 			function LibraryCallback:PreviousPage()
@@ -470,13 +474,8 @@ function NS.LibraryUI.Script:Load()
 				--------------------------------
 
 				if CurrentPage > Min then
-					NS.LibraryUI.Variables.CurrentPage = NS.LibraryUI.Variables.CurrentPage - 1
+					LibraryCallback:SetCurrentPage(CurrentPage - 1)
 				end
-
-				--------------------------------
-
-				LibraryCallback:UpdatePageCounter()
-				LibraryCallback:SetPageButtons(true)
 			end
 
 			function LibraryCallback:UpdatePageCounter()
@@ -516,7 +515,7 @@ function NS.LibraryUI.Script:Load()
 				LibraryUI.Content.ContentFrame.ScrollFrame.UpdateSize()
 			end
 
-			function LibraryCallback:SetPageButtons(playAnimation)
+			function LibraryCallback:SetPageButtons(playAnimation, userInput)
 				NS.LibraryUI.Variables.SelectedIndex = nil
 				CallbackRegistry:Trigger("LIBRARY_MENU_DATA_LOADED")
 
@@ -536,9 +535,9 @@ function NS.LibraryUI.Script:Load()
 						local playerName = UnitName("player")
 
 						if isLocal then
-							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Local Library - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local Library - Subtext 2"])
+							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Local - Subtext 1"] .. playerName .. L["Readable - Library - Name Text - Local - Subtext 2"])
 						else
-							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Global Library"])
+							Frame.LibraryUIFrame.Content.Title.Main.Text:SetText(L["Readable - Library - Name Text - Global"])
 						end
 					end
 
@@ -662,7 +661,7 @@ function NS.LibraryUI.Script:Load()
 						--------------------------------
 
 						if TooltipText then
-							addon.API.Util:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5, true)
+							addon.API.Util:AddTooltip(Buttons[i], TooltipText, "ANCHOR_TOP", 0, 17.5)
 						else
 							addon.API.Util:RemoveTooltip(Buttons[i])
 						end
@@ -721,7 +720,11 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				LibraryCallback:UpdatePageCounter()
+				if userInput then
+					LibraryCallback:SetCurrentPage(1)
+				else
+					LibraryCallback:UpdatePageCounter()
+				end
 
 				--------------------------------
 
@@ -736,7 +739,7 @@ function NS.LibraryUI.Script:Load()
 				--------------------------------
 
 				if LibraryUI:IsVisible() then
-					LibraryCallback:SetPageButtons(true)
+					LibraryCallback:SetPageButtons(true, true)
 				end
 			end
 
@@ -781,10 +784,16 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:DeleteFromLibrary(ID)
-				local Entry = addon.API.Util:FindKeyPositionInTable(NS.Variables.LibraryDB, ID)
+				local selectedEntry = addon.API.Util:FindKeyPositionInTable(NS.Variables.LibraryDB, ID)
 
-				if Entry then
-					InteractionPromptFrame.Set(L["Readable - Library - Prompt - Delete"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
+				--------------------------------
+
+				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+
+				--------------------------------
+
+				if selectedEntry then
+					InteractionPromptFrame.Set(isLocal and L["Readable - Library - Prompt - Delete - Local"] or L["Readable - Library - Prompt - Delete - Global"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
 						function()
 							NS.Variables.LibraryDB[ID] = nil
 							LibraryCallback:SetPageButtons(true)
@@ -831,13 +840,23 @@ function NS.LibraryUI.Script:Load()
 			function LibraryCallback:Export()
 				local library = NS.Variables.LibraryDB
 
-				local serialized = addon.Libraries.LibSerialize:SerializeEx(
-					{ errorOnUnserializableType = false },
-					library, { a = 1, b = library })
+				--------------------------------
+
+				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+				local isMacClient = IsMacClient()
+				local copyIcon = isMacClient and addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Mac.png" or addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Windows.png"
+
+				local serialized = addon.Libraries.LibSerialize:SerializeEx({ errorOnUnserializableType = false }, library, { a = 1, b = library })
 				local compressed = addon.Libraries.LibDeflate:CompressDeflate(serialized)
 				local encoded = addon.Libraries.LibDeflate:EncodeForPrint(compressed)
 
-				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export"] .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy.png", 25, 100, 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+				--------------------------------
+
+				if isLocal then
+					addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export - Local"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+				else
+					addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export - Global"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+				end
 			end
 
 			function LibraryCallback:Import(string)
@@ -849,12 +868,20 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:ImportPrompt()
-				addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Import"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
+				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+
+				--------------------------------
+
+				addon.PromptTextShowTextFrame(isLocal and L["Readable - Library - TextPrompt - Import - Local"] or L["Readable - Library - TextPrompt - Import - Global"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
 					local success, values = LibraryCallback:Import(val)
 
 					if val ~= "" and success then
-						InteractionPromptFrame.Set(L["Readable - Library - Prompt - Import"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
-								NS.Variables.LibraryDB = values
+						InteractionPromptFrame.Set(isLocal and L["Readable - Library - Prompt - Import - Local"] or L["Readable - Library - Prompt - Import - Global"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
+								if isLocal then
+									addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE = values
+								else
+									addon.Database.DB_GLOBAL_PERSISTENT.profile.READABLE = values
+								end
 
 								ReloadUI()
 							end,
@@ -952,6 +979,7 @@ function NS.LibraryUI.Script:Load()
 
 	do
 		LibraryCallback:SetToLocal()
+		LibraryCallback:AddCharacterToGlobal()
 
 		--------------------------------
 

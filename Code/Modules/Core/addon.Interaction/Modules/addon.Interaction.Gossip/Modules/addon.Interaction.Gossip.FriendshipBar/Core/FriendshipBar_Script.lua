@@ -204,9 +204,7 @@ function NS.Script:Load()
 		end)
 
 		Parent:SetScript("OnLeave", function()
-			GameTooltip:Hide()
-
-			addon.BlizzardGameTooltip.Script:StartCustom()
+			InteractionFrame.GameTooltip:Clear()
 		end)
 
 		local Events = CreateFrame("Frame")
