@@ -196,8 +196,8 @@ local function Load()
 		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Usar tecla de interação" .. addon.Theme.Settings.Tooltip_Text_Warning .. " A opção deve estar desativada para ajustar este atalho.|r"
 		L["Keybind - PC / Keybind / Quest Next Reward"] = "Próxima recompensa"
 		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Atalho para selecionar a próxima recompensa da missão.\n\nPadrão: TAB."
-		L["Keybind - PC / Keybind / Close"] = "Close"
-		L["Keybind - PC / Keybind / Close - Tooltip"] = "Keybind to close the current active Interaction window.\n\nDefault: ESCAPE."
+		L["Keybind - PC / Keybind / Close"] = "Fechar"
+		L["Keybind - PC / Keybind / Close - Tooltip"] = "Atalho para fechar a janela de interação ativa atual.\n\nDefault: ESC."
 		L["Title - Controller"] = "Controle"
 		L["Title - Controller / Controller"] = "Controle"
 
@@ -242,11 +242,11 @@ local function Load()
 
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
-		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o russo!"
+		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o Russo!"
 		L["Title - Credits / AKArenan"] = "AKArenan | Tradução - Português do Brasil"
 		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimentos especiais a AKArenan pelas traduções para o Português do Brasil!"
-		L["Title - Credits / El1as1989"] = "El1as1989 | Translator - Spanish"
-		L["Title - Credits / El1as1989 - Tooltip"] = "Special thanks to El1as1989 for the Spanish translations!"
+		L["Title - Credits / El1as1989"] = "El1as1989 | Tradução - Espanhol"
+		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimentos especiais a El1as1989 pelas traduções em Espanhol!"
 	end
 
 	--------------------------------
@@ -256,23 +256,23 @@ local function Load()
 	do
 		do -- LIBRARY
 			-- PROMPTS
-			L["Readable - Library - Prompt - Delete - Local"] = "This will permanently remove this entry from your PLAYER library."
-			L["Readable - Library - Prompt - Delete - Global"] = "This will permanently remove this entry from the WARBAND library."
+			L["Readable - Library - Prompt - Delete - Local"] = "Isso removerá permanentemente esta entrada da sua biblioteca do PERSONAGEM."
+			L["Readable - Library - Prompt - Delete - Global"] = "Isso removerá permanentemente esta entrada da sua biblioteca do BANDO DE GUERRA."
 			L["Readable - Library - Prompt - Delete Button 1"] = "Remover"
 			L["Readable - Library - Prompt - Delete Button 2"] = "Cancelar"
 
-			L["Readable - Library - Prompt - Import - Local"] = "Importing a saved state will overwrite your PLAYER library."
-			L["Readable - Library - Prompt - Import - Global"] = "Importing a saved state will overwrite the WARBAND library."
+			L["Readable - Library - Prompt - Import - Local"] = "Importar um estado salvo vai sobrescrever a sua biblioteca do PERSONAGEM."
+			L["Readable - Library - Prompt - Import - Global"] = "Importar um estado salvo vai sobrescrever a sua biblioteca do BANDO DE GUERRA."
 			L["Readable - Library - Prompt - Import Button 1"] = "Importar e Recarregar"
 			L["Readable - Library - Prompt - Import Button 2"] = "Cancelar"
 
-			L["Readable - Library - TextPrompt - Import - Local"] = "Import to Player Library"
-			L["Readable - Library - TextPrompt - Import - Global"] = "Import to Warband Library"
+			L["Readable - Library - TextPrompt - Import - Local"] = "Importar para a Biblioteca do PERSONAGEM"
+			L["Readable - Library - TextPrompt - Import - Global"] = "Importar para a Biblioteca do BANDO DE GUERRA"
 			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Inserir texto de dados"
 			L["Readable - Library - TextPrompt - Import Button 1"] = "Importar"
 
-			L["Readable - Library - TextPrompt - Export - Local"] = "Copy Player Data to Clipboard "
-			L["Readable - Library - TextPrompt - Export - Global"] = "Copy Warband Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export - Local"] = "Copiar Dados do Personagem para a Área de Transferência. "
+			L["Readable - Library - TextPrompt - Export - Global"] = "Copiar Dados do Bando de Guerra para a Área de Transferência. "
 			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Código de exportação inválido"
 
 			-- SIDEBAR
