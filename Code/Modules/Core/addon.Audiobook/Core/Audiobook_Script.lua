@@ -341,7 +341,7 @@ function NS.Script:Load()
 				end
 
 				local function Main()
-					local entry = addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE[LibraryID]
+					local entry = addon.Readable.LibraryUI.Variables.LibraryDB[LibraryID]
 
 					local itemID = entry.ItemID
 					local itemLink = entry.ItemLink

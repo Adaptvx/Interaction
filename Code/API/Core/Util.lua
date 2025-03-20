@@ -22,6 +22,7 @@ do -- CONSTANTS
 	addon.API.Util.RGB_RECOMMENDED = {}
 	addon.API.Util.RGB_WHITE = { r = .99, g = .99, b = .99 }
 	addon.API.Util.RGB_BLACK = { r = .2, g = .2, b = .2 }
+	addon.API.Util.UI_SCALE = addon.API.Main.UIScale
 end
 
 --------------------------------
@@ -55,8 +56,12 @@ end
 do
 	do -- STRING
 		do -- MEASUREMENT
-			addon.API.MeasurementText = UIParent:CreateFontString("addon.API.MeasurementText", "OVERLAY")
-			addon.API.MeasurementText:SetPoint("CENTER", UIParent)
+			addon.API.MeasurementFrame = CreateFrame("Frame", "addon.API.MeasurementFrame", nil)
+			addon.API.MeasurementFrame:SetScale(addon.API.Util.UI_SCALE)
+			addon.API.MeasurementFrame:SetAllPoints(UIParent)
+
+			addon.API.MeasurementText = addon.API.MeasurementFrame:CreateFontString("addon.API.MeasurementText", "OVERLAY")
+			addon.API.MeasurementText:SetPoint("CENTER", addon.API.MeasurementFrame)
 			addon.API.MeasurementText:Hide()
 
 			-- Gets the width & height of the given string.
@@ -463,8 +468,8 @@ do
 		--- @param location string
 		--- @param locationX? number
 		--- @param locationY? number
-		--- @param customTooltip? boolean
-		function addon.API.Util:AddTooltip(frame, text, location, locationX, locationY, bypassMouseResponder, textWrao)
+		--- @param wrapText? boolean
+		function addon.API.Util:AddTooltip(frame, text, location, locationX, locationY, bypassMouseResponder, wrapText)
 			frame.showTooltip = true
 			frame.tooltipText = text
 			frame.tooltipActive = false
@@ -482,7 +487,7 @@ do
 					--------------------------------
 
 					InteractionFrame.GameTooltip:SetOwner(frame, location, locationX, locationY)
-					InteractionFrame.GameTooltip:SetText(frame.tooltipText, 1, 1, 1, 1, textWrao or true)
+					InteractionFrame.GameTooltip:SetText(frame.tooltipText, 1, 1, 1, 1, (wrapText == nil and true or wrapText))
 					InteractionFrame.GameTooltip:Show()
 				end
 

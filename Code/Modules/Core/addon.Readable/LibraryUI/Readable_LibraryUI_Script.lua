@@ -212,8 +212,8 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				for title in pairs(NS.Variables.LibraryDB) do
-					local CurrentEntry = NS.Variables.LibraryDB[title]
+				for title in pairs(NS.LibraryUI.Variables.LibraryDB) do
+					local CurrentEntry = NS.LibraryUI.Variables.LibraryDB[title]
 
 					--------------------------------
 
@@ -386,13 +386,13 @@ function NS.LibraryUI.Script:Load()
 				local EndIndex = StartIndex + NS.LibraryUI.Variables.MAX_ENTRIES_PER_PAGE
 				local CurrentIndex = 0
 
-				for title in pairs(NS.Variables.LibraryDB) do
+				for title in pairs(NS.LibraryUI.Variables.LibraryDB) do
 					CurrentIndex = CurrentIndex + 1
 
 					--------------------------------
 
 					if CurrentIndex >= StartIndex and CurrentIndex <= EndIndex then
-						local CurrentEntry = NS.Variables.LibraryDB[title]
+						local CurrentEntry = NS.LibraryUI.Variables.LibraryDB[title]
 
 						--------------------------------
 
@@ -531,7 +531,7 @@ function NS.LibraryUI.Script:Load()
 
 				do -- TITLE
 					do -- TITLE TEXT
-						local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+						local isLocal = (NS.LibraryUI.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
 						local playerName = UnitName("player")
 
 						if isLocal then
@@ -734,7 +734,7 @@ function NS.LibraryUI.Script:Load()
 
 		do -- DATA
 			function LibraryCallback:SetLibraryDestination(destination)
-				NS.Variables.LibraryDB = destination
+				NS.LibraryUI.Variables.LibraryDB = destination
 
 				--------------------------------
 
@@ -774,28 +774,28 @@ function NS.LibraryUI.Script:Load()
 					Time = Time
 				}
 
-				if not NS.Variables.LibraryDB[ID] then
+				if not NS.LibraryUI.Variables.LibraryDB[ID] then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						addon.AlertNotification.Script:ShowWithText(L["Readable - Notification - Saved To Library"])
 					end, .1)
 				end
 
-				NS.Variables.LibraryDB[ID] = Entry
+				NS.LibraryUI.Variables.LibraryDB[ID] = Entry
 			end
 
 			function LibraryCallback:DeleteFromLibrary(ID)
-				local selectedEntry = addon.API.Util:FindKeyPositionInTable(NS.Variables.LibraryDB, ID)
+				local selectedEntry = addon.API.Util:FindKeyPositionInTable(NS.LibraryUI.Variables.LibraryDB, ID)
 
 				--------------------------------
 
-				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+				local isLocal = (NS.LibraryUI.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
 
 				--------------------------------
 
 				if selectedEntry then
 					InteractionPromptFrame.Set(isLocal and L["Readable - Library - Prompt - Delete - Local"] or L["Readable - Library - Prompt - Delete - Global"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
 						function()
-							NS.Variables.LibraryDB[ID] = nil
+							NS.LibraryUI.Variables.LibraryDB[ID] = nil
 							LibraryCallback:SetPageButtons(true)
 
 							InteractionPromptFrame.Clear()
@@ -807,7 +807,7 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:OpenFromLibrary(ID)
-				local Index = NS.Variables.LibraryDB[ID]
+				local Index = NS.LibraryUI.Variables.LibraryDB[ID]
 
 				local Type = Index.Type
 				local NumPages = Index.NumPages
@@ -838,11 +838,11 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:Export()
-				local library = NS.Variables.LibraryDB
+				local library = NS.LibraryUI.Variables.LibraryDB
 
 				--------------------------------
 
-				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+				local isLocal = (NS.LibraryUI.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
 				local isMacClient = IsMacClient()
 				local copyIcon = isMacClient and addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Mac.png" or addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Windows.png"
 
@@ -868,7 +868,7 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:ImportPrompt()
-				local isLocal = (NS.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
+				local isLocal = (NS.LibraryUI.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
 
 				--------------------------------
 

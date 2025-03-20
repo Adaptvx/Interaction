@@ -256,7 +256,7 @@ function NS.Elements:Load()
 
 							--------------------------------
 
-							Frame.TextPreviewFrame:SetSize(stringWidth + 1, stringHeight + 1) -- to account for trunacted y axis text.
+							Frame.TextPreviewFrame:SetSize(stringWidth, stringHeight)
 
 							--------------------------------
 

@@ -737,9 +737,7 @@ function NS.Elements:Load()
 				local function SetAutoTextHeight(frame, customWidthModifier)
 					local function UpdateSize()
 						frame:SetWidth(Frame.ScrollChildFrame:GetWidth() * (customWidthModifier or 1))
-
-						local _, textHeight = addon.API.Util:GetStringSize(frame, frame:GetWidth())
-						frame:SetHeight(textHeight)
+						frame:SetHeight(10000)
 					end
 					UpdateSize()
 
