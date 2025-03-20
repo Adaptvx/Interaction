@@ -197,8 +197,8 @@ local function Load()
 		L["Keybind - PC / Keybind / Progress - Tooltip / Conflict"] = addon.Theme.Settings.Tooltip_Text_Warning_Highlight .. "Использовать сочетание клавиш" .. addon.Theme.Settings.Tooltip_Text_Warning .. " для настройки этой привязки клавиш необходимо отключить эту опцию.|r"
 		L["Keybind - PC / Keybind / Quest Next Reward"] = "Следующая награда"
 		L["Keybind - PC / Keybind / Quest Next Reward - Tooltip"] = "Сочетание клавиш для выбора следующей награды за задание.\n\nПо умолчанию: TAB."
-		L["Keybind - PC / Keybind / Close"] = "Close"
-		L["Keybind - PC / Keybind / Close - Tooltip"] = "Keybind to close the current active Interaction window.\n\nDefault: ESCAPE."
+		L["Keybind - PC / Keybind / Close"] = "Закрыть"
+		L["Keybind - PC / Keybind / Close - Tooltip"] = "Сочетание клавиш для закрытия текущего активного окна взаимодействия.\n\nПо умолчанию: ESCAPE."
 		L["Title - Controller"] = "Контроллер"
 		L["Title - Controller / Controller"] = "Контроллер"
 
@@ -257,23 +257,23 @@ local function Load()
 	do
 		do -- LIBRARY
 			-- PROMPTS
-			L["Readable - Library - Prompt - Delete - Local"] = "This will permanently remove this entry from your PLAYER library."
-			L["Readable - Library - Prompt - Delete - Global"] = "This will permanently remove this entry from the WARBAND library."
+			L["Readable - Library - Prompt - Delete - Local"] = "Это навсегда удалит данную запись из вашей библиотеки персонажа."
+			L["Readable - Library - Prompt - Delete - Global"] = "Это навсегда удалит данную запись из вашей библиотеки отряда."
 			L["Readable - Library - Prompt - Delete Button 1"] = "Удалить"
 			L["Readable - Library - Prompt - Delete Button 2"] = "Отмена"
 
-			L["Readable - Library - Prompt - Import - Local"] = "Importing a saved state will overwrite your PLAYER library."
-			L["Readable - Library - Prompt - Import - Global"] = "Importing a saved state will overwrite the WARBAND library."
+			L["Readable - Library - Prompt - Import - Local"] = "Импорт сохраненного состояния приведет к перезаписыванию вашей библиотеки персонажа."
+			L["Readable - Library - Prompt - Import - Global"] = "Импорт сохраненного состояния приведет к перезаписыванию вашей библиотеки отряда."
 			L["Readable - Library - Prompt - Import Button 1"] = "Импорт и перезагрузка"
 			L["Readable - Library - Prompt - Import Button 2"] = "Отмена"
 
-			L["Readable - Library - TextPrompt - Export - Local"] = "Copy Player Data to Clipboard "
-			L["Readable - Library - TextPrompt - Export - Global"] = "Copy Warband Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export - Local"] = "Копировать данные игрока в буфер обмена "
+			L["Readable - Library - TextPrompt - Export - Global"] = "Копировать данные отряда в буфер обмена "
 			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Введите текст данных"
 			L["Readable - Library - TextPrompt - Import Button 1"] = "Импорт"
 
-			L["Readable - Library - TextPrompt - Export - Local"] = "Copy Player Data to Clipboard "
-			L["Readable - Library - TextPrompt - Export - Global"] = "Copy Warband Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export - Local"] = "Копировать данные игрока в буфер обмена "
+			L["Readable - Library - TextPrompt - Export - Global"] = "CКопировать данные отряда в буфер обмена "
 			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Неверный экспортный код"
 
 			-- SIDEBAR
