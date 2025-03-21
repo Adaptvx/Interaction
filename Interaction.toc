@@ -4,7 +4,7 @@
 ## Notes-ruRU: Захватывающий аддон к сюжету и заданиям.
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.0.8
+## Version: 0.0.8.1
 ## SavedVariables: InteractionDB, InteractionLibraryDB_Global
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI

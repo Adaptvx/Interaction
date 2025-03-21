@@ -744,43 +744,51 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryCallback:SaveToLibrary()
-				local ID = NS.ItemUI.Variables.Content[1]
+				local id = NS.ItemUI.Variables.Content[1]
 
-				local Type = NS.ItemUI.Variables.Type
-				local NumPages = NS.ItemUI.Variables.NumPages
-				local Title = NS.ItemUI.Variables.Title
-				local Content = NS.ItemUI.Variables.Content
+				--------------------------------
 
-				local IsItemInInventory = NS.ItemUI.Variables.IsItemInInventory
-				local ItemID = NS.ItemUI.Variables.ItemID
-				local ItemLink = NS.ItemUI.Variables.ItemLink
+				local type = NS.ItemUI.Variables.Type
+				local numPages = NS.ItemUI.Variables.NumPages
+				local title = NS.ItemUI.Variables.Title
+				local content = NS.ItemUI.Variables.Content
 
-				local Zone = GetZoneText()
-				local MapID = C_Map.GetBestMapForUnit("player")
-				local Position = C_Map.GetPlayerMapPosition(MapID, "player")
-				local Time = time()
+				local isItemInInventory = NS.ItemUI.Variables.IsItemInInventory
+				local itemID = NS.ItemUI.Variables.ItemID
+				local itemLink = NS.ItemUI.Variables.ItemLink
 
-				local Entry = {
-					Type = Type,
-					NumPages = NumPages,
-					Title = Title,
-					Content = Content,
-					IsItemInInventory = IsItemInInventory,
-					ItemID = ItemID,
-					ItemLink = ItemLink,
-					Zone = Zone,
-					MapID = MapID,
-					Position = Position,
-					Time = Time
+				local zone = GetZoneText()
+				local mapID = C_Map.GetBestMapForUnit("player")
+				local position = C_Map.GetPlayerMapPosition(mapID, "player")
+				local time = time()
+
+				--------------------------------
+
+				local entry = {
+					Type = type,
+					NumPages = numPages,
+					Title = title,
+					Content = content,
+					IsItemInInventory = isItemInInventory,
+					ItemID = itemID,
+					ItemLink = itemLink,
+					Zone = zone,
+					MapID = mapID,
+					Position = position,
+					Time = time
 				}
 
-				if not NS.LibraryUI.Variables.LibraryDB[ID] then
+				if not NS.LibraryUI.Variables.LibraryDB[id] then
 					addon.Libraries.AceTimer:ScheduleTimer(function()
+						LibraryCallback:AddCharacterToGlobal()
+
+						--------------------------------
+
 						addon.AlertNotification.Script:ShowWithText(L["Readable - Notification - Saved To Library"])
 					end, .1)
 				end
 
-				NS.LibraryUI.Variables.LibraryDB[ID] = Entry
+				NS.LibraryUI.Variables.LibraryDB[id] = entry
 			end
 
 			function LibraryCallback:DeleteFromLibrary(ID)
