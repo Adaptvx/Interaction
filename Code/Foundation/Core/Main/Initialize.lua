@@ -31,31 +31,31 @@ function NS:Load()
 
 	do
 		function NS:LoadCode()
-			local function Protected()
+			do -- PROTECTED
 				addon.InteractionFrame:Load()
 			end
 
-			local function Modules()
+			do -- MODULES
 				addon.Modules:Load()
+			end
+
+			do -- SUPPORT
+				addon.Support:Load()
 			end
 
 			--------------------------------
 
-			Protected()
-			Modules()
-
-			--------------------------------
-
+			-- Lag on load sometimes causes 'THEME_UPDATE' to not register on all frames.
 			CallbackRegistry:Trigger("THEME_UPDATE")
-			C_Timer.After(2, function()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
 				CallbackRegistry:Trigger("THEME_UPDATE")
-			end)
+			end, 2.5)
 
 			--------------------------------
 
-			C_Timer.After(2.5, function()
+			addon.Libraries.AceTimer:ScheduleTimer(function()
 				NS.Ready = true
-			end)
+			end, 2.5)
 		end
 
 		function NS:Initalize()
@@ -95,6 +95,8 @@ function NS:Load()
 				if event == "PLAYER_REGEN_ENABLED" then
 					if not InCombatLockdown() then
 						NS:Initalize()
+
+						--------------------------------
 
 						Events:UnregisterEvent("PLAYER_REGEN_ENABLED")
 					end

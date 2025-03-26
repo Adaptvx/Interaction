@@ -31,7 +31,7 @@ do -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.READABLE_UI_PATH = addon.Variables.PATH .. "Art/Readable/"
+		NS.Variables.READABLE_UI_PATH = addon.Variables.PATH_ART .. "Readable/"
 
 		NS.Variables.SCREEN_WIDTH = addon.API.Main:GetScreenWidth()
 		NS.Variables.SCREEN_HEIGHT = addon.API.Main:GetScreenHeight()

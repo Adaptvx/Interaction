@@ -310,7 +310,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
+		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-left.png", 16, 16, 0, 0) .. " to Drag.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-right.png", 16, 16, 0, 0) .. " to Close."
 	end
 
 	--------------------------------
@@ -471,6 +471,22 @@ local function Load()
 		-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
 		-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
 		L["AudiobookData - EstimatedCharPerSecond"] = 10
+	end
+
+	--------------------------------
+	-- SUPPORTED ADDONS
+	--------------------------------
+
+	do
+		do -- BtWQuests
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] = addon.Theme.RGB_GREEN_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] = addon.Theme.RGB_WHITE_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] = addon.Theme.RGB_GRAY_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Click to open quest chain in BtWQuests" .. "|r"
+		end
 	end
 end
 

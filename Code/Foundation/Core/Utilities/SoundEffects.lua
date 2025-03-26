@@ -11,7 +11,7 @@ addon.SoundEffects = {}
 local NS = addon.SoundEffects
 
 do -- CONSTANTS
-	NS.PATH = addon.Variables.PATH .. "Art/Audio/"
+	NS.PATH = addon.Variables.PATH_ART .. "Audio/"
 
 	-- READABLE UI
 	do

@@ -107,7 +107,7 @@ function NS.Elements:Load()
 							---------------------------------
 
 							do -- IMAGE
-								Frame.TitleArea.CloseButton.Image, Frame.TitleArea.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.TitleArea.CloseButton, "FULLSCREEN_DIALOG", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
+								Frame.TitleArea.CloseButton.Image, Frame.TitleArea.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.TitleArea.CloseButton, "FULLSCREEN_DIALOG", addon.Variables.PATH_ART .. "Elements/Elements/close.png", "$parent.Image")
 								Frame.TitleArea.CloseButton.Image:SetSize(Frame.TitleArea.CloseButton:GetWidth() - 10, Frame.TitleArea.CloseButton:GetHeight() - 10)
 								Frame.TitleArea.CloseButton.Image:SetPoint("CENTER", Frame.TitleArea.CloseButton)
 								Frame.TitleArea.CloseButton.Image:SetAlpha(.5)

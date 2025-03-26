@@ -29,8 +29,8 @@ do -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.SETTINGS_PATH = addon.Variables.PATH .. "Art/Settings/"
-		NS.Variables.TOOLTIP_PATH = addon.Variables.PATH .. "Art/Settings/Tooltip/"
+		NS.Variables.SETTINGS_PATH = addon.Variables.PATH_ART .. "Settings/"
+		NS.Variables.TOOLTIP_PATH = addon.Variables.PATH_ART .. "Settings/Tooltip/"
 	end
 end
 

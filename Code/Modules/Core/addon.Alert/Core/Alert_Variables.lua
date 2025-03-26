@@ -17,7 +17,7 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	NS.Variables.PATH = addon.Variables.PATH .. "Art/Alert/"
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "Alert/"
 end
 
 --------------------------------

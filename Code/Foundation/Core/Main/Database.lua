@@ -12,8 +12,8 @@ local AceDB = LibStub("AceDB-3.0")
 addon.Database = {}
 local NS = addon.Database
 
-do -- MAIN
-	NS.DB_GLOBAL = nil -- Settings, config etc
+do                             -- MAIN
+	NS.DB_GLOBAL = nil         -- Settings, config etc
 
 	NS.DB_GLOBAL_PERSISTENT = nil -- Persistent data (do not clear when wiping settings)
 	NS.DB_LOCAL_PERSISTENT = nil -- Persistent data (do not clear when wiping settings)
@@ -354,11 +354,13 @@ end
 
 do
 	function NS:OnInitialize()
-		NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
-		NS.DB_GLOBAL_PERSISTENT = AceDB:New("InteractionLibraryDB_Global", NS.DEFAULTS_GLOBAL_PERSISTENT, true)
-		NS.DB_LOCAL_PERSISTENT = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL_PERSISTENT, true)
+		addon.Libraries.AceTimer:ScheduleTimer(function()
+			NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
+			NS.DB_GLOBAL_PERSISTENT = AceDB:New("InteractionLibraryDB_Global", NS.DEFAULTS_GLOBAL_PERSISTENT, true)
+			NS.DB_LOCAL_PERSISTENT = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL_PERSISTENT, true)
 
-		NS:SetDynamicCinematicVariables()
+			NS:SetDynamicCinematicVariables()
+		end, 0)
 	end
 
 	NS = LibStub("AceAddon-3.0"):NewAddon(NS, "Interaction")

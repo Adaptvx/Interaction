@@ -93,7 +93,7 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	NS.Variables.PATH = addon.Variables.PATH .. "Art/Controller/"
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "Controller/"
 end
 
 --------------------------------

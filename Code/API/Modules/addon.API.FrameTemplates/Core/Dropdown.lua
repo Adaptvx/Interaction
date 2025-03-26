@@ -125,11 +125,11 @@ do
 			local function UpdateTheme()
 				if (theme and theme == 2) or (theme == nil and addon.API.Util.NativeAPI:GetDarkTheme()) then -- DARK MODE
 					-- DROPDOWN
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/dropdown-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/dropdown-background-highlighted.png"
-					Frame._ArrowTexture = Frame._CustomArrowTexture or addon.API.Util.PATH .. "Elements/arrow-down-light.png"
-					Frame._ArrowHighlightTexture = Frame._CustomArrowHighlightTexture or addon.API.Util.PATH .. "Elements/arrow-down-light.png"
-					Frame._ArrowEnableTexture = Frame._CustomArrowEnableTexture or addon.API.Util.PATH .. "Elements/arrow-up-light.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-background-highlighted.png"
+					Frame._ArrowTexture = Frame._CustomArrowTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-down-light.png"
+					Frame._ArrowHighlightTexture = Frame._CustomArrowHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-down-light.png"
+					Frame._ArrowEnableTexture = Frame._CustomArrowEnableTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-up-light.png"
 					Frame._DefaultColor = Frame._CustomDefaultColor or { r = 1, g = 1, b = 1, a = .75 }
 					Frame._HighlightColor = Frame._CustomHighlightColor or { r = 1, g = 1, b = 1, a = .5 }
 					Frame._TextSize = Frame._CustomTextSize or 14
@@ -138,12 +138,12 @@ do
 					Frame._HighlightTextColor = Frame._CustomHighlightTextColor or { r = 1, g = 1, b = 1, a = .75 }
 
 					-- LIST
-					Frame._ListTexture = Frame._CustomListTexture or addon.API.Util.PATH .. "Elements/dropdown-list-background-dark.png"
-					Frame._ListButtonTexture = Frame._CustomListButtonTexture or addon.API.Util.PATH .. "Elements/dropdown-list-button-background.png"
-					Frame._ListButtonCheckTexture = Frame._CustomListButtonCheckTexture or addon.API.Util.PATH .. "Elements/dropdown-list-button-check.png"
-					Frame._ListIndexBackgroundTexture = Frame._CustomListIndexBackgroundTexture or addon.API.Util.PATH .. "Elements/dropdown-list-index-background-dark.png"
-					Frame._ListIndexNextButtonTexture = Frame._CustomListIndexNextButtonTexture or addon.API.Util.PATH .. "Elements/arrow-right-light.png"
-					Frame._ListIndexPreviousButtonTexture = Frame._CustomListIndexPreviousButtonTexture or addon.API.Util.PATH .. "Elements/arrow-left-light.png"
+					Frame._ListTexture = Frame._CustomListTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-background-dark.png"
+					Frame._ListButtonTexture = Frame._CustomListButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-button-background.png"
+					Frame._ListButtonCheckTexture = Frame._CustomListButtonCheckTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-button-check.png"
+					Frame._ListIndexBackgroundTexture = Frame._CustomListIndexBackgroundTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-index-background-dark.png"
+					Frame._ListIndexNextButtonTexture = Frame._CustomListIndexNextButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-right-light.png"
+					Frame._ListIndexPreviousButtonTexture = Frame._CustomListIndexPreviousButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-left-light.png"
 					Frame._ListColor = Frame._CustomListColor or { r = 1, g = 1, b = 1, a = 1 }
 					Frame._ListElementColor = Frame._CustomListElementColor or { r = 1, g = 1, b = 1, a = .125 }
 					Frame._ListPrimaryColor = Frame._CustomListPrimaryColor or { r = 1, g = 1, b = 1, a = 1 }
@@ -151,11 +151,11 @@ do
 					Frame._ListElementHighlightTextColor = Frame._CustomListElementHighlightTextColor or { r = 1, g = 1, b = 1, a = 1 }
 				elseif (theme and theme == 1) or (theme == nil and not addon.API.Util.NativeAPI:GetDarkTheme()) then -- LIGHT MODE
 					-- DROPDOWN
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/dropdown-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/dropdown-background-highlighted.png"
-					Frame._ArrowTexture = Frame._CustomArrowTexture or addon.API.Util.PATH .. "Elements/arrow-down-dark.png"
-					Frame._ArrowHighlightTexture = Frame._CustomArrowHighlightTexture or addon.API.Util.PATH .. "Elements/arrow-down-light.png"
-					Frame._ArrowEnableTexture = Frame._CustomArrowEnableTexture or addon.API.Util.PATH .. "Elements/arrow-up-light.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-background-highlighted.png"
+					Frame._ArrowTexture = Frame._CustomArrowTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-down-dark.png"
+					Frame._ArrowHighlightTexture = Frame._CustomArrowHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-down-light.png"
+					Frame._ArrowEnableTexture = Frame._CustomArrowEnableTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-up-light.png"
 					Frame._DefaultColor = Frame._CustomDefaultColor or { r = .1, g = .1, b = .1, a = 1 }
 					Frame._HighlightColor = Frame._CustomHighlightColor or { r = .1, g = .1, b = .1, a = .75 }
 					Frame._TextSize = Frame._CustomTextSize or 14
@@ -164,12 +164,12 @@ do
 					Frame._HighlightTextColor = Frame._CustomHighlightTextColor or { r = 1, g = 1, b = 1, a = .75 }
 
 					-- LIST
-					Frame._ListTexture = Frame._CustomListTexture or addon.API.Util.PATH .. "Elements/dropdown-list-background-light.png"
-					Frame._ListButtonTexture = Frame._CustomListButtonTexture or addon.API.Util.PATH .. "Elements/dropdown-list-button-background.png"
-					Frame._ListButtonCheckTexture = Frame._CustomListButtonCheckTexture or addon.API.Util.PATH .. "Elements/dropdown-list-button-check.png"
-					Frame._ListIndexBackgroundTexture = Frame._CustomListIndexBackgroundTexture or addon.API.Util.PATH .. "Elements/dropdown-list-index-background-light.png"
-					Frame._ListIndexNextButtonTexture = Frame._CustomListIndexNextButtonTexture or addon.API.Util.PATH .. "Elements/arrow-right-light.png"
-					Frame._ListIndexPreviousButtonTexture = Frame._CustomListIndexPreviousButtonTexture or addon.API.Util.PATH .. "Elements/arrow-left-light.png"
+					Frame._ListTexture = Frame._CustomListTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-background-light.png"
+					Frame._ListButtonTexture = Frame._CustomListButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-button-background.png"
+					Frame._ListButtonCheckTexture = Frame._CustomListButtonCheckTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-button-check.png"
+					Frame._ListIndexBackgroundTexture = Frame._CustomListIndexBackgroundTexture or addon.Variables.PATH_ART .. "Elements/Elements/dropdown-list-index-background-light.png"
+					Frame._ListIndexNextButtonTexture = Frame._CustomListIndexNextButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-right-light.png"
+					Frame._ListIndexPreviousButtonTexture = Frame._CustomListIndexPreviousButtonTexture or addon.Variables.PATH_ART .. "Elements/Elements/arrow-left-light.png"
 					Frame._ListColor = Frame._CustomListColor or { r = 1, g = 1, b = 1, a = 1 }
 					Frame._ListElementColor = Frame._CustomListElementColor or { r = .1, g = .1, b = .1, a = .125 }
 					Frame._ListPrimaryColor = Frame._CustomListPrimaryColor or { r = .1, g = .1, b = .1, a = 1 }

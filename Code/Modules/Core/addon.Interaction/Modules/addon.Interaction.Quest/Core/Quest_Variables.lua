@@ -25,7 +25,7 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.QUEST_PATH = addon.Variables.PATH .. "Art/Quest/"
+		NS.Variables.QUEST_PATH = addon.Variables.PATH_ART .. "Quest/"
 		NS.Variables.FRAME_SIZE = { x = 625 * .75, y = 625 }
 	end
 
@@ -86,11 +86,11 @@ do
 		if addon.Theme.IsDarkTheme then
 			NS.Variables.THEME.INSCRIBED_BACKGROUND = addon.API.Presets.NINESLICE_INSCRIBED
             NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = addon.API.Presets.NINESLICE_INSCRIBED
-			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
+			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH_ART .. "Quest/header-nineslice.png"
 		else
 			NS.Variables.THEME.INSCRIBED_BACKGROUND = addon.API.Presets.NINESLICE_INSCRIBED
             NS.Variables.THEME.INSCRIBED_BACKGROUND_HIGHLIGHT = addon.API.Presets.NINESLICE_INSCRIBED
-			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH .. "Art/Quest/header-nineslice.png"
+			NS.Variables.THEME.INSCRIBED_HEADER = addon.Variables.PATH_ART .. "Quest/header-nineslice.png"
 		end
 	end, 0)
 end

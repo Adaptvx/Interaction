@@ -151,9 +151,9 @@ function NS.Script:Load()
 		do -- GRADIENT
 			local function Settings_UIDirection()
 				if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
-					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH .. "Art/Gradient/gradient-left-fullscreen.png")
+					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-left-fullscreen.png")
 				elseif addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then
-					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH .. "Art/Gradient/gradient-right-fullscreen.png")
+					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-right-fullscreen.png")
 				end
 			end
 			Settings_UIDirection()

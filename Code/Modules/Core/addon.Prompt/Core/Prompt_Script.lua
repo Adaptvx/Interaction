@@ -198,15 +198,15 @@ function NS.Script:Load()
 					--------------------------------
 
 					if gold > 0 then
-						text_gold = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
+						text_gold = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
 					end
 
 					if silver > 0 then
-						text_silver = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
+						text_silver = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
 					end
 
 					if copper > 0 then
-						text_copper = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
+						text_copper = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
 					end
 
 					--------------------------------

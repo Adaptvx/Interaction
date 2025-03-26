@@ -342,13 +342,13 @@ function NS.Script:Load()
 		do -- PREVENT OVERLAPPING FRAMES
 			hooksecurefunc(QuestFrame, "Show", function()
 				if GossipFrame:IsVisible() then
-					GossipFrame:Hide()
+					HideUIPanel(GossipFrame)
 				end
 			end)
 
 			hooksecurefunc(GossipFrame, "Show", function()
 				if QuestFrame:IsVisible() then
-					QuestFrame:Hide()
+					HideUIPanel(QuestFrame)
 				end
 			end)
 		end
@@ -475,7 +475,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							addon.Alert.Script:Show(addon.Variables.PATH .. "Art/Alert/swords.png", L["Alert - Under Attack"], 17.5, addon.SoundEffects.Alert_Combat_Show, addon.SoundEffects.Alert_Combat_Hide)
+							addon.Alert.Script:Show(addon.Variables.PATH_ART .. "Alert/swords.png", L["Alert - Under Attack"], 17.5, addon.SoundEffects.Alert_Combat_Show, addon.SoundEffects.Alert_Combat_Hide)
 						end
 					end
 				end)
@@ -497,14 +497,14 @@ function NS.Script:Load()
 						local Shortcut
 
 						if addon.Input.Variables.IsController then
-							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-controller.png", 25, 25, 0, 0) .. L["Alert - Open Settings"]
+							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Blizzard/Settings/shortcut-controller.png", 25, 25, 0, 0) .. L["Alert - Open Settings"]
 						else
-							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Blizzard/Settings/shortcut-pc.png", 25, 75, 0, 0) .. L["Alert - Open Settings"]
+							Shortcut = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Blizzard/Settings/shortcut-pc.png", 25, 75, 0, 0) .. L["Alert - Open Settings"]
 						end
 
 						--------------------------------
 
-						addon.Alert.Script:Show(addon.Variables.PATH .. "Art/Alert/cog.png", Shortcut, 12.5, nil, nil, 5)
+						addon.Alert.Script:Show(addon.Variables.PATH_ART .. "Alert/cog.png", Shortcut, 12.5, nil, nil, 5)
 					end
 				end, 0)
 			end

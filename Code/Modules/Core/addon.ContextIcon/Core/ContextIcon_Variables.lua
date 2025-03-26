@@ -72,7 +72,7 @@ do -- CONSTANTS
 		["legendaryInProgressquesticon"] = "quest-legendary-active",
 	}
 
-	NS.Variables.PATH = addon.Variables.PATH .. "Art/ContextIcons/"
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "ContextIcons/"
 end
 
 --------------------------------

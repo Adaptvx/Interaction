@@ -101,7 +101,7 @@ do
 						--------------------------------
 
 						do -- BACKGROUND
-							Frame.KeybindFrame.Background, Frame.KeybindFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.KeybindFrame, frameStrata, addon.Variables.PATH .. "Art/Platform/Platform-Keybind-Background.png", 128, .125, "$parent.Background")
+							Frame.KeybindFrame.Background, Frame.KeybindFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.KeybindFrame, frameStrata, addon.Variables.PATH_ART .. "Platform/Platform-Keybind-Background.png", 128, .125, "$parent.Background")
 							Frame.KeybindFrame.Background:SetAllPoints(Frame.KeybindFrame)
 							Frame.KeybindFrame.Background:SetFrameStrata(frameStrata)
 							Frame.KeybindFrame.Background:SetFrameLevel(frameLevel + 4)
@@ -141,15 +141,15 @@ do
 							local IsXbox = addon.Variables.Platform == 3
 
 							local replaceWithImageList = {
-								["SPACE"] = addon.Variables.PATH .. "Art/Platform/Text-Platform-PC-Space.png",
-								["PAD1"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-1.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-1.png",
-								["PAD2"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-2.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-2.png",
-								["PAD3"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-3.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-3.png",
-								["PAD4"] = IsPlaystation and addon.Variables.PATH .. "Art/Platform/Platform-PS-4.png" or IsXbox and addon.Variables.PATH .. "Art/Platform/Platform-XBOX-4.png",
-								["PADLSHOULDER"] = addon.Variables.PATH .. "Art/Platform/Platform-LB.png",
-								["PADRSHOULDER"] = addon.Variables.PATH .. "Art/Platform/Platform-RB.png",
-								["PADLTRIGGER"] = addon.Variables.PATH .. "Art/Platform/Platform-LT.png",
-								["PADRTRIGGER"] = addon.Variables.PATH .. "Art/Platform/Platform-RT.png",
+								["SPACE"] = addon.Variables.PATH_ART .. "Platform/Text-Platform-PC-Space.png",
+								["PAD1"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-1.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-1.png",
+								["PAD2"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-2.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-2.png",
+								["PAD3"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-3.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-3.png",
+								["PAD4"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-4.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-4.png",
+								["PADLSHOULDER"] = addon.Variables.PATH_ART .. "Platform/Platform-LB.png",
+								["PADRSHOULDER"] = addon.Variables.PATH_ART .. "Platform/Platform-RB.png",
+								["PADLTRIGGER"] = addon.Variables.PATH_ART .. "Platform/Platform-LT.png",
+								["PADRTRIGGER"] = addon.Variables.PATH_ART .. "Platform/Platform-RT.png",
 							}
 							local replaceWithTextList = {
 								["ESCAPE"] = "Esc",

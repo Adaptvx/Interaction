@@ -28,7 +28,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			do -- BACKDROP
-				Frame.Backdrop, Frame.BackdropTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", addon.Variables.PATH .. "Art/Settings/background-backdrop.png", "$parent.backdrop.png")
+				Frame.Backdrop, Frame.BackdropTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", addon.Variables.PATH_ART .. "Settings/background-backdrop.png", "$parent.backdrop.png")
 				Frame.Backdrop:SetSize(500, 500)
 				Frame.Backdrop:SetPoint("CENTER", Frame)
 				Frame.Backdrop:SetFrameStrata("FULLSCREEN_DIALOG")

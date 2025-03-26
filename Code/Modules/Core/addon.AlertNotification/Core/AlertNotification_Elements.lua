@@ -43,7 +43,7 @@ function NS.Elements:Load()
 
 			do -- NOTIFICATION
 				do -- BACKGROUND
-					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
 					Frame.Background:SetPoint("TOPLEFT", Frame, -12.5, 12.5)
 					Frame.Background:SetPoint("BOTTOMRIGHT", Frame, 12.5, -12.5)
 					Frame.Background:SetFrameStrata("FULLSCREEN")

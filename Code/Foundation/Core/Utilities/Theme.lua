@@ -20,11 +20,27 @@ end
 do -- CONSTANTS
 	NS.RGB_RECOMMENDED = {}
 
-	NS.RGB_WHITE = { r = 1, g = 1, b = 1 }
-	NS.RGB_BLACK = { r = .1, g = .1, b = .1 }
+	NS.RGB_WHITE = { r = 255 / 255, g = 255 / 255, b = 255 / 255 }
+	NS.RGB_BLACK = { r = 25 / 255, g = 25 / 255, b = 25 / 255 }
+	NS.RGB_ORANGE = { r = 255 / 255, g = 166 / 255, b = 0 / 255 }
+	NS.RGB_GREEN = { r = 82 / 255, g = 204 / 255, b = 51 / 255 }
+	NS.RGB_GREEN_02 = { r = 82 / 255, g = 175 / 255, b = 51 / 255 }
+	NS.RGB_RED = { r = 208 / 255, g = 85 / 255, b = 85 / 255 }
+	NS.RGB_GRAY = { r = 157 / 255, g = 157 / 255, b = 157 / 255 }
+	NS.RGB_LIGHT_GRAY = { r = 205 / 255, g = 205 / 255, b = 205 / 255 }
+	NS.RGB_CHAT_MSG_SAY = { r = 255 / 255, g = 222 / 255, b = 171 / 255 }
+	NS.RGB_CHAT_MSG_EMOTE = { r = 237 / 255, g = 132 / 255, b = 79 / 255 }
 
-	NS.RGB_CHAT_MSG_SAY = { r = 1, g = .87, b = .67 }
-	NS.RGB_CHAT_MSG_EMOTE = { r = .93, g = .52, b = .31 }
+	NS.RGB_WHITE_HEXCODE = "|cffFFFFFF"
+	NS.RGB_BLACK_HEXCODE = "|cff000000"
+	NS.RGB_ORANGE_HEXCODE = "|cffFFA500"
+	NS.RGB_GREEN_HEXCODE = "|cff54CB34"
+	NS.RGB_GREEN_02_HEXCODE = "|cff52AF33"
+	NS.RGB_RED_HEXCODE = "|cffD05555"
+	NS.RGB_GRAY_HEXCODE = "|cff9D9D9D"
+	NS.RGB_LIGHT_GRAY_HEXCODE = "|cffCDCDCD"
+	NS.RGB_CHAT_MSG_SAY_HEXCODE = "|cffFFDEAB"
+	NS.RGB_CHAT_MSG_EMOTE_HEXCODE = "|cffED844F"
 end
 
 do -- QUEST
@@ -660,6 +676,16 @@ end
 --------------------------------
 
 function NS:Load()
+	--------------------------------
+	-- FUNCTIONS (TOOLTIP)
+	--------------------------------
+
+	do
+		function NS:TOOLTIP_DIVIDER(width)
+			return "\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Elements/Elements/tooltip-divider-background.png", 1, width, 0, 0) .. "\n"
+		end
+	end
+
 	--------------------------------
 	-- FUNCTIONS (MAIN)
 	--------------------------------

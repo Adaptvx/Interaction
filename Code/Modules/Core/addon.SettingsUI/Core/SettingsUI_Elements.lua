@@ -264,7 +264,7 @@ function NS.Elements:Load()
 									--------------------------------
 
 									do -- IMAGE
-										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image, Frame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.Header.Content.ButtonContainer.CloseButton, "FULLSCREEN", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
+										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image, Frame.Content.Header.Content.ButtonContainer.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.Header.Content.ButtonContainer.CloseButton, "FULLSCREEN", addon.Variables.PATH_ART .. "Elements/Elements/close.png", "$parent.Image")
 										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetSize(Frame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8), Frame.Content.Header.Content.ButtonContainer.CloseButton:GetHeight() - NS.Variables:RATIO(8))
 										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetPoint("CENTER", Frame.Content.Header.Content.ButtonContainer.CloseButton)
 										Frame.Content.Header.Content.ButtonContainer.CloseButton.Image:SetFrameStrata("FULLSCREEN_DIALOG")
@@ -398,9 +398,9 @@ function NS.Elements:Load()
 										local TEXTURE
 
 										if addon.Theme.IsDarkTheme then
-											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-LB-Up-Light.png"
+											TEXTURE = addon.Variables.PATH_ART .. "Platform/Platform-LB-Up-Light.png"
 										else
-											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-LB-Up.png"
+											TEXTURE = addon.Variables.PATH_ART .. "Platform/Platform-LB-Up.png"
 										end
 
 										Frame.Sidebar.Legend.GamePad.Top.IconTexture:SetTexture(TEXTURE)
@@ -425,9 +425,9 @@ function NS.Elements:Load()
 										local TEXTURE
 
 										if addon.Theme.IsDarkTheme then
-											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-RB-Down-Light.png"
+											TEXTURE = addon.Variables.PATH_ART .. "Platform/Platform-RB-Down-Light.png"
 										else
-											TEXTURE = addon.Variables.PATH .. "Art/Platform/Platform-RB-Down.png"
+											TEXTURE = addon.Variables.PATH_ART .. "Platform/Platform-RB-Down.png"
 										end
 
 										Frame.Sidebar.Legend.GamePad.Bottom.IconTexture:SetTexture(TEXTURE)

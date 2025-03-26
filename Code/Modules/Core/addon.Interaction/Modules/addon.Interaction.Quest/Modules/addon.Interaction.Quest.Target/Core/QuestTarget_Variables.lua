@@ -31,7 +31,7 @@ do -- CONSTANTS
 	do -- MAIN
 		NS.Variables.PADDING = NS.Variables:RATIO(9)
 		NS.Variables.CONTENT_PADDING = NS.Variables:RATIO(8.5)
-		NS.Variables.PATH = addon.Variables.PATH .. "Art/QuestTarget/"
+		NS.Variables.PATH = addon.Variables.PATH_ART .. "QuestTarget/"
 	end
 end
 

@@ -64,16 +64,16 @@ do
 		do -- THEME
 			local function UpdateTheme()
 				if (theme and theme == 2) or (theme == nil and addon.API.Util.NativeAPI:GetDarkTheme()) then
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/check-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/check-background-highlighted.png"
-					Frame._CheckTexture = Frame._CustomCheckTexture or addon.API.Util.PATH .. "Elements/check-dark.png"
-					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or addon.API.Util.PATH .. "Elements/check-dark.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-background-highlighted.png"
+					Frame._CheckTexture = Frame._CustomCheckTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-dark.png"
+					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-dark.png"
 					Frame._Color = Frame._CustomColor or { r = 1, g = 1, b = 1 }
 				elseif (theme and theme == 1) or (theme == nil and not addon.API.Util.NativeAPI:GetDarkTheme()) then
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/check-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/check-background-highlighted.png"
-					Frame._CheckTexture = Frame._CustomCheckTexture or addon.API.Util.PATH .. "Elements/check-dark.png"
-					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or addon.API.Util.PATH .. "Elements/check-light.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-background-highlighted.png"
+					Frame._CheckTexture = Frame._CustomCheckTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-dark.png"
+					Frame._HighlightCheckTexture = Frame._CustomCheckHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/check-light.png"
 					Frame._Color = Frame._CustomColor or { r = .1, g = .1, b = .1 }
 				end
 			end

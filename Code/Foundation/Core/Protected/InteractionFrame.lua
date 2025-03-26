@@ -31,18 +31,13 @@ function NS:Load()
 		do -- CREATE ELEMENTS
 			do -- FRAME
 				InteractionFrame = CreateFrame("Frame", "InteractionFrame", nil)
-				InteractionFrame:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 				InteractionFrame:SetPoint("CENTER", nil)
-
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					InteractionFrame:SetScale(addon.API.Main.UIScale)
-				end, .1)
 
 				--------------------------------
 
 				do -- PREVENT MOUSE
 					InteractionFrame.PreventMouse = CreateFrame("Frame")
-					InteractionFrame.PreventMouse:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
+					InteractionFrame.PreventMouse:SetAllPoints(UIParent)
 					InteractionFrame.PreventMouse:SetPoint("CENTER", UIParent)
 					InteractionFrame.PreventMouse:SetFrameStrata("FULLSCREEN_DIALOG")
 					InteractionFrame.PreventMouse:SetFrameLevel(999)
@@ -61,14 +56,9 @@ function NS:Load()
 
 			do -- PRIORITY FRAME
 				InteractionPriorityFrame = CreateFrame("Frame", "InteractionPriorityFrame", nil)
-				InteractionPriorityFrame:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
 				InteractionPriorityFrame:SetPoint("CENTER", nil)
 				InteractionPriorityFrame:SetFrameStrata("FULLSCREEN_DIALOG")
 				InteractionPriorityFrame:SetFrameLevel(0)
-
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					InteractionPriorityFrame:SetScale(UIParent:GetScale())
-				end, .1)
 			end
 		end
 	end
@@ -82,11 +72,36 @@ function NS:Load()
 	local Callback = NS
 
 	--------------------------------
+	-- FUNCTIONS (FRAME)
+	--------------------------------
+
+	do
+		function Callback:UpdateSize()
+			local screenWidth = addon.API.Main:GetScreenWidth()
+			local screenHeight = addon.API.Main:GetScreenHeight()
+			local aspectRatio = screenWidth / screenHeight
+			local clampThreshold = 2.37 -- 2560/1080
+
+			local clampAspectRatio = aspectRatio > clampThreshold
+			local newWidth = clampAspectRatio and screenHeight * clampThreshold or screenWidth
+			local newHeight = screenHeight
+
+			--------------------------------
+
+			InteractionFrame:SetSize(newWidth, newHeight)
+			InteractionFrame:SetScale(addon.API.Main.UIScale)
+
+			InteractionPriorityFrame:SetSize(UIParent:GetSize())
+			InteractionPriorityFrame:SetScale(UIParent:GetScale())
+		end
+	end
+
+	--------------------------------
 	-- FUNCTIONS (MAIN)
 	--------------------------------
 
 	do
-		function NS:SetupReferences()
+		do -- REFERENCES
 			function NS.SetReferences(frame)
 				frame.Label = select(3, frame:GetRegions())
 				frame.Background = select(2, frame:GetRegions())
@@ -215,9 +230,9 @@ function NS:Load()
 			end
 		end)
 
-		CallbackRegistry:Add("THEME_UPDATE_ANIMATION", function()
-			Frame.ChangeThemeAnimation()
-		end, 0)
+		CallbackRegistry:Add("BLIZZARD_SETTINGS_RESOLUTION_CHANGED", function()
+			Callback:UpdateSize()
+		end)
 	end
 
 	--------------------------------
@@ -225,6 +240,6 @@ function NS:Load()
 	--------------------------------
 
 	do
-		NS:SetupReferences()
+		Callback:UpdateSize()
 	end
 end

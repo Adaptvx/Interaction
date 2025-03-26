@@ -852,7 +852,7 @@ function NS.LibraryUI.Script:Load()
 
 				local isLocal = (NS.LibraryUI.Variables.LibraryDB == NS.Variables.LIBRARY_LOCAL)
 				local isMacClient = IsMacClient()
-				local copyIcon = isMacClient and addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Mac.png" or addon.Variables.PATH .. "Art/Platform/Platform-PC-Copy-Windows.png"
+				local copyIcon = isMacClient and addon.Variables.PATH_ART .. "Platform/Platform-PC-Copy-Mac.png" or addon.Variables.PATH_ART .. "Platform/Platform-PC-Copy-Windows.png"
 
 				local serialized = addon.Libraries.LibSerialize:SerializeEx({ errorOnUnserializableType = false }, library, { a = 1, b = library })
 				local compressed = addon.Libraries.LibDeflate:CompressDeflate(serialized)

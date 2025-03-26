@@ -18,8 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionGossipParent = CreateFrame("Frame", "InteractionGossipParent", InteractionFrame)
-			InteractionGossipParent:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
-			InteractionGossipParent:SetPoint("CENTER", nil)
+			InteractionGossipParent:SetAllPoints(InteractionFrame)
 			InteractionGossipParent:SetFrameStrata("FULLSCREEN")
 
 			InteractionGossipFrame = CreateFrame("Frame", "InteractionGossipFrame", InteractionGossipParent)
@@ -35,7 +34,7 @@ function NS.Elements:Load()
 
 			do -- MOUSE RESPONDER
 				InteractionGossipFrame.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", InteractionGossipFrame)
-				InteractionGossipFrame.MouseResponder:SetAllPoints(InteractionGossipFrame, true)
+				InteractionGossipFrame.MouseResponder:SetAllPoints(InteractionGossipFrame)
 				InteractionGossipFrame.MouseResponder:SetFrameStrata("FULLSCREEN")
 				InteractionGossipFrame.MouseResponder:SetFrameLevel(0)
 			end
@@ -64,7 +63,7 @@ function NS.Elements:Load()
 
 					do -- ELEMENTS
 						do -- BACKGROUND
-							Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+							Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
 							Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, 62.5, 25)
 							Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, -62.5, -25)
 							Frame.GoodbyeButton.Background:SetAlpha(.5)
@@ -290,7 +289,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- ICON
-						button.Icon, button.IconTexture = addon.API.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH .. "Art/Icons/logo.png", "$parent.Icon")
+						button.Icon, button.IconTexture = addon.API.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH_ART .. "Icons/logo.png", "$parent.Icon")
 						button.Icon:SetSize(17.5, 17.5)
 						button.Icon:SetFrameStrata("FULLSCREEN")
 						button.Icon:SetFrameLevel(2)

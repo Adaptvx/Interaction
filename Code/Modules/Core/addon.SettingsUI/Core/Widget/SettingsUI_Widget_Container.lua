@@ -33,11 +33,11 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	do -- THEME
 		local function UpdateTheme()
 			if addon.Theme.IsDarkTheme then
-				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory-dark.png"
+				Frame.TEXTURE_Subcategory = addon.Variables.PATH_ART .. "Settings/subcategory-dark.png"
 				Frame.TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED
 				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_DarkTheme
 			else
-				Frame.TEXTURE_Subcategory = addon.Variables.PATH .. "Art/Settings/subcategory.png"
+				Frame.TEXTURE_Subcategory = addon.Variables.PATH_ART .. "Settings/subcategory.png"
 				Frame.TEXTURE_Background = addon.API.Presets.NINESLICE_INSCRIBED
 				Frame.COLOR_Background = addon.Theme.Settings.Tertiary_LightTheme
 			end

@@ -721,7 +721,8 @@ function NS.Script:Load()
 					local TEXT_REWARDS_SPELL, _ = QuestFrame_GetSpells()
 					local HEADER_REQUIRE = QuestProgressRequiredItemsText
 
-					local storylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(GetQuestID()) and C_QuestLine.GetQuestLineInfo(GetQuestID()).questLineName) or (addon.Variables.IS_CLASSIC and nil)
+					local questID = GetQuestID()
+					local storylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(questID) and C_QuestLine.GetQuestLineInfo(questID).questLineName) or (addon.Variables.IS_CLASSIC and nil)
 					local experience = UnitLevel("player") < GetMaxPlayerLevel() and GetRewardXP() or nil
 					local experiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
 					local gold, silver, copper = addon.API.Util:FormatMoney(GetRewardMoney())
@@ -739,7 +740,11 @@ function NS.Script:Load()
 						--------------------------------
 
 						if storylineInfo then
-							Frame.Storyline.Content.Text:SetText(storylineInfo)
+							Frame.Storyline:SetInfo(storylineInfo, nil, false, nil, nil)
+
+							--------------------------------
+
+							CallbackRegistry:Trigger("Quest.Storyline.Update", questID)
 						end
 					end
 
@@ -801,7 +806,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							if experience and experience > 0 then
-								Frame.Rewards_Experience.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/xp.png", 25, 25, 0, 0) .. " " .. addon.API.Util:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
+								Frame.Rewards_Experience.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/xp.png", 25, 25, 0, 0) .. " " .. addon.API.Util:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
 							end
 						end
 
@@ -816,15 +821,15 @@ function NS.Script:Load()
 								--------------------------------
 
 								if gold > 0 then
-									_gold = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. gold .. "|r" .. " "
+									_gold = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/gold.png", 20, 20, 0, 0) .. " " .. "|cffEBD596" .. gold .. "|r" .. " "
 								end
 
 								if silver > 0 then
-									_silver = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. silver .. "|r" .. " "
+									_silver = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/silver.png", 20, 20, 0, 0) .. " " .. "|cffC6C6C6" .. silver .. "|r" .. " "
 								end
 
 								if copper > 0 then
-									_copper = addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. copper .. "|r" .. " "
+									_copper = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/copper.png", 20, 20, 0, 0) .. " " .. "|cffD9AC86" .. copper .. "|r" .. " "
 								end
 
 								--------------------------------
@@ -839,7 +844,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							if honor > 0 then
-								Frame.Rewards_Honor.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. addon.API.Util:FormatNumber(honor) .. "|r")
+								Frame.Rewards_Honor.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. addon.API.Util:FormatNumber(honor) .. "|r")
 							end
 						end
 
@@ -1438,10 +1443,10 @@ function NS.Script:Load()
 			local Settings_UIDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
 
 			local offsetY = 0
-			local screenWidth = addon.API.Main:GetScreenWidth()
+			local usableWidth = InteractionQuestParent:GetWidth()
 			local frameWidth = Frame:GetWidth()
 			local dialogMaxWidth = 350
-			local quarterWidth = (screenWidth - dialogMaxWidth) / 2
+			local quarterWidth = (usableWidth - dialogMaxWidth) / 2
 			local quarterEdgePadding = (quarterWidth - frameWidth) / 2
 			local offsetX
 
@@ -1455,20 +1460,20 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame:SetPoint("LEFT", UIParent, quarterEdgePadding + Frame.Target:GetWidth(), offsetY)
+					Frame:SetPoint("LEFT", InteractionQuestParent, quarterEdgePadding + Frame.Target:GetWidth(), offsetY)
 				else
 					offsetX = quarterEdgePadding
 
 					--------------------------------
 
-					Frame:SetPoint("LEFT", UIParent, quarterEdgePadding, offsetY)
+					Frame:SetPoint("LEFT", InteractionQuestParent, quarterEdgePadding, offsetY)
 				end
 			else
-				offsetX = screenWidth - frameWidth - quarterEdgePadding
+				offsetX = usableWidth - frameWidth - quarterEdgePadding
 
 				--------------------------------
 
-				Frame:SetPoint("LEFT", UIParent, offsetX, offsetY)
+				Frame:SetPoint("LEFT", InteractionQuestParent, offsetX, offsetY)
 			end
 		end
 		Settings_UIDirection()

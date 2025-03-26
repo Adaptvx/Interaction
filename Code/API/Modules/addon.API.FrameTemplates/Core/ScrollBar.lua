@@ -64,10 +64,10 @@ do
 		do -- THEME
 			local function UpdateTheme()
 				if (theme and theme == 2) or (not theme and addon.API.Util.IsDarkTheme) then
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/scrollbar-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/scrollbar-background-highlighted.png"
-					Frame._ThumbTexture = Frame._CustomThumbTexture or addon.API.Util.PATH .. "Elements/scrollbar-thumb.png"
-					Frame._ThumbHighlightTexture = Frame._CustomThumbHighlightTexture or addon.API.Util.PATH .. "Elements/scrollbar-thumb-highlighted.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-background-highlighted.png"
+					Frame._ThumbTexture = Frame._CustomThumbTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-thumb.png"
+					Frame._ThumbHighlightTexture = Frame._CustomThumbHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-thumb-highlighted.png"
 					Frame._DefaultColor = Frame._CustomDefaultColor or { r = 1, g = 1, b = 1, a = .1 }
 					Frame._HighlightColor = Frame._CustomHighlightColor or { r = 1, g = 1, b = 1, a = .1 }
 					Frame._ThumbColor = Frame._CustomThumbColor or { r = 1, g = 1, b = 1, a = .25 }
@@ -75,10 +75,10 @@ do
 				end
 
 				if (theme and theme == 1) or (not theme and not addon.API.Util.IsDarkTheme) then
-					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/scrollbar-background.png"
-					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/scrollbar-background-highlighted.png"
-					Frame._ThumbTexture = Frame._CustomThumbTexture or addon.API.Util.PATH .. "Elements/scrollbar-thumb.png"
-					Frame._ThumbHighlightTexture = Frame._CustomThumbHighlightTexture or addon.API.Util.PATH .. "Elements/scrollbar-thumb-highlighted.png"
+					Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-background.png"
+					Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-background-highlighted.png"
+					Frame._ThumbTexture = Frame._CustomThumbTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-thumb.png"
+					Frame._ThumbHighlightTexture = Frame._CustomThumbHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/scrollbar-thumb-highlighted.png"
 					Frame._DefaultColor = Frame._CustomDefaultColor or { r = .1, g = .1, b = .1, a = .1 }
 					Frame._HighlightColor = Frame._CustomHighlightColor or { r = .1, g = .1, b = .1, a = .1 }
 					Frame._ThumbColor = Frame._CustomThumbColor or { r = .1, g = .1, b = .1, a = .5 }

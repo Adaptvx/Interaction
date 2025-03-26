@@ -34,7 +34,7 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.PATH = addon.Variables.PATH .. "Art/Gossip/"
+		NS.Variables.PATH = addon.Variables.PATH_ART .. "Gossip/"
 		NS.Variables.PADDING = 10
 	end
 end

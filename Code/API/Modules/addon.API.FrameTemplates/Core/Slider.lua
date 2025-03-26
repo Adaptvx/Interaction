@@ -67,18 +67,18 @@ do
 		do -- THEME
 			local function UpdateTheme()
 				if (theme and theme == 2) or (not theme and addon.API.Util.IsDarkTheme) then
-					frame._DefaultTexture = frame._CustomDefaultTexture or (addon.API.Util.PATH .. "Elements/slider-background.png")
-					frame._HighlightTexture = frame._CustomHighlightTexture or (addon.API.Util.PATH .. "Elements/slider-background-highlighted.png")
-					frame._ThumbTexture = frame._CustomThumbTexture or (addon.API.Util.PATH .. "Elements/slider-thumb.png")
-					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (addon.API.Util.PATH .. "Elements/slider-thumb-highlighted.png")
+					frame._DefaultTexture = frame._CustomDefaultTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-background.png")
+					frame._HighlightTexture = frame._CustomHighlightTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-background-highlighted.png")
+					frame._ThumbTexture = frame._CustomThumbTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-thumb.png")
+					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-thumb-highlighted.png")
 
 					frame._BackgroundColor = frame._CustomColor or addon.API.Util.RGB_WHITE
 					frame._ThumbColor = frame._CustomThumbColor or { r = 1, g = 1, b = 1 }
 				elseif (theme and theme == 1) or (not theme and not addon.API.Util.IsDarkTheme) then
-					frame._DefaultTexture = frame._CustomDefaultTexture or (addon.API.Util.PATH .. "Elements/slider-background.png")
-					frame._HighlightTexture = frame._CustomHighlightTexture or (addon.API.Util.PATH .. "Elements/slider-background-highlighted.png")
-					frame._ThumbTexture = frame._CustomThumbTexture or (addon.API.Util.PATH .. "Elements/slider-thumb.png")
-					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (addon.API.Util.PATH .. "Elements/slider-thumb-highlighted.png")
+					frame._DefaultTexture = frame._CustomDefaultTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-background.png")
+					frame._HighlightTexture = frame._CustomHighlightTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-background-highlighted.png")
+					frame._ThumbTexture = frame._CustomThumbTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-thumb.png")
+					frame._ThumbHighlightTexture = frame._ThumbHighlightTexture or (addon.Variables.PATH_ART .. "Elements/Elements/slider-thumb-highlighted.png")
 
 					frame._BackgroundColor = frame._CustomColor or addon.API.Util.RGB_BLACK
 					frame._ThumbColor = frame._CustomThumbColor or { r = .1, g = .1, b = .1 }

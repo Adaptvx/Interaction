@@ -40,8 +40,8 @@ do -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.AUDIOBOOKUI_PATH = addon.Variables.PATH .. "Art/Audiobook/"
-		NS.Variables.READABLEUI_PATH = addon.Variables.PATH .. "Art/Readable/"
+		NS.Variables.AUDIOBOOKUI_PATH = addon.Variables.PATH_ART .. "Audiobook/"
+		NS.Variables.READABLEUI_PATH = addon.Variables.PATH_ART .. "Readable/"
 
 		NS.Variables.NINESLICE_DEFAULT = NS.Variables.READABLEUI_PATH .. "Elements/button-nineslice.png"
 		NS.Variables.NINESLICE_HEAVY = NS.Variables.READABLEUI_PATH .. "Elements/button-heavy-nineslice.png"

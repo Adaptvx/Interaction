@@ -63,7 +63,7 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 		addon.API.Main:RegisterThemeUpdate(UpdateTheme, 3)
 
 		addon.API.FrameTemplates.Styles:Button(Frame.Button, {
-			defaultTexture = addon.API.Util.PATH .. "empty",
+			defaultTexture = addon.Variables.PATH_ART .. "Elements/empty",
 			playAnimation = false,
 			color = DefaultColor,
 			highlightColor = HighlightColor,
@@ -101,11 +101,11 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 				local TEXTURE_RIGHT
 
 				if addon.Theme.IsDarkTheme then
-					TEXTURE_LEFT = addon.Variables.PATH .. "Art/Platform/Platform-LB-Tab-Light.png"
-					TEXTURE_RIGHT = addon.Variables.PATH .. "Art/Platform/Platform-RB-Tab-Light.png"
+					TEXTURE_LEFT = addon.Variables.PATH_ART .. "Platform/Platform-LB-Tab-Light.png"
+					TEXTURE_RIGHT = addon.Variables.PATH_ART .. "Platform/Platform-RB-Tab-Light.png"
 				else
-					TEXTURE_LEFT = addon.Variables.PATH .. "Art/Platform/Platform-LB-Tab.png"
-					TEXTURE_RIGHT = addon.Variables.PATH .. "Art/Platform/Platform-RB-Tab.png"
+					TEXTURE_LEFT = addon.Variables.PATH_ART .. "Platform/Platform-LB-Tab.png"
+					TEXTURE_RIGHT = addon.Variables.PATH_ART .. "Platform/Platform-RB-Tab.png"
 				end
 
 				Frame.Button.Left_IconTexture:SetTexture(TEXTURE_LEFT)

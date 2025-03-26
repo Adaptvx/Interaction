@@ -12,6 +12,7 @@ local NS = addon.LoadedAddons
 
 do -- MAIN
 	NS.DynamicCam = false
+	NS.BtWQuests = false
 end
 
 do -- CONSTANTS
@@ -35,6 +36,7 @@ function NS:Load()
 
 		function addon.LoadedAddons:GetAddons()
 			addon.LoadedAddons.DynamicCam = addon.LoadedAddons:IsAddOnLoaded("DynamicCam")
+			addon.LoadedAddons.BtWQuests = addon.LoadedAddons:IsAddOnLoaded("BtWQuests")
 		end
 	end
 

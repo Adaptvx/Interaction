@@ -23,12 +23,12 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 
 		local function UpdateTheme()
 			if addon.Theme.IsDarkTheme then
-				TEXTURE_Check = addon.API.Util.PATH .. "Elements/check-light.png"
-				TEXTURE_CheckHighlight = addon.API.Util.PATH .. "Elements/check-dark.png"
+				TEXTURE_Check = addon.Variables.PATH_ART .. "Elements/Elements/check-light.png"
+				TEXTURE_CheckHighlight = addon.Variables.PATH_ART .. "Elements/Elements/check-dark.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_DarkTheme
 			else
-				TEXTURE_Check = addon.Variables.PATH .. "Art/Settings/check-dark.png"
-				TEXTURE_CheckHighlight = addon.API.Util.PATH .. "Elements/check-light.png"
+				TEXTURE_Check = addon.Variables.PATH_ART .. "Settings/check-dark.png"
+				TEXTURE_CheckHighlight = addon.Variables.PATH_ART .. "Elements/Elements/check-light.png"
 				COLOR_Default = addon.Theme.Settings.Element_Default_LightTheme
 			end
 

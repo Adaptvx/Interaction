@@ -17,7 +17,7 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	NS.Variables.PATH = addon.Variables.PATH .. "Art/PlayerStatusBar/"
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "PlayerStatusBar/"
 	NS.Variables.TEXTURE_Background = NS.Variables.PATH .. "background.png"
 	NS.Variables.TEXTURE_Notch = NS.Variables.PATH .. "notch.png"
 	NS.Variables.TEXTURE_Progress = NS.Variables.PATH .. "progress.png"

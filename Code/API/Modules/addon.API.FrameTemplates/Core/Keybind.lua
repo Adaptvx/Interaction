@@ -69,17 +69,17 @@ do
 
 		local function UpdateTheme()
 			if (theme and theme == 2) or (theme == nil and addon.API.Util.NativeAPI:GetDarkTheme()) then -- DARK MODE
-				Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/keybind-background-light-outline.png"
-				Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/keybind-background-highlighted-light.png"
-				Frame._ActiveTexture = Frame._CustomActiveTexture or addon.API.Util.PATH .. "Elements/keybind-background-active-light.png"
+				Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-light-outline.png"
+				Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-highlighted-light.png"
+				Frame._ActiveTexture = Frame._CustomActiveTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-active-light.png"
 				Frame._DefaultColor = Frame._CustomDefaultColor or { r = 1, g = 1, b = 1, a = 1 }
 				Frame._TextColor = Frame._CustomTextColor or { r = 1, g = 1, b = 1, a = 1 }
 				Frame._TextHighlightColor = Frame._CustomTextHighlightColor or { r = 0, g = 0, b = 0, a = 1 }
 				Frame._TextSize = Frame._CustomTextSize or 12.5
 			elseif (theme and theme == 1) or (theme == nil and not addon.API.Util.NativeAPI:GetDarkTheme()) then -- LIGHT MODE
-				Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.API.Util.PATH .. "Elements/keybind-background-light.png"
-				Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.API.Util.PATH .. "Elements/keybind-background-highlighted-light.png"
-				Frame._ActiveTexture = Frame._CustomActiveTexture or addon.API.Util.PATH .. "Elements/keybind-background-active-light.png"
+				Frame._DefaultTexture = Frame._CustomDefaultTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-light.png"
+				Frame._HighlightTexture = Frame._CustomHighlightTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-highlighted-light.png"
+				Frame._ActiveTexture = Frame._CustomActiveTexture or addon.Variables.PATH_ART .. "Elements/Elements/keybind-background-active-light.png"
 				Frame._DefaultColor = Frame._CustomDefaultColor or { r = .1, g = .1, b = .1, a = 1 }
 				Frame._TextColor = Frame._CustomTextColor or { r = .1, g = .1, b = .1, a = 1 }
 				Frame._TextHighlightColor = Frame._CustomTextHighlightColor or { r = 1, g = 1, b = 1, a = 1 }

@@ -18,8 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- CREATE ELEMENTS
 			InteractionQuestParent = CreateFrame("Frame", "InteractionQuestParent", InteractionFrame)
-			InteractionQuestParent:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
-			InteractionQuestParent:SetPoint("CENTER", nil)
+			InteractionQuestParent:SetAllPoints(InteractionFrame)
 			InteractionQuestParent:SetFrameStrata("HIGH")
 
 			InteractionQuestFrame = CreateFrame("Frame", "InteractionQuestFrame", InteractionQuestParent)
@@ -239,7 +238,7 @@ function NS.Elements:Load()
 
 				do -- LABEL
 					Frame.ContextIcon.Label = addon.API.FrameTemplates:CreateText(Frame.ContextIcon, addon.Theme.RGB_WHITE, 35, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Label")
-                    Frame.ContextIcon.Label:SetPoint("TOPLEFT", Frame.ContextIcon, 1, -1)
+					Frame.ContextIcon.Label:SetPoint("TOPLEFT", Frame.ContextIcon, 1, -1)
 					Frame.ContextIcon.Label:SetPoint("BOTTOMRIGHT", Frame.ContextIcon, 1, -1)
 				end
 			end
@@ -789,42 +788,324 @@ function NS.Elements:Load()
 
 				do -- STORYLINE
 					local PADDING = NS.Variables:RATIO(9)
+					local BACKGROUND_ALPHA_DEFAULT = .25
+					local BACKGROUND_ALPHA_HIGHLIGHT = .375
+					local BACKGROUND_ALPHA_CLICK = .325
 
 					Frame.Storyline = CreateFrame("Frame", "$parent.Storyline", Frame)
 					Frame.Storyline:SetPoint("BOTTOMLEFT", Frame.TitleHeader, 45, 17.5)
 					Frame.Storyline:SetFrameLevel(4)
 
+					local Storyline = Frame.Storyline
+
 					--------------------------------
 
-					do -- BACKGROUND
-						Frame.Storyline.Background, Frame.Storyline.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Storyline, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 25, .5, "$parent.Background")
-						Frame.Storyline.Background:SetAllPoints(Frame.Storyline, true)
-						Frame.Storyline.Background:SetFrameLevel(3)
-						Frame.Storyline.Background:SetAlpha(.25)
-					end
+					do -- ELEMENTS
+						do -- BACKGROUND
+							Storyline.Background, Storyline.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Storyline, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 25, .5, "$parent.Background")
+							Storyline.Background:SetAllPoints(Storyline, true)
+							Storyline.Background:SetFrameLevel(3)
+							Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+						end
 
-					do -- CONTENT
-						Frame.Storyline.Content = CreateFrame("Frame", "$parent.Content", Frame.Storyline)
-						Frame.Storyline.Content:SetPoint("TOPLEFT", Frame.Storyline, PADDING, -PADDING)
-						Frame.Storyline.Content:SetPoint("BOTTOMRIGHT", Frame.Storyline, -PADDING, PADDING)
-						Frame.Storyline.Content:SetFrameLevel(5)
+						do -- CONTENT
+							Storyline.Content = CreateFrame("Frame", "$parent.Content", Storyline)
+							Storyline.Content:SetPoint("CENTER", Storyline)
+							Storyline.Content:SetFrameLevel(5)
+							addon.API.FrameUtil:SetDynamicSize(Storyline.Content, Storyline, (PADDING * 2), (PADDING * 2))
 
-						----------------------------------
+							local Content = Storyline.Content
 
-						do -- TEXT
-							Frame.Storyline.Content.Text = addon.API.FrameTemplates:CreateText(Frame.Storyline.Content, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-							Frame.Storyline.Content.Text:SetAllPoints(Frame.Storyline.Content, true)
+							----------------------------------
+
+							do -- LAYOUT GROUP
+								Content.LayoutGroup = addon.API.FrameTemplates:CreateLayoutGroup(Content, { point = "LEFT", direction = "horizontal", resize = false, padding = (PADDING / 2), distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+								Content.LayoutGroup:SetPoint("CENTER", Content)
+								Content.LayoutGroup:SetFrameLevel(6)
+								addon.API.FrameUtil:SetDynamicSize(Content.LayoutGroup, Content, 0, 0)
+
+								local LayoutGroup = Content.LayoutGroup
+
+								----------------------------------
+
+								do -- IMAGE FRAME
+									LayoutGroup.ImageFrame = CreateFrame("Frame", "$parent.ImageFrame", LayoutGroup)
+									LayoutGroup.ImageFrame:SetFrameLevel(7)
+									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.ImageFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
+									LayoutGroup:AddElement(LayoutGroup.ImageFrame)
+
+									local ImageFrame = LayoutGroup.ImageFrame
+
+									----------------------------------
+
+									do -- BACKGROUND
+										ImageFrame.Background, ImageFrame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(ImageFrame, "HIGH", nil, "$parent.Background")
+										ImageFrame.Background:SetAllPoints(ImageFrame, true)
+										ImageFrame.Background:SetFrameLevel(7)
+									end
+								end
+
+								do -- TEXT FRAME
+									LayoutGroup.TextFrame = CreateFrame("Frame", "$parent.TextFrame", LayoutGroup)
+									LayoutGroup.TextFrame:SetFrameLevel(7)
+									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.TextFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
+									LayoutGroup:AddElement(LayoutGroup.TextFrame)
+
+									local TextFrame = LayoutGroup.TextFrame
+
+									----------------------------------
+
+									do -- TEXT
+										TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+										TextFrame.Text:SetAllPoints(TextFrame, true)
+									end
+								end
+							end
 						end
 					end
 
-					do -- EVENTS
-						local function UpdateSize()
-							Frame.Storyline:SetSize(PADDING + Frame.Storyline.Content.Text:GetStringWidth() + PADDING, 27.5)
-						end
-						UpdateSize()
+					do -- ANIMATIONS
+						do -- ON ENTER
+							function Frame:Animation_OnEnter_StopEvent()
+								return not Storyline.isMouseOver
+							end
 
-						Frame:HookScript("OnSizeChanged", UpdateSize)
-						hooksecurefunc(Frame.Storyline.Content.Text, "SetText", UpdateSize)
+							function Frame:Animation_OnEnter(skipAnimation)
+								if skipAnimation then
+									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
+								else
+									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
+								end
+							end
+						end
+
+						do -- ON LEAVE
+							function Frame:Animation_OnLeave_StopEvent()
+								return Storyline.isMouseOver
+							end
+
+							function Frame:Animation_OnLeave(skipAnimation)
+								if skipAnimation then
+									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+								else
+									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnLeave_StopEvent)
+								end
+							end
+						end
+
+						do -- ON MOUSE DOWN
+							function Frame:Animation_OnMouseDown_StopEvent()
+								return not Storyline.isMouseDown
+							end
+
+							function Frame:Animation_OnMouseDown(skipAnimation)
+								if skipAnimation then
+									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_CLICK)
+								else
+									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_CLICK, nil, Frame.Animation_OnEnter_StopEvent)
+								end
+							end
+						end
+
+						do -- ON MOUSE UP
+							function Frame:Animation_OnMouseUp_StopEvent()
+								return Storyline.isMouseDown
+							end
+
+							function Frame:Animation_OnMouseUp(skipAnimation)
+								if skipAnimation then
+									if Storyline.isMouseOver then
+										Storyline.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
+									else
+										Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+									end
+								else
+									if Storyline.isMouseOver then
+										addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
+									else
+										addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnEnter_StopEvent)
+									end
+								end
+							end
+						end
+					end
+
+					do -- LOGIC
+						Storyline.interactable = false
+						Storyline.isMouseOver = false
+						Storyline.isMouseDown = false
+
+						Storyline.onInteractableCallbacks = {}
+						Storyline.enterCallbacks = {}
+						Storyline.leaveCallbacks = {}
+						Storyline.mouseDownCallbacks = {}
+						Storyline.mouseUpCallbacks = {}
+						Storyline.clickCallbacks = {}
+
+						--------------------------------
+
+						do -- FUNCTIONS
+							do -- SET
+								function Storyline:SetInteractable(interactable)
+									Storyline.interactable = interactable
+
+									--------------------------------
+
+									if interactable then
+										Storyline:Event_OnLeave(true)
+									else
+										Storyline:Event_OnLeave(true)
+									end
+								end
+
+								function Storyline:SetClick(callback)
+									Storyline.clickCallbacks = {}
+									table.insert(Storyline.clickCallbacks, callback)
+								end
+
+								function Storyline:SetInfo(text, image, interactable, tooltipText, callback)
+									do -- SET
+										if image then Storyline.Content.LayoutGroup.ImageFrame:Show(); Storyline.Content.LayoutGroup.ImageFrame.BackgroundTexture:SetTexture(image) else Storyline.Content.LayoutGroup.ImageFrame:Hide() end
+										if text then Storyline.Content.LayoutGroup.TextFrame.Text:SetText(text) end
+
+										--------------------------------
+
+										local IMAGE_WIDTH = Storyline.Content.LayoutGroup.ImageFrame:GetWidth()
+										local TEXT_WIDTH = Storyline.Content.LayoutGroup.TextFrame.Text:GetStringWidth()
+
+										Storyline:SetSize(PADDING + (image and (IMAGE_WIDTH + PADDING / 2) or 0) + (TEXT_WIDTH or 0) + PADDING, 27.5)
+										Storyline.Content.LayoutGroup:Sort()
+									end
+
+									do -- INTERACTABLE
+										Storyline:SetInteractable(interactable)
+
+										--------------------------------
+
+										if interactable then
+											Storyline:SetClick(callback)
+
+											--------------------------------
+
+											addon.API.Util:AddTooltip(Storyline, tooltipText, "ANCHOR_BOTTOM", 0, -12.5, false, false)
+										else
+											addon.API.Util:RemoveTooltip(Storyline)
+										end
+									end
+								end
+							end
+
+							do -- LOGIC
+
+							end
+						end
+
+						do -- EVENTS
+							function Storyline:Event_OnEnter(skipAnimation)
+								if Storyline.interactable then
+									Storyline.isMouseOver = true
+
+									--------------------------------
+
+									Frame:Animation_OnEnter(skipAnimation)
+
+									--------------------------------
+
+									do -- ON ENTER
+										if #Storyline.enterCallbacks >= 1 then
+											local enterCallbacks = Storyline.enterCallbacks
+
+											for callback = 1, #enterCallbacks do
+												enterCallbacks[callback](Storyline)
+											end
+										end
+									end
+								end
+							end
+
+							function Storyline:Event_OnLeave(skipAnimation)
+								if Storyline.interactable then
+									Storyline.isMouseOver = false
+
+									--------------------------------
+
+									Frame:Animation_OnLeave(skipAnimation)
+
+									--------------------------------
+
+									do -- ON LEAVE
+										if #Storyline.leaveCallbacks >= 1 then
+											local leaveCallbacks = Storyline.leaveCallbacks
+
+											for callback = 1, #leaveCallbacks do
+												leaveCallbacks[callback](Storyline)
+											end
+										end
+									end
+								end
+							end
+
+							function Storyline:Event_OnMouseDown(skipAnimation)
+								if Storyline.interactable then
+									Storyline.isMouseDown = true
+
+									--------------------------------
+
+									Frame:Animation_OnMouseDown(skipAnimation)
+
+									--------------------------------
+
+									do -- ON MOUSE DOWN
+										if #Storyline.mouseDownCallbacks >= 1 then
+											local mouseDownCallbacks = Storyline.mouseDownCallbacks
+
+											for callback = 1, #mouseDownCallbacks do
+												mouseDownCallbacks[callback](Storyline)
+											end
+										end
+									end
+								end
+							end
+
+							function Storyline:Event_OnMouseUp(skipAnimation)
+								if Storyline.interactable then
+									Storyline.isMouseDown = false
+
+									--------------------------------
+
+									Frame:Animation_OnMouseUp(skipAnimation)
+
+									--------------------------------
+
+									do -- ON MOUSE UP
+										if #Storyline.mouseUpCallbacks >= 1 then
+											local mouseUpCallbacks = Storyline.mouseUpCallbacks
+
+											for callback = 1, #mouseUpCallbacks do
+												mouseUpCallbacks[callback](Storyline)
+											end
+										end
+									end
+
+									do -- ON CLICK
+										if #Storyline.clickCallbacks >= 1 then
+											local clickCallbacks = Storyline.clickCallbacks
+
+											for callback = 1, #clickCallbacks do
+												clickCallbacks[callback](Storyline)
+											end
+										end
+									end
+								end
+							end
+
+							addon.API.FrameTemplates:CreateMouseResponder(Storyline, { enterCallback = Storyline.Event_OnEnter, leaveCallback = Storyline.Event_OnLeave, mouseDownCallback = Storyline.Event_OnMouseDown, mouseUpCallback = Storyline.Event_OnMouseUp })
+						end
+					end
+
+					do -- SETUP
+						Storyline:Event_OnLeave(true)
+						Storyline:SetInteractable(false)
 					end
 				end
 

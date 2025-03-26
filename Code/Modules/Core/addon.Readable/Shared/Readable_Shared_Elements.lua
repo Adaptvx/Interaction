@@ -92,7 +92,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- IMAGE
-						InteractionReadableUIFrame.CloseButton.Image, InteractionReadableUIFrame.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(InteractionReadableUIFrame.CloseButton, "FULLSCREEN", addon.API.Util.PATH .. "Elements/close.png", "$parent.Image")
+						InteractionReadableUIFrame.CloseButton.Image, InteractionReadableUIFrame.CloseButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(InteractionReadableUIFrame.CloseButton, "FULLSCREEN", addon.Variables.PATH_ART .. "Elements/Elements/close.png", "$parent.Image")
 						InteractionReadableUIFrame.CloseButton.Image:SetSize(InteractionReadableUIFrame.CloseButton:GetWidth() - 10, InteractionReadableUIFrame.CloseButton:GetHeight() - 10)
 						InteractionReadableUIFrame.CloseButton.Image:SetPoint("CENTER", InteractionReadableUIFrame.CloseButton)
 						InteractionReadableUIFrame.CloseButton.Image:SetAlpha(.5)

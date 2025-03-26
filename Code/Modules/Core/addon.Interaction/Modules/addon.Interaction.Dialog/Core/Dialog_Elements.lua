@@ -57,9 +57,9 @@ function NS.Elements:Load()
 						local TEXTURE_Background
 
 						if addon.Theme.IsDarkTheme_Dialog then
-							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-dark.png"
+							TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-dark.png"
 						else
-							TEXTURE_Background = addon.Variables.PATH .. "Art/Dialog/tooltip-tail-light.png"
+							TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-light.png"
 						end
 
 						InteractionDialogFrame.DialogBackground.TailTexture:SetTexture(TEXTURE_Background)
@@ -90,7 +90,7 @@ function NS.Elements:Load()
 			end
 
 			do -- STYLE RUSTIC
-				InteractionDialogFrame.RusticBackground, InteractionDialogFrame.RusticBackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH .. "Art/Gradient/backdrop-nineslice.png", 128, .5, "$parent.RusticBackground")
+				InteractionDialogFrame.RusticBackground, InteractionDialogFrame.RusticBackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionDialogFrame, "LOW", addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.RusticBackground")
 				InteractionDialogFrame.RusticBackground:SetSize(InteractionDialogFrame.DialogBackground:GetWidth() + 55, InteractionDialogFrame.DialogBackground:GetHeight() + 55)
 				InteractionDialogFrame.RusticBackground:SetPoint("CENTER", InteractionDialogFrame)
 				InteractionDialogFrame.RusticBackground:SetFrameStrata("LOW")

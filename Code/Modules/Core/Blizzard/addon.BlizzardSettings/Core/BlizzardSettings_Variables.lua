@@ -29,7 +29,7 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.PATH = addon.Variables.PATH .. "Art/Blizzard/Settings/"
+		NS.Variables.PATH = addon.Variables.PATH_ART .. "Blizzard/Settings/"
 	end
 end
 

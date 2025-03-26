@@ -17,8 +17,6 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	addon.API.Util.PATH = "Interface/AddOns/Interaction/Code/API/Art/"
-	addon.API.Util.ADDON_PATH = "Interface/AddOns/Interaction/"
 	addon.API.Util.RGB_RECOMMENDED = {}
 	addon.API.Util.RGB_WHITE = { r = .99, g = .99, b = .99 }
 	addon.API.Util.RGB_BLACK = { r = .2, g = .2, b = .2 }

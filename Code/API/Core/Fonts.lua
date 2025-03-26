@@ -16,7 +16,7 @@ end
 
 do -- CONSTANTS
 	NS.Fonts.LOCALE = GetLocale()
-	NS.Fonts.PATH = addon.Variables.PATH .. "Art/Fonts/"
+	NS.Fonts.PATH = addon.Variables.PATH_ART .. "Fonts/"
 end
 
 --------------------------------

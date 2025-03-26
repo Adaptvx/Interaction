@@ -28,7 +28,7 @@ function NS.Variables:Load()
 	end
 
 	do -- CONSTANTS
-		NS.Variables.PATH = addon.Variables.PATH .. "Art/Waypoint/"
+		NS.Variables.PATH = addon.Variables.PATH_ART .. "Waypoint/"
 		NS.Variables.DEFAULT_HEIGHT = 125
 		NS.Variables.BLOCKED_HEIGHT = 75
 		NS.Variables.ANIMATION_HEIGHT = 25

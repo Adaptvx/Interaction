@@ -17,7 +17,7 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	NS.Variables.PATH = addon.Variables.PATH .. "Art/Readable/"
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "Readable/"
 	NS.Variables.NINESLICE_DEFAULT = NS.Variables.PATH .. "Elements/button-nineslice.png"
 	NS.Variables.NINESLICE_HEAVY = NS.Variables.PATH .. "Elements/button-heavy-nineslice.png"
 	NS.Variables.NINESLICE_HIGHLIGHT = NS.Variables.PATH .. "Elements/button-highlighted-nineslice.png"

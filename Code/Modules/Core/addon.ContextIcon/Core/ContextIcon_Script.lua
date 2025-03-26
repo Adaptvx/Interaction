@@ -63,7 +63,7 @@ function NS.Script:Load()
 
 				for k, v in pairs(NS.Variables.ICON_MAP) do
 					if tostring(texture) == tostring(k) then
-						Result = addon.Variables.PATH .. "Art/ContextIcons/" .. v .. ".png"
+						Result = addon.Variables.PATH_ART .. "ContextIcons/" .. v .. ".png"
 					end
 				end
 
@@ -381,7 +381,7 @@ function NS.Script:Load()
 
 							if resultPath and not resultTexture then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end
@@ -394,7 +394,7 @@ function NS.Script:Load()
 
 							if resultPath then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end
@@ -455,7 +455,7 @@ function NS.Script:Load()
 
 							if resultPath and not resultTexture then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end
@@ -468,7 +468,7 @@ function NS.Script:Load()
 
 							if resultPath then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end
@@ -529,7 +529,7 @@ function NS.Script:Load()
 
 							if resultPath and not resultTexture then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end
@@ -542,7 +542,7 @@ function NS.Script:Load()
 
 							if resultPath then
 								result = Callback:ConvertToInlineIcon(resultPath)
-								resultTexture = addon.Variables.PATH .. "Art/ContextIcons/" .. resultPath .. ".png"
+								resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 							else
 								-- print("Invalid Texture")
 							end

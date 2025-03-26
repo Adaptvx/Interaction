@@ -109,7 +109,7 @@ function NS.Script:Load()
 			end
 
 			local function Click(button)
-				local PATH_GOSSIP = addon.Variables.PATH .. "Art/ContextIcons/gossip-bubble.png"
+				local PATH_GOSSIP = addon.Variables.PATH_ART .. "ContextIcons/gossip-bubble.png"
 
 				local usePlayerVoice = (addon.Database.DB_GLOBAL.profile.INT_TTS and addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER)
 				local isGossipOption = (button.texture == PATH_GOSSIP)
@@ -511,10 +511,10 @@ function NS.Script:Load()
 							end
 
 							do -- TRIGGER ICON
-								text = (string.gsub(text, L["GossipData - Trigger - Quest"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-								text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], addon.API.Util:InlineIcon(addon.Variables.PATH .. "Art/ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
+								text = (string.gsub(text, L["GossipData - Trigger - Quest"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
+								text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Subtext 1"]))
 							end
 
 							--------------------------------
@@ -648,11 +648,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			local screenWidth = addon.API.Main:GetScreenWidth()
+			local usableWidth = InteractionGossipParent:GetWidth()
 			local frameWidth = 325
 			local dialogMaxWidth = 350
 
-			local quarterWidth = (screenWidth - dialogMaxWidth) / 2
+			local quarterWidth = (usableWidth - dialogMaxWidth) / 2
 			local quarterEdgePadding = (quarterWidth - frameWidth) / 2
 			local offsetX
 
@@ -662,13 +662,13 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				Frame:SetPoint("LEFT", UIParent, offsetX, 0)
+				Frame:SetPoint("LEFT", InteractionGossipParent, offsetX, 0)
 			else
-				offsetX = screenWidth - frameWidth - quarterEdgePadding
+				offsetX = usableWidth - frameWidth - quarterEdgePadding
 
 				--------------------------------
 
-				Frame:SetPoint("LEFT", UIParent, offsetX, 0)
+				Frame:SetPoint("LEFT", InteractionGossipParent, offsetX, 0)
 			end
 		end
 
