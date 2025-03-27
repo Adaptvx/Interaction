@@ -788,9 +788,9 @@ function NS.Elements:Load()
 
 				do -- STORYLINE
 					local PADDING = NS.Variables:RATIO(9)
-					local BACKGROUND_ALPHA_DEFAULT = .25
-					local BACKGROUND_ALPHA_HIGHLIGHT = .375
-					local BACKGROUND_ALPHA_CLICK = .325
+					local BACKGROUND_ALPHA_DEFAULT = .125
+					local BACKGROUND_ALPHA_HIGHLIGHT = .25
+					local BACKGROUND_ALPHA_CLICK = .175
 
 					Frame.Storyline = CreateFrame("Frame", "$parent.Storyline", Frame)
 					Frame.Storyline:SetPoint("BOTTOMLEFT", Frame.TitleHeader, 45, 17.5)
@@ -801,63 +801,75 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- ELEMENTS
-						do -- BACKGROUND
-							Storyline.Background, Storyline.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Storyline, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 25, .5, "$parent.Background")
-							Storyline.Background:SetAllPoints(Storyline, true)
-							Storyline.Background:SetFrameLevel(3)
-							Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
-						end
-
 						do -- CONTENT
 							Storyline.Content = CreateFrame("Frame", "$parent.Content", Storyline)
 							Storyline.Content:SetPoint("CENTER", Storyline)
 							Storyline.Content:SetFrameLevel(5)
-							addon.API.FrameUtil:SetDynamicSize(Storyline.Content, Storyline, (PADDING * 2), (PADDING * 2))
+							addon.API.FrameUtil:SetDynamicSize(Storyline.Content, Storyline, 0, 0)
 
 							local Content = Storyline.Content
 
 							----------------------------------
 
-							do -- LAYOUT GROUP
-								Content.LayoutGroup = addon.API.FrameTemplates:CreateLayoutGroup(Content, { point = "LEFT", direction = "horizontal", resize = false, padding = (PADDING / 2), distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
-								Content.LayoutGroup:SetPoint("CENTER", Content)
-								Content.LayoutGroup:SetFrameLevel(6)
-								addon.API.FrameUtil:SetDynamicSize(Content.LayoutGroup, Content, 0, 0)
+							do -- BACKGROUND
+								Content.Background, Content.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Content, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 25, .5, "$parent.Background")
+								Content.Background:SetAllPoints(Content, true)
+								Content.Background:SetFrameLevel(3)
+								Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+							end
 
-								local LayoutGroup = Content.LayoutGroup
+							do -- CONTENT
+								Content.Content = CreateFrame("Frame", "$parent.Content", Content)
+								Content.Content:SetPoint("CENTER", Content)
+								Content.Content:SetFrameLevel(5)
+								Content.Content:SetAlpha(.5)
+								addon.API.FrameUtil:SetDynamicSize(Content.Content, Content, (PADDING * 2), (PADDING * 2))
+
+								local Subcontent = Content.Content
 
 								----------------------------------
 
-								do -- IMAGE FRAME
-									LayoutGroup.ImageFrame = CreateFrame("Frame", "$parent.ImageFrame", LayoutGroup)
-									LayoutGroup.ImageFrame:SetFrameLevel(7)
-									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.ImageFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
-									LayoutGroup:AddElement(LayoutGroup.ImageFrame)
+								do -- LAYOUT GROUP
+									Subcontent.LayoutGroup = addon.API.FrameTemplates:CreateLayoutGroup(Subcontent, { point = "LEFT", direction = "horizontal", resize = false, padding = (PADDING / 2), distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+									Subcontent.LayoutGroup:SetPoint("CENTER", Subcontent)
+									Subcontent.LayoutGroup:SetFrameLevel(6)
+									addon.API.FrameUtil:SetDynamicSize(Subcontent.LayoutGroup, Subcontent, 0, 0)
 
-									local ImageFrame = LayoutGroup.ImageFrame
+									local LayoutGroup = Subcontent.LayoutGroup
 
 									----------------------------------
 
-									do -- BACKGROUND
-										ImageFrame.Background, ImageFrame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(ImageFrame, "HIGH", nil, "$parent.Background")
-										ImageFrame.Background:SetAllPoints(ImageFrame, true)
-										ImageFrame.Background:SetFrameLevel(7)
+									do -- IMAGE FRAME
+										LayoutGroup.ImageFrame = CreateFrame("Frame", "$parent.ImageFrame", LayoutGroup)
+										LayoutGroup.ImageFrame:SetFrameLevel(7)
+										addon.API.FrameUtil:SetDynamicSize(LayoutGroup.ImageFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
+										LayoutGroup:AddElement(LayoutGroup.ImageFrame)
+
+										local ImageFrame = LayoutGroup.ImageFrame
+
+										----------------------------------
+
+										do -- BACKGROUND
+											ImageFrame.Background, ImageFrame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(ImageFrame, "HIGH", nil, "$parent.Background")
+											ImageFrame.Background:SetAllPoints(ImageFrame, true)
+											ImageFrame.Background:SetFrameLevel(7)
+										end
 									end
-								end
 
-								do -- TEXT FRAME
-									LayoutGroup.TextFrame = CreateFrame("Frame", "$parent.TextFrame", LayoutGroup)
-									LayoutGroup.TextFrame:SetFrameLevel(7)
-									addon.API.FrameUtil:SetDynamicSize(LayoutGroup.TextFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
-									LayoutGroup:AddElement(LayoutGroup.TextFrame)
+									do -- TEXT FRAME
+										LayoutGroup.TextFrame = CreateFrame("Frame", "$parent.TextFrame", LayoutGroup)
+										LayoutGroup.TextFrame:SetFrameLevel(7)
+										addon.API.FrameUtil:SetDynamicSize(LayoutGroup.TextFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
+										LayoutGroup:AddElement(LayoutGroup.TextFrame)
 
-									local TextFrame = LayoutGroup.TextFrame
+										local TextFrame = LayoutGroup.TextFrame
 
-									----------------------------------
+										----------------------------------
 
-									do -- TEXT
-										TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-										TextFrame.Text:SetAllPoints(TextFrame, true)
+										do -- TEXT
+											TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+											TextFrame.Text:SetAllPoints(TextFrame, true)
+										end
 									end
 								end
 							end
@@ -872,9 +884,9 @@ function NS.Elements:Load()
 
 							function Frame:Animation_OnEnter(skipAnimation)
 								if skipAnimation then
-									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
+									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
 								else
-									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
+									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
 								end
 							end
 						end
@@ -886,9 +898,9 @@ function NS.Elements:Load()
 
 							function Frame:Animation_OnLeave(skipAnimation)
 								if skipAnimation then
-									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
 								else
-									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnLeave_StopEvent)
+									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnLeave_StopEvent)
 								end
 							end
 						end
@@ -900,9 +912,9 @@ function NS.Elements:Load()
 
 							function Frame:Animation_OnMouseDown(skipAnimation)
 								if skipAnimation then
-									Storyline.Background:SetAlpha(BACKGROUND_ALPHA_CLICK)
+									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_CLICK)
 								else
-									addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_CLICK, nil, Frame.Animation_OnEnter_StopEvent)
+									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_CLICK, nil, Frame.Animation_OnEnter_StopEvent)
 								end
 							end
 						end
@@ -915,15 +927,15 @@ function NS.Elements:Load()
 							function Frame:Animation_OnMouseUp(skipAnimation)
 								if skipAnimation then
 									if Storyline.isMouseOver then
-										Storyline.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
+										Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
 									else
-										Storyline.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+										Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
 									end
 								else
 									if Storyline.isMouseOver then
-										addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
+										addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
 									else
-										addon.API.Animation:Fade(Storyline.Background, .125, Storyline.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnEnter_StopEvent)
+										addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnEnter_StopEvent)
 									end
 								end
 							end
@@ -931,11 +943,11 @@ function NS.Elements:Load()
 					end
 
 					do -- LOGIC
-						Storyline.interactable = false
+						Storyline.enabled = false
 						Storyline.isMouseOver = false
 						Storyline.isMouseDown = false
 
-						Storyline.onInteractableCallbacks = {}
+						Storyline.onEnabledCallbacks = {}
 						Storyline.enterCallbacks = {}
 						Storyline.leaveCallbacks = {}
 						Storyline.mouseDownCallbacks = {}
@@ -946,15 +958,15 @@ function NS.Elements:Load()
 
 						do -- FUNCTIONS
 							do -- SET
-								function Storyline:SetInteractable(interactable)
-									Storyline.interactable = interactable
+								function Storyline:SetEnabled(enabled)
+									Storyline.enabled = enabled
 
 									--------------------------------
 
-									if interactable then
-										Storyline:Event_OnLeave(true)
+									if enabled then
+										Storyline:Leave(true, true)
 									else
-										Storyline:Event_OnLeave(true)
+										Storyline:Leave(true, true)
 									end
 								end
 
@@ -963,26 +975,28 @@ function NS.Elements:Load()
 									table.insert(Storyline.clickCallbacks, callback)
 								end
 
-								function Storyline:SetInfo(text, image, interactable, tooltipText, callback)
+								function Storyline:SetInfo(text, image, enabled, tooltipText, callback)
 									do -- SET
-										if image then Storyline.Content.LayoutGroup.ImageFrame:Show(); Storyline.Content.LayoutGroup.ImageFrame.BackgroundTexture:SetTexture(image) else Storyline.Content.LayoutGroup.ImageFrame:Hide() end
-										if text then Storyline.Content.LayoutGroup.TextFrame.Text:SetText(text) end
+										if image then
+											Storyline.Content.Content.LayoutGroup.ImageFrame:Show(); Storyline.Content.Content.LayoutGroup.ImageFrame.BackgroundTexture:SetTexture(image)
+										else Storyline.Content.Content.LayoutGroup.ImageFrame:Hide() end
+										if text then Storyline.Content.Content.LayoutGroup.TextFrame.Text:SetText(text) end
 
 										--------------------------------
 
-										local IMAGE_WIDTH = Storyline.Content.LayoutGroup.ImageFrame:GetWidth()
-										local TEXT_WIDTH = Storyline.Content.LayoutGroup.TextFrame.Text:GetStringWidth()
+										local IMAGE_WIDTH = Storyline.Content.Content.LayoutGroup.ImageFrame:GetWidth()
+										local TEXT_WIDTH = Storyline.Content.Content.LayoutGroup.TextFrame.Text:GetStringWidth()
 
 										Storyline:SetSize(PADDING + (image and (IMAGE_WIDTH + PADDING / 2) or 0) + (TEXT_WIDTH or 0) + PADDING, 27.5)
-										Storyline.Content.LayoutGroup:Sort()
+										Storyline.Content.Content.LayoutGroup:Sort()
 									end
 
-									do -- INTERACTABLE
-										Storyline:SetInteractable(interactable)
+									do -- ENABLED
+										Storyline:SetEnabled(enabled)
 
 										--------------------------------
 
-										if interactable then
+										if enabled then
 											Storyline:SetClick(callback)
 
 											--------------------------------
@@ -1001,8 +1015,8 @@ function NS.Elements:Load()
 						end
 
 						do -- EVENTS
-							function Storyline:Event_OnEnter(skipAnimation)
-								if Storyline.interactable then
+							function Storyline:Enter(bypass, skipAnimation)
+								if bypass or Storyline.enabled then
 									Storyline.isMouseOver = true
 
 									--------------------------------
@@ -1023,8 +1037,8 @@ function NS.Elements:Load()
 								end
 							end
 
-							function Storyline:Event_OnLeave(skipAnimation)
-								if Storyline.interactable then
+							function Storyline:Leave(bypass, skipAnimation)
+								if bypass or Storyline.enabled then
 									Storyline.isMouseOver = false
 
 									--------------------------------
@@ -1045,8 +1059,8 @@ function NS.Elements:Load()
 								end
 							end
 
-							function Storyline:Event_OnMouseDown(skipAnimation)
-								if Storyline.interactable then
+							function Storyline:MouseDown(bypass, skipAnimation)
+								if bypass or Storyline.enabled then
 									Storyline.isMouseDown = true
 
 									--------------------------------
@@ -1067,8 +1081,8 @@ function NS.Elements:Load()
 								end
 							end
 
-							function Storyline:Event_OnMouseUp(skipAnimation)
-								if Storyline.interactable then
+							function Storyline:MouseUp(bypass, skipAnimation)
+								if bypass or Storyline.enabled then
 									Storyline.isMouseDown = false
 
 									--------------------------------
@@ -1088,24 +1102,30 @@ function NS.Elements:Load()
 									end
 
 									do -- ON CLICK
-										if #Storyline.clickCallbacks >= 1 then
-											local clickCallbacks = Storyline.clickCallbacks
+										Storyline:Click()
+									end
+								end
+							end
 
-											for callback = 1, #clickCallbacks do
-												clickCallbacks[callback](Storyline)
-											end
+							function Storyline:Click()
+								do -- ON CLICK
+									if #Storyline.clickCallbacks >= 1 then
+										local clickCallbacks = Storyline.clickCallbacks
+
+										for callback = 1, #clickCallbacks do
+											clickCallbacks[callback](Storyline)
 										end
 									end
 								end
 							end
 
-							addon.API.FrameTemplates:CreateMouseResponder(Storyline, { enterCallback = Storyline.Event_OnEnter, leaveCallback = Storyline.Event_OnLeave, mouseDownCallback = Storyline.Event_OnMouseDown, mouseUpCallback = Storyline.Event_OnMouseUp })
+							addon.API.FrameTemplates:CreateMouseResponder(Storyline, { enterCallback = Storyline.Enter, leaveCallback = Storyline.Leave, mouseDownCallback = Storyline.MouseDown, mouseUpCallback = Storyline.MouseUp })
 						end
 					end
 
 					do -- SETUP
-						Storyline:Event_OnLeave(true)
-						Storyline:SetInteractable(false)
+						Storyline:Leave(true, true)
+						Storyline:SetEnabled(false)
 					end
 				end
 

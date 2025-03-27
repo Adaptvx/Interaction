@@ -902,6 +902,12 @@ function NS.Script:Load()
 			else
 				frame:SetAlpha(1)
 			end
+
+			--------------------------------
+
+			if frame.API_HideTooltip then
+				frame.API_HideTooltip()
+			end
 		end
 
 		function Callback:Frame_Enter(frame)
@@ -910,6 +916,12 @@ function NS.Script:Load()
 
 				if frame.MouseEnterCallback then
 					frame.MouseEnterCallback()
+				end
+
+				--------------------------------
+
+				if frame.API_ShowTooltip then
+					frame.API_ShowTooltip()
 				end
 			else
 				frame:SetAlpha(.5)
@@ -1144,7 +1156,12 @@ function NS.Script:Load()
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Top then
-				if Frame.Input_Relatives_Top:IsVisible() and (not Frame.Input_Relatives_Top.IsEnabled or (Frame.Input_Relatives_Top.IsEnabled and Frame.Input_Relatives_Top:IsEnabled())) then
+				local isEnabled = (Frame.Input_Relatives_Top.IsEnabled ~= nil and Frame.Input_Relatives_Top:IsEnabled()) or (Frame.Input_Relatives_Top.IsEnabled == nil and true)
+				local isEnabledFlag = (Frame.Input_Relatives_Top.enabled ~= nil and Frame.Input_Relatives_Top.enabled == true) or (Frame.Input_Relatives_Top.enabled == nil and true)
+
+				--------------------------------
+
+				if Frame.Input_Relatives_Top:IsVisible() and (isEnabled and isEnabledFlag) then
 					Callback:RegisterNewFrame(Frame.Input_Relatives_Top)
 				else
 					Callback:Nav_MoveUp(Frame.Input_Relatives_Top)
@@ -1158,7 +1175,12 @@ function NS.Script:Load()
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Bottom then
-				if Frame.Input_Relatives_Bottom:IsVisible() and (not Frame.Input_Relatives_Bottom.IsEnabled or (Frame.Input_Relatives_Bottom.IsEnabled and Frame.Input_Relatives_Bottom:IsEnabled())) then
+				local isEnabled = (Frame.Input_Relatives_Bottom.IsEnabled ~= nil and Frame.Input_Relatives_Bottom:IsEnabled()) or (Frame.Input_Relatives_Bottom.IsEnabled == nil and true)
+				local isEnabledFlag = (Frame.Input_Relatives_Bottom.enabled ~= nil and Frame.Input_Relatives_Bottom.enabled == true) or (Frame.Input_Relatives_Bottom.enabled == nil and true)
+
+				--------------------------------
+
+				if Frame.Input_Relatives_Bottom:IsVisible() and (isEnabled and isEnabledFlag) then
 					Callback:RegisterNewFrame(Frame.Input_Relatives_Bottom)
 				else
 					Callback:Nav_MoveDown(Frame.Input_Relatives_Bottom)
@@ -1172,7 +1194,12 @@ function NS.Script:Load()
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Left then
-				if Frame.Input_Relatives_Left:IsVisible() and (not Frame.Input_Relatives_Left.IsEnabled or (Frame.Input_Relatives_Left.IsEnabled and Frame.Input_Relatives_Left:IsEnabled())) then
+				local isEnabled = (Frame.Input_Relatives_Left.IsEnabled ~= nil and Frame.Input_Relatives_Left:IsEnabled()) or (Frame.Input_Relatives_Left.IsEnabled == nil and true)
+				local isEnabledFlag = (Frame.Input_Relatives_Left.enabled ~= nil and Frame.Input_Relatives_Left.enabled == true) or (Frame.Input_Relatives_Left.enabled == nil and true)
+
+				--------------------------------
+
+				if Frame.Input_Relatives_Left:IsVisible() and (isEnabled and isEnabledFlag) then
 					Callback:RegisterNewFrame(Frame.Input_Relatives_Left)
 				else
 					Callback:Nav_MoveLeft(Frame.Input_Relatives_Left)
@@ -1186,7 +1213,12 @@ function NS.Script:Load()
 			--------------------------------
 
 			if Frame and Frame.Input_Relatives_Right then
-				if Frame.Input_Relatives_Right:IsVisible() and (not Frame.Input_Relatives_Right.IsEnabled or (Frame.Input_Relatives_Right.IsEnabled and Frame.Input_Relatives_Right:IsEnabled())) then
+				local isEnabled = (Frame.Input_Relatives_Right.IsEnabled ~= nil and Frame.Input_Relatives_Right:IsEnabled()) or (Frame.Input_Relatives_Right.IsEnabled == nil and true)
+				local isEnabledFlag = (Frame.Input_Relatives_Right.enabled ~= nil and Frame.Input_Relatives_Right.enabled == true) or (Frame.Input_Relatives_Right.enabled == nil and true)
+
+				--------------------------------
+
+				if Frame.Input_Relatives_Right:IsVisible() and (isEnabled and isEnabledFlag) then
 					Callback:RegisterNewFrame(Frame.Input_Relatives_Right)
 				else
 					Callback:Nav_MoveRight(Frame.Input_Relatives_Right)

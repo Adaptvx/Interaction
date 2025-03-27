@@ -454,12 +454,20 @@ function NS.Navigation:Load()
 
 				--------------------------------
 
+				do -- STORYLINE
+					Callback:SetFrameRelatives({
+						["frame"] = Frame.Storyline,
+						["relativeBottom"] = Elements[1],
+					})
+				end
+
 				do -- CONTENT
 					for element = 1, #Elements do
 						-- FIRST ELEMENT
 						if element == 1 then
 							Callback:SetFrameRelatives({
 								["frame"] = Elements[element],
+								["relativeTop"] = Frame.Storyline,
 								["relativeBottom"] = Elements[element + 1],
 								["scrollFrame"] = Frame.ScrollFrame,
 								["scrollChildFrame"] = Frame.ScrollChildFrame,

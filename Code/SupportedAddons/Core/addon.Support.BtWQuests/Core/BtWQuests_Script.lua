@@ -379,6 +379,18 @@ function NS.Script:Load()
 		CallbackRegistry:Add("Quest.Storyline.Update", function(questID)
 			Callback:SetStorylineFrame(questID)
 		end)
+
+		--------------------------------
+
+		local _ = CreateFrame("Frame")
+		_:RegisterEvent("ADDON_LOADED")
+		_:SetScript("OnEvent", function(self, event, ...)
+			local name = ...
+
+			if addon.API.Util:FindString(name, "BtWQuests") then
+				Callback:UpdateQuestChainInfo()
+			end
+		end)
 	end
 
 	--------------------------------

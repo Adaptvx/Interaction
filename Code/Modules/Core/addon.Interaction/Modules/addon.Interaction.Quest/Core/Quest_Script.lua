@@ -1238,7 +1238,7 @@ function NS.Script:Load()
 			do -- CONTENT
 				if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 					addon.API.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-					addon.API.Animation:Fade(Frame.Storyline, .375, 0, .5, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+					addon.API.Animation:Fade(Frame.Storyline, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 					--------------------------------
 
@@ -1562,6 +1562,7 @@ function NS.Script:Load()
 
 			Frame.ClearChoiceSelected()
 			InteractionQuestFrame.UpdateGameTooltip()
+			InteractionFrame.GameTooltip:Clear()
 		end)
 
 		hooksecurefunc(Frame.ScrollFrame, "SetVerticalScroll", function()
