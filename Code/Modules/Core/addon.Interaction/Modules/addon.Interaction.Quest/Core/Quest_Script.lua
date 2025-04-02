@@ -1508,6 +1508,10 @@ function NS.Script:Load()
 				Frame.SetData() -- Refresh Formatting
 				Settings_UIDirection() -- Refresh Position
 			end
+
+			--------------------------------
+
+			CallbackRegistry:Trigger("Quest.Settings_QuestFrameSize")
 		end
 		Settings_QuestFrameSize()
 

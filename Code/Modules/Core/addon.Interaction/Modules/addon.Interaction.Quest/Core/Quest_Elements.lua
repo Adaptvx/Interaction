@@ -1329,6 +1329,7 @@ function NS.Elements:Load()
 				end
 
 				Frame:HookScript("OnSizeChanged", UpdateSize)
+				CallbackRegistry:Add("Quest.Settings_QuestFrameSize", UpdateSize, 0)
 			end
 		end
 	end
