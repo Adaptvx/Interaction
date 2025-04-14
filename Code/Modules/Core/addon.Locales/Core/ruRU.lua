@@ -413,7 +413,7 @@ local function Load()
 		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
 		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Записи"
 		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Вход"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Зап."
 		L["MinimapIcon - Tooltip - Entries - Empty"] = "Нет записей."
 	end
 
@@ -488,7 +488,7 @@ local function Load()
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] = "|r"
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] = addon.Theme.RGB_GRAY_HEXCODE
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] = "|r"
-			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Click to open quest chain in BtWQuests" .. "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Нажмите, чтобы открыть цепочку заданий в BtWQuests" .. "|r"
 		end
 	end
 end
