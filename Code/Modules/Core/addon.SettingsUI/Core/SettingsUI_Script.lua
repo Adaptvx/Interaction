@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -135,13 +135,13 @@ function NS.Script:Load()
 						for i = 1, #widgetPool do
 							if widgetPool[i].Button then
 								local button = widgetPool[i].Button
-								button.SetActive(false)
+								button:SetActive(false)
 							end
 						end
 					end
 
 					do -- SET
-						tabButton.SetActive(true)
+						tabButton:SetActive(true)
 					end
 				end
 
@@ -158,7 +158,7 @@ function NS.Script:Load()
 							--------------------------------
 
 							for element = 1, #elements do
-								elements[element].Leave()
+								elements[element]:OnLeave()
 							end
 						end
 					end
@@ -202,7 +202,7 @@ function NS.Script:Load()
 					if bypass then
 						Frame:Show()
 					else
-						Frame.ShowWithAnimation()
+						Frame:ShowWithAnimation()
 					end
 
 					if focus then
@@ -233,7 +233,7 @@ function NS.Script:Load()
 					if bypass then
 						Frame:Hide()
 					else
-						Frame.HideWithAnimation()
+						Frame:HideWithAnimation()
 					end
 
 					if focus or addon.HideUI.Variables.Lock then
@@ -374,65 +374,91 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation = function()
-			Frame.PreventMouse = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.PreventMouse = false
-			end, .25)
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent()
+				return Frame.hidden
+			end
 
-			--------------------------------
-
-			Frame:Show()
-
-			--------------------------------
-
-			Frame:SetAlpha(0)
-			Frame.Background:SetScale(2)
-			Frame.Container:SetAlpha(0)
-
-			--------------------------------
-
-			addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.hidden end)
-			addon.API.Animation:Scale(Frame.Background, .5, 2, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.hidden end)
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				addon.API.Animation:Fade(Frame.Container, .5, 0, 1, nil, function() return Frame.hidden end)
-			end, .325)
-		end
-
-		Frame.HideWithAnimation = function()
-			Frame.PreventMouse = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.PreventMouse = false
+			function Frame:ShowWithAnimation()
+				Frame.PreventMouse = true
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					Frame.PreventMouse = false
+				end, .25)
 
 				--------------------------------
 
-				if Frame.hidden then
-					Frame:Hide()
+				Frame:Show()
+
+				--------------------------------
+
+				Frame:SetAlpha(0)
+				Frame.Background:SetScale(2)
+				Frame.Container:SetAlpha(0)
+
+				--------------------------------
+
+				addon.API.Animation:Fade(Frame, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Background, .5, 2, 1, nil, addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
+
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					addon.API.Animation:Fade(Frame.Container, .5, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				end, .325)
+			end
+		end
+
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent()
+				return not Frame.hidden
+			end
+
+			function Frame:HideWithAnimation()
+				Frame.PreventMouse = true
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					Frame.PreventMouse = false
+
+					--------------------------------
+
+					if Frame.hidden then
+						Frame:Hide()
+					end
+				end, .25)
+
+				--------------------------------
+
+				Callback:HideTooltip(true)
+
+				--------------------------------
+
+				addon.API.Animation:Fade(Frame, .25, 1, 0, nil, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Background, .5, 1, .875, nil, addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.Container, .125, Frame.Container:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			end
+		end
+
+		do -- MOVE
+			do -- ACTIVE
+				function Callback:MoveActive_StopEvent()
+					return not Frame.moving or Frame.hidden
 				end
-			end, .25)
 
-			--------------------------------
+				function Callback:MoveActive()
+					addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .975, nil, addon.API.Animation.EaseExpo, Callback.MoveActive_StopEvent)
+					addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, Callback.MoveActive_StopEvent)
+					addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 0, nil, Callback.MoveActive_StopEvent)
+				end
+			end
 
-			Callback:HideTooltip(true)
+			do -- DISABLED
+				function Callback:MoveDisabled_StopEvent()
+					return Frame.moving or Frame.hidden
+				end
 
-			--------------------------------
-
-			addon.API.Animation:Fade(Frame, .25, 1, 0, nil, function() return not Frame.hidden end)
-			addon.API.Animation:Scale(Frame.Background, .5, 1, .875, nil, addon.API.Animation.EaseExpo, function() return not Frame.hidden end)
-			addon.API.Animation:Fade(Frame.Container, .125, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.hidden end)
-		end
-
-		function Callback:MoveActive()
-			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), .975, nil, addon.API.Animation.EaseExpo, function() return not Frame.moving or Frame.hidden end)
-			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, function() return not Frame.moving or Frame.hidden end)
-			addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 0, nil, function() return not Frame.moving or Frame.hidden end)
-		end
-
-		function Callback:MoveDisabled()
-			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, addon.API.Animation.EaseExpo, function() return Frame.moving or Frame.hidden end)
-			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
-			addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 1, nil, function() return Frame.moving or Frame.hidden end)
+				function Callback:MoveDisabled()
+					addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1, nil, addon.API.Animation.EaseExpo, Callback.MoveDisabled_StopEvent)
+					addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, Callback.MoveDisabled_StopEvent)
+					addon.API.Animation:Fade(Frame.Container, .075, Frame.Container:GetAlpha(), 1, nil, Callback.MoveDisabled_StopEvent)
+				end
+			end
 		end
 	end
 

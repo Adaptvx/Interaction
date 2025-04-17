@@ -205,7 +205,7 @@ local function GetOptionsMemberValue(membername, option, options, path, appName,
 		info.handler = handler
 		info.option = option
 		info.type = option.type
-		info.uiType = "dialog"
+		info.type = "dialog"
 		info.uiName = MAJOR
 
 		local a, b, c ,d
@@ -700,7 +700,7 @@ local function ActivateControl(widget, event, ...)
 	info.handler = handler
 	info.option = option
 	info.type = option.type
-	info.uiType = "dialog"
+	info.type = "dialog"
 	info.uiName = MAJOR
 
 	local name

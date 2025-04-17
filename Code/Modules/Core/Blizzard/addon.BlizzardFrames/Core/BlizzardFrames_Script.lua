@@ -1,6 +1,8 @@
+-- [!] [addon.BlizzardFrames] is used to modify Blizzard's default frames to support the custom functionality.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.BlizzardFrames
 
@@ -41,8 +43,10 @@ function NS.Script:Load()
 				frame:SetAlpha(0)
 			end
 
-			QuestFrame.Clear = function()
+			function Callback:Clear_QuestFrame()
 				QuestFrame:ClearAllPoints()
+
+				--------------------------------
 
 				if not addon._DEV.ENABLED then
 					ScanHideElement(QuestFrame)
@@ -55,8 +59,10 @@ function NS.Script:Load()
 				end
 			end
 
-			GossipFrame.Clear = function()
+			function Callback:Clear_GossipFrame()
 				GossipFrame:ClearAllPoints()
+
+				--------------------------------
 
 				if not addon._DEV.ENABLED then
 					ScanHideElement(GossipFrame)
@@ -67,6 +73,11 @@ function NS.Script:Load()
 					GossipFrame:SetPoint("LEFT", UIParent)
 					GossipFrame:SetAlpha(1)
 				end
+			end
+
+			function Callback:Clear()
+				Callback:Clear_QuestFrame()
+				Callback:Clear_GossipFrame()
 			end
 		end
 
@@ -113,15 +124,15 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		if not addon.Variables.IS_CLASSIC then
-			local function Callback()
-				CallbackRegistry:Trigger("QUEUE_POP")
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
+			local function Callback(queueType)
+				CallbackRegistry:Trigger("QUEUE_POP", queueType)
 			end
 
-			hooksecurefunc(LFGDungeonReadyPopup, "Show", Callback)
-			hooksecurefunc(PVPReadyDialog, "Show", Callback)
-			hooksecurefunc(PVPReadyPopup, "Show", Callback)
-			if PlunderstormFramePopup then hooksecurefunc(PlunderstormFramePopup, "Show", Callback) end
+			hooksecurefunc(LFGDungeonReadyPopup, "Show", function() Callback("Dungeon") end)
+			hooksecurefunc(PVPReadyDialog, "Show", function() Callback("PVP") end)
+			hooksecurefunc(PVPReadyPopup, "Show", function() Callback("PVP") end)
+			if PlunderstormFramePopup then hooksecurefunc(PlunderstormFramePopup, "Show", function() Callback("Plunderstorm") end) end
 		end
 	end
 
@@ -131,8 +142,7 @@ function NS.Script:Load()
 
 	do
 		CallbackRegistry:Add("START_INTERACTION", function()
-			QuestFrame.Clear()
-			GossipFrame.Clear()
+			Callback:Clear()
 		end, 0)
 	end
 
@@ -141,16 +151,18 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		addon.API.Util:UnregisterFrame(GossipFrame)
+		addon.API.Util:UnregisterFrame(QuestFrame)
 		GossipFrame:SetParent(InteractionFrame)
 		QuestFrame:SetParent(InteractionFrame)
 
 		--------------------------------
 
 		StaticPopup1:SetIgnoreParentAlpha(true)
-		if not addon.Variables.IS_CLASSIC_ERA then LFGDungeonReadyPopup:SetIgnoreParentAlpha(true) end
-		if not addon.Variables.IS_CLASSIC then PVPReadyDialog:SetIgnoreParentAlpha(true) end
-		if not addon.Variables.IS_CLASSIC then PVPReadyPopup:SetIgnoreParentAlpha(true) end
-		if not addon.Variables.IS_CLASSIC and PlunderstormFramePopup then PlunderstormFramePopup:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ERA then LFGDungeonReadyPopup:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then PVPReadyDialog:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then PVPReadyPopup:SetIgnoreParentAlpha(true) end
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and PlunderstormFramePopup then PlunderstormFramePopup:SetIgnoreParentAlpha(true) end
 
 		--------------------------------
 
@@ -178,7 +190,4 @@ function NS.Script:Load()
 		Events:RegisterEvent("CINEMATIC_STOP")
 		Events:SetScript("OnEvent", Update)
 	end
-
-	addon.API.Util:UnregisterFrame(GossipFrame)
-	addon.API.Util:UnregisterFrame(QuestFrame)
 end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Audiobook
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionAudiobookFrame = CreateFrame("Frame", "$parent.InteractionAudiobookFrame", InteractionFrame)
 			InteractionAudiobookFrame:SetSize(NS.Variables.FRAME_WIDTH, NS.Variables.FRAME_HEIGHT)
 			InteractionAudiobookFrame:SetPoint("TOP", UIParent, 0, -25)
@@ -25,9 +25,7 @@ function NS.Elements:Load()
 
 			InteractionAudiobookFrame:SetMovable(true)
 
-			--------------------------------
-
-			local Frame = InteractionAudiobookFrame
+            local Frame = InteractionAudiobookFrame
 
 			--------------------------------
 
@@ -72,63 +70,170 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						do -- BACKGROUND
-							Frame.Content.PlaybackButton.Background, Frame.Content.PlaybackButton.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png", "$parent.Background")
-							Frame.Content.PlaybackButton.Background:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, -5, 5)
-							Frame.Content.PlaybackButton.Background:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, 5, -5)
-							Frame.Content.PlaybackButton.Background:SetFrameStrata("FULLSCREEN")
-							Frame.Content.PlaybackButton.Background:SetFrameLevel(52)
+						do -- ELEMENTS
+							do -- BACKGROUND
+								Frame.Content.PlaybackButton.Background, Frame.Content.PlaybackButton.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png", "$parent.Background")
+								Frame.Content.PlaybackButton.Background:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, -5, 5)
+								Frame.Content.PlaybackButton.Background:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, 5, -5)
+								Frame.Content.PlaybackButton.Background:SetFrameStrata("FULLSCREEN")
+								Frame.Content.PlaybackButton.Background:SetFrameLevel(52)
+							end
+
+							do -- IMAGE
+								local IMAGE_PADDING = NS.Variables:RATIO(2.25)
+
+								Frame.Content.PlaybackButton.Image, Frame.Content.PlaybackButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-play.png", "$parent.Image")
+								Frame.Content.PlaybackButton.Image:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, IMAGE_PADDING, -IMAGE_PADDING)
+								Frame.Content.PlaybackButton.Image:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, -IMAGE_PADDING, IMAGE_PADDING)
+								Frame.Content.PlaybackButton.Image:SetFrameStrata("FULLSCREEN")
+								Frame.Content.PlaybackButton.Image:SetFrameLevel(54)
+							end
 						end
 
-						do -- IMAGE
-							local IMAGE_PADDING = NS.Variables:RATIO(2.25)
+						do -- ANIMATIONS
+							do -- ON ENTER
+								function Frame.Content.PlaybackButton:Animation_OnEnter_StopEvent()
+									return not Frame.isMouseOver
+								end
 
-							Frame.Content.PlaybackButton.Image, Frame.Content.PlaybackButton.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.PlaybackButton, "FULLSCREEN", NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-play.png", "$parent.Image")
-							Frame.Content.PlaybackButton.Image:SetPoint("TOPLEFT", Frame.Content.PlaybackButton, IMAGE_PADDING, -IMAGE_PADDING)
-							Frame.Content.PlaybackButton.Image:SetPoint("BOTTOMRIGHT", Frame.Content.PlaybackButton, -IMAGE_PADDING, IMAGE_PADDING)
-							Frame.Content.PlaybackButton.Image:SetFrameStrata("FULLSCREEN")
-							Frame.Content.PlaybackButton.Image:SetFrameLevel(54)
+								function Frame.Content.PlaybackButton:Animation_OnEnter(skipAnimation)
+									Frame.Content.PlaybackButton.BackgroundTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background-highlighted.png")
+								end
+							end
+
+							do -- ON LEAVE
+								function Frame.Content.PlaybackButton:Animation_OnLeave_StopEvent()
+									return Frame.isMouseOver
+								end
+
+								function Frame.Content.PlaybackButton:Animation_OnLeave(skipAnimation)
+									Frame.Content.PlaybackButton.BackgroundTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png")
+								end
+							end
+
+							do -- ON MOUSE DOWN
+								function Frame.Content.PlaybackButton:Animation_OnMouseDown_StopEvent()
+									return not Frame.isMouseDown
+								end
+
+								function Frame.Content.PlaybackButton:Animation_OnMouseDown(skipAnimation)
+									Frame.Content.PlaybackButton:SetAlpha(.75)
+									addon.API.Animation:Scale(Frame.Content.PlaybackButton, .25, Frame.Content.PlaybackButton:GetScale(), .875, nil, nil, Frame.Content.PlaybackButton.Animation_OnMouseDown_StopEvent)
+								end
+							end
+
+							do -- ON MOUSE UP
+								function Frame.Content.PlaybackButton:Animation_OnMouseUp_StopEvent()
+									return Frame.isMouseDown
+								end
+
+								function Frame.Content.PlaybackButton:Animation_OnMouseUp(skipAnimation)
+									Frame.Content.PlaybackButton:SetAlpha(1)
+									addon.API.Animation:Scale(Frame.Content.PlaybackButton, .075, Frame.Content.PlaybackButton:GetScale(), 1, nil, nil, Frame.Content.PlaybackButton.Animation_OnMouseUp_StopEvent)
+								end
+							end
 						end
 
-						do -- CLICK EVENTS
-							Frame.Content.PlaybackButton.Enter = function()
-								Frame.Content.PlaybackButton.isMouseOver = true
+						do -- LOGIC
+							Frame.Content.PlaybackButton.isMouseOver = false
+							Frame.Content.PlaybackButton.isMouseDown = false
 
-								--------------------------------
+							Frame.Content.PlaybackButton.enterCallbacks = {}
+							Frame.Content.PlaybackButton.leaveCallbacks = {}
+							Frame.Content.PlaybackButton.mouseDownCallbacks = {}
+							Frame.Content.PlaybackButton.mouseUpCallbacks = {}
 
-								Frame.Content.PlaybackButton.BackgroundTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background-highlighted.png")
+							do -- FUNCTIONS
+
 							end
 
-							Frame.Content.PlaybackButton.Leave = function()
-								Frame.Content.PlaybackButton.isMouseOver = false
+							do -- EVENTS
+								function Frame.Content.PlaybackButton:OnEnter(skipAnimation)
+									Frame.Content.PlaybackButton.isMouseOver = true
 
-								--------------------------------
+									--------------------------------
 
-								Frame.Content.PlaybackButton.BackgroundTexture:SetTexture(NS.Variables.AUDIOBOOKUI_PATH .. "button-playback-background.png")
+									Frame.Content.PlaybackButton:Animation_OnEnter(skipAnimation)
+
+									--------------------------------
+
+									do -- ON ENTER
+										if #Frame.Content.PlaybackButton.enterCallbacks >= 1 then
+											local enterCallbacks = Frame.Content.PlaybackButton.enterCallbacks
+
+											for callback = 1, #enterCallbacks do
+												enterCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame.Content.PlaybackButton:OnLeave(skipAnimation)
+									Frame.Content.PlaybackButton.isMouseOver = false
+
+									--------------------------------
+
+									Frame.Content.PlaybackButton:Animation_OnLeave(skipAnimation)
+
+									--------------------------------
+
+									do -- ON LEAVE
+										if #Frame.Content.PlaybackButton.leaveCallbacks >= 1 then
+											local leaveCallbacks = Frame.Content.PlaybackButton.leaveCallbacks
+
+											for callback = 1, #leaveCallbacks do
+												leaveCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame.Content.PlaybackButton:OnMouseDown(skipAnimation)
+									Frame.Content.PlaybackButton.isMouseDown = true
+
+									--------------------------------
+
+									Frame.Content.PlaybackButton:Animation_OnMouseDown(skipAnimation)
+
+									--------------------------------
+
+									do -- ON MOUSE DOWN
+										if #Frame.Content.PlaybackButton.mouseDownCallbacks >= 1 then
+											local mouseDownCallbacks = Frame.Content.PlaybackButton.mouseDownCallbacks
+
+											for callback = 1, #mouseDownCallbacks do
+												mouseDownCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame.Content.PlaybackButton:OnMouseUp(skipAnimation)
+									Frame.Content.PlaybackButton.isMouseDown = false
+
+									--------------------------------
+
+									Frame.Content.PlaybackButton:Animation_OnMouseUp(skipAnimation)
+
+									--------------------------------
+
+									do -- ON MOUSE UP
+										if #Frame.Content.PlaybackButton.mouseUpCallbacks >= 1 then
+											local mouseUpCallbacks = Frame.Content.PlaybackButton.mouseUpCallbacks
+
+											for callback = 1, #mouseUpCallbacks do
+												mouseUpCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								addon.API.FrameTemplates:CreateMouseResponder(Frame.Content.PlaybackButton, { enterCallback = Frame.Content.PlaybackButton.OnEnter, leaveCallback = Frame.Content.PlaybackButton.OnLeave, mouseDownCallback = Frame.Content.PlaybackButton.OnMouseDown, mouseUpCallback = Frame.Content.PlaybackButton.OnMouseUp })
 							end
+						end
 
-							Frame.Content.PlaybackButton.MouseDown = function()
-								Frame.Content.PlaybackButton.isMouseDown = true
-
-								--------------------------------
-
-								Frame.Content.PlaybackButton:SetAlpha(.75)
-								addon.API.Animation:Scale(Frame.Content.PlaybackButton, .25, Frame.Content.PlaybackButton:GetScale(), .875, nil, nil, function() return not Frame.Content.PlaybackButton.isMouseDown end)
-							end
-
-							Frame.Content.PlaybackButton.MouseUp = function()
-								Frame.Content.PlaybackButton.isMouseDown = false
-
-								--------------------------------
-
-								Frame.Content.PlaybackButton:SetAlpha(1)
-								addon.API.Animation:Scale(Frame.Content.PlaybackButton, .075, Frame.Content.PlaybackButton:GetScale(), 1, nil, nil, function() return Frame.Content.PlaybackButton.isMouseDown end)
-							end
-
-							Frame.Content.PlaybackButton:SetScript("OnEnter", Frame.Content.PlaybackButton.Enter)
-							Frame.Content.PlaybackButton:SetScript("OnLeave", Frame.Content.PlaybackButton.Leave)
-							Frame.Content.PlaybackButton:SetScript("OnMouseDown", Frame.Content.PlaybackButton.MouseDown)
-							Frame.Content.PlaybackButton:SetScript("OnMouseUp", Frame.Content.PlaybackButton.MouseUp)
+						do -- SETUP
+							Frame.Content.PlaybackButton:OnLeave(true)
 						end
 					end
 
@@ -261,7 +366,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							if Frame.TextPreviewFrame.NewTextAnimation then
-								Frame.TextPreviewFrame.NewTextAnimation()
+								Frame.TextPreviewFrame:NewTextAnimation()
 							end
 						end
 

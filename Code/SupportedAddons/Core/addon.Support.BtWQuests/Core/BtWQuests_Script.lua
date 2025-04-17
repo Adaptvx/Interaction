@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Support.BtWQuests
 
@@ -346,7 +346,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				if success then
-					InteractionQuestFrame.Storyline:SetInfo(nil, addon.Variables.PATH_ART .. "Icons/link.png", success, tooltipText, function()
+					InteractionFrame.QuestFrame.REF_HEADER_STORYLINE.Storyline:SetInfo(nil, addon.Variables.PATH_ART .. "Icons/link.png", success, tooltipText, function()
 						Callback:OpenQuestInBtWQuestsWindow(questID)
 					end)
 				end

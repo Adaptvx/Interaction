@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -20,7 +20,7 @@ function NS:Load()
 	Modules()
 end
 
-C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
+CallbackRegistry:Add("LOADED_ADDONS_READY", function()
 	if addon.LoadedAddons.BtWQuests then
 		NS:Load()
 	end

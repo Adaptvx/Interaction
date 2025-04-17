@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -16,7 +16,7 @@ function NS.LibraryUI.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionReadableUIFrame.LibraryUIFrame = CreateFrame("Frame", "$parent.LibraryUIFrame", InteractionReadableUIFrame)
 			InteractionReadableUIFrame.LibraryUIFrame:SetSize(InteractionReadableUIFrame:GetWidth(), InteractionReadableUIFrame:GetHeight())
 			InteractionReadableUIFrame.LibraryUIFrame:SetPoint("CENTER", InteractionReadableUIFrame)
@@ -182,7 +182,7 @@ function NS.LibraryUI.Elements:Load()
 
 						--------------------------------
 
-						LibraryUIFrame.Content.Sidebar.Search = addon.API.FrameTemplates:CreateInputBox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", {
+						LibraryUIFrame.Content.Sidebar.Search = addon.API.FrameTemplates:CreateInputBox(LibraryUIFrame.Content.Sidebar, "FULLSCREEN", LibraryUIFrame.Content.Sidebar:GetFrameLevel() + 1, {
 							defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 							highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 							edgeSize = 128,
@@ -192,7 +192,7 @@ function NS.LibraryUI.Elements:Load()
 							justifyH = "LEFT",
 							justifyV = "MIDDLE",
 							hint = L["Readable - Library - Search Input Placeholder"],
-							valueUpdateCallback = UpdateSearch
+							valueChangedCallback = UpdateSearch
 						}, "$parent.Search")
 						LibraryUIFrame.Content.Sidebar.Search:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth() - 20, 35)
 						LibraryUIFrame.Content.Sidebar.Search.BackgroundTexture:SetAlpha(.125)
@@ -508,7 +508,7 @@ function NS.LibraryUI.Elements:Load()
 
 									--------------------------------
 
-									LibraryUIFrame.Content.ContentFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", {
+									LibraryUIFrame.Content.ContentFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(LibraryUIFrame.Content.ContentFrame.ScrollFrame, "FULLSCREEN", LibraryUIFrame.Content.ContentFrame.ScrollFrame:GetFrameLevel() + 9, {
 										scrollFrame = LibraryUIFrame.Content.ContentFrame.ScrollFrame,
 										scrollChildFrame = LibraryUIFrame.Content.ContentFrame.ScrollChildFrame,
 										sizeX = 5,
@@ -523,7 +523,7 @@ function NS.LibraryUI.Elements:Load()
 							end
 
 							do -- EVENTS
-								LibraryUIFrame.Content.ContentFrame.ScrollFrame.UpdateSize = function()
+								function LibraryUIFrame.Content.ContentFrame.ScrollFrame:UpdateSize()
 									if LibraryUIFrame.Content.ContentFrame.Index:IsVisible() then
 										LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetSize(LibraryUIFrame.Content.ContentFrame:GetWidth(), LibraryUIFrame.Content.ContentFrame:GetHeight() - LibraryUIFrame.Content.ContentFrame.Index:GetHeight() - PADDING / 2)
 									else
@@ -532,12 +532,13 @@ function NS.LibraryUI.Elements:Load()
 
 									LibraryUIFrame.Content.ContentFrame.Scrollbar:SetHeight(LibraryUIFrame.Content.ContentFrame.ScrollFrame:GetHeight())
 								end
-								LibraryUIFrame.Content.ContentFrame.ScrollFrame.UpdateSize()
+
+								LibraryUIFrame.Content.ContentFrame.ScrollFrame:UpdateSize()
 
 								local function Update()
 									if LibraryUIFrame.Content.ContentFrame.ScrollFrame:IsVisible() then
-										LibraryUIFrame.Content.ContentFrame.ScrollFrame.RefreshLayout()
-										LibraryUIFrame.Content.ContentFrame.ScrollFrame.UpdateScrollIndicator()
+										LibraryUIFrame.Content.ContentFrame.ScrollFrame:RefreshLayout()
+										LibraryUIFrame.Content.ContentFrame.ScrollFrame:UpdateScrollIndicator()
 									end
 								end
 								Update()
@@ -562,180 +563,76 @@ function NS.LibraryUI.Elements:Load()
 
 								--------------------------------
 
-								local Button         = CreateFrame("Frame", nil, parent)
-								Button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
-								Button:SetPoint("CENTER", parent)
-								Button:SetFrameStrata("FULLSCREEN")
-								Button:SetFrameLevel(2)
+								local Frame         = CreateFrame("Frame", nil, parent)
+								Frame:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+								Frame:SetPoint("CENTER", parent)
+								Frame:SetFrameStrata("FULLSCREEN")
+								Frame:SetFrameLevel(2)
 
 								--------------------------------
-
-								Button.ID = ""
-								Button.Selected = false
-								Button.MouseOver = false
-
-								--------------------------------
-
-								do -- CLICK EVENTS
-									addon.API.FrameTemplates:CreateMouseResponder(Button, { enterCallback = function() Button.Enter() end, leaveCallback = function() Button.Leave() end })
-
-									Button.Enter = function()
-										if NS.LibraryUI.Variables.SelectedIndex == index then
-											return
-										end
-
-										--------------------------------
-
-										Button.MouseOver = true
-
-										--------------------------------
-
-										Button.Enter_Animation()
-
-										--------------------------------
-
-										addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_Enter)
-									end
-
-									Button.Leave = function(bypass)
-										if NS.LibraryUI.Variables.SelectedIndex == index then
-											return
-										end
-
-										--------------------------------
-
-										Button.MouseOver = false
-
-										--------------------------------
-
-										Button.Leave_Animation()
-
-										--------------------------------
-
-										addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_Leave)
-									end
-
-									Button.MouseDown = function()
-										addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_MouseDown)
-									end
-
-									Button.MouseUp = function()
-										addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_MouseUp)
-									end
-
-									Button.Click = function(_, button)
-										if NS.LibraryUI.Variables.SelectedIndex == index then
-											if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE and button == "RightButton" or addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE or button == "LeftButton" then
-												NS.LibraryUI.Script:OpenFromLibrary(Button.ID)
-											else
-												NS.LibraryUI.Variables.SelectedIndex = nil
-
-												Button.Leave_Animation()
-											end
-										else
-											NS.LibraryUI.Variables.SelectedIndex = index
-
-											Button.Enter_Animation()
-										end
-
-										CallbackRegistry:Trigger("LIBRARY_MENU_SELECTION", Button)
-									end
-
-									Button:SetScript("OnMouseDown", function()
-										Button.MouseDown()
-									end)
-
-									Button:SetScript("OnMouseUp", function(_, button)
-										Button.MouseUp()
-										Button.Click(_, button)
-									end)
-								end
-
-								do -- FUNCTIONS
-									Button.UpdateGradientAlpha = function()
-										Button.Content.Text.Detail:SetAlphaGradient(0, 50)
-										Button.Content.Text.Title:SetAlphaGradient(0, 50)
-									end
-
-									Button.Update = function()
-										if NS.LibraryUI.Variables.SelectedIndex == index then
-											Button.Enter_Animation()
-
-											--------------------------------
-
-											Button:SetAlpha(1)
-										else
-											Button.Leave_Animation()
-
-											--------------------------------
-
-											Button:SetAlpha(.75)
-										end
-									end
-								end
 
 								do -- ELEMENTS
 									do -- CONTENT
-										Button.Content = CreateFrame("Frame", "$parent.Content", Button)
-										Button.Content:SetPoint("CENTER", Button)
-										addon.API.FrameUtil:SetDynamicSize(Button.Content, Button, 0, 0)
+										Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
+										Frame.Content:SetPoint("CENTER", Frame)
+										addon.API.FrameUtil:SetDynamicSize(Frame.Content, Frame, 0, 0)
 
 										--------------------------------
 
 										do -- BACKGROUND
-											Button.Content.Background, Button.Content.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Button.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png", 64, .75, "$parent.Background", Enum.UITextureSliceMode.Stretched)
-											Button.Content.Background:SetPoint("CENTER", Button.Content)
-											Button.Content.Background:SetFrameStrata("FULLSCREEN")
-											Button.Content.Background:SetFrameLevel(1)
-											Button.Content.Background:SetAlpha(1)
-											addon.API.FrameUtil:SetDynamicSize(Button.Content.Background, Button.Content, -45, -45)
+											Frame.Content.Background, Frame.Content.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Content, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png", 64, .75, "$parent.Background", Enum.UITextureSliceMode.Stretched)
+											Frame.Content.Background:SetPoint("CENTER", Frame.Content)
+											Frame.Content.Background:SetFrameStrata("FULLSCREEN")
+											Frame.Content.Background:SetFrameLevel(1)
+											Frame.Content.Background:SetAlpha(1)
+											addon.API.FrameUtil:SetDynamicSize(Frame.Content.Background, Frame.Content, -45, -45)
 										end
 
 										do -- IMAGE
-											Button.Content.Image, Button.Content.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content, "FULLSCREEN", nil, "$parent.Image")
-											Button.Content.Image:SetSize(Button.Content:GetHeight() * .75, Button.Content:GetHeight() * .75)
-											Button.Content.Image:SetPoint("LEFT", Button.Content, offset, 0)
-											Button.Content.Image:SetFrameStrata("FULLSCREEN")
-											Button.Content.Image:SetFrameLevel(2)
+											Frame.Content.Image, Frame.Content.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content, "FULLSCREEN", nil, "$parent.Image")
+											Frame.Content.Image:SetSize(Frame.Content:GetHeight() * .75, Frame.Content:GetHeight() * .75)
+											Frame.Content.Image:SetPoint("LEFT", Frame.Content, offset, 0)
+											Frame.Content.Image:SetFrameStrata("FULLSCREEN")
+											Frame.Content.Image:SetFrameLevel(2)
 
 											--------------------------------
 
-											Button.Content.ImageTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png")
+											Frame.Content.ImageTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Parchment/parchment-light.png")
 
 											--------------------------------
 
-											offset = offset + Button.Content.Image:GetWidth() + (PADDING * 2)
+											offset = offset + Frame.Content.Image:GetWidth() + (PADDING * 2)
 										end
 
 										do -- TEXT
-											Button.Content.Text = CreateFrame("Frame", "$parent.Text", Button)
-											Button.Content.Text:SetSize(TEXT_WIDTH, CONTENT_HEIGHT)
-											Button.Content.Text:SetPoint("LEFT", Button.Content, offset, 0)
-											Button.Content.Text:SetClipsChildren(true)
+											Frame.Content.Text = CreateFrame("Frame", "$parent.Text", Frame)
+											Frame.Content.Text:SetSize(TEXT_WIDTH, CONTENT_HEIGHT)
+											Frame.Content.Text:SetPoint("LEFT", Frame.Content, offset, 0)
+											Frame.Content.Text:SetClipsChildren(true)
 
 											--------------------------------
 
 											do -- DETAIL
-												Button.Content.Text.Detail = addon.API.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Detail")
-												Button.Content.Text.Detail:SetSize(Button.Content.Text:GetSize())
-												Button.Content.Text.Detail:SetPoint("LEFT", Button.Content.Text)
-												Button.Content.Text.Detail:SetAlpha(.5)
-												Button.Content.Text.Detail:SetWordWrap(false)
+												Frame.Content.Text.Detail = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Detail")
+												Frame.Content.Text.Detail:SetSize(Frame.Content.Text:GetSize())
+												Frame.Content.Text.Detail:SetPoint("LEFT", Frame.Content.Text)
+												Frame.Content.Text.Detail:SetAlpha(.5)
+												Frame.Content.Text.Detail:SetWordWrap(false)
 											end
 
 											do -- TITLE
-												Button.Content.Text.Title = addon.API.FrameTemplates:CreateText(Button.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Title")
-												Button.Content.Text.Title:SetSize(Button.Content.Text:GetSize())
-												Button.Content.Text.Title:SetPoint("LEFT", Button.Content.Text)
-												Button.Content.Text.Title:SetAlpha(.75)
-												Button.Content.Text.Title:SetWordWrap(false)
+												Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Title")
+												Frame.Content.Text.Title:SetSize(Frame.Content.Text:GetSize())
+												Frame.Content.Text.Title:SetPoint("LEFT", Frame.Content.Text)
+												Frame.Content.Text.Title:SetAlpha(.75)
+												Frame.Content.Text.Title:SetWordWrap(false)
 											end
 										end
 
 										do -- BUTTONS
-											Button.Content.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", Button.Content)
-											Button.Content.ButtonContainer:SetSize(Button.Content:GetWidth() * .5, CONTENT_HEIGHT)
-											Button.Content.ButtonContainer:SetPoint("RIGHT", Button.Content, -25, 0)
+											Frame.Content.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", Frame.Content)
+											Frame.Content.ButtonContainer:SetSize(Frame.Content:GetWidth() * .5, CONTENT_HEIGHT)
+											Frame.Content.ButtonContainer:SetPoint("RIGHT", Frame.Content, -25, 0)
 
 											--------------------------------
 
@@ -745,7 +642,7 @@ function NS.LibraryUI.Elements:Load()
 											--------------------------------
 
 											do -- OPEN
-												Button.Content.ButtonContainer.Button_Open = addon.API.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
+												Frame.Content.ButtonContainer.Button_Open = addon.API.FrameTemplates:CreateCustomButton(Frame.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
 													defaultTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-nineslice.png",
 													highlightTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-highlighted-nineslice.png",
 													theme = 2,
@@ -757,31 +654,31 @@ function NS.LibraryUI.Elements:Load()
 													customHighlightColor = { r = 1, g = 1, b = 1, a = 1 },
 													customActiveColor = { r = 1, g = 1, b = 1, a = 1 },
 												}, "$parent.Button_Open")
-												Button.Content.ButtonContainer.Button_Open:SetPoint("RIGHT", Button.Content.ButtonContainer, -buttonOffset, 0)
-												Button.Content.ButtonContainer.Button_Open:SetFrameStrata("FULLSCREEN")
-												Button.Content.ButtonContainer.Button_Open:SetFrameLevel(3)
+												Frame.Content.ButtonContainer.Button_Open:SetPoint("RIGHT", Frame.Content.ButtonContainer, -buttonOffset, 0)
+												Frame.Content.ButtonContainer.Button_Open:SetFrameStrata("FULLSCREEN")
+												Frame.Content.ButtonContainer.Button_Open:SetFrameLevel(3)
 
-												Button.Content.ButtonContainer.Button_Open:SetScript("OnClick", function()
-													NS.LibraryUI.Script:OpenFromLibrary(Button.ID)
+												Frame.Content.ButtonContainer.Button_Open:SetScript("OnClick", function()
+													NS.LibraryUI.Script:OpenFromLibrary(Frame.id)
 												end)
 
 												--------------------------------
 
 												do -- IMAGE
-													Button.Content.ButtonContainer.Button_Open.Image, Button.Content.ButtonContainer.Button_Open.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Open, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-open.png", "$parent.Image")
-													Button.Content.ButtonContainer.Button_Open.Image:SetAllPoints(Button.Content.ButtonContainer.Button_Open, true)
-													Button.Content.ButtonContainer.Button_Open.Image:SetFrameStrata(Button.Content.ButtonContainer.Button_Open:GetFrameStrata())
-													Button.Content.ButtonContainer.Button_Open.Image:SetFrameLevel(4)
-													Button.Content.ButtonContainer.Button_Open.Image:SetScale(.5)
+													Frame.Content.ButtonContainer.Button_Open.Image, Frame.Content.ButtonContainer.Button_Open.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.ButtonContainer.Button_Open, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-open.png", "$parent.Image")
+													Frame.Content.ButtonContainer.Button_Open.Image:SetAllPoints(Frame.Content.ButtonContainer.Button_Open, true)
+													Frame.Content.ButtonContainer.Button_Open.Image:SetFrameStrata(Frame.Content.ButtonContainer.Button_Open:GetFrameStrata())
+													Frame.Content.ButtonContainer.Button_Open.Image:SetFrameLevel(4)
+													Frame.Content.ButtonContainer.Button_Open.Image:SetScale(.5)
 												end
 
 												--------------------------------
 
-												buttonOffset = buttonOffset + Button.Content.ButtonContainer.Button_Open:GetWidth() + NS.Variables:RATIO(10)
+												buttonOffset = buttonOffset + Frame.Content.ButtonContainer.Button_Open:GetWidth() + NS.Variables:RATIO(10)
 											end
 
 											do -- DELETE
-												Button.Content.ButtonContainer.Button_Delete = addon.API.FrameTemplates:CreateCustomButton(Button.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
+												Frame.Content.ButtonContainer.Button_Delete = addon.API.FrameTemplates:CreateCustomButton(Frame.Content.ButtonContainer, buttonSize, buttonSize, "FULLSCREEN", {
 													defaultTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-nineslice.png",
 													highlightTexture = NS.Variables.READABLE_UI_PATH .. "Library/element-button-background-highlighted-nineslice.png",
 													theme = 2,
@@ -793,87 +690,278 @@ function NS.LibraryUI.Elements:Load()
 													customHighlightColor = { r = 1, g = 1, b = 1, a = 1 },
 													customActiveColor = { r = 1, g = 1, b = 1, a = 1 },
 												}, "$parent.Button_Delete")
-												Button.Content.ButtonContainer.Button_Delete:SetPoint("RIGHT", Button.Content.ButtonContainer, -buttonOffset, 0)
-												Button.Content.ButtonContainer.Button_Delete:SetFrameStrata("FULLSCREEN")
-												Button.Content.ButtonContainer.Button_Delete:SetFrameLevel(3)
+												Frame.Content.ButtonContainer.Button_Delete:SetPoint("RIGHT", Frame.Content.ButtonContainer, -buttonOffset, 0)
+												Frame.Content.ButtonContainer.Button_Delete:SetFrameStrata("FULLSCREEN")
+												Frame.Content.ButtonContainer.Button_Delete:SetFrameLevel(3)
 
-												Button.Content.ButtonContainer.Button_Delete:SetScript("OnClick", function()
-													NS.LibraryUI.Script:DeleteFromLibrary(Button.ID)
+												Frame.Content.ButtonContainer.Button_Delete:SetScript("OnClick", function()
+													NS.LibraryUI.Script:DeleteFromLibrary(Frame.id)
 												end)
 
 												--------------------------------
 
 												do -- IMAGE
-													Button.Content.ButtonContainer.Button_Delete.Image, Button.Content.ButtonContainer.Button_Delete.ImageTexture = addon.API.FrameTemplates:CreateTexture(Button.Content.ButtonContainer.Button_Delete, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-delete.png", "$parent.Image")
-													Button.Content.ButtonContainer.Button_Delete.Image:SetAllPoints(Button.Content.ButtonContainer.Button_Delete, true)
-													Button.Content.ButtonContainer.Button_Delete.Image:SetFrameStrata(Button.Content.ButtonContainer.Button_Delete:GetFrameStrata())
-													Button.Content.ButtonContainer.Button_Delete.Image:SetFrameLevel(4)
-													Button.Content.ButtonContainer.Button_Delete.Image:SetScale(.5)
+													Frame.Content.ButtonContainer.Button_Delete.Image, Frame.Content.ButtonContainer.Button_Delete.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.Content.ButtonContainer.Button_Delete, "FULLSCREEN", NS.Variables.READABLE_UI_PATH .. "Library/button-delete.png", "$parent.Image")
+													Frame.Content.ButtonContainer.Button_Delete.Image:SetAllPoints(Frame.Content.ButtonContainer.Button_Delete, true)
+													Frame.Content.ButtonContainer.Button_Delete.Image:SetFrameStrata(Frame.Content.ButtonContainer.Button_Delete:GetFrameStrata())
+													Frame.Content.ButtonContainer.Button_Delete.Image:SetFrameLevel(4)
+													Frame.Content.ButtonContainer.Button_Delete.Image:SetScale(.5)
 												end
 
 												--------------------------------
 
-												buttonOffset = buttonOffset + Button.Content.ButtonContainer.Button_Delete:GetWidth() + NS.Variables:RATIO(10)
+												buttonOffset = buttonOffset + Frame.Content.ButtonContainer.Button_Delete:GetWidth() + NS.Variables:RATIO(10)
 											end
 										end
 									end
 								end
 
-								do -- ANIMATION
-									local function Enter_StopEvent()
-										return not Button.Selected
+								do -- ANIMATIONS
+									do -- ON ENTER
+										function Frame:Animation_OnEnter_StopEvent()
+											return not Frame.isMouseOver
+										end
+
+										function Frame:Animation_OnEnter(skipAnimation)
+											Frame:SetAlpha(.925)
+											Frame.Content.Background:SetAlpha(1)
+											Frame.Content.BackgroundTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Library/element-background-highlighted-nineslice.png")
+
+											--------------------------------
+
+											addon.API.Animation:Scale(Frame.Content.Text, .25, Frame.Content.Text:GetWidth(), TEXT_WIDTH * .875, "x", addon.API.Animation.EaseExpo, Frame.Animation_OnEnter_StopEvent)
+											addon.API.Animation:Fade(Frame.Content.ButtonContainer, .25, Frame.Content.ButtonContainer:GetAlpha(), 1, nil, Frame.Animation_OnEnter_StopEvent)
+											addon.API.Animation:Move(Frame.Content.ButtonContainer, .375, "RIGHT", -25, 0, "y", nil, Frame.Animation_OnEnter_StopEvent)
+										end
 									end
 
-									local function Leave_StopEvent()
-										return Button.Selected
+									-- ON LEAVE
+									function Frame:Animation_OnLeave_StopEvent()
+										return Frame.isMouseOver
 									end
 
-									Button.Enter_Animation = function()
-										Button.Selected = true
+									function Frame:Animation_OnLeave(skipAnimation)
+										Frame:SetAlpha(.75)
+										Frame.Content.Background:SetAlpha(1)
+										Frame.Content.BackgroundTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png")
 
 										--------------------------------
 
-										Button:SetAlpha(.925)
-										Button.Content.Background:SetAlpha(1)
-										Button.Content.BackgroundTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Library/element-background-highlighted-nineslice.png")
-
-										--------------------------------
-
-										addon.API.Animation:Scale(Button.Content.Text, .25, Button.Content.Text:GetWidth(), TEXT_WIDTH * .875, "x", addon.API.Animation.EaseExpo, Enter_StopEvent)
-										addon.API.Animation:Fade(Button.Content.ButtonContainer, .25, Button.Content.ButtonContainer:GetAlpha(), 1, nil, Enter_StopEvent)
-										addon.API.Animation:Move(Button.Content.ButtonContainer, .375, "RIGHT", -25, 0, "y", nil, Enter_StopEvent)
+										addon.API.Animation:Scale(Frame.Content.Text, .125, Frame.Content.Text:GetWidth(), TEXT_WIDTH, "x", nil, Frame.Animation_OnLeave_StopEvent)
+										addon.API.Animation:Fade(Frame.Content.ButtonContainer, .125, Frame.Content.ButtonContainer:GetAlpha(), 0, nil, Frame.Animation_OnLeave_StopEvent)
+										addon.API.Animation:Move(Frame.Content.ButtonContainer, .125, "RIGHT", 0, -10, "y", nil, Frame.Animation_OnLeave_StopEvent)
 									end
 
-									Button.Leave_Animation = function()
-										Button.Selected = false
+									do -- ON MOUSE DOWN
+										function Frame:Animation_OnMouseDown_StopEvent()
+											return Frame.isMouseDown
+										end
 
-										--------------------------------
+										function Frame:Animation_OnMouseDown(skipAnimation)
 
-										Button:SetAlpha(.75)
-										Button.Content.Background:SetAlpha(1)
-										Button.Content.BackgroundTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png")
-
-										--------------------------------
-
-										addon.API.Animation:Scale(Button.Content.Text, .125, Button.Content.Text:GetWidth(), TEXT_WIDTH, "x", nil, Leave_StopEvent)
-										addon.API.Animation:Fade(Button.Content.ButtonContainer, .125, Button.Content.ButtonContainer:GetAlpha(), 0, nil, Leave_StopEvent)
-										addon.API.Animation:Move(Button.Content.ButtonContainer, .125, "RIGHT", 0, -10, "y", nil, Leave_StopEvent)
+										end
 									end
+
+									do -- ON MOUSE UP
+										function Frame:Animation_OnMouseUp_StopEvent()
+											return not Frame.isMouseDown
+										end
+
+										function Frame:Animation_OnMouseUp(skipAnimation)
+
+										end
+									end
+								end
+
+								do -- LOGIC
+									Frame.id = ""
+									Frame.isMouseOver = false
+									Frame.isMouseDown = false
+
+									Frame.enterCallbacks = {}
+									Frame.leaveCallbacks = {}
+									Frame.mouseDownCallbacks = {}
+									Frame.mouseUpCallbacks = {}
+									Frame.clickCallbacks = {}
 
 									--------------------------------
 
-									Button:SetAlpha(.75)
-									Button.Content.Background:SetAlpha(1)
-									Button.Content.BackgroundTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Library/element-background-nineslice.png")
+									do -- FUNCTIONS
+										do -- LOGIC
+											function Frame:UpdateGradientAlpha()
+												Frame.Content.Text.Detail:SetAlphaGradient(0, 50)
+												Frame.Content.Text.Title:SetAlphaGradient(0, 50)
+											end
 
-									--------------------------------
+											function Frame:Update()
+												if NS.LibraryUI.Variables.SelectedIndex == index then
+													Frame:OnEnter()
 
-									Button.Content.ButtonContainer:SetAlpha(0)
+													--------------------------------
+
+													Frame:SetAlpha(1)
+												else
+													Frame:OnLeave()
+
+													--------------------------------
+
+													Frame:SetAlpha(.75)
+												end
+											end
+										end
+									end
+
+									do -- EVENTS
+										local function Logic_OnEnter()
+											addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_Enter)
+										end
+
+										local function Logic_OnLeave()
+											addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_Leave)
+										end
+
+										local function Logic_OnMouseDown()
+											addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_MouseDown)
+										end
+
+										local function Logic_OnMouseUp()
+											addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_LibraryUI_Button_Menu_MouseUp)
+										end
+
+										local function Logic_OnClick(button)
+											if NS.LibraryUI.Variables.SelectedIndex == index then
+												if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE and button == "RightButton" or addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE or button == "LeftButton" then
+													NS.LibraryUI.Script:OpenFromLibrary(Frame.id)
+												else
+													NS.LibraryUI.Variables.SelectedIndex = nil
+
+													Frame:Animation_OnLeave()
+												end
+											else
+												NS.LibraryUI.Variables.SelectedIndex = index
+
+												Frame:Animation_OnEnter()
+											end
+
+											--------------------------------
+
+											CallbackRegistry:Trigger("LIBRARY_MENU_SELECTION", Frame)
+										end
+
+										function Frame:OnEnter(skipAnimation)
+											if NS.LibraryUI.Variables.SelectedIndex ~= index then
+												Frame.isMouseOver = true
+
+												--------------------------------
+
+												Frame:Animation_OnEnter(skipAnimation)
+												Logic_OnEnter()
+
+												--------------------------------
+
+												do -- ON ENTER
+													if #Frame.enterCallbacks >= 1 then
+														local enterCallbacks = Frame.enterCallbacks
+
+														for callback = 1, #enterCallbacks do
+															enterCallbacks[callback](Frame, skipAnimation)
+														end
+													end
+												end
+											end
+										end
+
+										function Frame:OnLeave(skipAnimation)
+											if NS.LibraryUI.Variables.SelectedIndex ~= index then
+												Frame.isMouseOver = false
+
+												--------------------------------
+
+												Frame:Animation_OnLeave(skipAnimation)
+												Logic_OnLeave()
+
+												--------------------------------
+
+												do -- ON LEAVE
+													if #Frame.leaveCallbacks >= 1 then
+														local leaveCallbacks = Frame.leaveCallbacks
+
+														for callback = 1, #leaveCallbacks do
+															leaveCallbacks[callback](Frame, skipAnimation)
+														end
+													end
+												end
+											end
+										end
+
+										function Frame:OnMouseDown(button, skipAnimation)
+											Frame.isMouseDown = true
+
+											--------------------------------
+
+											Frame:Animation_OnMouseDown(skipAnimation)
+											Logic_OnMouseDown()
+
+											--------------------------------
+
+											do -- ON MOUSE DOWN
+												if #Frame.mouseDownCallbacks >= 1 then
+													local mouseDownCallbacks = Frame.mouseDownCallbacks
+
+													for callback = 1, #mouseDownCallbacks do
+														mouseDownCallbacks[callback](Frame, skipAnimation)
+													end
+												end
+											end
+										end
+
+										function Frame:OnMouseUp(button, skipAnimation)
+											Frame.isMouseDown = false
+
+											--------------------------------
+
+											Frame:Animation_OnMouseUp(skipAnimation)
+											Logic_OnMouseUp()
+											Logic_OnClick(button)
+
+											--------------------------------
+
+											do -- ON MOUSE UP
+												if #Frame.mouseUpCallbacks >= 1 then
+													local mouseUpCallbacks = Frame.mouseUpCallbacks
+
+													for callback = 1, #mouseUpCallbacks do
+														mouseUpCallbacks[callback](Frame, skipAnimation)
+													end
+												end
+											end
+
+											do -- ON CLICK
+												if #Frame.clickCallbacks >= 1 then
+													local clickCallbacks = Frame.clickCallbacks
+
+													for callback = 1, #clickCallbacks do
+														clickCallbacks[callback](Frame, skipAnimation, button)
+													end
+												end
+											end
+										end
+
+										function Frame:OnClick(skipAnimation)
+											Frame:OnMouseUp("LeftButton", skipAnimation)
+										end
+
+										addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave, mouseDownCallback = function(button) Frame:OnMouseDown(button) end, mouseUpCallback = function(button) Frame:OnMouseUp(button) end })
+									end
+								end
+
+								do -- SETUP
+									Frame:OnLeave(true)
 								end
 
 								--------------------------------
 
-								return Button
+								return Frame
 							end
 
 							--------------------------------

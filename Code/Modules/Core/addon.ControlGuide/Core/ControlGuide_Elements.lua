@@ -1,6 +1,10 @@
+-- [!] [addon.ControlGuide] is used to display relevant keybinds for the current context.
+-- [ControlGuide_Elements.lua] creates the front-end (UI)
+-- for the addon.ControlGuide module.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.ControlGuide
 
@@ -16,80 +20,70 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
-			InteractionControlGuideFrame = CreateFrame("Frame", "InteractionControlGuideFrame", InteractionFrame)
-			InteractionControlGuideFrame:SetSize(500, 35)
-			InteractionControlGuideFrame:SetPoint("BOTTOM", UIParent, 0, NS.Variables:RATIO(1.5))
-			InteractionControlGuideFrame:SetFrameStrata("HIGH")
-			InteractionControlGuideFrame:SetFrameLevel(0)
+		do -- ELEMENTS
+			InteractionFrame.ControlGuideFrame = CreateFrame("Frame", "$parent.ControlGuideFrame", InteractionFrame)
+			InteractionFrame.ControlGuideFrame:SetSize(500, 35)
+			InteractionFrame.ControlGuideFrame:SetPoint("BOTTOM", UIParent, 0, NS.Variables:RATIO(1.5))
+			InteractionFrame.ControlGuideFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.ControlGuideFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 
-			--------------------------------
-
-			local Frame = InteractionControlGuideFrame
+			local Frame = InteractionFrame.ControlGuideFrame
 
 			--------------------------------
 
 			do -- CONTENT
 				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
-				Frame.Content:SetAllPoints(Frame)
-				Frame.Content:SetFrameStrata("HIGH")
-				Frame.Content:SetFrameLevel(0)
+				Frame.Content:SetPoint("CENTER", Frame)
+				Frame.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+				addon.API.FrameUtil:SetDynamicSize(Frame.Content, Frame, nil, 0)
 				Frame.Content:SetAlpha(.5)
+
+				local Content = Frame.Content
 
 				--------------------------------
 
-				do -- ELEMENTS
-					local function CreateElement(parent)
-						local Element = CreateFrame("Frame", nil, parent)
-						Element:SetSize(100, 35)
-						Element:SetFrameStrata("HIGH")
-						Element:SetFrameLevel(1)
+				do -- LAYOUT GROUP
+					Content.LayoutGroup, Content.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Content, { point = "LEFT", direction = "horizontal", resize = true, padding = 0, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+					Content.LayoutGroup:SetPoint("CENTER", Content, 0, 0)
+					Content.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Content.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
+					addon.API.FrameUtil:SetDynamicSize(Content.LayoutGroup, Content, nil, 0)
+					addon.API.FrameUtil:SetDynamicSize(Content, Content.LayoutGroup, 0, nil)
+					CallbackRegistry:Add("LayoutGroupSort ControlGuide.Content", Content.LayoutGroup_Sort)
 
-						--------------------------------
-
-						do -- TEXT
-							Element.Text = addon.API.FrameTemplates:CreateText(Element, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
-							Element.Text:SetAllPoints(Element)
-							Element.Text:SetAlpha(.75)
-
-							--------------------------------
-
-							addon.API.Main:SetButtonToPlatform(Element, Element.Text, "")
-						end
-
-						do -- EVENTS
-							Element.UpdateSize = function()
-								Element:SetWidth(Element.API_ButtonTextFrame:GetWidth())
-
-								--------------------------------
-
-								addon.Libraries.AceTimer:ScheduleTimer(function()
-									Element:SetWidth(Element.API_ButtonTextFrame:GetWidth())
-								end, .1)
-							end
-							Element.UpdateSize()
-
-							--------------------------------
-
-							hooksecurefunc(Element.Text, "SetText", Element.UpdateSize)
-						end
-
-						--------------------------------
-
-						return Element
-					end
+					local LayoutGroup = Content.LayoutGroup
 
 					--------------------------------
 
-					Frame.Elements = {}
+					do -- ELEMENTS
+						local function CreateElement(name)
+							local Element = PrefabRegistry:Create("ControlGuide.Element", Frame.Content, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 3, name)
+							return Element
+						end
 
-					local numElements = 10
-					for i = 1, numElements do
-						local Element = CreateElement(Frame.Content)
-						table.insert(Frame.Elements, Element)
+						--------------------------------
+
+						for i = 1, 10 do
+							LayoutGroup["Element" .. i] = CreateElement(Frame.Content)
+							LayoutGroup:AddElement(LayoutGroup["Element" .. i])
+							table.insert(NS.Variables.Elements, LayoutGroup["Element" .. i])
+						end
 					end
 				end
 			end
+		end
+
+		do -- REFERENCES
+			local Frame = InteractionFrame.ControlGuideFrame
+
+			--------------------------------
+
+			-- CORE
+			Frame.REF_CONTENT = Frame.Content
+
+			-- CONTENT
+			Frame.REF_CONTENT_LAYOUTGROUP = Frame.Content.LayoutGroup
 		end
 	end
 
@@ -97,7 +91,7 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionControlGuideFrame
+	local Frame = InteractionFrame.ControlGuideFrame
 	local Callback = NS.Script
 
 	--------------------------------

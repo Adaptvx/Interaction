@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.ContextIcon
 
@@ -13,12 +13,14 @@ NS.Variables = {}
 --------------------------------
 
 do -- MAIN
-	NS.Variables.IsRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
-	NS.Variables.IsClassicCata = addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
-	NS.Variables.IsClassicEra = addon.Variables.IS_CLASSIC_ERA
+
 end
 
 do -- CONSTANTS
+	NS.Variables.PATH = addon.Variables.PATH_ART .. "ContextIcons/"
+end
+
+do -- DATA
 	NS.Variables.ICON_MAP = {
 		-- GOSSIP
 		["132053"] = "gossip-bubble",
@@ -71,8 +73,6 @@ do -- CONSTANTS
 		["WrapperInProgressquesticon"] = "quest-meta-active",
 		["legendaryInProgressquesticon"] = "quest-legendary-active",
 	}
-
-	NS.Variables.PATH = addon.Variables.PATH_ART .. "ContextIcons/"
 end
 
 --------------------------------

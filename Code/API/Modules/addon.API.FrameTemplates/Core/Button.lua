@@ -113,10 +113,10 @@ do
 			frame._CustomFont = customFont
 			frame._CustomFontSize = customFontSize
 
-			frame.EnterCallbacks = {}
-			frame.LeaveCallbacks = {}
-			frame.MouseDownCallbacks = {}
-			frame.MouseUpCallbacks = {}
+			frame.enterCallbacks = {}
+			frame.leaveCallbacks = {}
+			frame.mouseDownCallbacks = {}
+			frame.mouseUpCallbacks = {}
 
 			--------------------------------
 
@@ -193,7 +193,7 @@ do
 			do -- CLICK EVENTS
 				local disableHighlight = disableHighlight or false
 
-				frame.Enter = function()
+				function frame:OnEnter()
 					if frame.IsEnabled and frame:IsEnabled() and not disableHighlight then
 						frame.IsHighlight = true
 
@@ -219,7 +219,7 @@ do
 
 						--------------------------------
 
-						local enterCallbacks = frame.EnterCallbacks
+						local enterCallbacks = frame.enterCallbacks
 
 						for callback = 1, #enterCallbacks do
 							enterCallbacks[callback]()
@@ -228,10 +228,10 @@ do
 
 					--------------------------------
 
-					frame.UpdateActive()
+					frame:UpdateActive()
 				end
 
-				frame.Leave = function()
+				function frame:OnLeave()
 					frame.IsHighlight = false
 
 					--------------------------------
@@ -253,7 +253,7 @@ do
 
 						--------------------------------
 
-						local leaveCallbacks = frame.LeaveCallbacks
+						local leaveCallbacks = frame.leaveCallbacks
 
 						for callback = 1, #leaveCallbacks do
 							leaveCallbacks[callback]()
@@ -262,10 +262,10 @@ do
 
 					--------------------------------
 
-					frame.UpdateActive()
+					frame:UpdateActive()
 				end
 
-				frame.MouseDown = function()
+				function frame:OnMouseDown()
 					if frame.IsEnabled and frame:IsEnabled() and not disableMouseDown then
 						if playAnimation or playAnimation == nil then
 							frame.API_BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .25)
@@ -275,7 +275,7 @@ do
 
 						--------------------------------
 
-						local mouseDownCallbacks = frame.MouseDownCallbacks
+						local mouseDownCallbacks = frame.mouseDownCallbacks
 
 						for callback = 1, #mouseDownCallbacks do
 							mouseDownCallbacks[callback]()
@@ -283,7 +283,7 @@ do
 					end
 				end
 
-				frame.MouseUp = function()
+				function frame:OnMouseUp()
 					if frame.IsEnabled and frame:IsEnabled() and not disableMouseUp then
 						if playAnimation or playAnimation == nil then
 							frame.API_BackgroundTexture:SetVertexColor(frame._Color.r, frame._Color.g, frame._Color.b, .5)
@@ -293,7 +293,7 @@ do
 
 						--------------------------------
 
-						local mouseUpCallbacks = frame.MouseUpCallbacks
+						local mouseUpCallbacks = frame.mouseUpCallbacks
 
 						for callback = 1, #mouseUpCallbacks do
 							mouseUpCallbacks[callback]()
@@ -304,36 +304,36 @@ do
 				frame:HookScript("OnEnter", function()
 					if disableMouseHighlight then return end
 
-					frame.Enter()
+					frame:OnEnter()
 				end)
 
 				frame:HookScript("OnLeave", function()
 					if disableMouseHighlight then return end
 
-					frame.Leave()
+					frame:OnLeave()
 				end)
 
 				frame:HookScript("OnMouseDown", function()
-					frame.MouseDown()
+					frame:OnMouseDown()
 				end)
 
 				frame:HookScript("OnMouseUp", function()
-					frame.MouseUp()
+					frame:OnMouseUp()
 				end)
 			end
 
 			do -- STATE UPDATES
-				frame.SetActive = function(value)
+				function frame:SetActive(value)
 					frame.IsActive = value
 
 					--------------------------------
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						frame.UpdateActive()
+						frame:UpdateActive()
 					end, 0)
 				end
 
-				frame.UpdateEnabled = function()
+				function frame:UpdateEnabled()
 					if frame.IsEnabled and not frame:IsEnabled() then
 						frame:SetAlpha(.5)
 					else
@@ -341,7 +341,7 @@ do
 					end
 				end
 
-				frame.UpdateActive = function()
+				function frame:UpdateActive()
 					if frame.IsActive then
 						if frame._HighlightColor.a and frame._HighlightColor.a < .5 then
 							if (theme and theme == 2) or (not theme and addon.API.Util.IsDarkTheme) then
@@ -366,8 +366,8 @@ do
 
 				--------------------------------
 
-				frame.UpdateEnabled()
-				frame.UpdateActive()
+				frame:UpdateEnabled()
+				frame:UpdateActive()
 
 				--------------------------------
 
@@ -383,7 +383,7 @@ do
 				Events:RegisterEvent("GAME_PAD_ACTIVE_CHANGED")
 				Events:SetScript("OnEvent", function(self, event, ...)
 					if event == "GAME_PAD_ACTIVE_CHANGED" then
-						frame.Leave()
+						frame:OnLeave()
 					end
 				end)
 			end

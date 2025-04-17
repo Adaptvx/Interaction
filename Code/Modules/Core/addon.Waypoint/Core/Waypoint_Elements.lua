@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Waypoint
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionPinpointFrame = CreateFrame("Frame")
 			InteractionPinpointFrame:SetParent(SuperTrackedFrame)
 			InteractionPinpointFrame:SetSize(250, 50)
@@ -32,7 +32,7 @@ function NS.Elements:Load()
 
 			do -- PINPOINT
 				do -- BACKGROUND
-					InteractionPinpointFrame.Background, InteractionPinpointFrame.backgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "content.png", 25, .5, "$parent.Background")
+					InteractionPinpointFrame.Background, InteractionPinpointFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(InteractionPinpointFrame, "BACKGROUND", NS.Variables.PATH .. "content.png", 25, .5, "$parent.Background")
 					InteractionPinpointFrame.Background:SetSize(InteractionPinpointFrame:GetWidth(), InteractionPinpointFrame:GetHeight())
 					InteractionPinpointFrame.Background:SetPoint("CENTER", InteractionPinpointFrame)
 				end

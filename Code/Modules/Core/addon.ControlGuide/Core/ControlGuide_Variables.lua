@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.ControlGuide
 
@@ -16,7 +16,7 @@ do -- MAIN
 
 end
 
-do  -- CONSTANTS
+do -- CONSTANTS
 	do -- SCALE
 		NS.Variables.BASELINE_WIDTH = 500
 		NS.Variables.BASELINE_HEIGHT = 35
@@ -30,7 +30,15 @@ do  -- CONSTANTS
 
 	do -- MAIN
 		NS.Variables.PADDING = NS.Variables:RATIO(1)
+
+		NS.Variables.FRAME_STRATA = "HIGH"
+		NS.Variables.FRAME_LEVEL = 1
+		NS.Variables.FRAME_LEVEL_MAX = 999
 	end
+end
+
+do -- REFERENCES
+	NS.Variables.Elements = {}
 end
 
 --------------------------------

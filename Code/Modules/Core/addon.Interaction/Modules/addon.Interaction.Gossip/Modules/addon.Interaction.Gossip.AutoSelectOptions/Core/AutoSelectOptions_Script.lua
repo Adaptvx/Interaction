@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.AutoSelectOptions
 
@@ -56,7 +56,7 @@ function NS.Script:Load()
 				local GossipOption = GossipOptions[i]
 
 				local Flags = GossipOption.flags
-				local GossipOptionID = GossipOption.gossipOptionID
+				local GossipoptionID = GossipOption.gossipoptionID
 				local Name = GossipOption.name
 				local Status = GossipOption.status
 				local OrderIndex = GossipOption.orderIndex
@@ -66,7 +66,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				for key, value in pairs(NS.Variables.DB) do
-					if key == GossipOptionID then
+					if key == GossipoptionID then
 						if value == NS.Variables.ALWAYS then
 							Callback:SelectOption(OrderIndex)
 						elseif value == NS.Variables.ONLY_OPTION then

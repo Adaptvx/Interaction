@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -15,7 +15,11 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-
+	do -- MAIN
+		NS.FRAME_STRATA = "FULLSCREEN_DIALOG"
+		NS.FRAME_LEVEL = 1
+		NS.FRAME_LEVEL_MAX = 999
+	end
 end
 
 --------------------------------
@@ -28,7 +32,7 @@ function NS:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			do -- FRAME
 				InteractionFrame = CreateFrame("Frame", "InteractionFrame", nil)
 				InteractionFrame:SetPoint("CENTER", nil)
@@ -39,12 +43,9 @@ function NS:Load()
 					InteractionFrame.PreventMouse = CreateFrame("Frame")
 					InteractionFrame.PreventMouse:SetAllPoints(UIParent)
 					InteractionFrame.PreventMouse:SetPoint("CENTER", UIParent)
-					InteractionFrame.PreventMouse:SetFrameStrata("FULLSCREEN_DIALOG")
-					InteractionFrame.PreventMouse:SetFrameLevel(999)
+					InteractionFrame.PreventMouse:SetFrameStrata(NS.FRAME_STRATA)
+					InteractionFrame.PreventMouse:SetFrameLevel(NS.FRAME_LEVEL_MAX)
 					InteractionFrame.PreventMouse:EnableMouse(true)
-
-					--------------------------------
-
 					InteractionFrame.PreventMouse:Hide()
 				end
 
@@ -57,8 +58,8 @@ function NS:Load()
 			do -- PRIORITY FRAME
 				InteractionPriorityFrame = CreateFrame("Frame", "InteractionPriorityFrame", nil)
 				InteractionPriorityFrame:SetPoint("CENTER", nil)
-				InteractionPriorityFrame:SetFrameStrata("FULLSCREEN_DIALOG")
-				InteractionPriorityFrame:SetFrameLevel(0)
+				InteractionPriorityFrame:SetFrameStrata(NS.FRAME_STRATA)
+				InteractionPriorityFrame:SetFrameLevel(NS.FRAME_LEVEL_MAX)
 			end
 		end
 	end
@@ -128,7 +129,7 @@ function NS:Load()
 
 			--------------------------------
 
-			if not addon.Variables.IS_CLASSIC then -- RETAIL
+			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then -- RETAIL
 				hooksecurefunc(QuestFrameGreetingPanel, "Show", function(frame)
 					local function UpdateQuestFrameGreetingPanel()
 						local numButtons = 0
@@ -158,7 +159,7 @@ function NS:Load()
 						UpdateQuestFrameGreetingPanel()
 					end, 0)
 				end)
-			elseif addon.Variables.IS_CLASSIC then -- CLASSIC
+			elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then -- CLASSIC
 				local IsQuestTitleButtons = (QuestTitleButton1)
 
 				--------------------------------

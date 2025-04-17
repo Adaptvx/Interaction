@@ -1,6 +1,10 @@
+-- [!] [addon.Cinematic.Effects] is used to display screen gradients/effects.
+-- [Effects_Elements.lua] is the front-end (UI)
+-- for the module.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic.Effects
 
@@ -16,55 +20,71 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
-			InteractionCinematicEffectsFrame = CreateFrame("Frame", "InteractionCinematicEffectsFrame", InteractionFrame)
-			InteractionCinematicEffectsFrame:SetAllPoints(UIParent, true)
-			InteractionCinematicEffectsFrame:SetFrameStrata("HIGH")
-			InteractionCinematicEffectsFrame:SetFrameLevel(0)
+		do -- ELEMENTS
+			InteractionFrame.EffectsFrame = CreateFrame("Frame", "InteractionFrame.EffectsFrame", InteractionFrame)
+			InteractionFrame.EffectsFrame:SetAllPoints(UIParent, true)
+			InteractionFrame.EffectsFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.EffectsFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 
-			--------------------------------
-
-			local Frame = InteractionCinematicEffectsFrame
+            local Frame = InteractionFrame.EffectsFrame
 
 			--------------------------------
 
 			do -- MOUSE RESPONDER
 				Frame.MouseResponders = CreateFrame("Frame", "$parent.MouseResponders", Frame)
 				Frame.MouseResponders:SetAllPoints(Frame, true)
-				Frame.MouseResponders:SetFrameStrata("HIGH")
-				Frame.MouseResponders:SetFrameLevel(0)
+				Frame.MouseResponders:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.MouseResponders:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+
+				local MouseResponders = Frame.MouseResponders
 
 				--------------------------------
 
-				do -- LEFT HALF
-					Frame.MouseResponders.Left = CreateFrame("Frame", "$parent.MouseResponders.Left_Half", Frame.MouseResponders)
-					Frame.MouseResponders.Left:SetPoint("TOPLEFT", UIParent, 0, 0)
-					Frame.MouseResponders.Left:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMLEFT", 750, 0)
+				do -- LEFT
+					MouseResponders.Left = CreateFrame("Frame", "$parent.Left", MouseResponders)
+					MouseResponders.Left:SetPoint("TOPLEFT", UIParent, 0, 0)
+					MouseResponders.Left:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMLEFT", 750, 0)
 				end
 
-				do -- RIGHT HALF
-					Frame.MouseResponders.Right = CreateFrame("Frame", "$parent.MouseResponders.Right_Half", Frame.MouseResponders)
-					Frame.MouseResponders.Right:SetPoint("TOPLEFT", UIParent, -750, 0)
-					Frame.MouseResponders.Right:SetPoint("BOTTOMRIGHT", UIParent, 0, 0)
+				do -- RIGHT
+					MouseResponders.Right = CreateFrame("Frame", "$parent.Right", MouseResponders)
+					MouseResponders.Right:SetPoint("TOPLEFT", UIParent, -750, 0)
+					MouseResponders.Right:SetPoint("BOTTOMRIGHT", UIParent, 0, 0)
 				end
 			end
 
 			do -- GRADIENT
 				Frame.Gradient = CreateFrame("Frame", "$parent.Gradient", Frame)
 				Frame.Gradient:SetAllPoints(UIParent, true)
-				Frame.Gradient:SetFrameStrata("HIGH")
-				Frame.Gradient:SetFrameLevel(1)
+				Frame.Gradient:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Gradient:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+
+				local Gradient = Frame.Gradient
 
 				--------------------------------
 
 				do -- BACKGROUND
-					Frame.Gradient.Background, Frame.Gradient.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Gradient, "HIGH", nil, "$parent.Gradient")
-					Frame.Gradient.Background:SetAllPoints(Frame.Gradient, true)
-					Frame.Gradient.Background:SetFrameStrata("HIGH")
-					Frame.Gradient.Background:SetFrameLevel(2)
-					Frame.Gradient.Background:SetAlpha(.75)
+					Gradient.Background, Gradient.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Gradient, NS.Variables.FRAME_STRATA, nil, "$parent.Gradient")
+					Gradient.Background:SetAllPoints(Frame.Gradient, true)
+					Gradient.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Gradient.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
+					Gradient.Background:SetAlpha(.75)
 				end
 			end
+		end
+
+		do -- REFERENCES
+			local Frame = InteractionFrame.EffectsFrame
+
+			--------------------------------
+
+			-- CORE
+			Frame.REF_MOUSERESPONDERS = Frame.MouseResponders
+			Frame.REF_GRADIENT = Frame.Gradient
+
+			-- MOUSE RESPONDERS
+			Frame.REF_MOUSERESPONDERS_LEFT = Frame.REF_MOUSERESPONDERS.Left
+			Frame.REF_MOUSERESPONDERS_RIGHT = Frame.REF_MOUSERESPONDERS.Right
 		end
 	end
 
@@ -72,7 +92,7 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionCinematicEffectsFrame
+	local Frame = InteractionFrame.EffectsFrame
 	local Callback = NS.Script
 
 	--------------------------------

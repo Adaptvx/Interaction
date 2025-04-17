@@ -1,6 +1,10 @@
+-- [!] [addon.Interaction.Quest] is a replacement for Blizzard's Quest Frame.
+-- [Quest_Script.lua] is the back-end (logic & behavior)
+-- for [Quest_Elements.lua].
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest
 
@@ -15,7 +19,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionQuestFrame
+	local Frame = InteractionFrame.QuestFrame
 	local Callback = NS.Script
 
 	--------------------------------
@@ -23,23 +27,23 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ButtonContainer.AcceptButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation()
+		Frame.REF_FOOTER_CONTENT.AcceptButton:SetScript("OnClick", function()
+			Frame:HideWithAnimation()
 
 			--------------------------------
 
 			AcceptQuest()
 		end)
 
-		Frame.ButtonContainer.ContinueButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation()
+		Frame.REF_FOOTER_CONTENT.ContinueButton:SetScript("OnClick", function()
+			Frame:HideWithAnimation()
 
 			--------------------------------
 
 			CompleteQuest()
 		end)
 
-		Frame.ButtonContainer.CompleteButton:SetScript("OnClick", function()
+		Frame.REF_FOOTER_CONTENT.CompleteButton:SetScript("OnClick", function()
 			local numChoices = (GetNumQuestChoices())
 			local choiceIndex
 
@@ -55,7 +59,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.HideWithAnimation()
+			Frame:HideWithAnimation()
 
 			--------------------------------
 
@@ -64,20 +68,20 @@ function NS.Script:Load()
 			end, .35)
 		end)
 
-		Frame.ButtonContainer.DeclineButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation(true)
+		Frame.REF_FOOTER_CONTENT.DeclineButton:SetScript("OnClick", function()
+			Frame:HideWithAnimation(true)
 		end)
 
-		Frame.ButtonContainer.GoodbyeButton:SetScript("OnClick", function()
-			Frame.HideWithAnimation(true)
+		Frame.REF_FOOTER_CONTENT.GoodbyeButton:SetScript("OnClick", function()
+			Frame:HideWithAnimation(true)
 		end)
 
-		Frame.TitleHeader.MouseResponder:SetScript("OnEnter", function()
-			Frame.TitleHeader:SetAlpha(.75)
+		Frame.REF_HEADER_DIVIDER.MouseResponder:SetScript("OnEnter", function()
+			Frame.REF_HEADER_TITLE:SetAlpha(.75)
 		end)
 
-		Frame.TitleHeader.MouseResponder:SetScript("OnLeave", function()
-			Frame.TitleHeader:SetAlpha(1)
+		Frame.REF_HEADER_DIVIDER.MouseResponder:SetScript("OnLeave", function()
+			Frame.REF_HEADER_TITLE:SetAlpha(1)
 		end)
 	end
 
@@ -86,67 +90,34 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ScrollChildFrame.UpdateLayout = function()
-			local elements = Frame.ScrollChildFrame.Elements
-			local currentOffset = 0
-
-			--------------------------------
-
-			for element = 1, #elements do
-				if elements[element]:IsShown() then
-					local currentElement = elements[element]
-					local nextElement = elements[element + 1]
-
-					local currentElementHeight = 0
-
-					--------------------------------
-
-					if currentElement.GetStringHeight then
-						currentElementHeight = currentElement:GetStringHeight()
-					elseif currentElement.GetHeight then
-						currentElementHeight = currentElement:GetHeight()
-					end
-
-					--------------------------------
-
-					currentElement:ClearAllPoints()
-					currentElement:SetPoint("TOP", Frame.ScrollChildFrame, 0, -currentOffset)
-
-					--------------------------------
-
-					if (currentElement.type == "RewardText") and (nextElement and nextElement:IsShown() and nextElement.type == "RewardText") then
-						currentOffset = currentOffset + currentElementHeight + NS.Variables.PADDING
-					else
-						currentOffset = currentOffset + currentElementHeight + NS.Variables.PADDING
-					end
-				end
-			end
-
-			--------------------------------
-
-			Frame.ScrollChildFrame:SetHeight(currentOffset)
+		function Frame:UpdateAll()
+			Frame:UpdateLayout()
+			Frame:UpdateWarbandHeader()
+			Frame:UpdateScrollIndicator()
+			Frame:UpdateFocus()
 		end
 
-		Frame.UpdateAll = function()
-			Frame.UpdateWarbandHeader()
-			Frame.UpdateScrollFrameFormat()
-			Frame.UpdateScrollIndicator()
-			Frame.UpdateFocus()
+		function Frame:UpdateLayout()
+			CallbackRegistry:Trigger("UpdateDynamicSize Quest.Content.Main")
+
+			CallbackRegistry:Trigger("LayoutGroupSort Quest.Content")
+			CallbackRegistry:Trigger("LayoutGroupSort Quest.Content.Header")
+			CallbackRegistry:Trigger("LayoutGroupSort Quest.Content.Main")
 		end
 
-		Frame.UpdateWarbandHeader = function()
+		function Frame:UpdateWarbandHeader()
 			local isWarbandComplete = (C_QuestLog.IsQuestFlaggedCompletedOnAccount and C_QuestLog.IsQuestFlaggedCompletedOnAccount(GetQuestID())) or false
 
 			--------------------------------
 
-			Frame.TitleHeader:SetAlpha(1)
+			Frame.REF_HEADER_DIVIDER:SetAlpha(1)
 
 			if isWarbandComplete then
-				Frame.TitleHeader.MouseResponder:EnableMouse(true)
-				addon.API.Util:AddTooltip(Frame.TitleHeader.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0)
+				Frame.REF_HEADER_DIVIDER.MouseResponder:EnableMouse(true)
+				addon.API.Util:AddTooltip(Frame.REF_HEADER_DIVIDER.MouseResponder, ACCOUNT_COMPLETED_QUEST_NOTICE, "ANCHOR_TOPRIGHT", 0, 0)
 			else
-				Frame.TitleHeader.MouseResponder:EnableMouse(false)
-				addon.API.Util:RemoveTooltip(Frame.TitleHeader.MouseResponder)
+				Frame.REF_HEADER_DIVIDER.MouseResponder:EnableMouse(false)
+				addon.API.Util:RemoveTooltip(Frame.REF_HEADER_DIVIDER.MouseResponder)
 			end
 
 			--------------------------------
@@ -167,35 +138,18 @@ function NS.Script:Load()
 				end
 			end
 
-			Frame.TitleHeaderTexture:SetTexture(TEXTURE_Background)
+			Frame.REF_HEADER_DIVIDER.BackgroundTexture:SetTexture(TEXTURE_Background)
 		end
 
-		Frame.UpdateScrollFrameFormat = function()
-			if not Frame.Title then return end
-
-			--------------------------------
-
-			if Frame.Storyline:IsShown() then
-				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
-				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (75 / NS.Variables.ScaleModifier) - TitleHeight)
-			else
-				local TitleHeight = Frame.Title:GetStringHeight() + Frame.TitleHeader:GetHeight() + NS.Variables.PADDING
-				Frame.ScrollFrame:SetHeight(Frame:GetHeight() - (52.5 / NS.Variables.ScaleModifier) - TitleHeight)
-			end
-
-			Frame.ScrollFrame:ClearAllPoints()
-			Frame.ScrollFrame:SetPoint("BOTTOM", Frame, 0, 65)
-		end
-
-		Frame.UpdateScrollIndicator = function()
-			if Frame.ScrollFrame:IsVisible() and (Frame.ScrollFrame:GetVerticalScroll() < Frame.ScrollFrame:GetVerticalScrollRange() - 10) then
-				Frame.Background.ScrollFrameIndicator:Show()
+		function Frame:UpdateScrollIndicator()
+			if Frame.REF_MAIN_SCROLLFRAME:IsVisible() and (Frame.REF_MAIN_SCROLLFRAME:GetVerticalScroll() < Frame.REF_MAIN_SCROLLFRAME:GetVerticalScrollRange() - 10) then
+				Frame.REF_MAIN_SCROLLFRAME_SCROLLINDICATOR:Show()
 			elseif QuestProgressScrollFrame:IsVisible() and (QuestProgressScrollFrame:GetVerticalScroll() < QuestProgressScrollFrame:GetVerticalScrollRange() - 10) then
-				Frame.Background.ScrollFrameIndicator:Show()
+				Frame.REF_MAIN_SCROLLFRAME_SCROLLINDICATOR:Show()
 			elseif QuestRewardScrollFrame:IsVisible() and (QuestRewardScrollFrame:GetVerticalScroll() < QuestRewardScrollFrame:GetVerticalScrollRange() - 10) then
-				Frame.Background.ScrollFrameIndicator:Show()
+				Frame.REF_MAIN_SCROLLFRAME_SCROLLINDICATOR:Show()
 			else
-				Frame.Background.ScrollFrameIndicator:Hide()
+				Frame.REF_MAIN_SCROLLFRAME_SCROLLINDICATOR:Hide()
 			end
 		end
 	end
@@ -205,48 +159,50 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.SetChoiceSelected = function()
-			NS.Variables.ChoiceSelected = true
+		function Frame:SetChoiceSelected(frame)
+			NS.Variables.Button_Choice_Selected = frame
 
 			--------------------------------
 
-			Frame.UpdateCompleteButton()
+			Frame:UpdateCompleteButton()
 		end
 
-		Frame.ClearChoiceSelected = function()
+		function Frame:ClearButton_Choice_Selected()
 			QuestInfoFrame.itemChoice = 0
 
 			--------------------------------
 
-			NS.Variables.ChoiceSelected = false
+			NS.Variables.Button_Choice_Selected = nil
 
 			--------------------------------
 
-			Frame.UpdateCompleteButton()
+			Frame:UpdateCompleteButton()
 		end
 
-		Frame.DisableCompleteButton = function()
-			Frame.ButtonContainer.CompleteButton:SetEnabled(false)
-			Frame.ButtonContainer.CompleteButton:SetAlpha(.5)
+		function Frame:DisableCompleteButton()
+			Frame.REF_FOOTER_CONTENT.CompleteButton:SetEnabled(false)
+			Frame.REF_FOOTER_CONTENT.CompleteButton:SetAlpha(.5)
 		end
 
-		Frame.EnableCompleteButton = function()
-			Frame.ButtonContainer.CompleteButton:SetEnabled(true)
-			Frame.ButtonContainer.CompleteButton:SetAlpha(1)
+		function Frame:EnableCompleteButton()
+			Frame.REF_FOOTER_CONTENT.CompleteButton:SetEnabled(true)
+			Frame.REF_FOOTER_CONTENT.CompleteButton:SetAlpha(1)
 		end
 
-		Frame.UpdateCompleteButton = function()
-			local IsController = (addon.Input.Variables.IsController or addon.Input.Variables.SimulateController)
-			local IsCurrentHighlightedButtonSelected = (addon.Input.Variables.CurrentFrame == NS.Variables.ChoiceSelected)
-			local IsCompleteButtonHighlighted = (addon.Input.Variables.CurrentFrame == InteractionQuestFrame.ButtonContainer.CompleteButton)
+		function Frame:UpdateCompleteButton()
+			local isController = (addon.Input.Variables.IsControllerEnabled or addon.Input.Variables.SimulateController)
+			local isCurrentHighlightedButtonSelected = (addon.Input.Variables.CurrentFrame == NS.Variables.Button_Choice_Selected)
+			local isCompleteButtonHighlighted = (addon.Input.Variables.CurrentFrame == Frame.REF_FOOTER_CONTENT.CompleteButton)
 
-			local IsRewardSelection = (NS.Variables.Num_Choice > 1 and QuestFrameCompleteQuestButton:IsVisible())
-			local IsChoiceSelected = (NS.Variables.ChoiceSelected)
+			local isRewardSelection = (NS.Variables.Num_Choice > 1 and QuestFrameCompleteQuestButton:IsVisible())
+			local isButton_Choice_Selected = (NS.Variables.Button_Choice_Selected ~= nil)
 
-			if (not IsRewardSelection) or (IsRewardSelection and ((not IsController) or (IsController and (IsCurrentHighlightedButtonSelected or IsCompleteButtonHighlighted))) and (IsChoiceSelected)) then
-				Frame.EnableCompleteButton()
+			--------------------------------
+
+			if (not isRewardSelection) or (isRewardSelection and ((not isController) or (isController and (isCurrentHighlightedButtonSelected or isCompleteButtonHighlighted))) and (isButton_Choice_Selected)) then
+				Frame:EnableCompleteButton()
 			else
-				Frame.DisableCompleteButton()
+				Frame:DisableCompleteButton()
 			end
 		end
 	end
@@ -287,25 +243,52 @@ function NS.Script:Load()
 
 		do -- BUTTONS
 			do -- GET
-				Frame.GetButtons_Choice = function()
+				function Frame:GetButtons_Choice()
 					return NS.Variables.Buttons_Choice
 				end
 
-				Frame.GetButtons_Reward = function()
+				function Frame:GetButtons_Reward()
 					return NS.Variables.Buttons_Reward
 				end
 
-				Frame.GetButtons_Spell = function()
+				function Frame:GetButtons_Spell()
 					return NS.Variables.Buttons_Spell
 				end
 
-				Frame.GetButtons_Required = function()
+				function Frame:GetButtons_Required()
 					return NS.Variables.Buttons_Required
 				end
 			end
 
+			do -- SET
+				function Frame:DeselectAllButtons()
+					local Buttons_Choice = Frame:GetButtons_Choice()
+					local Buttons_Reward = Frame:GetButtons_Reward()
+					local Buttons_Required = Frame:GetButtons_Required()
+					local Buttons_Spell = Frame:GetButtons_Spell()
+
+					--------------------------------
+
+					for i = 1, #Buttons_Choice do
+						Buttons_Choice[i]:OnLeave()
+					end
+
+					for i = 1, #Buttons_Reward do
+						Buttons_Reward[i]:OnLeave()
+					end
+
+					for i = 1, #Buttons_Required do
+						Buttons_Required[i]:OnLeave()
+					end
+
+					for i = 1, #Buttons_Spell do
+						Buttons_Spell[i]:OnLeave()
+					end
+				end
+			end
+
 			do -- UPDATE
-				Frame.UpdateAllButtonStates = function()
+				function Frame:UpdateAllButtonStates()
 					local numChoices = NS.Variables.Num_Choice
 					local numRewards = NS.Variables.Num_Reward
 					local numRequired = NS.Variables.Num_Required
@@ -314,85 +297,85 @@ function NS.Script:Load()
 					--------------------------------
 
 					for i = 1, numChoices do
-						NS.Variables.Buttons_Choice[i].UpdateState()
+						NS.Variables.Buttons_Choice[i]:UpdateState()
 					end
 
 					for i = 1, numRewards do
-						NS.Variables.Buttons_Reward[i].UpdateState()
+						NS.Variables.Buttons_Reward[i]:UpdateState()
 					end
 
 					for i = 1, numRequired do
-						NS.Variables.Buttons_Required[i].UpdateState()
+						NS.Variables.Buttons_Required[i]:UpdateState()
 					end
 
 					for i = 1, numSpell do
-						NS.Variables.Buttons_Spell[i].UpdateState()
+						NS.Variables.Buttons_Spell[i]:UpdateState()
 					end
 				end
 			end
 		end
 
 		do -- HIDE
-			Frame.HideQuestChoice = function()
+			function Frame:HideQuestChoice()
 				NS.Variables.Num_Choice = 0
-				Frame.Rewards_Choice:Hide()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Choice:Hide()
 
 				--------------------------------
 
-				for i = 1, #Frame.GetButtons_Choice() do
-					local CurrentButton = Frame.GetButtons_Choice()[i]
+				for i = 1, #Frame:GetButtons_Choice() do
+					local CurrentButton = Frame:GetButtons_Choice()[i]
 					CurrentButton:Hide()
 				end
 			end
 
-			Frame.HideReceive = function()
+			function Frame:HideReceive()
 				NS.Variables.Num_Reward = 0
-				Frame.Rewards_Receive:Hide()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Receive:Hide()
 
 				--------------------------------
 
-				for i = 1, #Frame.GetButtons_Reward() do
-					local CurrentButton = Frame.GetButtons_Reward()[i]
+				for i = 1, #Frame:GetButtons_Reward() do
+					local CurrentButton = Frame:GetButtons_Reward()[i]
 					CurrentButton:Hide()
 				end
 			end
 
-			Frame.HideSpell = function()
+			function Frame:HideSpell()
 				NS.Variables.Num_Spell = 0
-				Frame.Rewards_Spell:Hide()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Spell:Hide()
 
 				--------------------------------
 
-				for i = 1, #Frame.GetButtons_Spell() do
-					local CurrentButton = Frame.GetButtons_Spell()[i]
+				for i = 1, #Frame:GetButtons_Spell() do
+					local CurrentButton = Frame:GetButtons_Spell()[i]
 					CurrentButton:Hide()
 				end
 			end
 
-			Frame.HideRequired = function()
+			function Frame:HideRequired()
 				NS.Variables.Num_Required = 0
-				Frame.Progress_Header:Hide()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Progress_Header:Hide()
 
 				--------------------------------
 
-				for i = 1, #Frame.GetButtons_Required() do
-					local CurrentButton = Frame.GetButtons_Required()[i]
+				for i = 1, #Frame:GetButtons_Required() do
+					local CurrentButton = Frame:GetButtons_Required()[i]
 					CurrentButton:Hide()
 				end
 			end
 		end
 
 		do -- SET
-			Frame.SetChoice = function(callbacks)
+			function Frame:SetChoice(callbacks)
 				NS.Variables.Num_Choice = #callbacks
 
 				--------------------------------
 
-				Frame.Rewards_Choice:Show()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Choice:Show()
 
 				--------------------------------
 
-				local Buttons = Frame.GetButtons_Choice()
+				local Buttons = Frame:GetButtons_Choice()
 
 				for i = 1, #Buttons do
 					Buttons[i]:Hide()
@@ -400,9 +383,9 @@ function NS.Script:Load()
 
 				for i = 1, NS.Variables.Num_Choice do
 					Buttons[i]:Show()
-					Buttons[i].Index = i
-					Buttons[i].Type = "choice"
-					Buttons[i].Callback = callbacks[i]
+					Buttons[i].index = i
+					Buttons[i].type = "choice"
+					Buttons[i].callback = callbacks[i]
 
 					--------------------------------
 
@@ -441,21 +424,21 @@ function NS.Script:Load()
 					end
 
 					do -- STATE
-						Buttons[i].SetStateAuto()
+						Buttons[i]:SetStateAuto()
 					end
 				end
 			end
 
-			Frame.SetReward = function(callbacks)
+			function Frame:SetReward(callbacks)
 				NS.Variables.Num_Reward = #callbacks
 
 				--------------------------------
 
-				Frame.Rewards_Receive:Show()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Receive:Show()
 
 				--------------------------------
 
-				local Buttons = Frame.GetButtons_Reward()
+				local Buttons = Frame:GetButtons_Reward()
 
 				for i = 1, #Buttons do
 					Buttons[i]:Hide()
@@ -463,9 +446,9 @@ function NS.Script:Load()
 
 				for i = 1, NS.Variables.Num_Reward do
 					Buttons[i]:Show()
-					Buttons[i].Index = i
-					Buttons[i].Type = "reward"
-					Buttons[i].Callback = callbacks[i]
+					Buttons[i].index = i
+					Buttons[i].type = "reward"
+					Buttons[i].callback = callbacks[i]
 
 					--------------------------------
 
@@ -504,21 +487,21 @@ function NS.Script:Load()
 					end
 
 					do -- STATE
-						Buttons[i].SetStateAuto()
+						Buttons[i]:SetStateAuto()
 					end
 				end
 			end
 
-			Frame.SetSpell = function(callbacks)
+			function Frame:SetSpell(callbacks)
 				NS.Variables.Num_Spell = #callbacks
 
 				--------------------------------
 
-				Frame.Rewards_Spell:Show()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Spell:Show()
 
 				--------------------------------
 
-				local Buttons = Frame.GetButtons_Spell()
+				local Buttons = Frame:GetButtons_Spell()
 
 				for i = 1, #Buttons do
 					Buttons[i]:Hide()
@@ -526,9 +509,9 @@ function NS.Script:Load()
 
 				for i = 1, NS.Variables.Num_Spell do
 					Buttons[i]:Show()
-					Buttons[i].Index = i
-					Buttons[i].Type = "spell"
-					Buttons[i].Callback = callbacks[i]
+					Buttons[i].index = i
+					Buttons[i].type = "spell"
+					Buttons[i].callback = callbacks[i]
 
 					--------------------------------
 
@@ -567,21 +550,21 @@ function NS.Script:Load()
 					end
 
 					do -- STATE
-						Buttons[i].SetStateAuto()
+						Buttons[i]:SetStateAuto()
 					end
 				end
 			end
 
-			Frame.SetRequired = function(callbacks)
+			function Frame:SetRequired(callbacks)
 				NS.Variables.Num_Required = #callbacks
 
 				--------------------------------
 
-				Frame.Progress_Header:Show()
+				Frame.REF_MAIN_SCROLLFRAME_CONTENT.Progress_Header:Show()
 
 				--------------------------------
 
-				local Buttons = Frame.GetButtons_Required()
+				local Buttons = Frame:GetButtons_Required()
 
 				for i = 1, #Buttons do
 					Buttons[i]:Hide()
@@ -589,9 +572,9 @@ function NS.Script:Load()
 
 				for i = 1, NS.Variables.Num_Required do
 					Buttons[i]:Show()
-					Buttons[i].Index = i
-					Buttons[i].Type = "required"
-					Buttons[i].Callback = callbacks[i]
+					Buttons[i].index = i
+					Buttons[i].type = "required"
+					Buttons[i].callback = callbacks[i]
 
 					--------------------------------
 
@@ -630,7 +613,7 @@ function NS.Script:Load()
 					end
 
 					do -- STATE
-						Buttons[i].SetStateAuto()
+						Buttons[i]:SetStateAuto()
 					end
 				end
 			end
@@ -704,7 +687,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.SetData = function()
+			function Frame:SetData()
 				do -- TEXT
 					if not QuestFrame:IsVisible() then
 						return
@@ -717,30 +700,30 @@ function NS.Script:Load()
 					local HEADER_REWARDS = QuestInfoRewardsFrame.Header
 					local TEXT_REWARDS_CHOICE = QuestInfoRewardsFrame.ItemChooseText
 					local TEXT_REWARDS_RECEIVE = QuestInfoRewardsFrame.ItemReceiveText
-					local TEXT_REWARDS_PARTYSYNC = (not addon.Variables.IS_CLASSIC and QuestInfoRewardsFrame.QuestSessionBonusReward) or (addon.Variables.IS_CLASSIC and nil)
+					local TEXT_REWARDS_PARTYSYNC = (not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL) and QuestInfoRewardsFrame.QuestSessionBonusReward or nil
 					local TEXT_REWARDS_SPELL, _ = QuestFrame_GetSpells()
 					local HEADER_REQUIRE = QuestProgressRequiredItemsText
 
 					local questID = GetQuestID()
-					local storylineInfo = (not addon.Variables.IS_CLASSIC and C_QuestLine.GetQuestLineInfo(questID) and C_QuestLine.GetQuestLineInfo(questID).questLineName) or (addon.Variables.IS_CLASSIC and nil)
+					local storylineInfo = (not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_QuestLine.GetQuestLineInfo(questID)) and C_QuestLine.GetQuestLineInfo(questID).questLineName or nil
 					local experience = UnitLevel("player") < GetMaxPlayerLevel() and GetRewardXP() or nil
 					local experiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
 					local gold, silver, copper = addon.API.Util:FormatMoney(GetRewardMoney())
 					local honor = GetRewardHonor()
 
-					if addon.Variables.IS_CLASSIC and GetClassicExpansionLevel() >= 3 then
+					if addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and GetClassicExpansionLevel() >= 3 then
 						honor = honor / 100
 					end
 
 					--------------------------------
 
 					do -- TEXT (STORYLINE)
-						Frame.Storyline:SetShown(storylineInfo and not TITLE_PROGRESS:IsVisible())
+						Frame.REF_HEADER_STORYLINE:SetShown(storylineInfo and not TITLE_PROGRESS:IsVisible())
 
 						--------------------------------
 
 						if storylineInfo then
-							Frame.Storyline:SetInfo(storylineInfo, nil, false, nil, nil)
+							Frame.REF_HEADER_STORYLINE.Storyline:SetInfo(storylineInfo, nil, false, nil, nil)
 
 							--------------------------------
 
@@ -750,68 +733,52 @@ function NS.Script:Load()
 
 					do -- TEXT (TITLE)
 						if not TITLE_PROGRESS:IsVisible() then
-							Frame.Title:SetShown(TITLE:IsVisible())
+							Frame.REF_HEADER_TITLE:SetShown(TITLE:IsVisible())
 
 							--------------------------------
 
 							if TITLE:IsVisible() then
-								Frame.Title:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE:GetText(), true))
-
-								--------------------------------
-
-								Frame.Title:ClearAllPoints()
-								if storylineInfo then
-									Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
-								else
-									Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
-								end
+								Frame.REF_HEADER_TITLE.Text:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE:GetText(), true))
 							end
 						else
-							Frame.Title:SetShown(TITLE_PROGRESS:IsVisible())
+							Frame.REF_HEADER_TITLE:SetShown(TITLE_PROGRESS:IsVisible())
 
 							--------------------------------
 
-							Frame.Title:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE_PROGRESS:GetText(), true))
-
-							--------------------------------
-
-							Frame.Title:ClearAllPoints()
-							if storylineInfo then
-								Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
-							else
-								Frame.Title:SetPoint("TOPLEFT", Frame, 55, -NS.Variables:RATIO(7))
+							if TITLE_PROGRESS:IsVisible() then
+								Frame.REF_HEADER_TITLE.Text:SetText(addon.API.Util:RemoveAtlasMarkup(TITLE_PROGRESS:GetText(), true))
 							end
 						end
 					end
 
 					do -- TEXT (OBJECTIVES)
-						Frame.Objectives_Header:SetShown(HEADER_OBJECTIVES:IsVisible())
-						Frame.Objectives_Text:SetShown(TEXT_OBJECTIVES:IsVisible())
+						Frame.REF_MAIN_SCROLLFRAME_CONTENT.Objectives_Header:SetShown(HEADER_OBJECTIVES:IsVisible())
+						Frame.REF_MAIN_SCROLLFRAME_CONTENT.Objectives_Text:SetShown(TEXT_OBJECTIVES:IsVisible())
 
 						--------------------------------
 
 						if HEADER_OBJECTIVES:IsVisible() then
-							Frame.Objectives_Text:SetText(TEXT_OBJECTIVES:GetText())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Objectives_Text:SetText(TEXT_OBJECTIVES:GetText())
 						end
 					end
 
 					do -- REWARDS
 						do -- HEADER
-							Frame.Rewards_Header:SetShown(HEADER_REWARDS:IsVisible() and not TITLE_PROGRESS:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Header:SetShown(HEADER_REWARDS:IsVisible() and not TITLE_PROGRESS:IsVisible())
 						end
 
 						do -- EXPERIENCE
-							Frame.Rewards_Experience:SetShown(experience and experience > 0 and not TITLE_PROGRESS:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Experience:SetShown(experience and experience > 0 and not TITLE_PROGRESS:IsVisible())
 
 							--------------------------------
 
 							if experience and experience > 0 then
-								Frame.Rewards_Experience.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/xp.png", 25, 25, 0, 0) .. " " .. addon.API.Util:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Experience.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/xp.png", 25, 25, 0, 0) .. " " .. addon.API.Util:FormatNumber(experience) .. " " .. "(" .. experiencePercentage .. ")")
 							end
 						end
 
 						do -- CURRENCY
-							Frame.Rewards_Currency:SetShown(GetRewardMoney() > 0 and not TITLE_PROGRESS:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Currency:SetShown(GetRewardMoney() > 0 and not TITLE_PROGRESS:IsVisible())
 
 							--------------------------------
 
@@ -834,52 +801,52 @@ function NS.Script:Load()
 
 								--------------------------------
 
-								Frame.Rewards_Currency.Text:SetText((_gold or "") .. (_silver or "") .. (_copper or ""))
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Currency.Text:SetText((_gold or "") .. (_silver or "") .. (_copper or ""))
 							end
 						end
 
 						do -- HONOR
-							Frame.Rewards_Honor:SetShown(honor > 0 and not TITLE_PROGRESS:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Honor:SetShown(honor > 0 and not TITLE_PROGRESS:IsVisible())
 
 							--------------------------------
 
 							if honor > 0 then
-								Frame.Rewards_Honor.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. addon.API.Util:FormatNumber(honor) .. "|r")
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Honor.Text:SetText(addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/honor.png", 25, 25, 0, 0) .. " " .. "|cffD7B473" .. addon.API.Util:FormatNumber(honor) .. "|r")
 							end
 						end
 
 						do -- CHOICE
-							Frame.Rewards_Choice:SetShown(TEXT_REWARDS_CHOICE:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Choice:SetShown(TEXT_REWARDS_CHOICE:IsVisible())
 
 							--------------------------------
 
-							Frame.Rewards_Choice:SetText(TEXT_REWARDS_CHOICE:GetText())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Choice:SetText(TEXT_REWARDS_CHOICE:GetText())
 						end
 
 						do -- RECIEVE
-							Frame.Rewards_Receive:SetShown(TEXT_REWARDS_PARTYSYNC and TEXT_REWARDS_PARTYSYNC:IsVisible() or TEXT_REWARDS_RECEIVE:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Receive:SetShown(TEXT_REWARDS_PARTYSYNC and TEXT_REWARDS_PARTYSYNC:IsVisible() or TEXT_REWARDS_RECEIVE:IsVisible())
 
 							--------------------------------
 
 							if TEXT_REWARDS_PARTYSYNC and TEXT_REWARDS_PARTYSYNC:IsVisible() then
-								Frame.Rewards_Receive:SetText(TEXT_REWARDS_PARTYSYNC:GetText())
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Receive:SetText(TEXT_REWARDS_PARTYSYNC:GetText())
 							else
-								Frame.Rewards_Receive:SetText(TEXT_REWARDS_RECEIVE:GetText())
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Receive:SetText(TEXT_REWARDS_RECEIVE:GetText())
 							end
 						end
 
 						do -- SPELL
-							Frame.Rewards_Spell:SetShown(TEXT_REWARDS_SPELL and TEXT_REWARDS_SPELL:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Spell:SetShown(TEXT_REWARDS_SPELL and TEXT_REWARDS_SPELL:IsVisible())
 
 							--------------------------------
 
 							if TEXT_REWARDS_SPELL then
-								Frame.Rewards_Spell:SetText(TEXT_REWARDS_SPELL:GetText())
+								Frame.REF_MAIN_SCROLLFRAME_CONTENT.Rewards_Spell:SetText(TEXT_REWARDS_SPELL:GetText())
 							end
 						end
 
 						do -- PROGRESS
-							Frame.Progress_Header:SetShown(HEADER_REQUIRE:IsVisible())
+							Frame.REF_MAIN_SCROLLFRAME_CONTENT.Progress_Header:SetShown(HEADER_REQUIRE:IsVisible())
 						end
 					end
 				end
@@ -889,7 +856,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame.ContextIcon.Label:SetText(ContextIcon)
+					Frame.REF_CONTEXTICON.Text:SetText(ContextIcon)
 				end
 
 				do -- REWARDS
@@ -901,33 +868,33 @@ function NS.Script:Load()
 					--------------------------------
 
 					if #choices >= 1 then
-						Frame.SetChoice(choices)
+						Frame:SetChoice(choices)
 					else
-						Frame.HideQuestChoice()
+						Frame:HideQuestChoice()
 					end
 
 					if #reward >= 1 then
-						Frame.SetReward(reward)
+						Frame:SetReward(reward)
 					else
-						Frame.HideReceive()
+						Frame:HideReceive()
 					end
 
 					if #spells >= 1 then
-						Frame.SetSpell(spells)
+						Frame:SetSpell(spells)
 					else
-						Frame.HideSpell()
+						Frame:HideSpell()
 					end
 
 					if #required >= 1 then
-						Frame.SetRequired(required)
+						Frame:SetRequired(required)
 					else
-						Frame.HideRequired()
+						Frame:HideRequired()
 					end
 
 					--------------------------------
 
-					Frame.SetQuality()
-					Frame.UpdateAllButtonStates()
+					Frame:SetQuality()
+					Frame:UpdateAllButtonStates()
 				end
 
 				do -- BUTTONS
@@ -944,19 +911,19 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.CompleteButton, BUTTON_COMPLETE:IsVisible())
-					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.ContinueButton, BUTTON_CONTINUE:IsVisible() and BUTTON_CONTINUE:IsEnabled())
-					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.AcceptButton, BUTTON_ACCEPT:IsVisible())
-					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.DeclineButton, BUTTON_DECLINE:IsVisible())
-					addon.API.FrameUtil:SetVisibility(Frame.ButtonContainer.GoodbyeButton, not BUTTON_DECLINE:IsVisible())
+					Frame.REF_FOOTER_CONTENT.CompleteButton:SetShown(BUTTON_COMPLETE:IsVisible())
+					Frame.REF_FOOTER_CONTENT.ContinueButton:SetShown(BUTTON_CONTINUE:IsVisible() and BUTTON_CONTINUE:IsEnabled())
+					Frame.REF_FOOTER_CONTENT.AcceptButton:SetShown(BUTTON_ACCEPT:IsVisible())
+					Frame.REF_FOOTER_CONTENT.DeclineButton:SetShown(BUTTON_DECLINE:IsVisible())
+					Frame.REF_FOOTER_CONTENT.GoodbyeButton:SetShown(not BUTTON_DECLINE:IsVisible())
 
 					--------------------------------
 
-					Frame.ButtonContainer.CompleteButton:SetEnabled(BUTTON_COMPLETE:IsEnabled())
-					Frame.ButtonContainer.ContinueButton:SetEnabled(BUTTON_CONTINUE:IsEnabled())
-					Frame.ButtonContainer.AcceptButton:SetEnabled(not isQuestLogFull)
-					Frame.ButtonContainer.DeclineButton:SetEnabled(true)
-					Frame.ButtonContainer.GoodbyeButton:SetEnabled(true)
+					Frame.REF_FOOTER_CONTENT.CompleteButton:SetEnabled(BUTTON_COMPLETE:IsEnabled())
+					Frame.REF_FOOTER_CONTENT.ContinueButton:SetEnabled(BUTTON_CONTINUE:IsEnabled())
+					Frame.REF_FOOTER_CONTENT.AcceptButton:SetEnabled(not isQuestLogFull)
+					Frame.REF_FOOTER_CONTENT.DeclineButton:SetEnabled(true)
+					Frame.REF_FOOTER_CONTENT.GoodbyeButton:SetEnabled(true)
 
 					--------------------------------
 
@@ -966,13 +933,13 @@ function NS.Script:Load()
 						--------------------------------
 
 						do -- ACCEPT
-							if frame == Frame.ButtonContainer.AcceptButton then
+							if frame == Frame.REF_FOOTER_CONTENT.AcceptButton then
 								if isQuestLogFull then
-									frame:SetText(L["InteractionQuestFrame - Accept - Quest Log Full"])
+									frame:SetText(L["InteractionFrame.QuestFrame - Accept - Quest Log Full"])
 								end
 
 								if isAutoAccept then
-									frame:SetText(L["InteractionQuestFrame - Accept - Auto Accept"])
+									frame:SetText(L["InteractionFrame.QuestFrame - Accept - Auto Accept"])
 								end
 
 								--------------------------------
@@ -982,9 +949,9 @@ function NS.Script:Load()
 						end
 
 						do -- GOODBYE
-							if frame == Frame.ButtonContainer.GoodbyeButton then
+							if frame == Frame.REF_FOOTER_CONTENT.GoodbyeButton then
 								if isAutoAccept then
-									frame:SetText(L["InteractionQuestFrame - Goodbye - Auto Accept"])
+									frame:SetText(L["InteractionFrame.QuestFrame - Goodbye - Auto Accept"])
 									keybindVariable = addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress)
 								end
 							end
@@ -1000,32 +967,27 @@ function NS.Script:Load()
 					end
 
 					if BUTTON_CONTINUE:IsEnabled() then
-						SetButtonText(Frame.ButtonContainer.ContinueButton, L["InteractionQuestFrame - Continue"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+						SetButtonText(Frame.REF_FOOTER_CONTENT.ContinueButton, L["InteractionFrame.QuestFrame - Continue"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
 					else
-						SetButtonText(Frame.ButtonContainer.ContinueButton, L["InteractionQuestFrame - In Progress"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+						SetButtonText(Frame.REF_FOOTER_CONTENT.ContinueButton, L["InteractionFrame.QuestFrame - In Progress"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
 					end
 
-					SetButtonText(Frame.ButtonContainer.CompleteButton, L["InteractionQuestFrame - Complete"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
-					SetButtonText(Frame.ButtonContainer.AcceptButton, L["InteractionQuestFrame - Accept"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
-					SetButtonText(Frame.ButtonContainer.DeclineButton, L["InteractionQuestFrame - Decline"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
-					SetButtonText(Frame.ButtonContainer.GoodbyeButton, L["InteractionQuestFrame - Goodbye"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
+					SetButtonText(Frame.REF_FOOTER_CONTENT.CompleteButton, L["InteractionFrame.QuestFrame - Complete"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					SetButtonText(Frame.REF_FOOTER_CONTENT.AcceptButton, L["InteractionFrame.QuestFrame - Accept"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Progress))
+					SetButtonText(Frame.REF_FOOTER_CONTENT.DeclineButton, L["InteractionFrame.QuestFrame - Decline"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
+					SetButtonText(Frame.REF_FOOTER_CONTENT.GoodbyeButton, L["InteractionFrame.QuestFrame - Goodbye"], addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
 				end
+
+				--------------------------------
+
+				Frame:UpdateCompleteButton()
+				Frame:DeselectAllButtons()
 
 				--------------------------------
 
 				CallbackRegistry:Trigger("QUEST_DATA_LOADED")
 
-				--------------------------------
-
-				Frame.ScrollChildFrame.UpdateLayout()
-				Frame.UpdateCompleteButton()
-
-				--------------------------------
-
-				CallbackRegistry:Trigger("QUEST_DATA_READY")
-
-				--------------------------------
-
+				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateLayout, 0)
 				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateAll, .1)
 			end
 		end
@@ -1056,7 +1018,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				if type == "reward" or type == "choice" then
-					if not addon.Variables.IS_CLASSIC then -- Retail
+					if addon.Variables.IS_WOW_VERSION_RETAIL then
 						local currencyInfo = C_QuestOffer.GetQuestRewardCurrencyInfo(type, currencyIndex)
 
 						--------------------------------
@@ -1064,7 +1026,7 @@ function NS.Script:Load()
 						if currencyInfo then
 							quality = currencyInfo.quality
 						end
-					else -- Classic
+					elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 						local currencyInfo = GetQuestCurrencyInfo(type, currencyIndex)
 
 						--------------------------------
@@ -1074,7 +1036,7 @@ function NS.Script:Load()
 						end
 					end
 				elseif type == "required" then
-					if not addon.Variables.IS_CLASSIC then -- Retail
+					if addon.Variables.IS_WOW_VERSION_RETAIL then
 						local currencyInfo = C_QuestOffer.GetQuestRequiredCurrencyInfo(currencyIndex)
 
 						--------------------------------
@@ -1082,7 +1044,7 @@ function NS.Script:Load()
 						if currencyInfo then
 							quality = currencyInfo.quality
 						end
-					else -- Classic
+					elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 						local currencyInfo = GetQuestCurrencyInfo(type, currencyIndex)
 
 						--------------------------------
@@ -1143,7 +1105,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.SetQuality = function()
+			function Frame:SetQuality()
 				local numChoices = NS.Variables.Num_Choice
 				local numRewards = NS.Variables.Num_Reward
 				local numRequired = NS.Variables.Num_Required
@@ -1179,11 +1141,11 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation_StopEvent = function(sessionID)
+		function Frame:ShowWithAnimation_StopEvent(sessionID)
 			return Frame.hidden or Frame.showWithAnimation_sessionID ~= sessionID
 		end
 
-		Frame.ShowWithAnimation = function()
+		function Frame:ShowWithAnimation()
 			if not Frame.hidden then
 				return
 			end
@@ -1212,61 +1174,61 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.ScrollFrame:SetVerticalScroll(0)
+			Frame.REF_MAIN_SCROLLFRAME:SetVerticalScroll(0)
 
 			--------------------------------
 
 			Frame:SetAlpha(0)
 			Frame.Background:SetAlpha(0)
-			Frame.Title:SetAlpha(0)
-			Frame.Storyline:SetAlpha(0)
-			Frame.ScrollFrame:SetAlpha(0)
-			Frame.ScrollFrame:Hide()
-			Frame.ButtonContainer:SetAlpha(0)
-			Frame.ButtonContainer:Hide()
+			Frame.REF_HEADER_TITLE.Text:SetAlpha(0)
+			Frame.REF_HEADER_STORYLINE.Storyline:SetAlpha(0)
+			Frame.REF_MAIN_SCROLLFRAME:SetAlpha(0)
+			Frame.REF_MAIN_SCROLLFRAME:Hide()
+			Frame.REF_FOOTER_CONTENT:SetAlpha(0)
+			Frame.REF_FOOTER_CONTENT:Hide()
 
 			--------------------------------
 
-			addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-			addon.API.Animation:Fade(Frame.ContextIcon.Label, .5, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-			addon.API.Animation:Scale(Frame.ContextIcon, .5, 5, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+			addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+			addon.API.Animation:Fade(Frame.REF_CONTEXTICON.Text, .5, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+			addon.API.Animation:Scale(Frame.REF_CONTEXTICON, .5, 5, 1, nil, addon.API.Animation.EaseExpo, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 			do -- BACKGROUND
-				addon.API.Animation:Fade(Frame.Background, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+				addon.API.Animation:Fade(Frame.Background, .375, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 			end
 
 			do -- CONTENT
 				if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
-					addon.API.Animation:Fade(Frame.Title, .375, 0, .75, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-					addon.API.Animation:Fade(Frame.Storyline, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+					addon.API.Animation:Fade(Frame.REF_HEADER_TITLE.Text, .375, 0, .75, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+					addon.API.Animation:Fade(Frame.REF_HEADER_STORYLINE.Storyline, .375, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 					--------------------------------
 
-					Frame.ScrollFrame:Hide()
-					Frame.ScrollChildFrame.UpdateLayout()
+					Frame.REF_MAIN_SCROLLFRAME:Hide()
+					Frame.REF_MAIN_SCROLLFRAME_CONTENT:Sort()
 
 					--------------------------------
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
-							addon.API.Animation:Fade(Frame.ScrollFrame, .375, 0, 1, nil, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+							addon.API.Animation:Fade(Frame.REF_MAIN_SCROLLFRAME, .375, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
 							addon.Libraries.AceTimer:ScheduleTimer(function()
-								Frame.ScrollFrame:Show()
+								Frame.REF_MAIN_SCROLLFRAME:Show()
 							end, 0)
 						end
 					end, .05)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
-							addon.API.Animation:Fade(Frame.ButtonContainer, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame.ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+							addon.API.Animation:Fade(Frame.REF_FOOTER_CONTENT, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
 							addon.Libraries.AceTimer:ScheduleTimer(function()
-								Frame.ButtonContainer:Show()
+								Frame.REF_FOOTER_CONTENT:Show()
 							end, 0)
 						end
 					end, .125)
@@ -1276,14 +1238,14 @@ function NS.Script:Load()
 			do -- SET
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
-						Frame.SetData()
+						Frame:SetData()
 					end
 				end, .1)
 			end
 
 			do -- UPDATE
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					Frame.UpdateAll()
+					Frame:UpdateAll()
 				end, .225)
 			end
 
@@ -1292,11 +1254,11 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Show)
 		end
 
-		Frame.HideWithAnimation_StopEvent = function()
+		function Frame:HideWithAnimation_StopEvent()
 			return not Frame.hidden
 		end
 
-		Frame.HideWithAnimation = function(stopSession)
+		function Frame:HideWithAnimation(stopSession)
 			if Frame.hidden then
 				return
 			end
@@ -1331,8 +1293,8 @@ function NS.Script:Load()
 			--------------------------------
 
 			addon.API.Animation:Fade(Frame, .175, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
-			addon.API.Animation:Fade(Frame.ContextIcon.Label, .175, Frame.ContextIcon.Label:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
-			addon.API.Animation:Scale(Frame.ContextIcon, 2.5, Frame.ContextIcon:GetScale(), 2.75, nil, addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Fade(Frame.REF_CONTEXTICON.Text, .175, Frame.REF_CONTEXTICON.Text:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Scale(Frame.REF_CONTEXTICON, 2.5, Frame.REF_CONTEXTICON:GetScale(), 2.75, nil, addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
 
 			--------------------------------
 
@@ -1351,22 +1313,22 @@ function NS.Script:Load()
 	end
 
 	--------------------------------
-	-- FUNCTIONS (GAME-TOOLTIP)
+	-- FUNCTIONS (TOOLTIP)
 	--------------------------------
 
 	do
-		InteractionQuestFrame.UpdateGameTooltip = function()
-			local IsRewardButton = (InteractionFrame.GameTooltip.RewardButton)
-			local IsFrame = (Frame:IsVisible())
+		function Frame:UpdateGameTooltip()
+			local isRewardButton = (InteractionFrame.GameTooltip.RewardButton)
+			local isFrame = (Frame:IsVisible())
 
-			if IsFrame and IsRewardButton then
+			if isFrame and isRewardButton then
 				InteractionFrame.GameTooltip.reward = true
 				InteractionFrame.GameTooltip.bypass = true
 
 				InteractionFrame.GameTooltip:SetAnchorType("ANCHOR_NONE")
 				InteractionFrame.GameTooltip:ClearAllPoints()
 				InteractionFrame.GameTooltip:SetPoint("TOP", InteractionFrame.GameTooltip.RewardButton, 0, InteractionFrame.GameTooltip:GetHeight() + 12.5)
-			elseif not IsFrame and InteractionFrame.GameTooltip.reward then
+			elseif not isFrame and InteractionFrame.GameTooltip.reward then
 				InteractionFrame.GameTooltip.reward = false
 				InteractionFrame.GameTooltip.bypass = false
 
@@ -1380,26 +1342,26 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		function Frame.Enter()
+		function Frame:OnEnter()
 			Frame.mouseOver = true
 
 			--------------------------------
 
-			Frame.UpdateFocus()
+			Frame:UpdateFocus()
 		end
 
-		function Frame.Leave()
+		function Frame:OnLeave()
 			Frame.mouseOver = false
 
 			--------------------------------
 
-			Frame.UpdateFocus()
+			Frame:UpdateFocus()
 		end
 
-		function Frame.UpdateFocus()
+		function Frame:UpdateFocus()
 			if not addon.Input.Variables.IsController then
 				local IsMouseOver = (Frame.mouseOver)
-				local IsInDialog = (not InteractionDialogFrame.hidden)
+				local IsInDialog = (not InteractionFrame.DialogFrame.hidden)
 
 				--------------------------------
 
@@ -1412,16 +1374,16 @@ function NS.Script:Load()
 				--------------------------------
 
 				if Frame.focused then
-					addon.API.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
+					addon.API.Animation:Fade(InteractionFrame.QuestParent, .25, InteractionFrame.QuestParent:GetAlpha(), 1, nil, function() return not Frame.focused end)
 				else
-					addon.API.Animation:Fade(InteractionQuestParent, .25, InteractionQuestParent:GetAlpha(), 1, nil, function() return Frame.focused end)
+					addon.API.Animation:Fade(InteractionFrame.QuestParent, .25, InteractionFrame.QuestParent:GetAlpha(), 1, nil, function() return Frame.focused end)
 				end
 			else
-				InteractionQuestParent:SetAlpha(1)
+				InteractionFrame.QuestParent:SetAlpha(1)
 			end
 		end
 
-		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.Enter, leaveCallback = Frame.Leave }, { x = 175, y = 175 })
+		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave }, { x = 175, y = 175 })
 
 		CallbackRegistry:Add("START_DIALOG", Frame.UpdateFocus, 0)
 		CallbackRegistry:Add("STOP_DIALOG", Frame.UpdateFocus, 0)
@@ -1434,7 +1396,7 @@ function NS.Script:Load()
 	do
 		local function Settings_ThemeUpdate()
 			if Frame:IsVisible() then
-				Frame.UpdateWarbandHeader()
+				Frame:UpdateWarbandHeader()
 			end
 		end
 		Settings_ThemeUpdate()
@@ -1443,7 +1405,7 @@ function NS.Script:Load()
 			local Settings_UIDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
 
 			local offsetY = 0
-			local usableWidth = InteractionQuestParent:GetWidth()
+			local usableWidth = InteractionFrame.QuestParent:GetWidth()
 			local frameWidth = Frame:GetWidth()
 			local dialogMaxWidth = 350
 			local quarterWidth = (usableWidth - dialogMaxWidth) / 2
@@ -1460,20 +1422,20 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame:SetPoint("LEFT", InteractionQuestParent, quarterEdgePadding + Frame.Target:GetWidth(), offsetY)
+					Frame:SetPoint("LEFT", InteractionFrame.QuestParent, quarterEdgePadding + Frame.Target:GetWidth(), offsetY)
 				else
 					offsetX = quarterEdgePadding
 
 					--------------------------------
 
-					Frame:SetPoint("LEFT", InteractionQuestParent, quarterEdgePadding, offsetY)
+					Frame:SetPoint("LEFT", InteractionFrame.QuestParent, quarterEdgePadding, offsetY)
 				end
 			else
 				offsetX = usableWidth - frameWidth - quarterEdgePadding
 
 				--------------------------------
 
-				Frame:SetPoint("LEFT", InteractionQuestParent, offsetX, offsetY)
+				Frame:SetPoint("LEFT", InteractionFrame.QuestParent, offsetX, offsetY)
 			end
 		end
 		Settings_UIDirection()
@@ -1505,7 +1467,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			if not Frame.hidden then
-				Frame.SetData() -- Refresh Formatting
+				Frame:SetData() -- Refresh Formatting
 				Settings_UIDirection() -- Refresh Position
 			end
 
@@ -1518,10 +1480,10 @@ function NS.Script:Load()
 		--------------------------------
 
 		CallbackRegistry:Add("THEME_UPDATE", Settings_ThemeUpdate, 10)
-		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 0)
-		CallbackRegistry:Add("BLIZZARD_SETTINGS_RESOLUTION_CHANGED", Settings_UIDirection, 0)
-		CallbackRegistry:Add("START_QUEST", Settings_UIDirection, 0)
-		CallbackRegistry:Add("SETTINGS_QUESTFRAME_SIZE_CHANGED", Settings_QuestFrameSize, 0)
+		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 1)
+		CallbackRegistry:Add("BLIZZARD_SETTINGS_RESOLUTION_CHANGED", Settings_UIDirection, 1)
+		CallbackRegistry:Add("START_QUEST", Settings_UIDirection, 1)
+		CallbackRegistry:Add("SETTINGS_QUESTFRAME_SIZE_CHANGED", Settings_QuestFrameSize, 1)
 
 		if QuestModelScene then -- Fix for Classic Era
 			hooksecurefunc(QuestModelScene, "Show", Settings_UIDirection)
@@ -1534,20 +1496,20 @@ function NS.Script:Load()
 
 	do
 		CallbackRegistry:Add("QUEST_DATA_LOADED", function()
-			Frame.UpdateAll()
+			Frame:UpdateAll()
 		end, 5)
 
 		CallbackRegistry:Add("INPUT_NAVIGATION_HIGHLIGHTED", function()
-			Frame.UpdateCompleteButton()
+			Frame:UpdateCompleteButton()
 		end, 0)
 
 		--------------------------------
 
 		Frame:SetScript("OnMouseUp", function(self, button)
 			if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
-				InteractionDialogFrame.ReturnToPreviousDialog()
+				InteractionFrame.DialogFrame:ReturnToPreviousDialog()
 			elseif addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
-				InteractionDialogFrame.ReturnToPreviousDialog()
+				InteractionFrame.DialogFrame:ReturnToPreviousDialog()
 			end
 		end)
 
@@ -1556,7 +1518,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.ClearChoiceSelected()
+			Frame:ClearButton_Choice_Selected()
 		end)
 
 		hooksecurefunc(Frame, "Hide", function()
@@ -1564,14 +1526,12 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.ClearChoiceSelected()
-			InteractionQuestFrame.UpdateGameTooltip()
+			Frame:ClearButton_Choice_Selected()
+			InteractionFrame.QuestFrame:UpdateGameTooltip()
 			InteractionFrame.GameTooltip:Clear()
 		end)
 
-		hooksecurefunc(Frame.ScrollFrame, "SetVerticalScroll", function()
-			Frame.UpdateScrollIndicator()
-		end)
+		table.insert(Frame.REF_MAIN_SCROLLFRAME.onSmoothScrollCallbacks, Frame.UpdateScrollIndicator)
 	end
 
 	--------------------------------

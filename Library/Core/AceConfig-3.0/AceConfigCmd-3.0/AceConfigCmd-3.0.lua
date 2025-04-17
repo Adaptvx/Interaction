@@ -755,7 +755,7 @@ function AceConfigCmd:HandleCommand(slashcmd, appName, input)
 		input = input,
 		self = self,
 		handler = self,
-		uiType = "cmd",
+		type = "cmd",
 		uiName = MAJOR,
 	}
 

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -59,7 +59,7 @@ function NS:Load()
 			-- RETAIL
 			--------------------------------
 
-			if not addon.Variables.IS_CLASSIC then
+			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				local NumButtons = 0
 				local Frame = QuestFrameGreetingPanel
 
@@ -82,7 +82,7 @@ function NS:Load()
 			-- CLASSIC
 			--------------------------------
 
-			if addon.Variables.IS_CLASSIC then
+			if addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				local IsQuestTitleButtons = (QuestTitleButton1)
 				local NumButtons = 0
 

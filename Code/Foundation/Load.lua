@@ -25,8 +25,8 @@ function NS:Load()
 	--------------------------------
 
 	local function Priority()
-		addon.PrefabRegistry:Load()
 		addon.CallbackRegistry:Load()
+		addon.PrefabRegistry:Load()
 		addon.EventListener:Load()
 	end
 

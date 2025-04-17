@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.PromptText
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionTextPromptFrame = CreateFrame("Frame", "InteractionTextPromptFrame", InteractionFrame)
 			InteractionTextPromptFrame:SetSize(375, 500)
 			InteractionTextPromptFrame:SetFrameStrata("FULLSCREEN_DIALOG")
@@ -101,7 +101,7 @@ function NS.Elements:Load()
 							Frame.TitleArea.CloseButton:SetPoint("RIGHT", Frame.TitleArea)
 
 							Frame.TitleArea.CloseButton:SetScript("OnClick", function()
-								addon.PromptTextHideTextFrame()
+								addon.PromptText:HideTextFrame()
 							end)
 
 							---------------------------------
@@ -140,7 +140,7 @@ function NS.Elements:Load()
 					end
 
 					do -- SCROLL BAR
-						Frame.InputArea.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.InputArea, "FULLSCREEN_DIALOG", {
+						Frame.InputArea.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.InputArea, "FULLSCREEN_DIALOG", Frame.InputArea:GetFrameLevel() + 9, {
 							scrollFrame = Frame.InputArea,
 							scrollChildFrame = Frame.InputArea.InputBox,
 							sizeX = 5,

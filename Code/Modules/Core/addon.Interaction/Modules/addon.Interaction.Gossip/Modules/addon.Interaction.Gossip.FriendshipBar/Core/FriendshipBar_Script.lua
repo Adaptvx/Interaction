@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.FriendshipBar
 
@@ -19,7 +19,7 @@ function NS.Script:Load()
 	local Frame = InteractionFriendshipBarFrame
 	local Callback = NS.Script
 
-	local BlizzardFriendshipBar; if not addon.Variables.IS_CLASSIC then BlizzardFriendshipBar = GossipFrame.FriendshipStatusBar else BlizzardFriendshipBar = NPCFriendshipStatusBar end
+	local BlizzardFriendshipBar = not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and GossipFrame.FriendshipStatusBar or NPCFriendshipStatusBar
 
 	--------------------------------
 	-- FUNCTIONS (TOOLTIP)
@@ -49,7 +49,7 @@ function NS.Script:Load()
 			InteractionFrame.GameTooltip:SetOwner(self, anchor);
 			local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(friendshipData.friendshipFactionID);
 			if rankInfo.maxLevel > 0 then
-				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name.." ("..rankInfo.currentLevel.." / "..rankInfo.maxLevel..")", HIGHLIGHT_FONT_COLOR);
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name .. " (" .. rankInfo.currentLevel .. " / " .. rankInfo.maxLevel .. ")", HIGHLIGHT_FONT_COLOR);
 			else
 				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name, HIGHLIGHT_FONT_COLOR);
 			end
@@ -62,7 +62,7 @@ function NS.Script:Load()
 				local current = friendshipData.standing - friendshipData.reactionThreshold;
 				local max = friendshipData.nextThreshold - friendshipData.reactionThreshold;
 				local wrapText = true;
-				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction.." ("..current.." / "..max..")", wrapText);
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction .. " (" .. current .. " / " .. max .. ")", wrapText);
 			else
 				local wrapText = true;
 				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction, wrapText);
@@ -99,7 +99,7 @@ function NS.Script:Load()
 			InteractionFrame.GameTooltip:SetOwner(self, anchor);
 			local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(friendshipData.friendshipFactionID);
 			if rankInfo.maxLevel > 0 then
-				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name.." ("..rankInfo.currentLevel.." / "..rankInfo.maxLevel..")", HIGHLIGHT_FONT_COLOR);
+				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name .. " (" .. rankInfo.currentLevel .. " / " .. rankInfo.maxLevel .. ")", HIGHLIGHT_FONT_COLOR);
 			else
 				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name, HIGHLIGHT_FONT_COLOR);
 			end
@@ -112,7 +112,7 @@ function NS.Script:Load()
 				local current = friendshipData.standing - friendshipData.reactionThreshold;
 				local max = friendshipData.nextThreshold - friendshipData.reactionThreshold;
 				local wrapText = true;
-				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction.." ("..current.." / "..max..")", wrapText);
+				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction .. " (" .. current .. " / " .. max .. ")", wrapText);
 			else
 				local wrapText = true;
 				GameTooltip_AddHighlightLine(InteractionFrame.GameTooltip, friendshipData.reaction, wrapText);
@@ -133,23 +133,22 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowProgress = function()
-			Frame.ShowWithAnimation()
+		function Frame:ShowProgress()
+			Frame:ShowWithAnimation()
 
 			--------------------------------
 
-			local NewValue = (BlizzardFriendshipBar:GetValue())
-			local Min = (select(1, BlizzardFriendshipBar:GetMinMaxValues()))
-			local Max = (select(2, BlizzardFriendshipBar:GetMinMaxValues()))
+			local value = BlizzardFriendshipBar:GetValue()
+			local min, max = BlizzardFriendshipBar:GetMinMaxValues()
 
 			Frame.Progress.Bar:SetValue(0)
-			Frame.Progress.Bar:SetMinMaxValues(Min, Max)
-			addon.API.Animation:SetProgressTo(Frame.Progress.Bar, NewValue, 1)
+			Frame.Progress.Bar:SetMinMaxValues(min, max)
+			addon.API.Animation:SetProgressTo(Frame.Progress.Bar, value, 1)
 
 			--------------------------------
 
-			local ImageTexture = (BlizzardFriendshipBar.icon:GetTexture())
-			Frame.Image.ImageTexture:SetTexture(ImageTexture)
+			local texture = (BlizzardFriendshipBar.icon:GetTexture())
+			Frame.Image.ImageTexture:SetTexture(texture)
 		end
 	end
 
@@ -158,35 +157,43 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation = function()
-			Parent:Show()
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent()
+				return not Frame:IsVisible()
+			end
 
-			--------------------------------
+			function Frame:ShowWithAnimation()
+				Parent:Show()
 
-			InteractionFriendshipBarFrame:SetAlpha(0)
-			Frame.Image:SetAlpha(0)
-			Frame.Progress:SetAlpha(0)
-			Frame.Image:SetScale(.75)
+				--------------------------------
 
-			--------------------------------
+				Frame:SetAlpha(0)
+				Frame.Image:SetAlpha(0)
+				Frame.Progress:SetAlpha(0)
+				Frame.Image:SetScale(.75)
 
-			local StopEvent = function() return not InteractionFriendshipBarFrame:IsVisible() end
+				--------------------------------
 
-			--------------------------------
-
-			addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, 0, 1, nil, StopEvent())
-			addon.API.Animation:Fade(Frame.Progress, .125, 0, 1, nil, StopEvent())
-			addon.API.Animation:Fade(Frame.Image, .125, 0, 1, nil, StopEvent())
+				addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.Progress, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.Image, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+			end
 		end
 
-		Frame.HideWithAnimation = function()
-			addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, InteractionFriendshipBarFrame:GetAlpha(), 0)
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent()
 
-			--------------------------------
+			end
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Parent:Hide()
-			end, .25)
+			function Frame:HideWithAnimation()
+				addon.API.Animation:Fade(InteractionFriendshipBarFrame, .125, InteractionFriendshipBarFrame:GetAlpha(), 0)
+
+				--------------------------------
+
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					Parent:Hide()
+				end, .25)
+			end
 		end
 	end
 
@@ -196,7 +203,7 @@ function NS.Script:Load()
 
 	do
 		Parent:SetScript("OnEnter", function()
-			if not addon.Variables.IS_CLASSIC then
+			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				ReputationTooltip_Retail.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame.TooltipParent, BlizzardFriendshipBar.friendshipFactionID, "ANCHOR_BOTTOM", false)
 			else
 				ReputationTooltip_Classic(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
@@ -218,9 +225,9 @@ function NS.Script:Load()
 
 			if event == "GOSSIP_SHOW" then
 				if BlizzardFriendshipBar:IsVisible() then
-					Frame.ShowProgress()
+					Frame:ShowProgress()
 				else
-					Frame.HideWithAnimation()
+					Frame:HideWithAnimation()
 				end
 			end
 		end)

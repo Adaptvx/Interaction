@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -29,7 +29,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.StartCooldown = function()
+		function Frame:StartCooldown()
 			Frame.cooldown = true
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -37,12 +37,12 @@ function NS.Script:Load()
 			end, 1)
 		end
 
-		Frame.ShowWithAnimation = function(type)
+		function Frame:ShowWithAnimation(uiType)
 			if not Frame.hidden or Frame.cooldown then
 				return
 			end
 			Frame.hidden = false
-			Frame.StartCooldown()
+			Frame:StartCooldown()
 
 			Frame:Show()
 
@@ -52,20 +52,20 @@ function NS.Script:Load()
 			Frame.Disc:SetAlpha(0)
 			Frame.DiscTexture:SetRotation(0)
 
-			if type == "ReadableUI" then
+			if uiType == "READABLE" then
 				ReadableUI:Show()
 				LibraryUI:Hide()
 
 				ReadableUI:SetAlpha(1)
-				ReadableUI.ShowWithAnimation()
+				ReadableUI:ShowWithAnimation()
 			end
 
-			if type == "Library" then
+			if uiType == "LIBRARY" then
 				ReadableUI:Hide()
 				LibraryUI:Show()
 
 				LibraryUI:SetAlpha(1)
-				LibraryUI.ShowWithAnimation()
+				LibraryUI:ShowWithAnimation()
 			end
 
 			--------------------------------
@@ -73,16 +73,12 @@ function NS.Script:Load()
 			addon.API.Animation:Fade(Frame, .5, 0, 1, nil)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				local RingScale
-				if type == "Library" then
-					RingScale = 1.25
-				end
-				if type == "ReadableUI" then
-					RingScale = 1.125
-				end
+				local RING_SCALE = (uiType == "LIBRARY" and 1.25) or (uiType == "READABLE" and 1.125)
+
+				----------------------------------
 
 				addon.API.Animation:Fade(Frame.Disc, .25, 0, .5, nil)
-				addon.API.Animation:Scale(Frame.Disc, 1, RingScale + .125, RingScale, nil, nil, nil)
+				addon.API.Animation:Scale(Frame.Disc, 1, RING_SCALE + .125, RING_SCALE, nil, nil, nil)
 				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, nil)
 			end, .25)
 
@@ -115,7 +111,7 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_Open)
 		end
 
-		Frame.TransitionToType = function(type)
+		function Frame:TransitionToType(uiType)
 			if Frame.cooldown or Frame.transition then
 				return
 			end
@@ -130,22 +126,16 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if type == "ReadableUI" then
-				LibraryUI.HideWithAnimation()
+			if uiType == "READABLE" then
+				LibraryUI:HideWithAnimation()
 			end
 
-			if type == "Library" then
-				ReadableUI.HideWithAnimation()
+			if uiType == "LIBRARY" then
+				ReadableUI:HideWithAnimation()
 			end
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				local RingScale
-				if type == "Library" then
-					RingScale = 1.25
-				end
-				if type == "ReadableUI" then
-					RingScale = 1.125
-				end
+				local RING_SCALE = (uiType == "LIBRARY" and 1.25) or (uiType == "READABLE" and 1.125)
 
 				--------------------------------
 
@@ -153,17 +143,17 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.API.Animation:Scale(Frame.Disc, 5, Frame.Disc:GetScale(), RingScale, nil, addon.API.Animation.EaseExpo, StopEvent)
+				addon.API.Animation:Scale(Frame.Disc, 5, Frame.Disc:GetScale(), RING_SCALE, nil, addon.API.Animation.EaseExpo, StopEvent)
 				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, StopEvent)
 			end, 0)
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if type == "Library" then
-					LibraryUI.ShowWithAnimation()
+				if uiType == "LIBRARY" then
+					LibraryUI:ShowWithAnimation()
 				end
 
-				if type == "ReadableUI" then
-					ReadableUI.ShowWithAnimation()
+				if uiType == "READABLE" then
+					ReadableUI:ShowWithAnimation()
 				end
 			end, .5)
 
@@ -176,7 +166,7 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_Transition)
 		end
 
-		Frame.HideWithAnimation = function(bypass, preventCloseItem)
+		function Frame:HideWithAnimation(bypass, preventCloseItem)
 			if not bypass and (Frame.hidden or Frame.cooldown) then
 				return
 			end
@@ -224,7 +214,7 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Readable_Close)
 		end
 
-		Frame.ShowLibrary = function()
+		function Frame:ShowLibrary()
 			if not addon.Initialize.Ready then
 				return
 			end
@@ -237,7 +227,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.ShowWithAnimation("Library")
+			Frame:ShowWithAnimation("LIBRARY")
 		end
 	end
 
@@ -288,7 +278,7 @@ function NS.Script:Load()
 	do
 		if addon.Database.DB_GLOBAL.profile.INT_READABLE then
 			CallbackRegistry:Add("READABLE_DATA_READY", function()
-				Frame.ShowWithAnimation("ReadableUI")
+				Frame:ShowWithAnimation("READABLE")
 
 				--------------------------------
 
@@ -305,7 +295,7 @@ function NS.Script:Load()
 			end, 0)
 
 			CallbackRegistry:Add("START_INTERACTION", function()
-				Frame.HideWithAnimation()
+				Frame:HideWithAnimation()
 			end, 0)
 
 			CallbackRegistry:Add("LIBRARY_INDEX_CHANGED", function()
@@ -322,7 +312,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						Buttons[i].Update()
+						Buttons[i]:Update()
 					end
 				end
 			end, 0)
@@ -367,7 +357,7 @@ function NS.Script:Load()
 				if event == "ITEM_TEXT_CLOSED" then
 					if not addon.Database.DB_GLOBAL.profile.INT_READABLE_ALWAYS_SHOW then
 						if Frame.ReadableUIFrame:IsVisible() then
-							Frame.HideWithAnimation(true, true)
+							Frame:HideWithAnimation(true, true)
 						end
 					end
 				end

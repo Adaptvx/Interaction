@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -16,7 +16,7 @@ function NS.ItemUI.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionReadableUIFrame.ReadableUIFrame = CreateFrame("Frame", "$parent.ReadableUIFrame", NS.Variables.Frame)
 			InteractionReadableUIFrame.ReadableUIFrame:SetSize(NS.Variables.Frame:GetWidth(), NS.Variables.Frame:GetHeight())
 			InteractionReadableUIFrame.ReadableUIFrame:SetPoint("CENTER", NS.Variables.Frame)
@@ -84,75 +84,213 @@ function NS.ItemUI.Elements:Load()
 
 				do -- BUTTONS
 					local function CreateButton(width, height, offset, defaultTexture, highlightTexture, triggerCallback)
-						local Button = CreateFrame("Frame", nil, ReadableUIFrame.NavigationFrame)
-						Button:SetSize(width, height)
+						local Frame = CreateFrame("Frame", nil, ReadableUIFrame.NavigationFrame)
+						Frame:SetSize(width, height)
 
 						--------------------------------
 
-						local Image, ImageTexture = addon.API.FrameTemplates:CreateTexture(Button, "FULLSCREEN", defaultTexture, "$parent.Image")
-						Image:SetSize(Button:GetSize())
-						Image:SetPoint("CENTER", Button)
+						do -- ELEMENTS
+							Frame.Image, Frame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN", defaultTexture, "$parent.Image")
+							Frame.Image:SetSize(Frame:GetSize())
+							Frame.Image:SetPoint("CENTER", Frame)
+						end
+
+						do -- ANIMATIONS
+							do -- ON ENTER
+								function Frame:Animation_OnEnter_StopEvent()
+									return not Frame.isMouseOver
+								end
+
+								function Frame:Animation_OnEnter(skipAnimation)
+									Frame.ImageTexture:SetTexture(highlightTexture)
+
+									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75)
+									addon.API.Animation:Move(Frame.Image, .25, "CENTER", 0, offset, "x", addon.API.Animation.EaseExpo, Frame.Animation_OnEnter_StopEvent)
+								end
+							end
+
+							do -- ON LEAVE
+								function Frame:Animation_OnLeave_StopEvent()
+									return Frame.isMouseOver
+								end
+
+								function Frame:Animation_OnLeave(skipAnimation)
+									Frame.ImageTexture:SetTexture(defaultTexture)
+
+									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1)
+									addon.API.Animation:Move(Frame.Image, .25, "CENTER", offset, 0, "x", addon.API.Animation.EaseExpo, Frame.Animation_OnLeave_StopEvent)
+								end
+							end
+
+							do -- ON MOUSE DOWN
+								function Frame:Animation_OnMouseDown_StopEvent()
+									return not Frame.isMouseDown
+								end
+
+								function Frame:Animation_OnMouseDown(skipAnimation)
+									Frame.ImageTexture:SetTexture(highlightTexture)
+
+									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .5, nil, Frame.Animation_OnMouseDown_StopEvent)
+								end
+							end
+
+							do -- ON MOUSE UP
+								function Frame:Animation_OnMouseUp_StopEvent()
+									return Frame.isMouseDown
+								end
+
+								function Frame:Animation_OnMouseUp(skipAnimation)
+									Frame.ImageTexture:SetTexture(highlightTexture)
+
+									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), .75, nil, Frame.Animation_OnMouseUp_StopEvent)
+								end
+							end
+						end
+
+						do -- LOGIC
+							Frame.isMouseOver = false
+							Frame.isMouseDown = false
+
+							Frame.enterCallbacks = {}
+							Frame.leaveCallbacks = {}
+							Frame.mouseDownCallbacks = {}
+							Frame.mouseUpCallbacks = {}
+							Frame.clickCallbacks = {}
+
+							--------------------------------
+
+							do -- FUNCTIONS
+
+							end
+
+							do -- EVENTS
+								local function Logic_OnEnter()
+
+								end
+
+								local function Logic_OnLeave()
+
+								end
+
+								local function Logic_OnMouseDown()
+
+								end
+
+								local function Logic_OnMouseUp()
+									triggerCallback()
+								end
+
+								function Frame:OnEnter(skipAnimation)
+									Frame.isMouseOver = true
+
+									--------------------------------
+
+									Frame:Animation_OnEnter(skipAnimation)
+									Logic_OnEnter()
+
+									--------------------------------
+
+									do -- ON ENTER
+										if #Frame.enterCallbacks >= 1 then
+											local enterCallbacks = Frame.enterCallbacks
+
+											for callback = 1, #enterCallbacks do
+												enterCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame:OnLeave(skipAnimation)
+									Frame.isMouseOver = false
+
+									--------------------------------
+
+									Frame:Animation_OnLeave(skipAnimation)
+									Logic_OnLeave()
+
+									--------------------------------
+
+									do -- ON LEAVE
+										if #Frame.leaveCallbacks >= 1 then
+											local leaveCallbacks = Frame.leaveCallbacks
+
+											for callback = 1, #leaveCallbacks do
+												leaveCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame:OnMouseDown(button, skipAnimation)
+									Frame.isMouseDown = true
+
+									--------------------------------
+
+									Frame:Animation_OnMouseDown(skipAnimation)
+									Logic_OnMouseDown()
+
+									--------------------------------
+
+									do -- ON MOUSE DOWN
+										if #Frame.mouseDownCallbacks >= 1 then
+											local mouseDownCallbacks = Frame.mouseDownCallbacks
+
+											for callback = 1, #mouseDownCallbacks do
+												mouseDownCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								function Frame:OnMouseUp(button, skipAnimation)
+									Frame.isMouseDown = false
+
+									--------------------------------
+
+									Frame:Animation_OnMouseUp(skipAnimation)
+									Logic_OnMouseUp()
+
+									--------------------------------
+
+									do -- ON MOUSE UP
+										if #Frame.mouseUpCallbacks >= 1 then
+											local mouseUpCallbacks = Frame.mouseUpCallbacks
+
+											for callback = 1, #mouseUpCallbacks do
+												mouseUpCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+
+									do -- ON CLICK
+										if #Frame.clickCallbacks >= 1 then
+											local clickCallbacks = Frame.clickCallbacks
+
+											for callback = 1, #clickCallbacks do
+												clickCallbacks[callback](skipAnimation)
+											end
+										end
+									end
+								end
+
+								addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave, mouseDownCallback = Frame.OnMouseDown, mouseUpCallback = Frame.OnMouseUp })
+							end
+						end
+
+						do -- SETUP
+							Frame:OnLeave(true)
+						end
 
 						--------------------------------
 
-						Button.Enter = function()
-							ImageTexture:SetTexture(highlightTexture)
-
-							addon.API.Animation:Fade(Button, .125, Button:GetAlpha(), .75)
-							addon.API.Animation:Move(Image, .25, "CENTER", 0, offset, "x", addon.API.Animation.EaseExpo)
-						end
-
-						Button.Leave = function()
-							ImageTexture:SetTexture(defaultTexture)
-
-							addon.API.Animation:Fade(Button, .125, Button:GetAlpha(), 1)
-							addon.API.Animation:Move(Image, .25, "CENTER", offset, 0, "x", addon.API.Animation.EaseExpo)
-						end
-
-						Button.MouseDown = function()
-							ImageTexture:SetTexture(highlightTexture)
-
-							addon.API.Animation:Fade(Button, .125, Button:GetAlpha(), .5)
-						end
-
-						Button.MouseUp = function()
-							ImageTexture:SetTexture(highlightTexture)
-
-							addon.API.Animation:Fade(Button, .125, Button:GetAlpha(), .75)
-						end
-
-						Button.Click = function()
-							triggerCallback()
-						end
-
-						--------------------------------
-
-						Button:SetScript("OnEnter", function()
-							Button.Enter()
-						end)
-
-						Button:SetScript("OnLeave", function()
-							Button.Leave()
-						end)
-
-						Button:SetScript("OnMouseDown", function()
-							Button.MouseDown()
-						end)
-
-						Button:SetScript("OnMouseUp", function()
-							Button.MouseUp()
-							Button.Click()
-						end)
-
-						--------------------------------
-
-						return Button
+						return Frame
 					end
 
 					--------------------------------
 
 					do -- PREVIOUS PAGE
-						ReadableUIFrame.NavigationFrame.PreviousPage = CreateButton(150 * .14, 150, -1, NS.Variables.READABLE_UI_PATH .. "Elements/button-back.png", NS.Variables.READABLE_UI_PATH .. "Elements/button-back.png", function() InteractionReadableUIFrame.Back() end)
+						ReadableUIFrame.NavigationFrame.PreviousPage = CreateButton(150 * .14, 150, -1, NS.Variables.READABLE_UI_PATH .. "Elements/button-back.png", NS.Variables.READABLE_UI_PATH .. "Elements/button-back.png", function() InteractionReadableUIFrame:Back() end)
 						ReadableUIFrame.NavigationFrame.PreviousPage:SetPoint("LEFT", ReadableUIFrame, 55, 0)
 					end
 
@@ -214,7 +352,7 @@ function NS.ItemUI.Elements:Load()
 
 					--------------------------------
 
-					ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator = function()
+					function ReadableUIFrame.ItemFrame.ScrollFrame:UpdateScrollIndicator()
 						local VerticalScroll = ReadableUIFrame.ItemFrame.ScrollFrame:GetVerticalScroll()
 						local ScrollRange = ReadableUIFrame.ItemFrame.ScrollFrame:GetVerticalScrollRange()
 
@@ -226,7 +364,7 @@ function NS.ItemUI.Elements:Load()
 					end
 
 					ReadableUIFrame.ItemFrame.ScrollFrame.MouseWheel = function()
-						ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator()
+						ReadableUIFrame.ItemFrame.ScrollFrame:UpdateScrollIndicator()
 					end
 					ReadableUIFrame.ItemFrame.ScrollFrame:HookScript("OnMouseWheel", function()
 						ReadableUIFrame.ItemFrame.ScrollFrame.MouseWheel()
@@ -270,7 +408,7 @@ function NS.ItemUI.Elements:Load()
 								--------------------------------
 
 								addon.Libraries.AceTimer:ScheduleTimer(function()
-									ReadableUIFrame.ItemFrame.ScrollFrame.UpdateScrollIndicator()
+									ReadableUIFrame.ItemFrame.ScrollFrame:UpdateScrollIndicator()
 								end, .25)
 							end, .1)
 						end)
@@ -435,7 +573,7 @@ function NS.ItemUI.Elements:Load()
 						--------------------------------
 
 						do -- LEFT
-							ReadableUIFrame.BookFrame.Content.Left.UpdateScrollIndicator = function()
+							function ReadableUIFrame.BookFrame.Content.Left:UpdateScrollIndicator()
 								if NS.ItemUI.Variables.Type == "ParchmentLarge" then
 									ReadableUIFrame.BookFrame.Content.Left.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Book/book-large-content-gradient.png")
 								else
@@ -504,7 +642,7 @@ function NS.ItemUI.Elements:Load()
 											--------------------------------
 
 											addon.Libraries.AceTimer:ScheduleTimer(function()
-												ReadableUIFrame.BookFrame.Content.Left.UpdateScrollIndicator()
+												ReadableUIFrame.BookFrame.Content.Left:UpdateScrollIndicator()
 											end, .25)
 										end, .1)
 									end)
@@ -520,7 +658,7 @@ function NS.ItemUI.Elements:Load()
 						end
 
 						do -- RIGHT
-							ReadableUIFrame.BookFrame.Content.Right.UpdateScrollIndicator = function()
+							function ReadableUIFrame.BookFrame.Content.Right:UpdateScrollIndicator()
 								if NS.ItemUI.Variables.Type == "ParchmentLarge" then
 									ReadableUIFrame.BookFrame.Content.Right.GradientTexture:SetTexture(NS.Variables.READABLE_UI_PATH .. "Book/book-large-content-gradient.png")
 								else
@@ -589,7 +727,7 @@ function NS.ItemUI.Elements:Load()
 											--------------------------------
 
 											addon.Libraries.AceTimer:ScheduleTimer(function()
-												ReadableUIFrame.BookFrame.Content.Right.UpdateScrollIndicator()
+												ReadableUIFrame.BookFrame.Content.Right:UpdateScrollIndicator()
 											end, .25)
 										end, .1)
 									end)

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -16,7 +16,12 @@ function NS:Load()
 		NS.Script:Load()
 	end
 
+	local function Prefabs()
+		NS.Prefabs:Load()
+	end
+
 	--------------------------------
 
+	Prefabs()
 	Modules()
 end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.PlayerStatusBar
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionPlayerStatusBarFrame = CreateFrame("Frame", "$parent.InteractionPlayerStatusBarFrame", InteractionFrame)
 			InteractionPlayerStatusBarFrame:SetSize(addon.API.Main:GetScreenWidth(), 10)
 			InteractionPlayerStatusBarFrame:SetPoint("BOTTOM", UIParent)

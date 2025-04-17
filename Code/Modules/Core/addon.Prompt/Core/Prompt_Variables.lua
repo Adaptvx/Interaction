@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Prompt
 
@@ -33,8 +33,11 @@ do -- CONSTANTS
 	end
 
 	do -- MAIN
-		NS.Variables.BUTTON_HEIGHT = NS.Variables:RATIO(5)
 		NS.Variables.PADDING = (NS.Variables:RATIO(8))
+
+		NS.Variables.FRAME_STRATA = "FULLSCREEN_DIALOG"
+		NS.Variables.FRAME_LEVEL = 1
+		NS.Variables.FRAME_LEVEL_MAX = 999
 	end
 end
 

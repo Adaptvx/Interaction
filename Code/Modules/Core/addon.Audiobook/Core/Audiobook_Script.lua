@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Audiobook
 
@@ -38,7 +38,9 @@ function NS.Script:Load()
 		end)
 
 		Frame.Content.Slider:HookScript("OnMouseUp", function()
-			Frame.UpdateState()
+			Frame:UpdateState()
+
+			--------------------------------
 
 			local isSameLine, isLastLine = Callback:IsSameLine()
 			if isSameLine then
@@ -48,7 +50,7 @@ function NS.Script:Load()
 
 		Frame.Content.Slider:HookScript("OnValueChanged", function(self, value, userInput)
 			if userInput then
-				Frame.SetIndexOnValue()
+				Frame:SetIndexOnValue()
 			end
 		end)
 
@@ -291,7 +293,7 @@ function NS.Script:Load()
 
 				NS.Variables.IsPlaying = true
 				NS.Variables.LastPlayTime = GetTime()
-				Frame.UpdateState()
+				Frame:UpdateState()
 
 				--------------------------------
 
@@ -308,7 +310,7 @@ function NS.Script:Load()
 			function Callback:StopPlayback()
 				if NS.Variables.IsPlaying then
 					NS.Variables.IsPlaying = false
-					Frame.UpdateState()
+					Frame:UpdateState()
 
 					--------------------------------
 
@@ -330,7 +332,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame.UpdateState()
+					Frame:UpdateState()
 					Callback:StartPlayback()
 				end
 			end
@@ -351,7 +353,7 @@ function NS.Script:Load()
 					local content = entry.Content
 
 					Callback:SetData(itemID, itemLink, type, title, numPages, content)
-					Frame.UpdateState()
+					Frame:UpdateState()
 
 					--------------------------------
 
@@ -364,7 +366,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						Frame.ShowWithAnimation()
+						Frame:ShowWithAnimation()
 					end, 1)
 				end
 
@@ -399,12 +401,12 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				Frame.HideWithAnimation()
+				Frame:HideWithAnimation()
 			end
 		end
 
 		do -- FRAME
-			Frame.UpdateState = function()
+			function Frame:UpdateState()
 				if not NS.Variables.Lines then
 					return
 				end
@@ -441,10 +443,10 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				Frame.UpdateText()
+				Frame:UpdateText()
 			end
 
-			Frame.UpdateText = function()
+			function Frame:UpdateText()
 				if not NS.Variables.Lines then
 					return
 				end
@@ -458,12 +460,12 @@ function NS.Script:Load()
 				Frame.Content.Text.Index.Text:SetText(currentPage .. "/" .. maxPage)
 			end
 
-			Frame.SetIndexOnValue = function()
+			function Frame:SetIndexOnValue()
 				NS.Variables.PlaybackLineIndex = math.floor(Frame.Content.Slider:GetValue())
 
 				--------------------------------
 
-				Frame.UpdateState()
+				Frame:UpdateState()
 			end
 		end
 	end
@@ -473,69 +475,97 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation = function()
-			Frame.hidden = false
-			Frame:Show()
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent()
 
-			Frame.MouseResponder:Show()
-
-			--------------------------------
-
-			addon.API.Animation:Fade(Frame, .125, 0, 1)
-			addon.API.Animation:Scale(Frame.Background, .25, .875, 1, nil, addon.API.Animation.EaseSine)
-			addon.API.Animation:Fade(Frame.Content, .25, 0, 1)
-			addon.API.Animation:Scale(Frame.Content, .25, 1.05, 1, nil, addon.API.Animation.EaseSine)
-		end
-
-		Frame.HideWithAnimation = function()
-			Frame.hidden = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.hidden then
-					Frame:Hide()
-				end
-			end, 1)
-
-			Frame.MouseResponder:Hide()
-
-			--------------------------------
-
-			addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
-			addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, addon.API.Animation.EaseSine)
-			addon.API.Animation:Fade(Frame.Content, .125, Frame.Content:GetAlpha(), 0)
-			addon.API.Animation:Scale(Frame.Content, .25, Frame.Content:GetScale(), 1.125, nil, addon.API.Animation.EaseSine)
-		end
-
-		Frame.TextPreviewFrame.ShowWithAnimation = function()
-			if not Frame.TextPreviewFrame.hidden then
-				return
 			end
-			Frame.TextPreviewFrame.hidden = false
-			Frame.TextPreviewFrame:Show()
 
-			--------------------------------
+			function Frame:ShowWithAnimation()
+				Frame.hidden = false
+				Frame:Show()
 
-			addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, 0, 1, nil, function() return Frame.TextPreviewFrame.hidden end)
-		end
+				Frame.MouseResponder:Show()
 
-		Frame.TextPreviewFrame.HideWithAnimation = function()
-			if Frame.TextPreviewFrame.hidden then
-				return
+				--------------------------------
+
+				addon.API.Animation:Fade(Frame, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Background, .25, .875, 1, nil, addon.API.Animation.EaseSine, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.Content, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Content, .25, 1.05, 1, nil, addon.API.Animation.EaseSine, Frame.ShowWithAnimation_StopEvent)
 			end
-			Frame.TextPreviewFrame.hidden = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.TextPreviewFrame.hidden then
-					Frame.TextPreviewFrame:Hide()
-				end
-			end, .25)
-
-			--------------------------------
-
-			addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, Frame.TextPreviewFrame:GetAlpha(), 0, nil, function() return not Frame.TextPreviewFrame.hidden end)
 		end
 
-		Frame.TextPreviewFrame.NewTextAnimation = function()
-			addon.API.Animation:Fade(Frame.TextPreviewFrame.Content.Text, .5, 0, 1)
-			addon.API.Animation:Move(Frame.TextPreviewFrame.Content.Text, .375, "CENTER", 25, 0, "y")
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent()
+
+			end
+
+			function Frame:HideWithAnimation()
+				Frame.hidden = true
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.hidden then
+						Frame:Hide()
+					end
+				end, 1)
+
+				Frame.MouseResponder:Hide()
+
+				--------------------------------
+
+				addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Background, .25, Frame.Background:GetScale(), 1.05, nil, addon.API.Animation.EaseSine, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.Content, .125, Frame.Content:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Scale(Frame.Content, .25, Frame.Content:GetScale(), 1.125, nil, addon.API.Animation.EaseSine)
+			end
+		end
+
+		do -- TEXT PREVIEW
+			do -- SHOW
+				function Frame.TextPreviewFrame:ShowWithAnimation_StopEvent()
+					return Frame.TextPreviewFrame.hidden
+				end
+
+				function Frame.TextPreviewFrame:ShowWithAnimation()
+					if not Frame.TextPreviewFrame.hidden then
+						return
+					end
+					Frame.TextPreviewFrame.hidden = false
+					Frame.TextPreviewFrame:Show()
+
+					--------------------------------
+
+					addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, 0, 1, nil, Frame.TextPreviewFrame.ShowWithAnimation_StopEvent)
+				end
+			end
+
+			do -- HIDE
+				function Frame.TextPreviewFrame:HideWithAnimation_StopEvent()
+					return not Frame.TextPreviewFrame.hidden
+				end
+
+				function Frame.TextPreviewFrame:HideWithAnimation()
+					if Frame.TextPreviewFrame.hidden then
+						return
+					end
+					Frame.TextPreviewFrame.hidden = true
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						if Frame.TextPreviewFrame.hidden then
+							Frame.TextPreviewFrame:Hide()
+						end
+					end, .25)
+
+					--------------------------------
+
+					addon.API.Animation:Fade(Frame.TextPreviewFrame, .125, Frame.TextPreviewFrame:GetAlpha(), 0, nil, Frame.TextPreviewFrame.HideWithAnimation_StopEvent)
+				end
+			end
+
+			do -- FRAME
+				function Frame.TextPreviewFrame:NewTextAnimation()
+					addon.API.Animation:Fade(Frame.TextPreviewFrame.Content.Text, .5, 0, 1)
+					addon.API.Animation:Move(Frame.TextPreviewFrame.Content.Text, .375, "CENTER", 25, 0, "y")
+				end
+			end
 		end
 	end
 

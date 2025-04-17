@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -89,7 +89,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 		InteractionSettingsFrame.Content.ScrollFrame:HookScript("OnMouseWheel", function(self, delta)
 			if not addon.API.Main:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
 				if Frame.Dropdown.List:IsVisible() then
-					Frame.Dropdown.List.HideList()
+					Frame.Dropdown.List:HideList()
 					Frame.Dropdown.Leave()
 				end
 			end

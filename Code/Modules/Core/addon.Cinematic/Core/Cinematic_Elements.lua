@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionFrame.CinematicMode = CreateFrame("Frame", "$parent.CinematicMode", InteractionFrame)
 			InteractionFrame.CinematicMode:SetAllPoints(UIParent, true)
 			InteractionFrame.CinematicMode:SetIgnoreParentScale(true)

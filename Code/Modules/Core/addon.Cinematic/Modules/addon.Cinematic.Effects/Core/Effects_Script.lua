@@ -1,6 +1,10 @@
+-- [!] [addon.Cinematic.Effects] is used to display screen gradients/effects.
+-- [Effects_Script.lua] is the back-end (logic & behavior)
+-- for [Effects_Elements.lua].
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic.Effects
 
@@ -15,7 +19,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionCinematicEffectsFrame
+	local Frame = InteractionFrame.EffectsFrame
 	local Callback = NS.Script
 
 	--------------------------------
@@ -26,31 +30,29 @@ function NS.Script:Load()
 		do -- MAIN
 			function Callback:UpdateVisibility()
 				local isCinematicMode = (addon.Database.DB_GLOBAL.profile.INT_CINEMATIC)
+				local isGradient = (addon.Database.VAR_CINEMATIC_VIGNETTE and addon.Database.VAR_CINEMATIC_VIGNETTE_GRADIENT)
+
 				if not isCinematicMode then
 					return
 				end
 
 				--------------------------------
 
-				local isGradient = (addon.Database.VAR_CINEMATIC_VIGNETTE and addon.Database.VAR_CINEMATIC_VIGNETTE_GRADIENT)
-
-				--------------------------------
-
 				if isGradient then
 					local isInteraction = (addon.Interaction.Variables.Active)
-					local isDialog = (not InteractionDialogFrame.hidden)
-					local isGossip = (not InteractionGossipFrame.hidden)
-					local isQuest = (not InteractionQuestFrame.hidden)
+					local isDialog = (not InteractionFrame.DialogFrame.hidden)
+					local isGossip = (not InteractionFrame.GossipFrame.hidden)
+					local isQuest = (not InteractionFrame.QuestFrame.hidden)
 
 					--------------------------------
 
 					if isInteraction and (isGossip or isQuest) then
-						Frame.Gradient.ShowWithAnimation()
+						Frame.REF_GRADIENT:ShowWithAnimation()
 					else
-						Frame.Gradient.HideWithAnimation()
+						Frame.REF_GRADIENT:HideWithAnimation()
 					end
 				else
-					Frame.Gradient.HideWithAnimation()
+					Frame.REF_GRADIENT:HideWithAnimation()
 				end
 			end
 		end
@@ -62,33 +64,45 @@ function NS.Script:Load()
 
 	do
 		do -- GRADIENT
-			Frame.Gradient.ShowWithAnimation = function()
-				if not Frame.Gradient.hidden then
-					return
+			do -- SHOW
+				function Frame.REF_GRADIENT:ShowWithAnimation_StopEvent()
+					return Frame.REF_GRADIENT.hidden
 				end
-				Frame.Gradient.hidden = false
-				Frame.Gradient:Show()
 
-				--------------------------------
+				function Frame.REF_GRADIENT:ShowWithAnimation()
+					if not Frame.REF_GRADIENT.hidden then
+						return
+					end
+					Frame.REF_GRADIENT.hidden = false
+					Frame.REF_GRADIENT:Show()
 
-				addon.API.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 1, nil, function() return Frame.Gradient.hidden end)
+					--------------------------------
+
+					addon.API.Animation:Fade(Frame.REF_GRADIENT, .25, Frame.REF_GRADIENT:GetAlpha(), 1, nil, function() return Frame.REF_GRADIENT.hidden end)
+				end
 			end
 
-			Frame.Gradient.HideWithAnimation = function()
-				if Frame.Gradient.hidden then
-					return
+			do -- HIDE
+				function Frame.REF_GRADIENT:HideWithAnimation_StopEvent()
+					return not Frame.REF_GRADIENT.hidden
 				end
-				Frame.Gradient.hidden = true
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if Frame.Gradient.hidden then
-						Frame.Gradient:Hide()
+				function Frame.REF_GRADIENT:HideWithAnimation()
+					if Frame.REF_GRADIENT.hidden then
+						return
 					end
-				end, .25)
+					Frame.REF_GRADIENT.hidden = true
 
-				--------------------------------
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						if Frame.REF_GRADIENT.hidden then
+							Frame.REF_GRADIENT:Hide()
+						end
+					end, .25)
 
-				addon.API.Animation:Fade(Frame.Gradient, .25, Frame.Gradient:GetAlpha(), 0, nil, function() return not Frame.Gradient.hidden end)
+					--------------------------------
+
+					addon.API.Animation:Fade(Frame.REF_GRADIENT, .25, Frame.REF_GRADIENT:GetAlpha(), 0, nil, function() return not Frame.REF_GRADIENT.hidden end)
+				end
 			end
 		end
 	end
@@ -99,47 +113,47 @@ function NS.Script:Load()
 
 	do
 		-- do -- GRADIENT
-		-- 	Frame.Gradient.Enter = function()
-		-- 		Frame.Gradient.mouseOver = true
+		-- 	function Frame.REF_GRADIENT:OnEnter()
+		-- 		Frame.REF_GRADIENT.mouseOver = true
 
 		-- 		--------------------------------
 
-		-- 		Frame.Gradient.UpdateFocus()
+		-- 		Frame.REF_GRADIENT:UpdateFocus()
 		-- 	end
 
-		-- 	Frame.Gradient.Leave = function()
-		-- 		Frame.Gradient.mouseOver = false
+		-- 	function Frame.REF_GRADIENT:OnLeave()
+		-- 		Frame.REF_GRADIENT.mouseOver = false
 
 		-- 		--------------------------------
 
-		-- 		Frame.Gradient.UpdateFocus()
+		-- 		Frame.REF_GRADIENT:UpdateFocus()
 		-- 	end
 
-		-- 	Frame.Gradient.UpdateFocus = function()
+		-- 	function Frame.REF_GRADIENT:UpdateFocus()
 		-- 		if not addon.Input.Variables.IsController then
-		-- 			local IsMouseOver = (Frame.Gradient.mouseOver)
-		-- 			local IsInDialog = (not InteractionDialogFrame.hidden)
+		-- 			local IsMouseOver = (Frame.REF_GRADIENT.mouseOver)
+		-- 			local IsInDialog = (not InteractionFrame.DialogFrame.hidden)
 
 		-- 			if IsInDialog and not IsMouseOver then
-		-- 				Frame.Gradient.focused = false
+		-- 				Frame.REF_GRADIENT.focused = false
 		-- 			else
-		-- 				Frame.Gradient.focused = true
+		-- 				Frame.REF_GRADIENT.focused = true
 		-- 			end
 		-- 		else
-		-- 			Frame.Gradient.focused = true
+		-- 			Frame.REF_GRADIENT.focused = true
 		-- 		end
 
 		-- 		--------------------------------
 
-		-- 		if Frame.Gradient.focused then
-		-- 			addon.API.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), 1, nil, function() return not Frame.Gradient.focused end)
+		-- 		if Frame.REF_GRADIENT.focused then
+		-- 			addon.API.Animation:Fade(Frame.REF_GRADIENT.Background, .25, Frame.REF_GRADIENT.Background:GetAlpha(), 1, nil, function() return not Frame.REF_GRADIENT.focused end)
 		-- 		else
-		-- 			addon.API.Animation:Fade(Frame.Gradient.Background, .25, Frame.Gradient.Background:GetAlpha(), .5, nil, function() return Frame.Gradient.focused end)
+		-- 			addon.API.Animation:Fade(Frame.REF_GRADIENT.Background, .25, Frame.REF_GRADIENT.Background:GetAlpha(), .5, nil, function() return Frame.REF_GRADIENT.focused end)
 		-- 		end
 		-- 	end
 
-		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Left, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.Gradient.Leave() end end })
-		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.MouseResponders.Right, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.Gradient.Leave() end end })
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSERESPONDERS_LEFT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Leave() end end })
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSERESPONDERS_RIGHT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Leave() end end })
 		-- end
 	end
 
@@ -151,9 +165,9 @@ function NS.Script:Load()
 		do -- GRADIENT
 			local function Settings_UIDirection()
 				if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then
-					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-left-fullscreen.png")
+					Frame.REF_GRADIENT.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-left-fullscreen.png")
 				elseif addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then
-					Frame.Gradient.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-right-fullscreen.png")
+					Frame.REF_GRADIENT.BackgroundTexture:SetTexture(addon.Variables.PATH_ART .. "Gradient/gradient-right-fullscreen.png")
 				end
 			end
 			Settings_UIDirection()

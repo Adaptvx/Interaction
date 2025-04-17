@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionSettingsParent = CreateFrame("Frame", "$parent.SettingsParent", InteractionFrame)
 			InteractionSettingsParent:SetSize(addon.API.Main:GetScreenWidth(), addon.API.Main:GetScreenHeight())
 			InteractionSettingsParent:SetPoint("CENTER", nil)
@@ -316,7 +316,7 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- SCROLL BAR
-							Frame.Content.ScrollFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.Content.ScrollFrame, "FULLSCREEN_DIALOG", {
+							Frame.Content.ScrollFrame.Scrollbar = addon.API.FrameTemplates:CreateScrollbar(Frame.Content.ScrollFrame, "FULLSCREEN_DIALOG", Frame.Content.ScrollFrame:GetFrameLevel() + 9, {
 								scrollFrame = Frame.Content.ScrollFrame,
 								scrollChildFrame = Frame.Content.ScrollChildFrame,
 								sizeX = 5,

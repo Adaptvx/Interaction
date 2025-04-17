@@ -1,6 +1,8 @@
+-- [!] [addon.Interaction] is used to manage NPC interaction custom logic such as displaying Quest/Gossip frame etc.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction
 
@@ -21,26 +23,57 @@ function NS.Script:Load()
 		local LastQuestID
 		local LastDialog
 
+		--------------------------------
+
 		function NS.Script:SetActiveState(value)
 			NS.Variables.LastActive = NS.Variables.Active
 			NS.Variables.Active = value
 		end
 
 		function NS.Script:IsNewQuestNPC(hideSameNPC)
-			local IsSameQuestNPC = (not hideSameNPC or hideSameNPC == nil) and (UnitName("questnpc") == NS.Variables.LastQuestNPC)
-			local IsStaticNPC = (addon.API.Util:FindItemInInventory(UnitName("questnpc")))
+			local isSameQuestNPC = (not hideSameNPC or hideSameNPC == nil) and (UnitName("questnpc") == NS.Variables.LastQuestNPC)
+			local isStaticNPC = (addon.API.Util:FindItemInInventory(UnitName("questnpc")))
 			NS.Variables.LastQuestNPC = UnitName("questnpc")
 
-			if (IsStaticNPC) and not (IsSameQuestNPC) and (NS.Variables.Active) then
+			--------------------------------
+
+			if (isStaticNPC) and not (isSameQuestNPC) and (NS.Variables.Active) then
 				return true
 			else
 				return false
 			end
 		end
 
+		local function CloseInteraction(deselectTarget)
+			if not NS.Variables.Active then
+				return
+			end
+
+			--------------------------------
+
+			do -- DESELECT TARGET
+				if deselectTarget then
+					C_PlayerInteractionManager.ClearInteraction()
+				end
+			end
+
+			do -- BLIZZARD
+				HideUIPanel(QuestFrame)
+				HideUIPanel(GossipFrame)
+			end
+
+			do -- STATE
+				NS.Script:SetActiveState(false)
+			end
+
+			do -- CALLBACK
+				CallbackRegistry:Trigger("STOP_INTERACTION")
+			end
+		end
+
 		function NS.Script:Stop(skip, deselectTarget)
-			if InteractionDialogFrame and InteractionDialogFrame:IsVisible() then
-				InteractionDialogFrame:Hide()
+			if InteractionFrame.DialogFrame and InteractionFrame.DialogFrame:IsVisible() then
+				InteractionFrame.DialogFrame:Hide()
 			end
 
 			--------------------------------
@@ -49,49 +82,16 @@ function NS.Script:Load()
 			LastFrameType = nil
 			LastQuestID = nil
 
-			NS.Variables.GossipLastNPC = nil
-			NS.Variables.GossipFirstInteractMessage = nil
-			NS.Variables.LastActiveTime = GetTime()
-
 			NS.Variables.Type = nil
 
 			--------------------------------
 
-			local function CloseInteraction()
-				if not NS.Variables.Active then
-					return
-				end
-
-				--------------------------------
-
-				do -- DESELECT TARGET
-					if deselectTarget then
-						C_PlayerInteractionManager.ClearInteraction()
-					end
-				end
-
-				do -- BLIZZARD
-					HideUIPanel(QuestFrame)
-					HideUIPanel(GossipFrame)
-				end
-
-				do -- STATE
-					NS.Script:SetActiveState(false)
-				end
-
-				do -- CALLBACK
-					CallbackRegistry:Trigger("STOP_INTERACTION")
-				end
-			end
-
-			--------------------------------
-
 			if skip then
-				CloseInteraction()
+				CloseInteraction(deselectTarget)
 			else
 				addon.Libraries.AceTimer:ScheduleTimer(function()
 					if not GossipFrame:IsVisible() and not QuestFrame:IsVisible() then
-						CloseInteraction()
+						CloseInteraction(deselectTarget)
 					end
 				end, .575)
 			end
@@ -99,31 +99,23 @@ function NS.Script:Load()
 
 		function NS.Script:Start(frameType)
 			local NPC = UnitName("npc") or UnitName("questnpc")
-			local FrameType = frameType
 			local QuestID = GetQuestID() or 0
 
-			local Text_Reward = GetRewardText()
-			local Text_Progress = GetProgressText()
-			local Text_Greeting = GetGreetingText()
-			local Text_Detail = GetQuestText()
-			local Text_Gossip = C_GossipInfo.GetText()
-
-			local Dialog
-			if frameType == "quest-reward" then
-				Dialog = Text_Reward
-			elseif frameType == "quest-progress" then
-				Dialog = Text_Progress
-			elseif frameType == "gossip" then
-				Dialog = Text_Gossip
-			elseif frameType == "quest-greeting" then
-				Dialog = Text_Greeting
-			elseif frameType == "quest-detail" then
-				Dialog = Text_Detail
-			end
+			local TEXT_REWARD = GetRewardText()
+			local TEXT_PROGRESS = GetProgressText()
+			local TEXT_GREETING = GetGreetingText()
+			local TEXT_DETAIL = GetQuestText()
+			local TEXT_GOSSIP = C_GossipInfo.GetText()
+			local TEXT =
+				frameType == "quest-reward" and TEXT_REWARD or
+				frameType == "quest-progress" and TEXT_PROGRESS or
+				frameType == "gossip" and TEXT_GOSSIP or
+				frameType == "quest-greeting" and TEXT_GREETING or
+				frameType == "quest-detail" and TEXT_DETAIL
 
 			--------------------------------
 
-			if (LastNPC == NPC) and (LastFrameType == FrameType) and (LastQuestID == QuestID) and (LastDialog == Dialog) then
+			if (LastNPC == NPC) and (LastFrameType == frameType) and (LastQuestID == QuestID) and (LastDialog == TEXT) then
 				return
 			end
 
@@ -139,25 +131,17 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			CallbackRegistry:Trigger("INITIATE_INTERACTION")
-
-			--------------------------------
-
-			GossipFrame.Clear()
-			QuestFrame.Clear()
+			addon.BlizzardFrames.Script:Clear_GossipFrame()
+			addon.BlizzardFrames.Script:Clear_QuestFrame()
 
 			--------------------------------
 
 			LastNPC = NPC
-			LastFrameType = FrameType
+			LastFrameType = frameType
 			LastQuestID = QuestID
-			LastDialog = Dialog
+			LastDialog = TEXT
 
 			NS.Variables.Type = frameType
-
-			--------------------------------
-
-			NS.Variables.StartInteractionTime = GetTime()
 
 			--------------------------------
 
@@ -179,29 +163,8 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Interaction.Dialog.Variables.IsInInteraction = true
-			addon.Interaction.Dialog.Variables.AllowAutoProgress = true
-			addon.Interaction.Dialog.Variables.Finished = false
-
-			addon.Interaction.Dialog.Variables.Temp_FrameType = frameType
-			addon.Interaction.Dialog.Variables.Temp_CurrentIndex = 1
-			addon.Interaction.Dialog.Variables.Temp_DialogStringList = {}
-			addon.Interaction.Dialog.Variables.Temp_CurrentString = nil
-			addon.Interaction.Dialog.Variables.Temp_IsScrollDialog = false
-			addon.Interaction.Dialog.Variables.Temp_IsEmoteDialog = false
-			addon.Interaction.Dialog.Variables.Temp_Temp_IsEmoteDialog = false
-			addon.Interaction.Dialog.Variables.Temp_IsEmoteDialogIndexes = {}
-			addon.Interaction.Dialog.Variables.Temp_NotEmoteDialogIndexes = {}
-			addon.Interaction.Dialog.Variables.Temp_IsStylisedDialog = false
-
-			--------------------------------
-
-			addon.Interaction.Dialog.Script:GetString()
-
-			--------------------------------
-
 			do -- NAMEPLATE
-				C_Timer.After(0, function()
+				addon.Libraries.AceTimer:ScheduleTimer(function()
 					local nameplate = C_NamePlate.GetNamePlateForUnit("npc")
 
 					--------------------------------
@@ -211,89 +174,68 @@ function NS.Script:Load()
 							nameplate:Hide()
 						end
 					end
-				end)
+				end, 0)
 			end
 
 			do -- START
-				if #addon.Interaction.Dialog.Variables.Temp_DialogStringList >= 1 and #addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] >= 1 and addon.Interaction.Dialog.Variables.Temp_DialogStringList[1] ~= " " then
-					addon.Interaction.Dialog.Script:UpdateString(true)
-
-					--------------------------------
-
-					InteractionDialogFrame.StartDialog()
-				end
+				addon.Interaction.Dialog.Script:Init(frameType)
 			end
 		end
 
 		function NS.Script:Manager_Dialog_Stop()
-			addon.Interaction.Dialog.Variables.IsInInteraction = false
-			addon.Interaction.Dialog.Variables.AllowAutoProgress = true
-			addon.Interaction.Dialog.Variables.Finished = false
-
-			addon.Interaction.Dialog.Variables.Temp_FrameType = nil
-			addon.Interaction.Dialog.Variables.Temp_CurrentIndex = 1
-			addon.Interaction.Dialog.Variables.Temp_DialogStringList = {}
-			addon.Interaction.Dialog.Variables.Temp_CurrentString = nil
-			addon.Interaction.Dialog.Variables.Temp_IsScrollDialog = false
-			addon.Interaction.Dialog.Variables.Temp_IsEmoteDialog = false
-			addon.Interaction.Dialog.Variables.Temp_Temp_IsEmoteDialog = false
-			addon.Interaction.Dialog.Variables.Temp_IsEmoteDialogIndexes = {}
-			addon.Interaction.Dialog.Variables.Temp_NotEmoteDialogIndexes = {}
-			addon.Interaction.Dialog.Variables.Temp_IsStylisedDialog = false
-
-			--------------------------------
-
-			InteractionDialogFrame.StopDialog()
+			addon.Interaction.Dialog.Script:Stop()
 		end
 
 		function NS.Script:Manager_Gossip_Visibility()
-			local IsInteractingWithNPC = (UnitName("npc") or UnitName("questnpc"))
-			local IsDialog = (InteractionDialogFrame:IsVisible())
-			local IsQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
-			local IsGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
-
-			local IsInitalized = (addon.Interaction.Variables.Active)
-			local IsDialogFinished = (addon.Interaction.Dialog.Variables.Finished)
+			local isFinishedDialog = (addon.Interaction.Dialog.Variables.Playback_Finished)
+			local isValidDialog = (addon.Interaction.Dialog.Variables.Playback_Valid)
+			local isGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
+			local isQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
 
 			--------------------------------
 
-			if IsInitalized and IsInteractingWithNPC and IsGossip and (addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP or (not addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP and not IsDialog and IsDialogFinished)) then
-				InteractionGossipFrame.ShowWithAnimation()
-
-				--------------------------------
-
-				InteractionGossipFrame.UpdateAll()
+			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP then
+				if (isGossip) then
+					InteractionFrame.GossipFrame:ShowWithAnimation()
+				else
+					InteractionFrame.GossipFrame:HideWithAnimation()
+				end
 			else
-				InteractionGossipFrame.HideWithAnimation()
+				if (isGossip) and (not isValidDialog or (isValidDialog and isFinishedDialog)) then
+					InteractionFrame.GossipFrame:ShowWithAnimation()
+				else
+					InteractionFrame.GossipFrame:HideWithAnimation()
+				end
 			end
 		end
 
 		function NS.Script:Manager_Quest_Visibility()
-			local IsFinishedDialog = (addon.Interaction.Dialog.Variables.Finished)
-			local IsGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
-			local IsQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
+			local isFinishedDialog = (addon.Interaction.Dialog.Variables.Playback_Finished)
+			local isValidDialog = (addon.Interaction.Dialog.Variables.Playback_Valid)
+			local isGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
+			local isQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
 
 			--------------------------------
 
 			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST then
-				if (IsQuest and not IsGossip) then
-					InteractionQuestFrame.ShowWithAnimation()
+				if (isQuest and not isGossip) then
+					InteractionFrame.QuestFrame:ShowWithAnimation()
 				else
-					InteractionQuestFrame.HideWithAnimation()
+					InteractionFrame.QuestFrame:HideWithAnimation()
 				end
 			else
-				if (IsQuest and not IsGossip) and (IsFinishedDialog) then
-					InteractionQuestFrame.ShowWithAnimation()
+				if (isQuest and not isGossip) and (not isValidDialog or (isValidDialog and isFinishedDialog)) then
+					InteractionFrame.QuestFrame:ShowWithAnimation()
 				else
-					InteractionQuestFrame.HideWithAnimation()
+					InteractionFrame.QuestFrame:HideWithAnimation()
 				end
 			end
 		end
 
 		function NS.Script:Manager_Quest_Start()
-			if InteractionQuestFrame:IsVisible() then
-				InteractionQuestFrame:Hide()
-				InteractionQuestFrame.hidden = true
+			if InteractionFrame.QuestFrame:IsVisible() then
+				InteractionFrame.QuestFrame:Hide()
+				InteractionFrame.QuestFrame.hidden = true
 			end
 		end
 
@@ -320,15 +262,15 @@ function NS.Script:Load()
 
 	do
 		CallbackRegistry:Add("GOSSIP_BUTTON_CLICKED", function(button)
-			local atlas, texture = button.IconTexture:GetAtlas(), button.IconTexture:GetTexture()
+			local atlas, texture = button:GetImageObject().BackgroundTexture:GetAtlas(), button:GetImageObject().BackgroundTexture:GetTexture()
 
 			--------------------------------
 
-			local IsTrainer = (atlas == 132058 or texture == 132058)
+			local isTrainer = (atlas == 132058 or texture == 132058)
 
 			--------------------------------
 
-			if IsTrainer then
+			if isTrainer then
 				if not InCombatLockdown() then
 					UIParent:Show()
 				end
@@ -396,7 +338,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			CallbackRegistry:Add("INITIATE_INTERACTION", function()
+			CallbackRegistry:Add("START_INTERACTION", function()
 				WorldMapFrame:Hide()
 
 				--------------------------------
@@ -423,7 +365,7 @@ function NS.Script:Load()
 				NS.Script:Stop(true)
 			end)
 
-			if not addon.Variables.IS_CLASSIC then
+			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				hooksecurefunc(PlayerChoiceFrame, "Show", function()
 					NS.Script:Stop()
 				end)
@@ -516,7 +458,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		GossipFrame.Clear()
-		QuestFrame.Clear()
+		addon.BlizzardFrames.Script:Clear_GossipFrame()
+		addon.BlizzardFrames.Script:Clear_QuestFrame()
 	end
 end

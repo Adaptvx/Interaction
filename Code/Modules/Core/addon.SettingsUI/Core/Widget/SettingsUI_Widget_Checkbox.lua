@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -46,7 +46,7 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 
 		--------------------------------
 
-		Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame.Container, Frame:GetFrameStrata(), {
+		Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame.Container, Frame:GetFrameStrata(), Frame:GetFrameLevel() + 1, {
 			scale = .425,
 			customColor = COLOR_Default,
 			callbackFunction = setFunc
@@ -62,7 +62,7 @@ function NS.Widgets:CreateCheckbox(parent, getFunc, setFunc, subcategory, toolti
 
 		--------------------------------
 
-		table.insert(Frame.Checkbox.MouseUpCallbacks, UpdateState)
+		table.insert(Frame.Checkbox.mouseUpCallbacks, UpdateState)
 		CallbackRegistry:Add("START_SETTING", UpdateState, 0)
 
 		--------------------------------

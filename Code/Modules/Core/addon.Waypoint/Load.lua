@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -12,7 +12,7 @@ local NS = addon.Waypoint
 
 function NS:Load()
 	local WAYPOINT_ENABLE = addon.Database.DB_GLOBAL.profile.INT_WAYPOINT
-	if not WAYPOINT_ENABLE or addon.Variables.IS_CLASSIC then return end
+	if not WAYPOINT_ENABLE or addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then return end
 
 	--------------------------------
 

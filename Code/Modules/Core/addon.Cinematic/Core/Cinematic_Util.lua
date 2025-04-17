@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
 
@@ -10,7 +10,7 @@ NS.Util = {}
 
 --------------------------------
 
-local GetGlidingInfo = not addon.Variables.IS_CLASSIC and C_PlayerInfo.GetGlidingInfo or nil
+local GetGlidingInfo = addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_PlayerInfo.GetGlidingInfo or nil
 
 --------------------------------
 
@@ -125,7 +125,7 @@ function NS.Util:Load()
 
 	do -- FOV
 		function NS.Util:SetCameraFieldOfView(level, duration)
-			local IsSkyriding = not addon.Variables.IS_CLASSIC and select(1, GetGlidingInfo()) or false
+			local IsSkyriding = GetGlidingInfo and select(1, GetGlidingInfo()) or false
 
 			--------------------------------
 
@@ -334,12 +334,12 @@ function NS.Util:Load()
 
 	local _ = CreateFrame("Frame", "UpdateFrame/View.lua -- SetCameraFieldOfView", nil)
 	_:SetScript("OnUpdate", function()
-		local IsSkyriding = not addon.Variables.IS_CLASSIC and select(1, GetGlidingInfo()) or false
-		local IsFieldOfViewActive = (InteractionFrame.INT_CameraFieldOfView and InteractionFrame.INT_CameraFieldOfView:GetScript("OnUpdate") ~= nil)
+		local isSkyriding = GetGlidingInfo and select(1, GetGlidingInfo()) or false
+		local isFieldOfViewActive = (InteractionFrame.INT_CameraFieldOfView and InteractionFrame.INT_CameraFieldOfView:GetScript("OnUpdate") ~= nil)
 
 		--------------------------------
 
-		if IsSkyriding and IsFieldOfViewActive then
+		if isSkyriding and isFieldOfViewActive then
 			NS.Util:ForceStopCameraFieldOfView()
 		end
 	end)

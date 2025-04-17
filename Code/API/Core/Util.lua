@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -69,13 +69,14 @@ do
 			---@return width number
 			---@return height number
 			function addon.API.Util:GetStringSize(frame, maxWidth, maxHeight)
+				local text = addon.API.Util:GetUnformattedText(frame:GetText())
 				local font, size, flags = frame:GetFont()
 				local justifyH, justifyV = frame:GetJustifyH(), frame:GetJustifyV()
 
 				--------------------------------
 
 				addon.API.MeasurementText:SetFont(font or GameFontNormal:GetFont(), size > 0 and size or 12.5, flags or "")
-				addon.API.MeasurementText:SetText(frame:GetText())
+				addon.API.MeasurementText:SetText(text)
 
 				if justifyH then
 					addon.API.MeasurementText:SetJustifyH(justifyH)
@@ -634,26 +635,41 @@ do
 			return nil
 		end
 
+		-- Returns a sub variable from a list.
+		---@param list table
+		---@param subVariableList table
+		---@return any
+		function addon.API.Util:GetSubVariableFromList(list, subVariableList)
+			local currentKey = list
+
+			--------------------------------
+
+			for i = 1, #subVariableList do
+				currentKey = currentKey[subVariableList[i]]
+			end
+
+			--------------------------------
+
+			return currentKey
+		end
+
 		-- Sorts a list by numbers.
 		---@param list table
-		---@param variable string: variable to sort
-		---@param subVariable? string: variable of 'variable' to sort
+		---@param subVariableList table
 		---@param ascending? boolean: use ascending order
 		---@return table
-		function addon.API.Util:SortListByNumber(list, variable, subVariable, ascending)
+		function addon.API.Util:SortListByNumber(list, subVariableList, ascending)
 			table.sort(list, function(a, b)
 				if ascending then
-					if subVariable then
-						return a[variable][subVariable] > b[variable][subVariable]
-					else
-						return a[variable] > b[variable]
-					end
+					local subVariableA = addon.API.Util:GetSubVariableFromList(a, subVariableList)
+					local subVariableB = addon.API.Util:GetSubVariableFromList(b, subVariableList)
+
+					return subVariableA > subVariableB
 				else
-					if subVariable then
-						return b[variable][subVariable] < a[variable][subVariable]
-					else
-						return a[variable] < b[variable]
-					end
+					local subVariableA = addon.API.Util:GetSubVariableFromList(a, subVariableList)
+					local subVariableB = addon.API.Util:GetSubVariableFromList(b, subVariableList)
+
+					return subVariableA < subVariableB
 				end
 			end)
 
@@ -664,24 +680,21 @@ do
 
 		-- Sorts a list by alphabetical order.
 		---@param list table
-		---@param variable string: variable to sort
-		---@param subVariable? string: variable of 'variable' to sort
+		---@param subVariableList table,
 		---@param descending? boolean: use descending order (Z-A)
 		---@return table
-		function addon.API.Util:SortListByAlphabeticalOrder(list, variable, subVariable, descending)
+		function addon.API.Util:SortListByAlphabeticalOrder(list, subVariableList, descending)
 			table.sort(list, function(a, b)
 				if descending then
-					if subVariable then
-						return a[variable][subVariable]:lower() > b[variable][subVariable]:lower()
-					else
-						return a[variable]:lower() > b[variable]:lower()
-					end
+					local subVariableA = addon.API.Util:GetSubVariableFromList(a, subVariableList)
+					local subVariableB = addon.API.Util:GetSubVariableFromList(b, subVariableList)
+
+					return subVariableA:lower() > subVariableB:lower()
 				else
-					if subVariable then
-						return a[variable][subVariable]:lower() < b[variable][subVariable]:lower()
-					else
-						return a[variable]:lower() < b[variable]:lower()
-					end
+					local subVariableA = addon.API.Util:GetSubVariableFromList(a, subVariableList)
+					local subVariableB = addon.API.Util:GetSubVariableFromList(b, subVariableList)
+
+					return subVariableA:lower() < subVariableB:lower()
 				end
 			end)
 
@@ -692,14 +705,13 @@ do
 
 		-- Filters a list by a variable.
 		---@param list table
-		---@param variable string: variable to filter
-		---@param subVariable? string: variable of 'variable' to filter
+		---@param subVariableList table,
 		---@param value any: value to filter
 		---@param roughMatch? boolean: use rough matching
 		---@param caseSensitive? boolean: use case-sensitive matching
 		---@param customCheck? function
 		---@return table
-		function addon.API.Util:FilterListByVariable(list, variable, subVariable, value, roughMatch, caseSensitive, customCheck)
+		function addon.API.Util:FilterListByVariable(list, subVariableList, value, roughMatch, caseSensitive, customCheck)
 			local filteredList = {}
 
 			--------------------------------
@@ -711,46 +723,30 @@ do
 					end
 				elseif roughMatch then
 					if caseSensitive or caseSensitive == nil then
-						if subVariable then
-							if addon.API.Util:FindString(tostring(v[variable][subVariable]), tostring(value)) then
-								table.insert(filteredList, v)
-							end
-						else
-							if addon.API.Util:FindString(tostring(v[variable]), tostring(value)) then
-								table.insert(filteredList, v)
-							end
+						local subVariableValue = addon.API.Util:GetSubVariableFromList(v, subVariableList)
+
+						if addon.API.Util:FindString(tostring(subVariableValue), tostring(value)) then
+							table.insert(filteredList, v)
 						end
 					else
-						if subVariable then
-							if addon.API.Util:FindString(string.lower(tostring(v[variable][subVariable])), string.lower(tostring(value))) then
-								table.insert(filteredList, v)
-							end
-						else
-							if addon.API.Util:FindString(string.lower(tostring(v[variable])), string.lower(tostring(value))) then
-								table.insert(filteredList, v)
-							end
+						local subVariableValue = addon.API.Util:GetSubVariableFromList(v, subVariableList)
+
+						if addon.API.Util:FindString(string.lower(tostring(subVariableValue)), string.lower(tostring(value))) then
+							table.insert(filteredList, v)
 						end
 					end
 				else
 					if caseSensitive or caseSensitive == nil then
-						if subVariable then
-							if v[variable][subVariable] == value then
-								table.insert(filteredList, v)
-							end
-						else
-							if v[variable] == value then
-								table.insert(filteredList, v)
-							end
+						local subVariableValue = addon.API.Util:GetSubVariableFromList(v, subVariableList)
+
+						if subVariableValue == value then
+							table.insert(filteredList, v)
 						end
 					else
-						if subVariable then
-							if string.lower(tostring(v[variable][subVariable])) == string.lower(tostring(value)) then
-								table.insert(filteredList, v)
-							end
-						else
-							if string.lower(tostring(v[variable])) == string.lower(tostring(value)) then
-								table.insert(filteredList, v)
-							end
+						local subVariableValue = addon.API.Util:GetSubVariableFromList(v, subVariableList)
+
+						if string.lower(tostring(subVariableValue)) == string.lower(tostring(value)) then
+							table.insert(filteredList, v)
 						end
 					end
 				end
@@ -848,6 +844,45 @@ do
 		---@return height number
 		function addon.API.Util:GetScreenHeight()
 			return WorldFrame:GetHeight()
+		end
+	end
+
+	do -- METHOD
+		-- Creates a method chain. Input a list of variables names to keep track and set. The variables can be called at anytime.
+		--
+		-- DECLARATION
+		-- 		local chain = AddMethodChain({ "onFinish" })
+		-- 		return { onFinish = chain.onFinish.set } -- in return statement
+		--
+		-- CALL
+		--		chain.onFinish.variable()
+		--
+		-- USAGE
+		-- 		func().onFinish(function()
+		-- 			print("Hello, World!")
+		-- 		end)
+		---@param variableNames table
+		---@return table
+		function addon.API.Util:AddMethodChain(variableNames)
+			local chain = {}
+
+			--------------------------------
+
+			for i = 1, #variableNames do
+				local entry = {}
+				entry = {
+					["variable"] = nil,
+					["set"] = function(...)
+						entry.variable = ...
+					end
+				}
+
+				chain[variableNames[i]] = entry
+			end
+
+			--------------------------------
+
+			return chain
 		end
 	end
 

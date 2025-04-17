@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Waypoint
 
@@ -15,6 +15,8 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
+	local WaypointFrame = InteractionWaypointFrame
+	local PinpointFrame = InteractionPinpointFrame
 	local Callback = NS.Script
 
 	--------------------------------
@@ -23,56 +25,56 @@ function NS.Script:Load()
 
 	do
 		function Callback:ShowWaypoint(bypass, sfx)
-			local isWaypointVisible = (InteractionWaypointFrame.Line:GetAlpha() >= .75)
+			local isWaypointVisible = (WaypointFrame.Line:GetAlpha() >= .75)
 			local isInPinRange = (C_Navigation.GetDistance() < 200)
 
 			--------------------------------
 
 			if not isWaypointVisible or bypass then
 				if sfx or sfx == nil then
-					addon.API.Animation:Scale(InteractionWaypointFrame.Line, 2, 50, 1000, "y")
+					addon.API.Animation:Scale(WaypointFrame.Line, 2, 50, 1000, "y")
 
 					--------------------------------
 
 					if not isInPinRange then
-						InteractionWaypointFrame.GlowAnimation.Play()
+						WaypointFrame.GlowAnimation.Play()
 
 						--------------------------------
 
-						addon.API.Animation:Fade(InteractionWaypointFrame.GlowAnimation, .25, 1, 0)
+						addon.API.Animation:Fade(WaypointFrame.GlowAnimation, .25, 1, 0)
 					end
 
 					--------------------------------
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if NS.Variables.AudioEnable then
-							if not isInPinRange and InteractionWaypointFrame:IsVisible() then
+							if not isInPinRange and WaypointFrame:IsVisible() then
 								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_SUPER_TRACK_ON)
 							end
 						end
 					end, 0)
 
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						InteractionWaypointFrame.Line:SetHeight(1000)
+						WaypointFrame.Line:SetHeight(1000)
 					end, 2)
 				else
-					InteractionWaypointFrame.Line:SetHeight(1000)
-					InteractionWaypointFrame.GlowAnimation:SetAlpha(0)
+					WaypointFrame.Line:SetHeight(1000)
+					WaypointFrame.GlowAnimation:SetAlpha(0)
 				end
 
 				--------------------------------
 
-				InteractionWaypointFrame.Line:SetAlpha(.75)
+				WaypointFrame.Line:SetAlpha(.75)
 			end
 		end
 
 		function Callback:HideWaypoint(bypass)
-			local isWaypointVisible = (InteractionWaypointFrame.Line:GetAlpha() > 0)
+			local isWaypointVisible = (WaypointFrame.Line:GetAlpha() > 0)
 
 			--------------------------------
 
 			if isWaypointVisible or bypass then
-				InteractionWaypointFrame.Line:SetAlpha(0)
+				WaypointFrame.Line:SetAlpha(0)
 			end
 		end
 
@@ -86,7 +88,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			if distance < 50 then
-				if not InteractionWaypointFrame:IsVisible() then
+				if not WaypointFrame:IsVisible() then
 					NS.Variables.State = "Invalid"
 				else
 					NS.Variables.State = "PinInvalid"
@@ -262,22 +264,22 @@ function NS.Script:Load()
 
 									if isCompleted then
 										if currentWaypointObjective then
-											InteractionPinpointFrame.Label:SetText(currentWaypointObjective)
+											PinpointFrame.Label:SetText(currentWaypointObjective)
 										else
-											InteractionPinpointFrame.Label:SetText(L["Waypoint - Ready for Turn-in"])
+											PinpointFrame.Label:SetText(L["Waypoint - Ready for Turn-in"])
 										end
 									else
 										if selectedQuestObjectives then
 											if currentWaypointObjective then
-												InteractionPinpointFrame.Label:SetText(currentWaypointObjective)
+												PinpointFrame.Label:SetText(currentWaypointObjective)
 											else
-												InteractionPinpointFrame.Label:SetText(currentQuestObjective)
+												PinpointFrame.Label:SetText(currentQuestObjective)
 											end
 										elseif isComplete then
 											if currentWaypointObjective then
-												InteractionPinpointFrame.Label:SetText(currentWaypointObjective)
+												PinpointFrame.Label:SetText(currentWaypointObjective)
 											else
-												InteractionPinpointFrame.Label:SetText(L["Waypoint - Ready for Turn-in"])
+												PinpointFrame.Label:SetText(L["Waypoint - Ready for Turn-in"])
 											end
 										end
 									end
@@ -285,15 +287,15 @@ function NS.Script:Load()
 							end
 
 							do -- FORMATTING
-								if InteractionPinpointFrame.Label:GetStringWidth() >= 300 then
-									InteractionPinpointFrame.Label:SetWidth(275)
-									InteractionPinpointFrame.Background:SetSize(300, InteractionPinpointFrame.Label:GetStringHeight() + 25)
+								if PinpointFrame.Label:GetStringWidth() >= 300 then
+									PinpointFrame.Label:SetWidth(275)
+									PinpointFrame.Background:SetSize(300, PinpointFrame.Label:GetStringHeight() + 25)
 								else
-									InteractionPinpointFrame.Label:SetWidth(InteractionPinpointFrame.Label:GetStringWidth() + 25)
-									InteractionPinpointFrame.Background:SetSize(InteractionPinpointFrame.Label:GetStringWidth() + 25, InteractionPinpointFrame.Label:GetStringHeight() + 25)
+									PinpointFrame.Label:SetWidth(PinpointFrame.Label:GetStringWidth() + 25)
+									PinpointFrame.Background:SetSize(PinpointFrame.Label:GetStringWidth() + 25, PinpointFrame.Label:GetStringHeight() + 25)
 								end
 
-								InteractionWaypointFrame.Distance:SetText(addon.API.Util:FormatNumber(string.format("%.0f", navDistance)) .. " yds")
+								WaypointFrame.Distance:SetText(addon.API.Util:FormatNumber(string.format("%.0f", navDistance)) .. " yds")
 							end
 						else -- OUT OF VIEW
 							if
@@ -311,14 +313,14 @@ function NS.Script:Load()
 								SuperTrackedFrame.DistanceText:SetAlpha(1)
 							end
 
-							InteractionPinpointFrame:Hide()
-							InteractionWaypointFrame:Hide()
+							PinpointFrame:Hide()
+							WaypointFrame:Hide()
 						end
 					end
 				end
 			else -- SHOW BLIZZARD
-				InteractionPinpointFrame:Hide()
-				InteractionWaypointFrame:Hide()
+				PinpointFrame:Hide()
+				WaypointFrame:Hide()
 
 				SuperTrackedFrame.Icon:SetAlpha(1)
 				SuperTrackedFrame.Arrow:SetAlpha(1)
@@ -342,422 +344,449 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		InteractionPinpointFrame.SetIntroAnimation = function(state, stateIsDistance)
-			Callback.Playback = true
+		do -- PINPOINT
+			do -- INTRO
+				function PinpointFrame:PlayIntroAnimation(state, stateIsDistance)
+					Callback.Playback = true
 
-			--------------------------------
+					--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if (not stateIsDistance and NS.Variables.State == state) or (stateIsDistance and NS.Variables.StateDistance == state) then
-					Callback.Playback = false
+					addon.Libraries.AceTimer:ScheduleTimer(function()
+						if (not stateIsDistance and NS.Variables.State == state) or (stateIsDistance and NS.Variables.StateDistance == state) then
+							Callback.Playback = false
+						end
+					end, 1)
 				end
-			end, 1)
+			end
+
+			do -- UPDATE
+				function PinpointFrame:UpdateAnimation()
+					local lastState = Callback.LastState
+					local state = NS.Variables.State
+
+					--------------------------------
+
+					do -- PINPOINT
+						do -- BLOCKED
+							if state == "Blocked" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									if NS.Variables.AudioEnable then
+										addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_BUTTON_CLICK_ON)
+									end
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
+
+									-- ALPHA -- PinpointFrame
+									addon.API.Animation:Fade(PinpointFrame, .5, PinpointFrame:GetAlpha(), 1)
+
+									-- SCALE -- PinpointFrame
+									addon.API.Animation:Scale(PinpointFrame, 1, PinpointFrame:GetScale(), 1)
+
+									-- POSITION -- PinpointFrame
+									addon.API.Animation:Move(PinpointFrame, .5, "CENTER", select(5, PinpointFrame:GetPoint()), NS.Variables.BLOCKED_HEIGHT, "y")
+
+									-- ALPHA -- PinpointFrame.Line
+									addon.API.Animation:Fade(PinpointFrame.Line, .25, PinpointFrame.Line:GetAlpha(), 0)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									WaypointFrame.Distance:Hide()
+
+									-- ALPHA -- WaypointFrame.Distance
+									WaypointFrame.Distance:SetAlpha(0)
+
+									-- SCALE -- WaypointFrame.Distance
+									WaypointFrame.Distance:SetScale(1)
+
+									-- ALPHA -- WaypointFrame.Line
+									WaypointFrame.Line:SetAlpha(1)
+
+									-- SCALE -- WaypointFrame.Line
+									WaypointFrame.Line:SetScale(1)
+								end
+
+								if (not C_Navigation.WasClampedToScreen()) then
+									-- VISIBILITY -- WaypointFrame
+									WaypointFrame:Hide()
+								end
+
+								-- ALPHA -- SuperTrackedFrame
+								SuperTrackedFrame:SetAlpha(1)
+							end
+						end
+
+						do -- NOT BLOCKED
+							if state == "NotBlocked" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									if NS.Variables.AudioEnable then
+										addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_BUTTON_CLICK_OFF)
+									end
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
+
+									-- ALPHA -- PinpointFrame
+									addon.API.Animation:Fade(PinpointFrame, .5, PinpointFrame:GetAlpha(), 1)
+
+									-- SCALE -- PinpointFrame
+									addon.API.Animation:Scale(PinpointFrame, 1, PinpointFrame:GetScale(), 1)
+
+									-- POSITION -- PinpointFrame
+									addon.API.Animation:Move(PinpointFrame, .5, "CENTER", select(5, PinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
+
+									-- ALPHA -- PinpointFrame.Line
+									addon.API.Animation:Fade(PinpointFrame.Line, .25, PinpointFrame.Line:GetAlpha(), 1)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "content.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									WaypointFrame.Distance:Hide()
+
+									-- ALPHA -- WaypointFrame.Distance
+									WaypointFrame.Distance:SetAlpha(0)
+
+									-- SCALE -- WaypointFrame.Distance
+									WaypointFrame.Distance:SetScale(1)
+
+									-- ALPHA -- WaypointFrame.Line
+									WaypointFrame.Line:SetAlpha(1)
+
+									-- SCALE -- WaypointFrame.Line
+									WaypointFrame.Line:SetScale(1)
+								end
+
+								if (not C_Navigation.WasClampedToScreen()) then
+									-- VISIBILITY -- WaypointFrame
+									WaypointFrame:Hide()
+								end
+
+								-- ALPHA -- SuperTrackedFrame
+								SuperTrackedFrame:SetAlpha(1)
+							end
+						end
+
+						do -- INVALID
+							if state == "Invalid" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 0)
+
+									-- ALPHA -- PinpointFrame
+									-- addon.API.Animation:Fade(PinpointFrame, .5, PinpointFrame:GetAlpha(), 1)
+
+									-- SCALE -- PinpointFrame
+									-- addon.API.Animation:Scale(PinpointFrame, 1, PinpointFrame:GetScale(), 1)
+
+									-- POSITION -- PinpointFrame
+									-- addon.API.Animation:Move(PinpointFrame, .5, "CENTER", select(5, PinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
+
+									-- ALPHA -- PinpointFrame.Line
+									-- addon.API.Animation:Fade(PinpointFrame.Line, .25, PinpointFrame.Line:GetAlpha(), 0)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									-- PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									-- WaypointFrame.Distance:Hide()
+
+									-- ALPHA -- WaypointFrame.Distance
+									-- WaypointFrame.Distance:SetAlpha(0)
+
+									-- SCALE -- WaypointFrame.Distance
+									-- WaypointFrame.Distance:SetScale(1)
+
+									-- ALPHA -- WaypointFrame.Line
+									-- WaypointFrame.Line:SetAlpha(1)
+
+									-- SCALE -- WaypointFrame.Line
+									-- WaypointFrame.Line:SetScale(1)
+								end
+
+								-- if (not C_Navigation.WasClampedToScreen()) then
+								-- VISIBILITY -- WaypointFrame
+								-- WaypointFrame:Hide()
+								-- end
+							end
+						end
+					end
+
+					do -- WAYPOINT
+						do -- IN RANGE (PIN)
+							if state == "Pin" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									if NS.Variables.AudioEnable then
+										addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_CHAT_SHARE)
+									end
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									-- SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									-- PinpointFrame:SetAlpha(0)
+
+									-- SCALE -- PinpointFrame
+									-- PinpointFrame:SetScale(1)
+
+									-- POSITION -- PinpointFrame
+									-- PinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
+
+									-- ALPHA -- PinpointFrame.Line
+									-- PinpointFrame.Line:SetAlpha(0)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									-- PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									WaypointFrame.Distance:Show()
+
+									-- ALPHA -- WaypointFrame.Distance
+									addon.API.Animation:Fade(WaypointFrame.Distance, .5, WaypointFrame.Distance:GetAlpha(), 1)
+
+									-- SCALE -- WaypointFrame.Distance
+									addon.API.Animation:Scale(WaypointFrame.Distance, 1, WaypointFrame.Distance:GetScale(), 1.5)
+
+									-- ALPHA -- WaypointFrame.Line
+									addon.API.Animation:Fade(WaypointFrame.Line, .5, WaypointFrame.Line:GetAlpha(), .75)
+
+									-- SCALE -- WaypointFrame.Line
+									addon.API.Animation:Scale(WaypointFrame.Line, 1, WaypointFrame.Line:GetScale(), 1)
+								end
+
+								if (not C_Navigation.WasClampedToScreen()) then
+									-- VISIBILITY -- WaypointFrame
+									WaypointFrame:Show()
+
+									-- ALPHA -- SuperTrackedFrame
+									SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									PinpointFrame:SetAlpha(0)
+								end
+							end
+						end
+
+						do -- INVALID (PIN)
+							if state == "PinInvalid" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									-- SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									PinpointFrame:SetAlpha(0)
+
+									-- SCALE -- PinpointFrame
+									-- PinpointFrame:SetScale(1)
+
+									-- POSITION -- PinpointFrame
+									-- PinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
+
+									-- ALPHA -- PinpointFrame.Line
+									-- PinpointFrame.Line:SetAlpha(0)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									-- PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									WaypointFrame.Distance:Show()
+
+									-- ALPHA -- WaypointFrame.Distance
+									addon.API.Animation:Fade(WaypointFrame.Distance, .5, WaypointFrame.Distance:GetAlpha(), 0)
+
+									-- SCALE -- WaypointFrame.Distance
+									addon.API.Animation:Scale(WaypointFrame.Distance, 1, WaypointFrame.Distance:GetScale(), 1.5)
+
+									-- ALPHA -- WaypointFrame.Line
+									addon.API.Animation:Fade(WaypointFrame.Line, .5, WaypointFrame.Line:GetAlpha(), 0)
+
+									-- SCALE -- WaypointFrame.Line
+									addon.API.Animation:Scale(WaypointFrame.Line, 1, WaypointFrame.Line:GetScale(), 1)
+								end
+
+								if (not C_Navigation.WasClampedToScreen()) then
+									-- VISIBILITY -- WaypointFrame
+									if WaypointFrame.Line:GetAlpha() <= .1 then
+										WaypointFrame:Hide()
+									else
+										WaypointFrame:Show()
+									end
+
+									-- ALPHA -- SuperTrackedFrame
+									SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									PinpointFrame:SetAlpha(0)
+								end
+
+								-- ALPHA -- SuperTrackedFrame
+								SuperTrackedFrame:SetAlpha(0)
+							end
+						end
+
+						do -- OUT RANGE
+							if state == "OutDistance" then
+								if lastState ~= state then
+									PinpointFrame:PlayIntroAnimation(state, false)
+
+									if NS.Variables.AudioEnable then
+										addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_SUPER_TRACK_OFF)
+									end
+
+									--------------------------------
+
+									-- ALPHA -- SuperTrackedFrame
+									-- SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									-- PinpointFrame:SetAlpha(0)
+
+									-- SCALE -- PinpointFrame
+									-- PinpointFrame:SetScale(1)
+
+									-- POSITION -- PinpointFrame
+									-- PinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
+
+									-- ALPHA -- PinpointFrame.Line
+									-- PinpointFrame.Line:SetAlpha(0)
+
+									-- BACKGROUND TEXTURE -- PinpointFrame.BackgroundTexture
+									-- PinpointFrame.BackgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
+
+									--------------------------------
+
+									-- VISIBILITY -- WaypointFrame.Distance
+									WaypointFrame.Distance:Show()
+
+									-- ALPHA -- WaypointFrame.Distance
+									addon.API.Animation:Fade(WaypointFrame.Distance, .5, WaypointFrame.Distance:GetAlpha(), .75)
+
+									-- SCALE -- WaypointFrame.Distance
+									addon.API.Animation:Scale(WaypointFrame.Distance, 1, WaypointFrame.Distance:GetScale(), 1)
+
+									-- ALPHA -- WaypointFrame.Line
+									addon.API.Animation:Fade(WaypointFrame.Line, .5, WaypointFrame.Line:GetAlpha(), 1)
+
+									-- SCALE -- WaypointFrame.Line
+									addon.API.Animation:Scale(WaypointFrame.Line, 1, WaypointFrame.Line:GetScale(), 1)
+
+									-- [ADDON]
+									-- Show Waypoint Animation
+									-- If last State was not "Pin"
+
+									if lastState ~= "Pin" then
+										Callback:NewWaypoint(false)
+									end
+								end
+
+								if (not C_Navigation.WasClampedToScreen()) then
+									-- VISIBILITY -- WaypointFrame
+									WaypointFrame:Show()
+
+									-- ALPHA -- SuperTrackedFrame
+									SuperTrackedFrame:SetAlpha(0)
+
+									-- ALPHA -- PinpointFrame
+									PinpointFrame:SetAlpha(0)
+								end
+							end
+						end
+					end
+
+					--------------------------------
+
+					Callback.LastState = state
+				end
+			end
+
+
+			do -- SHINE
+				do -- PLAY
+					function PinpointFrame.Shine.Play_StopEvent()
+
+					end
+
+					function PinpointFrame.Shine:Play()
+						addon.API.Animation:Fade(PinpointFrame.Shine, .25, 0, 1, addon.API.Animation.EaseExpo)
+
+						--------------------------------
+
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							addon.API.Animation:Fade(PinpointFrame.Shine, .25, 1, 0, addon.API.Animation.EaseSine)
+						end, .125)
+					end
+				end
+			end
 		end
 
-		InteractionPinpointFrame.UpdateAnimation = function()
-			local lastState = Callback.LastState
-			local state = NS.Variables.State
+		do -- MAIN
+			do -- SHOW
+				function Callback:ShowWithAnimation_StopEvent()
 
-			--------------------------------
-
-			do -- PINPOINT
-				do -- BLOCKED
-					if state == "Blocked" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
-
-							if NS.Variables.AudioEnable then
-								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_BUTTON_CLICK_ON)
-							end
-
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
-
-							-- ALPHA -- InteractionPinpointFrame
-							addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
-
-							-- SCALE -- InteractionPinpointFrame
-							addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
-
-							-- POSITION -- InteractionPinpointFrame
-							addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.BLOCKED_HEIGHT, "y")
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:Hide()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:SetAlpha(0)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:SetScale(1)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							InteractionWaypointFrame.Line:SetAlpha(1)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							InteractionWaypointFrame.Line:SetScale(1)
-						end
-
-						if (not C_Navigation.WasClampedToScreen()) then
-							-- VISIBILITY -- InteractionWaypointFrame
-							InteractionWaypointFrame:Hide()
-						end
-
-						-- ALPHA -- SuperTrackedFrame
-						SuperTrackedFrame:SetAlpha(1)
-					end
 				end
 
-				do -- NOT BLOCKED
-					if state == "NotBlocked" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
+				function Callback:ShowWithAnimation()
+					if not PinpointFrame:IsVisible() then
+						PinpointFrame:Show()
 
-							if NS.Variables.AudioEnable then
-								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_BUTTON_CLICK_OFF)
-							end
+						--------------------------------
 
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							-- addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 1)
-
-							-- ALPHA -- InteractionPinpointFrame
-							addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
-
-							-- SCALE -- InteractionPinpointFrame
-							addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
-
-							-- POSITION -- InteractionPinpointFrame
-							addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 1)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "content.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:Hide()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:SetAlpha(0)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:SetScale(1)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							InteractionWaypointFrame.Line:SetAlpha(1)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							InteractionWaypointFrame.Line:SetScale(1)
-						end
-
-						if (not C_Navigation.WasClampedToScreen()) then
-							-- VISIBILITY -- InteractionWaypointFrame
-							InteractionWaypointFrame:Hide()
-						end
-
-						-- ALPHA -- SuperTrackedFrame
-						SuperTrackedFrame:SetAlpha(1)
-					end
-				end
-
-				do -- INVALID
-					if state == "Invalid" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
-
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							addon.API.Animation:Fade(SuperTrackedFrame, .5, SuperTrackedFrame:GetAlpha(), 0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							-- addon.API.Animation:Fade(InteractionPinpointFrame, .5, InteractionPinpointFrame:GetAlpha(), 1)
-
-							-- SCALE -- InteractionPinpointFrame
-							-- addon.API.Animation:Scale(InteractionPinpointFrame, 1, InteractionPinpointFrame:GetScale(), 1)
-
-							-- POSITION -- InteractionPinpointFrame
-							-- addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", select(5, InteractionPinpointFrame:GetPoint()), NS.Variables.DEFAULT_HEIGHT, "y")
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							-- addon.API.Animation:Fade(InteractionPinpointFrame.Line, .25, InteractionPinpointFrame.Line:GetAlpha(), 0)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							-- InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							-- InteractionWaypointFrame.Distance:Hide()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							-- InteractionWaypointFrame.Distance:SetAlpha(0)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							-- InteractionWaypointFrame.Distance:SetScale(1)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							-- InteractionWaypointFrame.Line:SetAlpha(1)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							-- InteractionWaypointFrame.Line:SetScale(1)
-						end
-
-						-- if (not C_Navigation.WasClampedToScreen()) then
-						-- VISIBILITY -- InteractionWaypointFrame
-						-- InteractionWaypointFrame:Hide()
-						-- end
+						PinpointFrame.Shine:Play()
+						addon.API.Animation:Fade(SuperTrackedFrame, .25, 0, 1)
 					end
 				end
 			end
 
-			do -- WAYPOINT
-				do -- IN RANGE (PIN)
-					if state == "Pin" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
+			do -- HIDE
+				function Callback:HideWithAnimation_StopEvent()
 
-							if NS.Variables.AudioEnable then
-								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_CHAT_SHARE)
-							end
+				end
 
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							-- SuperTrackedFrame:SetAlpha(0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetAlpha(0)
-
-							-- SCALE -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetScale(1)
-
-							-- POSITION -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							-- InteractionPinpointFrame.Line:SetAlpha(0)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							-- InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:Show()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 1)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), .75)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
-						end
-
-						if (not C_Navigation.WasClampedToScreen()) then
-							-- VISIBILITY -- InteractionWaypointFrame
-							InteractionWaypointFrame:Show()
-
-							-- ALPHA -- SuperTrackedFrame
+				function Callback:HideWithAnimation()
+					if SuperTrackedFrame:GetAlpha() == 1 then
+						addon.Libraries.AceTimer:ScheduleTimer(function()
 							SuperTrackedFrame:SetAlpha(0)
+						end, .5)
 
-							-- ALPHA -- InteractionPinpointFrame
-							InteractionPinpointFrame:SetAlpha(0)
-						end
-					end
-				end
+						--------------------------------
 
-				do -- INVALID (PIN)
-					if state == "PinInvalid" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
-
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							-- SuperTrackedFrame:SetAlpha(0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							InteractionPinpointFrame:SetAlpha(0)
-
-							-- SCALE -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetScale(1)
-
-							-- POSITION -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							-- InteractionPinpointFrame.Line:SetAlpha(0)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							-- InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:Show()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), 0)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1.5)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 0)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
-						end
-
-						if (not C_Navigation.WasClampedToScreen()) then
-							-- VISIBILITY -- InteractionWaypointFrame
-							if InteractionWaypointFrame.Line:GetAlpha() <= .1 then
-								InteractionWaypointFrame:Hide()
-							else
-								InteractionWaypointFrame:Show()
-							end
-
-							-- ALPHA -- SuperTrackedFrame
-							SuperTrackedFrame:SetAlpha(0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							InteractionPinpointFrame:SetAlpha(0)
-						end
-
-						-- ALPHA -- SuperTrackedFrame
-						SuperTrackedFrame:SetAlpha(0)
-					end
-				end
-
-				do -- OUT RANGE
-					if state == "OutDistance" then
-						if lastState ~= state then
-							InteractionPinpointFrame.SetIntroAnimation(state, false)
-
-							if NS.Variables.AudioEnable then
-								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_SUPER_TRACK_OFF)
-							end
-
-							--------------------------------
-
-							-- ALPHA -- SuperTrackedFrame
-							-- SuperTrackedFrame:SetAlpha(0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetAlpha(0)
-
-							-- SCALE -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetScale(1)
-
-							-- POSITION -- InteractionPinpointFrame
-							-- InteractionPinpointFrame:SetPoint("CENTER", SuperTrackedFrame, 0, blockedHeight)
-
-							-- ALPHA -- InteractionPinpointFrame.Line
-							-- InteractionPinpointFrame.Line:SetAlpha(0)
-
-							-- BACKGROUND TEXTURE -- InteractionPinpointFrame.backgroundTexture
-							-- InteractionPinpointFrame.backgroundTexture:SetTexture(NS.Variables.PATH .. "border.png")
-
-							--------------------------------
-
-							-- VISIBILITY -- InteractionWaypointFrame.Distance
-							InteractionWaypointFrame.Distance:Show()
-
-							-- ALPHA -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Fade(InteractionWaypointFrame.Distance, .5, InteractionWaypointFrame.Distance:GetAlpha(), .75)
-
-							-- SCALE -- InteractionWaypointFrame.Distance
-							addon.API.Animation:Scale(InteractionWaypointFrame.Distance, 1, InteractionWaypointFrame.Distance:GetScale(), 1)
-
-							-- ALPHA -- InteractionWaypointFrame.Line
-							addon.API.Animation:Fade(InteractionWaypointFrame.Line, .5, InteractionWaypointFrame.Line:GetAlpha(), 1)
-
-							-- SCALE -- InteractionWaypointFrame.Line
-							addon.API.Animation:Scale(InteractionWaypointFrame.Line, 1, InteractionWaypointFrame.Line:GetScale(), 1)
-
-							-- [ADDON]
-							-- Show Waypoint Animation
-							-- If last State was not "Pin"
-
-							if lastState ~= "Pin" then
-								Callback:NewWaypoint(false)
-							end
-						end
-
-						if (not C_Navigation.WasClampedToScreen()) then
-							-- VISIBILITY -- InteractionWaypointFrame
-							InteractionWaypointFrame:Show()
-
-							-- ALPHA -- SuperTrackedFrame
-							SuperTrackedFrame:SetAlpha(0)
-
-							-- ALPHA -- InteractionPinpointFrame
-							InteractionPinpointFrame:SetAlpha(0)
-						end
+						addon.API.Animation:Fade(SuperTrackedFrame, .25, 1, 0)
+						addon.API.Animation:Move(PinpointFrame, .5, "CENTER", NS.Variables.DEFAULT_HEIGHT, NS.Variables.ANIMATION_HEIGHT, "y")
 					end
 				end
 			end
-
-			--------------------------------
-
-			Callback.LastState = state
-		end
-
-		--------------------------------
-
-		Callback.ShowWithAnimation = function()
-			if not InteractionPinpointFrame:IsVisible() then
-				InteractionPinpointFrame:Show()
-
-				--------------------------------
-
-				InteractionPinpointFrame.Shine.Play()
-				addon.API.Animation:Fade(SuperTrackedFrame, .25, 0, 1)
-			end
-		end
-
-		Callback.HideWithAnimation = function()
-			if SuperTrackedFrame:GetAlpha() == 1 then
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					SuperTrackedFrame:SetAlpha(0)
-				end, .5)
-
-				--------------------------------
-
-				addon.API.Animation:Fade(SuperTrackedFrame, .25, 1, 0)
-				addon.API.Animation:Move(InteractionPinpointFrame, .5, "CENTER", NS.Variables.DEFAULT_HEIGHT, NS.Variables.ANIMATION_HEIGHT, "y")
-			end
-		end
-
-		InteractionPinpointFrame.Shine.Play = function()
-			addon.API.Animation:Fade(InteractionPinpointFrame.Shine, .25, 0, 1, addon.API.Animation.EaseExpo)
-
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				addon.API.Animation:Fade(InteractionPinpointFrame.Shine, .25, 1, 0, addon.API.Animation.EaseSine)
-			end, .125)
 		end
 	end
 
@@ -774,12 +803,12 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		InteractionPinpointFrame:SetScript("OnUpdate", function()
+		PinpointFrame:SetScript("OnUpdate", function()
 			if NS.Variables.State == "Invalid" then
-				if InteractionPinpointFrame:GetAlpha() > .05 then
-					InteractionPinpointFrame:SetAlpha(InteractionPinpointFrame:GetAlpha() - .05)
+				if PinpointFrame:GetAlpha() > .05 then
+					PinpointFrame:SetAlpha(PinpointFrame:GetAlpha() - .05)
 				else
-					InteractionPinpointFrame:SetAlpha(0)
+					PinpointFrame:SetAlpha(0)
 				end
 			end
 		end)
@@ -790,8 +819,8 @@ function NS.Script:Load()
 		Events:RegisterEvent("SUPER_TRACKING_CHANGED")
 		Events:SetScript("OnEvent", function(self, event, ...)
 			if event == "SUPER_TRACKING_CHANGED" then
-				InteractionPinpointFrame:Hide()
-				InteractionWaypointFrame:Hide()
+				PinpointFrame:Hide()
+				WaypointFrame:Hide()
 
 				--------------------------------
 
@@ -816,7 +845,7 @@ function NS.Script:Load()
 			Callback:Update()
 
 			if not isInInstance then
-				InteractionPinpointFrame.UpdateAnimation()
+				PinpointFrame:UpdateAnimation()
 			end
 
 			--------------------------------

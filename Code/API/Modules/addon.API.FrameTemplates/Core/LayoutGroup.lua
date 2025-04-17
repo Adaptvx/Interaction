@@ -7,7 +7,7 @@ local CallbackRegistry = addon.CallbackRegistry
 --------------------------------
 
 do -- MAIN
-	NS.LayoutGroupSortHooks = {}
+
 end
 
 do -- CONSTANTS
@@ -536,29 +536,6 @@ do
 end
 
 --------------------------------
--- HOOKS
---------------------------------
-
-do
-	-- Adds the identifier name as a hook to call the sort function of a layout group. It can be called with [addon.API.FrameTemplates:LayoutGroupSortHooks_Call(id)]
-	---@param id string
-	---@param func function
-	function NS:LayoutGroupSortHooks_Add(id, func)
-		if NS.LayoutGroupSortHooks[id] == nil then
-			NS.LayoutGroupSortHooks[id] = func
-		end
-	end
-
-	-- Calls the sort function assigned with the identifier name.
-	---@param id string
-	function NS:LayoutGroupSortHooks_Call(id)
-		if NS.LayoutGroupSortHooks[id] then
-			NS.LayoutGroupSortHooks[id]()
-		end
-	end
-end
-
---------------------------------
 -- TEMPLATES
 --------------------------------
 
@@ -578,12 +555,13 @@ do
 	-- customOffset (function(frame, element, direction, currentOffset))
 	-- customLayoutSort (string) -> string to match the function name
 	-- customLayoutSort_data (table)
-	-- customSortHookID (function(frame))
 	---@param parent any
 	---@param data table
 	---@param name string
+	---@return any Frame
+	---@return function Sort
 	function NS:CreateLayoutGroup(parent, data, name)
-		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data, customSortHookID = data.point, data.direction, data.resize, data.padding, data.distribute, data.distributeResizeElements, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data, data.customSortHookID
+		local point, direction, resize, padding, distribute, distributeResizeElements, excludeHidden, headerCallback, footerCallback, autoSort, customOffset, customLayoutSort, customLayoutSort_data = data.point, data.direction, data.resize, data.padding, data.distribute, data.distributeResizeElements, data.excludeHidden, data.headerCallback, data.footerCallback, data.autoSort, data.customOffset, data.customLayoutSort, data.customLayoutSort_data
 
 		--------------------------------
 
@@ -634,14 +612,12 @@ do
 			end
 
 			do -- EVENTS
-				if customSortHookID then
-					NS:LayoutGroupSortHooks_Add(customSortHookID, Frame.Sort)
-				end
+
 			end
 		end
 
 		--------------------------------
 
-		return Frame
+		return Frame, Frame.Sort
 	end
 end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.AutoSelectOptions
 
@@ -30,7 +30,7 @@ do -- CONSTANTS
 		[107826] = NS.Variables.ALWAYS, -- Trading Post
 		[48598] = NS.Variables.ALWAYS, -- Katy Stampwhistle
 		[120733] = NS.Variables.ALWAYS, -- Theater Troupe
-	};
+	}
 end
 
 --------------------------------

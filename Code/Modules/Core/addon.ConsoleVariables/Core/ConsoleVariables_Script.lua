@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.ConsoleVariables
 
@@ -177,7 +177,7 @@ function NS.Script:Load()
 		-- CONTROLLER
 		--------------------------------
 
-		if addon.Variables.Platform > 1 then
+		if addon.Input.Variables.IsController then
 			SetCVar("GamePadEnable", 1)
 		end
 

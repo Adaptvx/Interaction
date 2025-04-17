@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Input
 
@@ -14,13 +14,26 @@ NS.Variables = {}
 
 do -- MAIN
 	do -- INPUT DEVICE
-		NS.Variables.SimulateController = false -- DEBUG
+		NS.Variables.SimulateController = false -- DEBUG // Simulate controller navigation with keyboard shortcuts.
+		NS.Variables.IsControllerEnabled = false
+
 		NS.Variables.IsController = nil
+		NS.Variables.IsPlaystation = nil
+		NS.Variables.IsXbox = nil
 		NS.Variables.IsPC = nil
 
 		--------------------------------
 
-		NS.Variables.IsControllerEnabled = false
+		do -- LOGIC
+			do -- FUNCTIONS
+				function NS.Variables:UpdatePlatform()
+					NS.Variables.IsController = (addon.Variables.Platform == 2 or addon.Variables.Platform == 3)
+					NS.Variables.IsPlaystation = (addon.Variables.Platform == 2)
+					NS.Variables.IsXbox = (addon.Variables.Platform == 3)
+					NS.Variables.IsPC = (addon.Variables.Platform == 1)
+				end
+			end
+		end
 	end
 
 	do -- NAVIGATION
@@ -65,7 +78,7 @@ do -- MAIN
 					NS.Variables.Key_Previous = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PREVIOUS, [2] = "PADLTRIGGER" }
 					NS.Variables.Key_Prompt_Accept = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_ACCEPT, [2] = "PADLSHOULDER" }
 					NS.Variables.Key_Prompt_Decline = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_PROMPT_DECLINE, [2] = "PADRSHOULDER" }
-					NS.Variables.Key_Quest_NextReward = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD, [2] = "" }
+					NS.Variables.Key_Quest_NextReward = { [1] = addon.Database.DB_GLOBAL.profile.INT_KEY_QUEST_NEXTREWARD, [2] = nil }
 				end
 
 				do -- INTERACT KEY
@@ -80,11 +93,23 @@ do -- MAIN
 			end
 
 			function NS.Variables:GetKeybindForPlatform(variable)
-				if addon.Variables.Platform == 1 then
+				if NS.Variables.IsPC then
 					return variable[1]
 				else
 					return variable[2]
 				end
+			end
+
+			function NS.Variables:IsKey(key, keyTable)
+				for i = 1, #keyTable do
+					if key == keyTable[i] then
+						return true
+					end
+				end
+
+				--------------------------------
+
+				return false
 			end
 
 			CallbackRegistry:Add("KEYBIND_CHANGED", NS.Variables.UpdateKeybinds, 0)
@@ -99,3 +124,14 @@ end
 --------------------------------
 -- EVENTS
 --------------------------------
+
+--------------------------------
+-- SETUP
+--------------------------------
+
+do
+	CallbackRegistry:Add("ADDON_DATABASE_READY", function()
+		NS.Variables:UpdatePlatform()
+		NS.Variables:UpdateKeybinds()
+	end, 0)
+end

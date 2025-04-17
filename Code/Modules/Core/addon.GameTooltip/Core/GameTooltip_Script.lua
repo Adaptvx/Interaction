@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.GameTooltip
 
@@ -412,7 +412,7 @@ function NS.Script:Load()
 
 		do -- TOOLTIP
 			function InteractionFrame_GameTooltip:ShowComparison(self, anchorFrame)
-				if addon.Variables.IS_CLASSIC then
+				if addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 					local tooltip, shoppingTooltip1, shoppingTooltip2;
 					tooltip, anchorFrame, shoppingTooltip1, shoppingTooltip2 = GameTooltip_InitializeComparisonTooltips(self, anchorFrame);
 

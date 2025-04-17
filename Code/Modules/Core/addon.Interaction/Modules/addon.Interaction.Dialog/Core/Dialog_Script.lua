@@ -1,6 +1,10 @@
+-- [!] [addon.Interaction.Dialog] is a custom frame to display quest/gossip text in a chat-bubble format.
+-- [Dialog_Script.lua] is the back-end (logic & behavior)
+-- for [Dialog_Elements.lua].
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Dialog
 
@@ -10,12 +14,16 @@ NS.Script = {}
 
 --------------------------------
 
+local GetTitleForQuestID = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestInfo
+
+--------------------------------
+
 function NS.Script:Load()
 	--------------------------------
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionDialogFrame
+	local Frame = InteractionFrame.DialogFrame
 	local Callback = NS.Script
 
 	--------------------------------
@@ -23,215 +31,209 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.UpdateSize = function()
-			local limitWidth = 350
-			Frame.Content.Label:SetWidth(limitWidth)
-			Frame.Content.Measurement:SetWidth(limitWidth)
-			local wrap = Frame.Content.Label:GetStringWidth() >= limitWidth and Frame.Content.Measurement:GetStringHeight() >= 25
-
-			--------------------------------
-
-			if wrap then
-				Frame:SetWidth(limitWidth + 50)
-				Frame.DialogBackground:SetWidth(Frame:GetWidth())
-				Frame.Content.Label:SetWidth(limitWidth)
-				Frame.Content.Measurement:SetWidth(limitWidth)
-			else
-				Frame:SetWidth(Frame.Content.Label:GetStringWidth() + 50)
-				Frame.DialogBackground:SetWidth(Frame:GetWidth())
-				Frame.Content.Label:SetWidth(Frame.Content.Label:GetStringWidth() + 200)
-				Frame.Content.Measurement:SetWidth(Frame.Content.Label:GetStringWidth() + 200)
+		do -- UPDATE
+			function Frame:UpdateAll()
+				Frame:UpdateLayout()
+				Frame:UpdatePosition()
+				Frame:UpdateStyle()
 			end
 
-			Frame.Content.Label:ClearAllPoints()
-			Frame.Content.Label:SetPoint("CENTER", 0, -100)
-
-			--------------------------------
-
-			Frame:SetHeight(Frame.Content.Measurement:GetStringHeight() + 50)
-			Frame.Content.Label:SetHeight(Frame.Content.Measurement:GetStringHeight() + 200)
-			Frame.DialogBackground:SetHeight(Frame:GetHeight())
-		end
-
-		Frame.UpdateTitle = function()
-			Frame.Title.Progress:SetWidth(Frame.Title.Label:GetStringWidth())
-			Frame.Title.Progress.Bar:SetWidth(Frame.Title.Progress:GetWidth() - 5)
-
-			--------------------------------
-
-			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST and (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible()) then
-				Frame.Title.Label:Hide()
-			else
-				Frame.Title.Label:Show()
+			function Frame:UpdateLayout()
+				CallbackRegistry:Trigger("UpdateDynamicTextSize Dialog.Content.Text")
+				CallbackRegistry:Trigger("LayoutGroupSort Dialog.Title")
 			end
-		end
 
-		Frame.UpdateStyle = function()
-			local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-			local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+			function Frame:UpdatePosition()
+				if not Frame.hidden then
+					local NAMEPLATE = C_NamePlate.GetNamePlateForUnit("npc")
+					local NAMEPLATE_PLAYER = C_NamePlate.GetNamePlateForUnit("player")
 
-			--------------------------------
+					--------------------------------
 
-			if NS.Variables.Temp_IsEmoteDialog then
-				--------------------------------
-				-- TEXT PLAYBACK STATE
-				--------------------------------
+					do -- STATE
+						local isValidNameplate = (NAMEPLATE and NAMEPLATE ~= NAMEPLATE_PLAYER and (not UnitIsGameObject("npc") and not UnitIsGameObject("questnpc")))
 
-				Frame.Content.Label.freezePlayback = true
+						--------------------------------
 
-				--------------------------------
-				-- BACKGROUND
-				--------------------------------
+						if isValidNameplate then
+							Frame.REF_BACKGROUND_DIALOG_TAIL:Show()
 
-				Frame.DialogBackgroundTexture:SetAlpha(0)
-				Frame.DialogBackground.TailTexture:SetAlpha(0)
+							--------------------------------
 
-				--------------------------------
-				-- TEXT
-				--------------------------------
+							Frame:ClearAllPoints()
+							Frame:SetPoint("BOTTOM", NAMEPLATE, 0, 35)
 
-				Frame.Content.Label:SetJustifyH("CENTER")
-				Frame.Content.Label:SetTextColor(.93, .52, .31)
+							--------------------------------
 
-				--------------------------------
-				-- SCROLL
-				--------------------------------
+							Frame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+						else
+							Frame.REF_BACKGROUND_DIALOG_TAIL:Hide()
 
-				Frame.ScrollBackground:Hide()
+							--------------------------------
 
-				--------------------------------
-				-- BACKDROP
-				--------------------------------
+							-- UI Direction
+							-- 1 -> LEFT
+							-- 2 -> RIGHT
 
-				Frame.RusticBackground:Show()
-			elseif NS.Variables.Temp_IsScrollDialog then
-				--------------------------------
-				-- TEXT ANIMATION
-				--------------------------------
+							-- Dialog Direction:
+							-- 1 -> TOP
+							-- 2 -> CENTER
+							-- 3 -> BOTTOM
 
-				Frame.Content.Label.freezePlayback = false
+							local uiDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
+							local dialogDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG
+							local mirrorQuest = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR
 
-				--------------------------------
-				-- BACKGROUND
-				--------------------------------
+							local screenWidth = addon.API.Main:GetScreenWidth()
+							local screenHeight = addon.API.Main:GetScreenHeight()
+							local questWidth = InteractionFrame.QuestFrame:GetWidth() + 50 -- Padding
+							local questHeight = InteractionFrame.QuestFrame:GetHeight() + 50 -- Padding
+							local dialogWidth = NS.Variables.FRAME_MAX_WIDTH + 25
+							local dialogHeight = InteractionFrame.DialogFrame:GetHeight()
 
-				Frame.DialogBackgroundTexture:SetAlpha(0)
-				Frame.DialogBackground.TailTexture:SetAlpha(0)
+							local dialogMaxWidth = NS.Variables.FRAME_MAX_WIDTH
+							local quarterWidth = (screenWidth - dialogMaxWidth) / 2
+							local quarterEdgePadding = (quarterWidth - questWidth) / 2
 
-				--------------------------------
-				-- TEXT
-				--------------------------------
+							local offsetX = 0
+							local offsetY = (screenHeight - questHeight) / 2
 
-				Frame.Content.Label:SetJustifyH("CENTER")
+							if mirrorQuest then
+								local offset = (screenWidth - questWidth - quarterEdgePadding) + (dialogWidth / 2)
 
-				if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-					Frame.Content.Label:SetTextColor(1, 1, 1)
-				else
-					Frame.Content.Label:SetTextColor(.1, .1, .1)
-				end
+								if uiDirection == 1 then
+									offsetX = -(screenWidth / 2) + offset
+								else
+									offsetX = (screenWidth / 2) - offset
+								end
+							end
 
-				--------------------------------
-				-- SCROLL
-				--------------------------------
+							Frame:ClearAllPoints()
+							if dialogDirection == 1 then
+								Frame:SetPoint("TOP", UIParent, offsetX, -offsetY)
+							elseif dialogDirection == 2 then
+								Frame:SetPoint("CENTER", UIParent, offsetX, 0)
+							elseif dialogDirection == 3 then
+								Frame:SetPoint("BOTTOM", UIParent, offsetX, offsetY)
+							end
 
-				Frame.ScrollBackground.ShowWithAnimation()
+							--------------------------------
 
-				--------------------------------
-				-- BACKDROP
-				--------------------------------
-
-				Frame.RusticBackground:Hide()
-			elseif NS.Variables.Temp_IsStylisedDialog then
-				--------------------------------
-				-- TEXT PLAYBACK STATE
-				--------------------------------
-
-				Frame.Content.Label.freezePlayback = false
-
-				--------------------------------
-				-- BACKGROUND
-				--------------------------------
-
-				Frame.DialogBackgroundTexture:SetAlpha(0)
-				Frame.DialogBackground.TailTexture:SetAlpha(0)
-
-				--------------------------------
-				-- TEXT
-				--------------------------------
-
-				Frame.Content.Label:SetJustifyH("CENTER")
-				Frame.Content.Label:SetTextColor(1, .87, .67)
-
-				--------------------------------
-				-- SCROLL
-				--------------------------------
-
-				Frame.ScrollBackground:Hide()
-
-				--------------------------------
-				-- BACKDROP
-				--------------------------------
-
-				Frame.RusticBackground:Show()
-			else
-				--------------------------------
-				-- TEXT ANIMATION
-				--------------------------------
-
-				Frame.Content.Label.freezePlayback = false
-
-				--------------------------------
-				-- BACKGROUND
-				--------------------------------
-
-				Frame.DialogBackgroundTexture:SetAlpha(1)
-				Frame.DialogBackground.TailTexture:SetAlpha(1)
-
-				if not interactTargetNameplate or interactTargetIsSelf then
-					Frame.DialogBackground.Tail:SetAlpha(0)
-				else
-					if Frame.DialogBackground.Tail:GetAlpha() == 0 then
-						Frame.DialogBackground.Tail:SetAlpha(1)
+							Frame:SetFrameStrata(NS.Variables.FRAME_STRATA_MAX)
+						end
 					end
 				end
-
-				--------------------------------
-				-- TEXT
-				--------------------------------
-
-				Frame.Content.Label:SetJustifyH("CENTER")
-
-				if addon.Theme.IsDarkTheme_Dialog then
-					Frame.Content.Label:SetTextColor(1, 1, 1)
-				else
-					Frame.Content.Label:SetTextColor(1, .87, .67)
-				end
-
-				--------------------------------
-				-- SCROLL
-				--------------------------------
-
-				Frame.ScrollBackground:Hide()
-
-				--------------------------------
-				-- BACKDROP
-				--------------------------------
-
-				Frame.RusticBackground:Hide()
 			end
 		end
 
-		Frame.UpdateScrollDialog = function()
-			local interactTargetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
-			local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
-			local isItem = (addon.API.Util:FindItemInInventory(UnitName("npc") or "Empty Result") or addon.API.Util:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
+		do -- STYLE
+			function Frame:Style_MatchScrollCriteria()
+				local targetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
+				local targetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+				local targetIsItem = (addon.API.Util:FindItemInInventory(UnitName("npc") or "Empty Result") or addon.API.Util:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
 
-			--------------------------------
+				--------------------------------
 
-			if interactTargetIsGameObject or interactTargetIsSelf or isItem then
-				return true
-			else
-				return false
+				if targetIsGameObject or targetIsSelf or targetIsItem then
+					return true
+				else
+					return false
+				end
+			end
+
+			function Frame:UpdateStyle()
+				local info = NS.Variables.info
+				local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
+				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+
+				--------------------------------
+
+				if info.contentInfo.full then
+					if info.contentInfo.emoteIndexes[NS.Variables.Playback_Index] then NS.Variables.Style_IsEmote = true else NS.Variables.Style_IsEmote = false end
+					NS.Variables.Style_IsScroll = Frame:Style_MatchScrollCriteria()
+					NS.Variables.Style_IsRustic = addon.Theme.IsRusticTheme_Dialog
+					NS.Variables.Style_IsDialog = not NS.Variables.Style_IsEmote and not NS.Variables.Style_IsScroll and not NS.Variables.Style_IsRustic
+
+					--------------------------------
+
+					if NS.Variables.Style_IsEmote then
+						Frame:Style_SetToEmote()
+					elseif NS.Variables.Style_IsScroll then
+						Frame:Style_SetToScroll()
+					elseif NS.Variables.Style_IsRustic then
+						Frame:Style_SetToRustic()
+					elseif NS.Variables.Style_IsDialog then
+						Frame:Style_SetToDialog(interactTargetNameplate and not interactTargetIsSelf)
+					end
+				end
+			end
+
+			function Frame:Style_SetToDialog(showTail)
+				NS.Variables.Playback_Freeze = false
+
+				--------------------------------
+
+				Frame.REF_BACKGROUND_DIALOG:Show(); Frame.REF_BACKGROUND_DIALOG_TAIL:SetShown(showTail)
+				Frame.REF_BACKGROUND_SCROLL:Hide()
+				Frame.REF_BACKGROUND_RUSTIC:Hide()
+				Frame.REF_BACKGROUND_EMOTE:Hide()
+
+				Frame.REF_CONTENT_TEXT:SetJustifyH("CENTER")
+				if addon.Theme.IsDarkTheme_Dialog then
+					Frame.REF_CONTENT_TEXT:SetTextColor(1, 1, 1)
+				else
+					Frame.REF_CONTENT_TEXT:SetTextColor(1, .87, .67)
+				end
+			end
+
+			function Frame:Style_SetToScroll()
+				NS.Variables.Playback_Freeze = false
+
+				--------------------------------
+
+				Frame.REF_BACKGROUND_DIALOG:Hide()
+				Frame.REF_BACKGROUND_SCROLL:Show()
+				Frame.REF_BACKGROUND_RUSTIC:Hide()
+				Frame.REF_BACKGROUND_EMOTE:Hide()
+
+				Frame.REF_CONTENT_TEXT:SetJustifyH("CENTER")
+				if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
+					Frame.REF_CONTENT_TEXT:SetTextColor(1, 1, 1)
+				else
+					Frame.REF_CONTENT_TEXT:SetTextColor(.1, .1, .1)
+				end
+
+				--------------------------------
+
+				Frame.REF_BACKGROUND_SCROLL:ShowWithAnimation()
+			end
+
+			function Frame:Style_SetToRustic()
+				NS.Variables.Playback_Freeze = false
+
+				--------------------------------
+
+				Frame.REF_BACKGROUND_DIALOG:Hide()
+				Frame.REF_BACKGROUND_SCROLL:Hide()
+				Frame.REF_BACKGROUND_RUSTIC:Hide()
+				Frame.REF_BACKGROUND_EMOTE:Show()
+
+				Frame.REF_CONTENT_TEXT:SetJustifyH("CENTER")
+				Frame.REF_CONTENT_TEXT:SetTextColor(1, .87, .67)
+			end
+
+			function Frame:Style_SetToEmote()
+				NS.Variables.Playback_Freeze = true
+
+				--------------------------------
+
+				Frame.REF_BACKGROUND_DIALOG:Hide()
+				Frame.REF_BACKGROUND_SCROLL:Hide()
+				Frame.REF_BACKGROUND_RUSTIC:Hide()
+				Frame.REF_BACKGROUND_EMOTE:Show()
+
+				Frame.REF_CONTENT_TEXT:SetJustifyH("CENTER")
+				Frame.REF_CONTENT_TEXT:SetTextColor(.93, .52, .31)
 			end
 		end
 	end
@@ -241,589 +243,496 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		local function SplitString(string, pattern)
-			local start, iterator = 1, string.gmatch(string, "()(" .. pattern .. ")")
-
-			--------------------------------
-
-			local function GetNextSegment(segments, separators, separator, capture1, ...)
-				start = separator and separators + #separator
-				return string.sub(string, segments, separators or -1), capture1 or separator, ...
-			end
-
-			--------------------------------
-
-			return function()
-				if start then
-					return GetNextSegment(start, iterator())
-				end
-			end
-		end
-
-		local function SplitText(string)
-			if not string then
-				return
-			end
-
-			--------------------------------
-
-			local separatorPattern = "[\\.|>|<|!|?|\n]%s+"
-			string = string:gsub(" %s+", " "):gsub("|cffFFFFFF", ""):gsub("|r", "")
-			string = string:gsub("%.%.%.", "…")
-
-			--------------------------------
-
-			local lines = {}
-			local lineIndex = 1
-
-			for segment in SplitString(string, separatorPattern) do
-				if segment ~= nil and segment ~= "" then
-					lines[lineIndex] = segment
-					lineIndex = lineIndex + 1
-				end
-			end
-
-			--------------------------------
-
-			return lines
-		end
-
-		local function RemoveAngledBrackets(str)
-			if str then
-				return str:gsub("[<>]", "")
-			else
-				return str
-			end
-		end
-
-		local function DoesCurrentIndexAppearIn(table)
-			return (addon.API.Util:FindValuePositionInTable(table, tostring(NS.Variables.Temp_CurrentIndex)))
-		end
-
-		function Callback:GetString()
-			local rewardQuestText = GetRewardText()
-			local progressQuestText = GetProgressText()
-			local greetingQuestText = GetGreetingText()
-			local infoQuestText = GetQuestText()
-			local gossipText = C_GossipInfo.GetText()
-
-			if NS.Variables.Temp_FrameType == "quest-reward" then
-				NS.Variables.Temp_DialogStringList = SplitText(rewardQuestText)
-			elseif NS.Variables.Temp_FrameType == "quest-progress" then
-				NS.Variables.Temp_DialogStringList = SplitText(progressQuestText)
-			elseif NS.Variables.Temp_FrameType == "gossip" then
-				NS.Variables.Temp_DialogStringList = SplitText(gossipText)
-			elseif NS.Variables.Temp_FrameType == "quest-greeting" then
-				NS.Variables.Temp_DialogStringList = SplitText(greetingQuestText)
-			elseif NS.Variables.Temp_FrameType == "quest-detail" then
-				NS.Variables.Temp_DialogStringList = SplitText(infoQuestText)
-			end
-		end
-
-		function Callback:UpdateString(animate)
-			if not NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex] then
-				return
-			end
-
-			local callbackID = GetTime()
-
-			--------------------------------
-
-			local isGossip = (NS.Variables.Temp_FrameType == "gossip")
-			local isQuestFrameGreeting = (NS.Variables.Temp_FrameType == "quest-greeting")
-			local isQuestFrameProgress = (NS.Variables.Temp_FrameType == "quest-progress")
-			local isQuestFrameDetail = (NS.Variables.Temp_FrameType == "quest-detail")
-
-			--------------------------------
-
-			CallbackRegistry:Trigger("UPDATE_DIALOG")
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				Frame.UpdateDialog()
-			end, 0)
-
-			--------------------------------
-
-			do -- SET
-				do -- TITLE
-					NS.Variables.NPCName = nil
-					NS.Variables.OptionIcon = nil
-					NS.Variables.IsCompleted = nil
-					NS.Variables.QuestTitleText = nil
-
-					--------------------------------
-
-					do                                                       -- GET
-						do                                                   -- COMPLETED
-							if addon.Variables.IS_CLASSIC then
-								NS.Variables.IsCompleted = QuestFrameCompleteQuestButton:IsVisible() -- IsQuestComplete(GetQuestID())
-							else
-								NS.Variables.IsCompleted = QuestFrameCompleteQuestButton:IsVisible() -- C_QuestLog.IsComplete(GetQuestID())
-							end
-						end
-
-						do -- NPC NAME
-							if C_NamePlate.GetNamePlateForUnit("npc") == nil and UnitName("npc") then
-								NS.Variables.NPCName = UnitName("npc")
-							else
-								NS.Variables.NPCName = ""
-							end
-						end
-
-						do -- QUEST TITLE
-							local infoTitle
-							local progressTitle
-
-							if not addon.Variables.IS_CLASSIC then
-								infoTitle = QuestInfoTitleHeader
-								progressTitle = QuestProgressTitleText
-							else
-								infoTitle = QuestInfoTitleHeader
-								progressTitle = QuestProgressTitleText
-							end
-
-							if infoTitle:IsVisible() then
-								NS.Variables.QuestTitleText = infoTitle:GetText()
-							elseif progressTitle:IsVisible() then
-								NS.Variables.QuestTitleText = progressTitle:GetText()
-							else
-								NS.Variables.QuestTitleText = ""
-							end
-						end
-
-						do -- OPTION ICON
-							NS.Variables.OptionIcon = addon.ContextIcon.Script:GetContextIcon() or "[Missing Icon]"
-						end
-					end
-
-					do -- SET
-						if isQuestFrameProgress then
-							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. addon.API.Util:RemoveAtlasMarkup(QuestProgressTitleText:GetText()) .. "|r")
-						elseif isGossip or isQuestFrameGreeting then
-							local name = UnitName("npc") or UnitName("questnpc")
-
-							--------------------------------
-
-							if name then
-								Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. name)
-							else
-								addon.Interaction.Script:Stop(true)
-							end
-						else
-							Frame.Title.Label:SetText(NS.Variables.OptionIcon .. " " .. "|cffFFFFFF" .. addon.API.Util:RemoveAtlasMarkup(QuestInfoTitleHeader:GetText()) .. "|r")
-						end
-					end
-				end
-
-				do -- SPECIAL DIALOG
-					local isEmoteStart = (addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], "<"))
-					local isEmoteEnd = (addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex], ">"))
-					local isLastIndexEmoteEnd = (NS.Variables.Temp_CurrentIndex - 1 > 0 and addon.API.Util:FindString(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex - 1], ">"))
-
-					--------------------------------
-
-					if isEmoteStart then
-						NS.Variables.Temp_Temp_IsEmoteDialog = true
-
-						--------------------------------
-
-						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
-					elseif isEmoteEnd then
-						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
-					else
-						NS.Variables.Temp_CurrentString = RemoveAngledBrackets(NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex])
-					end
-
-					if isLastIndexEmoteEnd then
-						NS.Variables.Temp_Temp_IsEmoteDialog = false
-					end
-
-					-- SAVE THIS INDEX AS SPECIAL DIALOG
-					--------------------------------
-
-					if NS.Variables.Temp_Temp_IsEmoteDialog and not DoesCurrentIndexAppearIn(NS.Variables.Temp_NotEmoteDialogIndexes) then
-						table.insert(NS.Variables.Temp_IsEmoteDialogIndexes, tostring(NS.Variables.Temp_CurrentIndex))
-					end
-
-					if not NS.Variables.Temp_Temp_IsEmoteDialog and not DoesCurrentIndexAppearIn(NS.Variables.Temp_IsEmoteDialogIndexes) then
-						table.insert(NS.Variables.Temp_NotEmoteDialogIndexes, tostring(NS.Variables.Temp_CurrentIndex))
-					end
-
-					-- SET SPECIAL DIALOG BASED ON INDEX --
-					--------------------------------
-
-					if DoesCurrentIndexAppearIn(NS.Variables.Temp_IsEmoteDialogIndexes) then
-						NS.Variables.Temp_IsEmoteDialog = true
-					elseif DoesCurrentIndexAppearIn(NS.Variables.Temp_NotEmoteDialogIndexes) then
-						NS.Variables.Temp_IsEmoteDialog = false
-					else
-						NS.Variables.Temp_IsEmoteDialog = false
-					end
-				end
-
-				do -- CONTENT
-					Frame.Content.Measurement:SetText(NS.Variables.Temp_CurrentString)
-					Frame.Content.Label:SetText(NS.Variables.Temp_CurrentString)
-				end
-
-				do -- PROGRESS BAR
-					if #NS.Variables.Temp_DialogStringList > 1 then
-						Frame.Title.Progress.Bar:SetMinMaxValues(0, #NS.Variables.Temp_DialogStringList)
-						addon.API.Animation:SetProgressTo(Frame.Title.Progress.Bar, NS.Variables.Temp_CurrentIndex, .25, addon.API.Animation.EaseExpo)
-						Frame.Title.Progress.Bar:SetAlpha(1)
-					else
-						Frame.Title.Progress.Bar:SetMinMaxValues(0, 1)
-						Frame.Title.Progress.Bar:SetValue(1)
-						Frame.Title.Progress.Bar:SetAlpha(.5)
-					end
-				end
-			end
-
-			do -- ANIMATION
-				Frame.NewDialogAnimation(NS.Variables.Temp_IsEmoteDialog, NS.Variables.Temp_IsScrollDialog)
+		do -- GET
+			local function SplitString(string, pattern)
+				local start, iterator = 1, string.gmatch(string, "()(" .. pattern .. ")")
 
 				--------------------------------
 
-				if animate then
-					do -- PLAY ANIMATION
-						local skipAnimation = false
-						local animationSpeed = .05 / (addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_SPEED * L["DialogData - PlaybackSpeedModifier"])
+				local function GetNextSegment(segments, separators, separator, capture1, ...)
+					start = separator and separators + #separator
+					return string.sub(string, segments, separators or -1), capture1 or separator, ...
+				end
 
-						local autoPlayEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS
-						local autoPlayDynamicPausingEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
-						local autoCloseEnabled = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
+				--------------------------------
 
-						local autoPlayDelay = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
-
-						--------------------------------
-
-						Frame.StopTextPlayback(Frame.Content.Label)
-						Frame.StartTextPlayback(Frame.Content.Label, animationSpeed, function()
-							Callback:AutoProgress(callbackID, autoPlayEnabled, autoCloseEnabled)
-						end, autoPlayDelay, skipAnimation, autoPlayDynamicPausingEnabled)
+				return function()
+					if start then
+						return GetNextSegment(start, iterator())
 					end
-				else
-					Frame.StopTextPlayback(Frame.Content.Label)
 				end
 			end
 
-			do -- TTS
-				do -- READ CURRENT LINE
-					local quest = addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST
-					local gossip = addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP
-					local voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
-					local gender = UnitSex("npc")
-
-					--------------------------------
-
-					if not quest and (addon.Interaction.Variables.Type == "quest-detail" or addon.Interaction.Variables.Type == "quest-reward" or addon.Interaction.Variables.Type == "quest-progress") then
-						addon.TextToSpeech.Script:StopSpeakingText()
-						return
-					end
-
-					if not gossip and (addon.Interaction.Variables.Type == "gossip" or addon.Interaction.Variables.Type == "quest-greeting") then
-						addon.TextToSpeech.Script:StopSpeakingText()
-						return
-					end
-
-					--------------------------------
-
-					if gender == 2 then
-						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01
-					elseif gender == 3 then
-						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02
-					end
-					if NS.Variables.Temp_IsEmoteDialog then
-						voice = addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE
-					end
-
-					--------------------------------
-
-					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, NS.Variables.Temp_CurrentString)
+			local function SplitText(string)
+				if not string then
+					return
 				end
+
+				--------------------------------
+
+				local separatorPattern = "[\\.|>|<|!|?|\n]%s+"
+				string = string:gsub(" %s+", " "):gsub("|cffFFFFFF", ""):gsub("|r", "")
+				string = string:gsub("%.%.%.", "...")
+
+				--------------------------------
+
+				local lines = {}
+				local lineIndex = 1
+
+				for segment in SplitString(string, separatorPattern) do
+					if segment ~= nil and segment ~= "" then
+						lines[lineIndex] = segment
+						lineIndex = lineIndex + 1
+					end
+				end
+
+				--------------------------------
+
+				return lines
+			end
+
+			local function RemoveAngledBrackets(str)
+				if str then
+					return str:gsub("[<>]", "")
+				else
+					return str
+				end
+			end
+
+			function Callback:GetNPCInfo()
+				local npcInfo = {
+					["name"] = UnitName("npc") or UnitName("questnpc"),
+					["guid"] = UnitGUID("npc") or UnitGUID("questnpc")
+				}
+
+				return npcInfo
+			end
+
+			function Callback:GetContextIcon()
+				local contextIcon = addon.ContextIcon.Script:GetContextIcon() or ""
+				return contextIcon
+			end
+
+			function Callback:GetTitle(frameType)
+				local text_title = nil
+
+				--------------------------------
+
+				if frameType == "quest-reward" or frameType == "quest-progress" or frameType == "quest-detail" then
+					local text = GetTitleForQuestID(GetQuestID())
+					text_title = text
+				elseif frameType == "gossip" or frameType == "quest-greeting" then
+					local text = UnitName("npc")
+					text_title = text
+				end
+
+				--------------------------------
+
+				return text_title
+			end
+
+			function Callback:GetContent(frameType)
+				local contentInfo = {
+					["full"] = nil,
+					["split"] = nil,
+					["formatted"] = nil,
+				}
+
+				--------------------------------
+
+				local TEXT_REWARD = GetRewardText()
+				local TEXT_PROGRESS = GetProgressText()
+				local TEXT_GREETING = GetGreetingText()
+				local TEXT_QUEST = GetQuestText()
+				local TEXT_GOSSIP = C_GossipInfo.GetText()
+
+				local text_full =
+					frameType == "quest-reward" and TEXT_REWARD or
+					frameType == "quest-progress" and TEXT_PROGRESS or
+					frameType == "gossip" and TEXT_GOSSIP or
+					frameType == "quest-greeting" and TEXT_GREETING or
+					frameType == "quest-detail" and TEXT_QUEST
+
+				local text_split =
+					frameType == "quest-reward" and SplitText(TEXT_REWARD) or
+					frameType == "quest-progress" and SplitText(TEXT_PROGRESS) or
+					frameType == "gossip" and SplitText(TEXT_GOSSIP) or
+					frameType == "quest-greeting" and SplitText(TEXT_GREETING) or
+					frameType == "quest-detail" and SplitText(TEXT_QUEST)
+
+				local text_formatted = {}
+				if text_split then
+					for i = 1, #text_split do
+						local formatted = RemoveAngledBrackets(text_split[i])
+						table.insert(text_formatted, formatted)
+					end
+				end
+
+				contentInfo["full"] = text_full
+				contentInfo["split"] = text_split
+				contentInfo["formatted"] = text_formatted
+
+				--------------------------------
+
+				return contentInfo
+			end
+
+			function Callback:GetEmoteIndexes(splitText)
+				local results = {}
+
+				--------------------------------
+
+				local isInEmote = false
+				for line = 1, #splitText do
+					local currentLine = splitText[line]
+					local isSameLineEmote = false
+
+					--------------------------------
+
+					if addon.API.Util:FindString(currentLine, "<") then
+						isInEmote = true
+					end
+
+					if addon.API.Util:FindString(currentLine, ">") then
+						isInEmote = false
+					end
+
+					if addon.API.Util:FindString(currentLine, "<") and addon.API.Util:FindString(currentLine, ">") then
+						isSameLineEmote = true
+					end
+
+					--------------------------------
+
+					if isInEmote or isSameLineEmote then
+						results[line] = true
+					end
+				end
+
+				--------------------------------
+
+				return results
 			end
 		end
 
-		function Callback:AutoProgress(callbackID, autoPlayEnabled, autoCloseEnabled)
-			local savedInteractionID = tostring(callbackID)
-			local savedString = NS.Variables.Temp_CurrentString
+		do -- SET
+			function Callback:SetInfo(frameType)
+				local npcInfo = Callback:GetNPCInfo()
+				local contextIcon = Callback:GetContextIcon()
+				local title = Callback:GetTitle(frameType)
+				local contentInfo = Callback:GetContent(frameType)
+				local emoteIndexes = Callback:GetEmoteIndexes(contentInfo.split)
 
-			local isInDialog = (Frame:IsVisible())
-			local isInGossip = (InteractionGossipFrame:IsVisible())
-			local isSameID = (tostring(callbackID) == savedInteractionID)
-			local isSameText = (Frame.Content.Label.currentText == savedString)
+				NS.Variables.info.type = frameType
+				NS.Variables.info.npcInfo.name = npcInfo.name
+				NS.Variables.info.npcInfo.guid = npcInfo.guid
+				NS.Variables.info.contextIcon = contextIcon
+				NS.Variables.info.title = title
+				NS.Variables.info.contentInfo.full = contentInfo.full
+				NS.Variables.info.contentInfo.split = contentInfo.split
+				NS.Variables.info.contentInfo.formatted = contentInfo.formatted
+				NS.Variables.info.contentInfo.emoteIndexes = emoteIndexes
+			end
 
-			--------------------------------
+			function Callback:SetLineToIndex(index, skipAnimation)
+				local info = NS.Variables.info
 
-			if isInDialog and isSameID and isSameText then
-				if autoPlayEnabled and NS.Variables.AllowAutoProgress then
-					if NS.Variables.Temp_CurrentIndex < #NS.Variables.Temp_DialogStringList then
-						NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex + 1
+				--------------------------------
 
-						--------------------------------
+				NS.Variables.Playback_Index = index
+				NS.Variables.Playback_AutoProgress = skipAnimation and false or addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS
 
-						Callback:UpdateString(true)
+				--------------------------------
 
-						--------------------------------
+				do -- SET
+					local isAlwaysShowQuest = addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST
+					local isQuestVisible = (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible())
+					local isQuestType = (info.type == "quest-reward" or info.type == "quest-progress" or info.type == "quest-detail")
 
-						if not NS.Variables.Temp_IsEmoteDialog then
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Next)
+					--------------------------------
+
+					do -- TITLE TEXT
+						if isAlwaysShowQuest and isQuestVisible and isQuestType then
+							Frame.REF_TITLE_PREFIXFRAME:Hide()
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.npcInfo.name)
+						elseif isQuestType then
+							Frame.REF_TITLE_PREFIXFRAME:Show()
+							Frame.REF_TITLE_PREFIXFRAME_TEXT:SetText(info.npcInfo.name)
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.title)
+						else
+							Frame.REF_TITLE_PREFIXFRAME:Hide()
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.title)
 						end
+					end
+
+					do -- TITLE PROGRESS
+						Frame.REF_TITLE_PROGRESS_BAR:SetMinMaxValues(0, #info.contentInfo.split)
+						addon.API.Animation:SetProgressTo(Frame.REF_TITLE_PROGRESS_BAR, index, .25, addon.API.Animation.EaseExpo)
+					end
+
+					do -- CONTENT TEXT
+						Frame.REF_CONTENT_TEXT:SetText(info.contentInfo.split[index])
+					end
+				end
+
+				do -- ANIMATION
+					Frame:Animation_New()
+
+					--------------------------------
+
+					if skipAnimation then
+						Frame:Animation_Text_Stop()
 					else
-						if autoCloseEnabled and isInGossip then
-							local numButtons = #InteractionGossipFrame.GetButtons()
+						local interval = .05 / (addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_SPEED * L["DialogData - PlaybackSpeedModifier"])
+						local pauseText = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_PUNCTUATION_PAUSING
+
+						--------------------------------
+
+						Frame:Animation_Text_Start(interval, pauseText)
+					end
+				end
+
+				do -- TTS
+					local playQuest = addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST
+					local playGossip = addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP
+					local gender = UnitSex("npc")
+					local voice =
+						NS.Variables.Temp_IsEmoteTheme and addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE or
+						gender == 3 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 or
+						gender == 2 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 or
+						gender == 1 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
+
+					--------------------------------
+
+					if not playQuest and (info.type == "quest-detail" or info.type == "quest-reward" or info.type == "quest-progress") then
+						addon.TextToSpeech.Script:StopSpeakingText()
+						return
+					end
+
+					if not playGossip and (info.type == "gossip" or info.type == "quest-greeting") then
+						addon.TextToSpeech.Script:StopSpeakingText()
+						return
+					end
+
+					--------------------------------
+
+					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.split[index])
+				end
+
+				--------------------------------
+
+				Frame:UpdateAll()
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("UPDATE_DIALOG")
+			end
+		end
+
+		do -- STATE
+			function Callback:IncrementIndex()
+				if NS.Variables.Playback_Index < #NS.Variables.info.contentInfo.split then
+					NS.Variables.Playback_Index = NS.Variables.Playback_Index + 1
+
+					--------------------------------
+
+					if not NS.Variables.Style_IsEmote then
+						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Next)
+					end
+
+					--------------------------------
+
+					Callback:SetLineToIndex(NS.Variables.Playback_Index)
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("Dialog.IncrementIndex")
+				else
+					Callback:Stop()
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("Dialog.IncrementIndex.Finished")
+				end
+			end
+
+			function Callback:DecrementIndex()
+				if NS.Variables.Playback_Finished then
+					Callback:Restart()
+				elseif not NS.Variables.Finished and (NS.Variables.Playback_Index > 1) then
+					NS.Variables.Playback_Index = NS.Variables.Playback_Index - 1
+
+					--------------------------------
+
+					if not NS.Variables.Style_IsEmote then
+						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Previous)
+					end
+
+					--------------------------------
+
+					Callback:SetLineToIndex(NS.Variables.Playback_Index, true)
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("Dialog.DecrementIndex")
+				else
+					Frame:Animation_Invalid()
+
+					--------------------------------
+
+					if not NS.Variables.Style_IsEmote then
+						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Invalid)
+					end
+
+					--------------------------------
+
+					Callback:SetLineToIndex(NS.Variables.Playback_Index, true)
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("Dialog.DecrementIndex.Invalid")
+				end
+			end
+
+			function Callback:AutoIncrement()
+				local isAutoClose = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
+				local isValid = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS and NS.Variables.Playback_AutoProgress
+				local isDialog = (Frame:IsVisible())
+				local isGossip = (InteractionFrame.GossipFrame:IsVisible())
+
+				--------------------------------
+
+				if isDialog and isValid then
+					if NS.Variables.Playback_Index < #NS.Variables.info.contentInfo.split then
+						Callback:IncrementIndex()
+					else
+						if isAutoClose and isGossip then
+							local numButtons = #InteractionFrame.GossipFrame:GetButtons()
 
 							--------------------------------
 
 							if numButtons == 0 then
-								InteractionGossipFrame.HideWithAnimation()
+								addon.Interaction.Script:Stop(true)
 
 								--------------------------------
 
-								addon.Interaction.Script:Stop(true)
+								CallbackRegistry:Trigger("Dialog.AutoIncrement.AutoClose")
 							else
-								Frame.StopDialog()
+								Callback:Stop()
 							end
 						else
-							Frame.StopDialog()
+							Callback:Stop()
 						end
 					end
 				end
-			end
-		end
-
-		--------------------------------
-
-		Frame.PreventAutoPlay = function()
-			NS.Variables.AllowAutoProgress = false
-		end
-
-		Frame.StopDialog = function()
-			NS.Variables.Finished = true
-
-			--------------------------------
-
-			local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-
-			--------------------------------
-
-			if interactTargetNameplate then -- ANCHORED
-				Frame.HideWithAnimation()
-			else                   -- SCROLL DIALOG
-				Frame.HideWithAnimation()
-			end
-
-			--------------------------------
-
-			addon.TextToSpeech.Script:StopSpeakingText()
-
-			--------------------------------
-
-			CallbackRegistry:Trigger("STOP_DIALOG")
-		end
-
-		Frame.StartDialog = function(isReturnToPreviousDialog)
-			NS.Variables.Finished = false
-
-			--------------------------------
-
-			if NS.Variables.Temp_FrameType == "gossip" then
-				local gossipInteractMessage = select(1, select(1, GossipFrame.GreetingPanel.ScrollBox.ScrollTarget:GetChildren()):GetRegions()):GetText()
 
 				--------------------------------
 
-				if not isReturnToPreviousDialog then
-					if addon.Interaction.Variables.GossipLastNPC ~= UnitName("npc") then
-						addon.Interaction.GossipFirstInteractMessage = gossipInteractMessage
-						addon.Interaction.Variables.GossipLastNPC = UnitName("npc")
-					end
+				CallbackRegistry:Trigger("Dialog.AutoIncrement")
+			end
+
+			function Callback:Restart()
+				Callback:Start(NS.Variables.Playback_Index, true)
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("RESTART_DIALOG")
+			end
+
+			function Callback:Start(index, skipAnimation)
+				NS.Variables.Playback_Finished = false
+				addon.TextToSpeech.Script:StopSpeakingText()
+
+				--------------------------------
+
+				Callback:SetLineToIndex(index, skipAnimation)
+				Frame:ShowWithAnimation()
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("START_DIALOG")
+			end
+
+			function Callback:Stop()
+				NS.Variables.Playback_Finished = true
+				addon.TextToSpeech.Script:StopSpeakingText()
+				Frame:Animation_Text_Stop()
+
+				--------------------------------
+
+				Frame:HideWithAnimation()
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("STOP_DIALOG")
+			end
+
+			function Callback:Init(frameType)
+				Callback:SetInfo(frameType)
+
+				--------------------------------
+
+				local info = NS.Variables.info
+
+				--------------------------------
+
+				NS.Variables.Playback_Valid = nil
+				NS.Variables.Playback_Index = 1
+				NS.Variables.Playback_Freeze = false
+				NS.Variables.Playback_AutoProgress = true
+				NS.Variables.Playback_Finished = false
+
+				NS.Variables.Style_IsDialog = false
+				NS.Variables.Style_IsScroll = false
+				NS.Variables.Style_IsRustic = false
+				NS.Variables.Style_IsEmote = false
+
+				if #info.contentInfo.split >= 1 and #info.contentInfo.split[1] > 1 then
+					NS.Variables.Playback_Valid = true
 
 					--------------------------------
 
-					Frame.ShowWithAnimation()
+					Callback:Start(1)
 				else
-					Frame.ShowWithAnimation()
+					NS.Variables.Playback_Valid = false
 				end
-			else
-				Frame.ShowWithAnimation()
-			end
-
-			--------------------------------
-
-			CallbackRegistry:Trigger("START_DIALOG")
-		end
-
-		Frame.UpdatePosition = function()
-			local nameplate = C_NamePlate.GetNamePlateForUnit("npc")
-			local playerNameplate = C_NamePlate.GetNamePlateForUnit("player")
-
-			--------------------------------
-
-			do -- STATE
-				local IsValidNameplate = (nameplate and nameplate ~= playerNameplate and (not UnitIsGameObject("npc") and not UnitIsGameObject("questnpc")))
 
 				--------------------------------
 
-				if IsValidNameplate then
-					do -- FRAME
-						Frame.DialogBackground.Tail:Show()
+				CallbackRegistry:Trigger("INIT_DIALOG")
+			end
+		end
 
-						--------------------------------
+		do -- AUTO PROGRESS PROCESSING
+			local AutoProgress = {}
+			AutoProgress.Timer = nil
 
-						local heightModifier = 25
+			--------------------------------
 
-						Frame:ClearAllPoints()
-						Frame:SetPoint("BOTTOM", nameplate, 0, heightModifier)
+			do -- FUNCTIONS
+				function AutoProgress:Init()
+					local autoProgressDelay = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
 
-						--------------------------------
+					--------------------------------
 
-						Frame:SetFrameStrata("LOW")
-					end
-				else
-					do -- FRAME
-						Frame.DialogBackground.Tail:Hide()
+					AutoProgress:Cancel()
+					AutoProgress.Timer = C_Timer.NewTimer(autoProgressDelay, Callback.AutoIncrement)
+				end
 
-						--------------------------------
-
-						-- UI Direction
-						-- 1 -> LEFT
-						-- 2 -> RIGHT
-
-						-- Dialog Direction:
-						-- 1 -> TOP
-						-- 2 -> CENTER
-						-- 3 -> BOTTOM
-
-						local uiDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION
-						local dialogDirection = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG
-						local mirrorQuest = addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION_DIALOG_MIRROR
-
-						local screenWidth = addon.API.Main:GetScreenWidth()
-						local screenHeight = addon.API.Main:GetScreenHeight()
-						local questWidth = InteractionQuestFrame:GetWidth() + 50 -- Padding
-						local questHeight = InteractionQuestFrame:GetHeight() + 50 -- Padding
-						local dialogWidth = 375
-						local dialogHeight = InteractionDialogFrame:GetHeight()
-
-						local dialogMaxWidth = 350
-						local quarterWidth = (screenWidth - dialogMaxWidth) / 2
-						local quarterEdgePadding = (quarterWidth - questWidth) / 2
-
-						local offsetX = 0
-						local offsetY = (screenHeight - questHeight) / 2
-
-						if mirrorQuest then
-							local offset = (screenWidth - questWidth - quarterEdgePadding) + (dialogWidth / 2)
-
-							if uiDirection == 1 then
-								offsetX = -(screenWidth / 2) + offset
-							else
-								offsetX = (screenWidth / 2) - offset
-							end
-						end
-
-						Frame:ClearAllPoints()
-						if dialogDirection == 1 then
-							Frame:SetPoint("TOP", UIParent, offsetX, -offsetY)
-						elseif dialogDirection == 2 then
-							Frame:SetPoint("CENTER", UIParent, offsetX, 0)
-						elseif dialogDirection == 3 then
-							Frame:SetPoint("BOTTOM", UIParent, offsetX, offsetY)
-						end
-
-						--------------------------------
-
-						Frame:SetFrameStrata("FULLSCREEN")
+				function AutoProgress:Cancel()
+					if AutoProgress.Timer then
+						AutoProgress.Timer:Cancel()
 					end
 				end
 			end
-		end
 
-		Frame.UpdateDialog = function()
-			NS.Variables.Temp_IsScrollDialog = Frame.UpdateScrollDialog()
-			NS.Variables.Temp_IsStylisedDialog = addon.Theme.IsRusticTheme_Dialog
-
-			--------------------------------
-
-			Frame.UpdatePosition()
-			Frame.UpdateSize(NS.Variables.Temp_IsEmoteDialog)
-			Frame.UpdateTitle()
-			Frame.UpdateStyle(NS.Variables.Temp_IsEmoteDialog, NS.Variables.Temp_IsScrollDialog, NS.Variables.Temp_IsStylisedDialog)
-		end
-
-		--------------------------------
-
-		function Frame.IncrementIndex()
-			if not NS.Variables.IsInInteraction then
-				return
-			end
-
-			--------------------------------
-
-			if NS.Variables.Temp_DialogStringList and NS.Variables.Temp_CurrentIndex < #NS.Variables.Temp_DialogStringList then
-				NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex + 1
-				Callback:UpdateString(true)
-
-				--------------------------------
-
-				if NS.Variables.Temp_IsEmoteDialog == false then
-					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Next)
-				end
-			else
-				Frame.StopDialog()
+			do -- EVENTS
+				CallbackRegistry:Add("Dialog.Animation_Text_OnUpdate.Finished", AutoProgress.Init, 0)
+				CallbackRegistry:Add("Dialog.IncrementIndex", AutoProgress.Cancel, 0)
+				CallbackRegistry:Add("Dialog.DecrementIndex", AutoProgress.Cancel, 0)
+				CallbackRegistry:Add("START_DIALOG", AutoProgress.Cancel, 0)
+				CallbackRegistry:Add("STOP_DIALOG", AutoProgress.Cancel, 0)
 			end
 		end
-
-		function Frame.DecrementIndex()
-			if not NS.Variables.IsInInteraction then
-				return
-			end
-
-			--------------------------------
-
-			if Frame:IsVisible() then
-				if NS.Variables.Temp_CurrentIndex > 1 then
-					NS.Variables.Temp_CurrentIndex = NS.Variables.Temp_CurrentIndex - 1
-					Callback:UpdateString(false)
-
-					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Previous)
-				else
-					Frame.InvalidDialogAnimation()
-					Callback:UpdateString(false)
-
-					addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Dialog_Invalid)
-				end
-			else
-				Frame.ReturnToPreviousDialog()
-			end
-		end
-
-		function Frame.ReturnToPreviousDialog()
-			if not NS.Variables.IsInInteraction or not Frame.hidden then
-				return
-			end
-
-			if NS.Variables.Temp_DialogStringList[NS.Variables.Temp_CurrentIndex] == " " then
-				return
-			end
-
-			--------------------------------
-
-			Frame.StartDialog(true)
-			Callback:UpdateString(false)
-
-			--------------------------------
-
-			NS.Variables.AllowAutoProgress = false
-
-			--------------------------------
-
-			CallbackRegistry:Trigger("PREVIOUS_DIALOG")
-		end
-
-		--------------------------------
-
-		CallbackRegistry:Add("GOSSIP_BUTTON_CLICKED", Frame.PreventAutoPlay, 0)
 	end
 
 	--------------------------------
@@ -831,167 +740,172 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		do -- PLAYBACK
-			Frame.StartTextPlayback = function(frame, interval, callback, callbackDelay, skipAnimation, usePausing)
-				local text = frame:GetText() or ""
-				local textLength = strlenutf8(text)
-				local pauseDuration = .125
-				local timer = 0
-				local paused = false
-				local pauseTimer = 0
+		do -- TEXT
+			local session = {}
+			local _ = CreateFrame("Frame")
 
-				local pauseCharDB = L["DialogData - PauseCharDB"]
+			local function ResetSession()
+				session = {
+					["text"] = "",
+					["elapsed"] = 0,
+					["interval"] = 0,
+					["pause"] = {
+						["enabled"] = false,
+						["duration"] = 0,
+						["active"] = false,
+						["elapsed"] = 0,
+						["database"] = nil
+					}
+				}
+			end
+
+			local function GetTextColor()
+				local color
+				local textColor
+
+				local contentPreviewAlpha = addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA
+				local isDarkThemeDialog = addon.Theme.IsDarkTheme_Dialog
+				local isRusticThemeDialog = addon.Theme.IsRusticTheme_Dialog
+				local isDialogStyle = NS.Variables.Style_IsDialog
+				local isScrollStyle = NS.Variables.Style_IsScroll
+				local isRusticStyle = NS.Variables.Style_IsRustic
+				local isEmoteStyle = NS.Variables.Style_IsEmote
 
 				--------------------------------
 
-				frame.TextAnimationFrame = frame.TextAnimationFrame or CreateFrame("Frame", "$parent.TextAnimationFrame", nil)
-
-				--------------------------------
-
-				local function Update(self, elapsed)
-					if paused then
-						pauseTimer = pauseTimer + elapsed
-
-						--------------------------------
-
-						if pauseTimer >= pauseDuration then
-							paused = false
-							pauseTimer = 0
-						else
-							return
-						end
-					end
-
-					--------------------------------
-
-					timer = timer + elapsed
-
-					--------------------------------
-
-					local numCharsToShow = math.min(math.floor(timer / interval) + 1, textLength)
-					local current = addon.API.Util:GetSubstring(text, 1, numCharsToShow)
-					local remaining = addon.API.Util:GetSubstring(text, numCharsToShow + 1, textLength)
-					local new
-
-					--------------------------------
-
-					local textColor
-					local color
-
-					do -- TEXT COLOR
-						if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
+				do -- TEXT COLOR
+					if (isDarkThemeDialog or isRusticThemeDialog) and (isScrollStyle) then
+						textColor = { r = 1, g = 1, b = 1 }
+					elseif (isDarkThemeDialog or isRusticThemeDialog) then
+						if isRusticThemeDialog then
+							textColor = addon.Theme.RGB_CHAT_MSG_SAY
+						elseif isDarkThemeDialog then
 							textColor = { r = 1, g = 1, b = 1 }
-						elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-							if addon.Theme.IsRusticTheme_Dialog then
-								textColor = addon.Theme.RGB_CHAT_MSG_SAY
-							elseif addon.Theme.IsDarkTheme_Dialog then
-								textColor = { r = 1, g = 1, b = 1 }
-							end
-						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-							textColor = { r = .1, g = .1, b = .1 }
-						elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-							if addon.Theme.IsRusticTheme_Dialog then
-								textColor = addon.Theme.RGB_CHAT_MSG_SAY
-							elseif not addon.Theme.IsDarkTheme_Dialog then
-								textColor = addon.Theme.RGB_CHAT_MSG_SAY
-							end
+						end
+					elseif not (isDarkThemeDialog or isRusticThemeDialog) and (isScrollStyle) then
+						textColor = { r = .1, g = .1, b = .1 }
+					elseif not (isDarkThemeDialog or isRusticThemeDialog) then
+						if isRusticThemeDialog then
+							textColor = addon.Theme.RGB_CHAT_MSG_SAY
+						elseif not isDarkThemeDialog then
+							textColor = addon.Theme.RGB_CHAT_MSG_SAY
 						end
 					end
+				end
 
-					do -- COLOR
-						local isMouseOver = frame.mouseOver
-
-						--------------------------------
-
-						if addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA <= .1 then
-							if (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-								color = isMouseOver and "101010" or "101010"
-							elseif (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-								if addon.Theme.IsRusticTheme_Dialog then
-									color = "101010"
-								elseif addon.Theme.IsDarkTheme_Dialog then
-									color = isMouseOver and "0D0A0B" or "070504"
-								end
-							elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-								color = "CEAA82"
-							elseif not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) then
-								if addon.Theme.IsRusticTheme_Dialog then
-									color = "101010"
-								elseif not addon.Theme.IsDarkTheme_Dialog then
-									color = isMouseOver and "232323" or "191919"
-								end
+				do -- COLOR
+					if contentPreviewAlpha <= .1 then
+						if (isDarkThemeDialog or isRusticThemeDialog) and (isScrollStyle) then
+							color = Frame.isMouseOver and "101010" or "101010"
+						elseif (isDarkThemeDialog or isRusticThemeDialog) then
+							if isRusticThemeDialog then
+								color = "101010"
+							elseif isDarkThemeDialog then
+								color = Frame.isMouseOver and "0D0A0B" or "070504"
 							end
+						elseif not (isDarkThemeDialog or isRusticThemeDialog) and (isScrollStyle) then
+							color = "CEAA82"
+						elseif not (isDarkThemeDialog or isRusticThemeDialog) then
+							if isRusticThemeDialog then
+								color = "101010"
+							elseif not isDarkThemeDialog then
+								color = Frame.isMouseOver and "232323" or "191919"
+							end
+						end
+					else
+						local modifier = .2 + (addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
+						if not (isDarkThemeDialog or isRusticThemeDialog) and (isScrollStyle) then
+							color = addon.API.Util:SetHexColorFromModifierWithBase(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
 						else
-							local modifier = .2 + (addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA / 1.25)
-							if not (addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog) and NS.Variables.Temp_IsScrollDialog then
-								color = addon.API.Util:SetHexColorFromModifierWithBase(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier, "CEAA82")
-							else
-								color = addon.API.Util:SetHexColorFromModifier(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
-							end
+							color = addon.API.Util:SetHexColorFromModifier(addon.API.Util:GetHexColor(textColor.r, textColor.g, textColor.b), modifier)
 						end
 					end
+				end
 
-					do -- PAUSE
-						if usePausing then
-							local lastChar = addon.API.Util:GetSubstring(text, numCharsToShow, numCharsToShow)
+				--------------------------------
 
-							--------------------------------
+				return color
+			end
 
-							for char = 1, #pauseCharDB do
-								if addon.API.Util:FindString(pauseCharDB[char], lastChar) then
-									paused = true
-									break
-								end
-							end
-						end
-					end
+			function Frame:Animation_Text_Start(interval, pauseText)
+				ResetSession()
+				session.text = Frame.REF_CONTENT_TEXT:GetText() or ""
+				session.interval = interval
+				session.pause.enabled = pauseText
+				session.pause.duration = .125
+				session.pause.database = L["DialogData - PauseCharDB"]
 
-					do -- TEXT
-						if strlenutf8(remaining) > 0 and not frame.freezePlayback then
-							new = current .. "|cff" .. color .. remaining .. "|r"
-						else
-							new = current .. remaining
-						end
-					end
+				--------------------------------
+
+				_:SetScript("OnUpdate", Frame.Animation_Text_OnUpdate)
+			end
+
+			function Frame:Animation_Text_Stop()
+				ResetSession()
+
+				--------------------------------
+
+				_:SetScript("OnUpdate", nil)
+			end
+
+			function Frame:Animation_Text_OnUpdate(elapsed)
+				if session.pause.enabled and session.pause.active then
+					session.pause.elapsed = session.pause.elapsed + elapsed
 
 					--------------------------------
 
-					if not skipAnimation then
-						frame:SetText(new)
-						frame.currentText = new
+					if session.pause.elapsed >= session.pause.duration then
+						session.pause.active = false
+						session.pause.elapsed = 0
+					else
+						return
 					end
+				end
 
-					--------------------------------
+				--------------------------------
 
-					if numCharsToShow >= textLength then
-						frame.TextAnimationFrame:SetScript("OnUpdate", nil)
+				session.elapsed = session.elapsed + elapsed
+
+				--------------------------------
+
+				local numCharsToShow = math.min(math.floor(session.elapsed / session.interval) + 1, strlenutf8(session.text))
+				local text_current = addon.API.Util:GetSubstring(session.text, 1, numCharsToShow)
+				local text_remaining = addon.API.Util:GetSubstring(session.text, numCharsToShow + 1, strlenutf8(session.text))
+				local text_new = ""
+				local preview_color = GetTextColor()
+
+				--------------------------------
+
+				do -- PAUSE
+					if session.pause.enabled then
+						local lastChar = addon.API.Util:GetSubstring(session.text, numCharsToShow, numCharsToShow)
 
 						--------------------------------
 
-						if callback then
-							if callbackDelay then
-								frame.TextAnimationCallbackTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-									callback()
-								end, callbackDelay)
-							else
-								callback()
+						for char = 1, #session.pause.database do
+							if addon.API.Util:FindString(session.pause.database[char], lastChar) then
+								session.pause.active = true
+								break
 							end
 						end
 					end
 				end
 
-				frame.TextAnimationFrame:SetScript("OnUpdate", Update)
-			end
+				--------------------------------
 
-			Frame.StopTextPlayback = function(textFrame)
-				if textFrame.TextAnimationFrame then
-					textFrame.TextAnimationFrame:SetScript("OnUpdate", nil)
+				if strlenutf8(text_remaining) > 0 and not NS.Variables.Playback_Freeze then
+					text_new = text_current .. "|cff" .. preview_color .. text_remaining .. "|r"
+				else
+					text_new = text_current .. text_remaining
+				end
 
-					--------------------------------
+				Frame.REF_CONTENT_TEXT:SetText(text_new)
 
-					if textFrame.TextAnimationCallbackTimer then
-						addon.Libraries.AceTimer:CancelTimer(textFrame.TextAnimationCallbackTimer)
-					end
+				--------------------------------
+
+				if numCharsToShow >= strlenutf8(session.text) then
+					Frame:Animation_Text_Stop()
+					CallbackRegistry:Trigger("Dialog.Animation_Text_OnUpdate.Finished")
 				end
 			end
 		end
@@ -1001,140 +915,196 @@ function NS.Script:Load()
 			local isInvalidDialogTransition
 			local savedDialogText
 
-			Frame.NewDialogAnimation = function()
-				if isTransition or isInvalidDialogTransition then
-					return
-				end
+			--------------------------------
 
-				--------------------------------
-
-				if savedDialogText == Frame.Content.Measurement:GetText() then
-					return
-				end
-				savedDialogText = Frame.Content.Measurement:GetText()
-
-				--------------------------------
-
-				addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
-
-				if not NS.Variables.Temp_IsEmoteDialog and not NS.Variables.Temp_IsScrollDialog then
-					addon.API.Animation:Fade(Frame, .25, 0, 1, nil, function() return Frame.Content.Measurement:GetText() ~= savedDialogText end)
-					addon.API.Animation:Scale(Frame.DialogBackground, .75, .75, 1, nil, addon.API.Animation.EaseExpo, function() return Frame.Content.Measurement:GetText() ~= savedDialogText or isInvalidDialogTransition end)
-				end
-			end
-
-			Frame.PreviousDialogAnimation = function()
-				addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1)
-			end
-
-			Frame.InvalidDialogAnimation = function()
-				if isTransition or isInvalidDialogTransition then
-					return
-				end
-				isInvalidDialogTransition = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if isInvalidDialogTransition then
-						isInvalidDialogTransition = false
+			do -- BACKGROUND
+				do -- SHOW
+					function Frame.REF_BACKGROUND_SCROLL:ShowWithAnimation_StopEvent()
+						return not Frame.REF_BACKGROUND_SCROLL:IsVisible()
 					end
-				end, .25)
 
-				--------------------------------
+					function Frame.REF_BACKGROUND_SCROLL:ShowWithAnimation()
+						Frame.REF_BACKGROUND_SCROLL:Show()
 
-				addon.API.Animation:Scale(Frame.DialogBackground, 1, .95, 1)
-				addon.API.Animation:Scale(Frame.ScrollBackground, 1, .95, 1)
+						addon.API.Animation:Scale(Frame.REF_BACKGROUND_SCROLL, .5, .75, 1, nil, nil, Frame.REF_BACKGROUND_SCROLL.ShowWithAnimation_StopEvent)
+					end
+				end
 			end
 
-			Frame.ShowWithAnimation = function()
-				Frame.hidden = false
+			do -- NEW DIALOG
+				function Frame:Animation_New_StopEvent()
+					return NS.Variables.info.contentInfo.split[NS.Variables.Playback_Index] ~= savedDialogText
+				end
 
-				--------------------------------
-
-				Frame:Show()
-
-				--------------------------------
-
-				isTransition = true
-				savedDialogText = nil
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					if not Frame.hidden then
-						isTransition = false
-					end
-				end, .25)
-
-				--------------------------------
-
-				Frame:SetAlpha(0)
-				Frame.Title:SetAlpha(0)
-				Frame.Title.Label:SetAlpha(0)
-				Frame.Content.Label:SetAlpha(0)
-
-				--------------------------------
-
-				if not Frame.hidden then
-					addon.API.Animation:Fade(Frame, .25, 0, 1)
-					addon.API.Animation:Fade(Frame.Title, .25, 0, 1)
-
-					--------------------------------
-
-					if addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA > 0 then
-						addon.API.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
-					else
-						addon.API.Animation:Fade(Frame.Title.Label, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
+				function Frame:Animation_New()
+					if isTransition then
+						return
 					end
 
 					--------------------------------
 
-					addon.API.Animation:Fade(Frame.Content.Label, .5, 0, 1)
+					if savedDialogText == NS.Variables.info.contentInfo.split[NS.Variables.Playback_Index] then
+						return
+					end
+					savedDialogText = NS.Variables.info.contentInfo.split[NS.Variables.Playback_Index]
 
 					--------------------------------
 
-					addon.API.Animation:Scale(Frame.DialogBackground, 1, .25, 1)
-					addon.API.Animation:Scale(Frame.ScrollBackground, 1, .25, 1)
+					addon.API.Animation:Fade(Frame, .25, 0, 1, nil, Frame.Animation_New_StopEvent)
+					addon.API.Animation:Fade(Frame.REF_CONTENT, .5, 0, 1, nil, Frame.Animation_New_StopEvent)
+					if NS.Variables.Style_IsDialog then addon.API.Animation:Scale(Frame.REF_BACKGROUND_DIALOG, .75, .75, 1, nil, addon.API.Animation.EaseExpo, Frame.Animation_New_StopEvent) end
 				end
 			end
 
-			Frame.HideWithAnimation = function(skipAnimation)
-				if Frame.hidden then
-					return
+			do -- PREVIOUS DIALOG
+				function Frame:Animation_Previous()
+					addon.API.Animation:Fade(Frame.REF_CONTENT, .5, 0, 1)
 				end
-				Frame.hidden = true
+			end
 
-				if skipAnimation then
-					Frame:Hide()
-				else
+			do -- INVALID DIALOG
+				function Frame:Animation_Invalid()
+					if isTransition or isInvalidDialogTransition then
+						return
+					end
+					isInvalidDialogTransition = true
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if Frame.hidden then
-							Frame:Hide()
+						if isInvalidDialogTransition then
+							isInvalidDialogTransition = false
 						end
 					end, .25)
-				end
 
-				--------------------------------
+					--------------------------------
 
-				if not skipAnimation then
-					addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
-					addon.API.Animation:Scale(Frame.DialogBackground, .25, Frame.DialogBackground:GetScale(), .925)
-					addon.API.Animation:Scale(Frame.ScrollBackground, .25, Frame.ScrollBackground:GetScale(), .925)
+					if (NS.Variables.Style_IsDialog or NS.Variables.Style_IsScroll) and not (NS.Variables.Style_IsEmote) then addon.API.Animation:Scale(Frame.REF_CLIP, 1, .95, 1) end
+					if NS.Variables.Style_IsDialog then addon.API.Animation:Scale(Frame.REF_BACKGROUND_DIALOG, 1, .95, 1) end
+					if NS.Variables.Style_IsScroll then addon.API.Animation:Scale(Frame.REF_BACKGROUND_SCROLL, 1, .95, 1) end
 				end
 			end
 
-			Frame.ScrollBackground.ShowWithAnimation = function()
-				if not Frame.ScrollBackground:IsVisible() then
-					Frame.ScrollBackground:Show()
-
-					addon.API.Animation:Fade(Frame.ScrollBackground, .25, 0, 1)
-					addon.API.Animation:Scale(Frame.ScrollBackground, .5, .75, 1)
+			do -- SHOW
+				function Frame:ShowWithAnimation_StopEvent()
+					return Frame.hidden
 				end
-			end
 
-			Frame.ScrollBackground.HideWithAnimation = function()
-				if Frame.ScrollBackground:IsVisible() and Frame.ScrollBackground:GetAlpha() == 1 then
-					addon.API.Animation:Fade(Frame.ScrollBackground, .5, 1, 0)
-					addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1, .5)
+				function Frame:ShowWithAnimation()
+					Frame.hidden = false
 
+					--------------------------------
+
+					Frame:Show()
+
+					--------------------------------
+
+					isTransition = true
+					savedDialogText = nil
 					addon.Libraries.AceTimer:ScheduleTimer(function()
-						Frame.ScrollBackground:Hide()
-					end, 1)
+						if not Frame.hidden then
+							isTransition = false
+						end
+					end, .25)
+
+					--------------------------------
+
+					if not Frame.hidden then
+						addon.API.Animation:Fade(Frame, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_TITLE, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_TITLE_PREFIXFRAME, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_TITLE_PREFIXFRAME_TEXT, .5, 0, Frame.REF_TITLE_PREFIXFRAME_TEXT.targetAlpha, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_TITLE_TITLEFRAME, .5, 0, addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_TITLE_TITLEFRAME_TEXT, .5, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+						addon.API.Animation:Fade(Frame.REF_CONTENT, .5, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+						if (NS.Variables.Style_IsDialog or NS.Variables.Style_IsScroll) and not (NS.Variables.Style_IsEmote) then addon.API.Animation:Scale(Frame.REF_CLIP, 1, .25, 1, nil, nil, Frame.ShowWithAnimation_StopEvent) end
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Scale(Frame.REF_BACKGROUND_DIALOG, 1, .25, 1, nil, nil, Frame.ShowWithAnimation_StopEvent) end
+						if NS.Variables.Style_IsScroll then addon.API.Animation:Scale(Frame.REF_BACKGROUND_SCROLL, 1, .25, 1, nil, nil, Frame.ShowWithAnimation_StopEvent) end
+					end
+				end
+			end
+
+			do -- HIDE
+				function Frame:HideWithAnimation_StopEvent()
+					return not Frame.hidden
+				end
+
+				function Frame:HideWithAnimation(skipAnimation)
+					if Frame.hidden then
+						return
+					end
+					Frame.hidden = true
+
+					if skipAnimation then
+						Frame:Hide()
+					else
+						addon.Libraries.AceTimer:ScheduleTimer(function()
+							if Frame.hidden then
+								Frame:Hide()
+							end
+						end, .25)
+					end
+
+					--------------------------------
+
+					if not skipAnimation then
+						addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0)
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Scale(Frame.REF_BACKGROUND_DIALOG, .25, Frame.REF_BACKGROUND_DIALOG:GetScale(), .925, nil, nil, Frame.HideWithAnimation_StopEvent) end
+						if NS.Variables.Style_IsScroll then addon.API.Animation:Scale(Frame.REF_BACKGROUND_SCROLL, .25, Frame.REF_BACKGROUND_SCROLL:GetScale(), .925, nil, nil, Frame.HideWithAnimation_StopEvent) end
+					end
+				end
+			end
+
+			do -- ON ENTER
+				function Frame:Animation_OnEnter_StopEvent()
+					return not Frame.isMouseOver
+				end
+
+				function Frame:Animation_OnEnter(skipAnimation)
+					if skipAnimation then
+						if NS.Variables.Style_IsDialog then Frame.REF_BACKGROUND_DIALOG:SetAlpha(.75) end
+						if NS.Variables.Style_IsDialog then Frame.REF_BACKGROUND_DIALOG_TAIL:SetAlpha(.75) end
+						if NS.Variables.Style_IsScroll then Frame.REF_BACKGROUND_SCROLL:SetAlpha(.975) end
+					else
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Fade(Frame.REF_BACKGROUND_DIALOG, .125, Frame.REF_BACKGROUND_DIALOG:GetAlpha(), .75, nil, Frame.Animation_OnEnter_StopEvent) end
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Fade(Frame.REF_BACKGROUND_DIALOG_TAIL, .125, Frame.REF_BACKGROUND_DIALOG_TAIL:GetAlpha(), .75, nil, Frame.Animation_OnEnter_StopEvent) end
+						if NS.Variables.Style_IsScroll then addon.API.Animation:Fade(Frame.REF_BACKGROUND_SCROLL, .125, Frame.REF_BACKGROUND_SCROLL:GetAlpha(), .975, nil, Frame.Animation_OnEnter_StopEvent) end
+					end
+				end
+			end
+
+			do -- ON LEAVE
+				function Frame:Animation_OnLeave_StopEvent()
+					return Frame.isMouseOver
+				end
+
+				function Frame:Animation_OnLeave(skipAnimation)
+					if skipAnimation then
+						if NS.Variables.Style_IsDialog then Frame.REF_BACKGROUND_DIALOG:SetAlpha(1) end
+						if NS.Variables.Style_IsDialog then Frame.REF_BACKGROUND_DIALOG_TAIL:SetAlpha(1) end
+						if NS.Variables.Style_IsScroll then Frame.REF_BACKGROUND_SCROLL:SetAlpha(1) end
+					else
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Fade(Frame.REF_BACKGROUND_DIALOG, .125, Frame.REF_BACKGROUND_DIALOG:GetAlpha(), 1, nil, Frame.Animation_OnLeave_StopEvent) end
+						if NS.Variables.Style_IsDialog then addon.API.Animation:Fade(Frame.REF_BACKGROUND_DIALOG_TAIL, .125, Frame.REF_BACKGROUND_DIALOG_TAIL:GetAlpha(), 1, nil, Frame.Animation_OnLeave_StopEvent) end
+						if NS.Variables.Style_IsScroll then addon.API.Animation:Fade(Frame.REF_BACKGROUND_SCROLL, .125, Frame.REF_BACKGROUND_SCROLL:GetAlpha(), 1, nil, Frame.Animation_OnLeave_StopEvent) end
+					end
+				end
+			end
+
+			do -- ON MOUSE DOWN
+				function Frame:Animation_OnMouseDown_StopEvent()
+					return not Frame.isMouseDown
+				end
+
+				function Frame:Animation_OnMouseDown(skipAnimation)
+
+				end
+			end
+
+			do -- ON MOUSE UP
+				function Frame:Animation_OnMouseUp_StopEvent()
+					return Frame.isMouseDown
+				end
+
+				function Frame:Animation_OnMouseUp(skipAnimation)
+
 				end
 			end
 		end
@@ -1146,75 +1116,41 @@ function NS.Script:Load()
 
 	do
 		local function Settings_ContentSize()
-			local TextSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE
+			addon.API.Util:SetFontSize(Frame.REF_CONTENT_TEXT, addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE)
 
-			addon.API.Util:SetFontSize(Frame.Content.Measurement, TextSize)
-			addon.API.Util:SetFontSize(Frame.Content.Label, TextSize)
+			--------------------------------
 
-			if Frame:IsVisible() and addon.Interaction.Variables.Active then
-				Frame.UpdateDialog()
-			end
+			Frame:UpdateAll()
 		end
 		Settings_ContentSize()
 
 		local function Settings_TitleProgressVisibility()
-			local Visiblity = addon.Database.DB_GLOBAL.profile.INT_PROGRESS_SHOW
+			Frame.REF_TITLE_PROGRESS:SetShown(addon.Database.DB_GLOBAL.profile.INT_PROGRESS_SHOW)
+			Frame.REF_TITLE_PROGRESS:SetAlpha(1)
 
-			Frame.Title.Progress:SetShown(Visiblity)
-			Frame.Title.Progress:SetAlpha(1)
+			--------------------------------
+
+			Frame:UpdateAll()
 		end
 		Settings_TitleProgressVisibility()
 
 		local function Settings_TitleAlpha()
-			local Alpha = addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA
-
-			Frame.Title.Label:SetAlpha(Alpha)
+			Frame.REF_TITLE_PREFIXFRAME:SetAlpha(addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
+			Frame.REF_TITLE_TITLEFRAME:SetAlpha(addon.Database.DB_GLOBAL.profile.INT_TITLE_ALPHA)
 		end
 		Settings_TitleAlpha()
 
 		local function Settings_ThemeUpdate()
-			if Frame:IsVisible() then
-				Frame.UpdateDialog()
-
-				--------------------------------
-
-				Callback:UpdateString(true)
-			end
+			Frame:UpdateStyle()
 		end
-
-		local function Settings_ThemeUpdateDialogAnimation()
-			if Frame:IsVisible() then
-				Frame.AllowAutoProgress = false
-
-				--------------------------------
-
-				addon.API.Animation:RemoveAllAnimationsFromFrame(Frame)
-				if Frame.ThemeUpdateTimer then
-					addon.Libraries.AceTimer:CancelTimer(Frame.ThemeUpdateTimer)
-				end
-
-				--------------------------------
-
-				addon.Libraries.AceTimer:ScheduleTimer(function()
-					addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0)
-
-					--------------------------------
-
-					Frame.ThemeUpdateTimer = addon.Libraries.AceTimer:ScheduleTimer(function()
-						addon.API.Animation:Fade(Frame, .25, 0, 1)
-					end, .75)
-				end, .1)
-			end
-		end
+		Settings_ThemeUpdate()
 
 		--------------------------------
 
 		CallbackRegistry:Add("SETTINGS_CONTENT_SIZE_CHANGED", Settings_ContentSize, 0)
 		CallbackRegistry:Add("SETTINGS_TITLE_PROGRESS_VISIBILITY_CHANGED", Settings_TitleProgressVisibility, 0)
 		CallbackRegistry:Add("SETTINGS_TITLE_ALPHA_CHANGED", Settings_TitleAlpha, 0)
-
-		CallbackRegistry:Add("THEME_UPDATE", Settings_ThemeUpdate, 10)
-		CallbackRegistry:Add("THEME_UPDATE_DIALOG_ANIMATION", Settings_ThemeUpdateDialogAnimation, 0)
+		CallbackRegistry:Add("THEME_UPDATE", Settings_ThemeUpdate, 0)
 	end
 
 	--------------------------------
@@ -1222,54 +1158,137 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame:SetScript("OnEnter", function()
-			addon.API.Animation:Scale(Frame.Title.Progress, .5, 1, 1.125)
-			addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1, 1.05)
+		Frame.isMouseOver = false
+		Frame.isMouseDown = false
 
-			addon.API.Animation:Fade(Frame.DialogBackground, .125, 1, .75)
-			addon.API.Animation:Fade(Frame.DialogBackground.Tail, .125, 1, .75)
-			addon.API.Animation:Fade(Frame.ScrollBackground, .125, 1, .975)
+		Frame.enterCallbacks = {}
+		Frame.leaveCallbacks = {}
+		Frame.mouseDownCallbacks = {}
+		Frame.mouseUpCallbacks = {}
 
-			Frame.Content.Label.mouseOver = true
-		end)
+		--------------------------------
 
-		Frame:SetScript("OnLeave", function()
-			addon.API.Animation:Scale(Frame.Title.Progress, .5, 1.125, 1)
-			addon.API.Animation:Scale(Frame.ScrollBackground, .5, 1.05, 1)
+		do -- EVENTS
+			local function Logic_OnEnter()
 
-			addon.API.Animation:Fade(Frame.DialogBackground, .125, .75, 1)
-			addon.API.Animation:Fade(Frame.DialogBackground.Tail, .125, .75, 1)
-			addon.API.Animation:Fade(Frame.ScrollBackground, .125, .975, 1)
-
-			Frame.Content.Label.mouseOver = false
-		end)
-
-		Frame:SetScript("OnMouseUp", function(self, button)
-			if button == "LeftButton" then
-				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
-					Frame.DecrementIndex()
-				else
-					Frame.IncrementIndex()
-				end
-
-				NS.Variables.AllowAutoProgress = false
-			elseif button == "RightButton" then
-				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
-					Frame.IncrementIndex()
-				else
-					Frame.DecrementIndex()
-				end
-
-				NS.Variables.AllowAutoProgress = false
 			end
-		end)
 
-		Frame.Title.Progress:SetScript("OnMouseUp", function(self, button)
-			Frame.StopDialog()
-		end)
+			local function Logic_OnLeave()
+
+			end
+
+			local function Logic_OnMouseDown(button)
+
+			end
+
+			local function Logic_OnMouseUp(button)
+				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE then
+					if button == "LeftButton" then
+						Callback:DecrementIndex()
+					else
+						Callback:IncrementIndex()
+					end
+				else
+					if button == "LeftButton" then
+						Callback:IncrementIndex()
+					else
+						Callback:DecrementIndex()
+					end
+				end
+			end
+
+			function Frame:OnEnter(skipAnimation)
+				Frame.isMouseOver = true
+
+				--------------------------------
+
+				Frame:Animation_OnEnter(skipAnimation)
+				Logic_OnEnter()
+
+				--------------------------------
+
+				do -- ON ENTER
+					if #Frame.enterCallbacks >= 1 then
+						local enterCallbacks = Frame.enterCallbacks
+
+						for callback = 1, #enterCallbacks do
+							enterCallbacks[callback](skipAnimation)
+						end
+					end
+				end
+			end
+
+			function Frame:OnLeave(skipAnimation)
+				Frame.isMouseOver = false
+
+				--------------------------------
+
+				Frame:Animation_OnLeave(skipAnimation)
+				Logic_OnLeave()
+
+				--------------------------------
+
+				do -- ON LEAVE
+					if #Frame.leaveCallbacks >= 1 then
+						local leaveCallbacks = Frame.leaveCallbacks
+
+						for callback = 1, #leaveCallbacks do
+							leaveCallbacks[callback](skipAnimation)
+						end
+					end
+				end
+			end
+
+			function Frame:OnMouseDown(button, skipAnimation)
+				Frame.isMouseDown = true
+
+				--------------------------------
+
+				Frame:Animation_OnMouseDown(skipAnimation)
+				Logic_OnMouseDown(button)
+
+				--------------------------------
+
+				do -- ON MOUSE DOWN
+					if #Frame.mouseDownCallbacks >= 1 then
+						local mouseDownCallbacks = Frame.mouseDownCallbacks
+
+						for callback = 1, #mouseDownCallbacks do
+							mouseDownCallbacks[callback](skipAnimation)
+						end
+					end
+				end
+			end
+
+			function Frame:OnMouseUp(button, skipAnimation)
+				Frame.isMouseDown = false
+
+				--------------------------------
+
+				Frame:Animation_OnMouseUp(skipAnimation)
+				Logic_OnMouseUp(button)
+
+				--------------------------------
+
+				do -- ON MOUSE UP
+					if #Frame.mouseUpCallbacks >= 1 then
+						local mouseUpCallbacks = Frame.mouseUpCallbacks
+
+						for callback = 1, #mouseUpCallbacks do
+							mouseUpCallbacks[callback](skipAnimation)
+						end
+					end
+				end
+			end
+
+			Frame.REF_MOUSERESPONDER:SetScript("OnEnter", function() Frame:OnEnter() end)
+			Frame.REF_MOUSERESPONDER:SetScript("OnLeave", function() Frame:OnLeave() end)
+			Frame.REF_MOUSERESPONDER:SetScript("OnMouseDown", function(_, button) Frame:OnMouseDown(button) end)
+			Frame.REF_MOUSERESPONDER:SetScript("OnMouseUp", function(_, button) Frame:OnMouseUp(button) end)
+		end
 
 		Frame:SetScript("OnUpdate", function()
-			Frame.UpdatePosition()
+			Frame:UpdatePosition()
 		end)
 
 		local Events = CreateFrame("Frame")
@@ -1281,29 +1300,13 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					local npcName_Target = UnitName("npc") or UnitName("questnpc")
-					local npcName_MouseOver = UnitName("mouseover")
+					local targetName = UnitName("npc") or UnitName("questnpc")
+					local mouseOverName = UnitName("mouseover")
 
 					--------------------------------
 
-					if (tostring(npcName_Target) == tostring(npcName_MouseOver)) then
-						if button == "LeftButton" then
-							if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
-								Frame.DecrementIndex()
-							else
-								Frame.IncrementIndex()
-							end
-
-							NS.Variables.AllowAutoProgress = false
-						elseif button == "RightButton" then
-							if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true then
-								Frame.IncrementIndex()
-							else
-								Frame.DecrementIndex()
-							end
-
-							NS.Variables.AllowAutoProgress = false
-						end
+					if tostring(targetName) == tostring(mouseOverName) then
+						Frame:OnMouseUp(button, false)
 					end
 				end
 			end

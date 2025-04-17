@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionReadableUIFrame = CreateFrame("Frame", "$parent.InteractionReadableUIFrame", InteractionFrame)
 			InteractionReadableUIFrame:SetSize(NS.Variables.SCREEN_HEIGHT, NS.Variables.SCREEN_HEIGHT)
 			InteractionReadableUIFrame:SetFrameStrata("FULLSCREEN")
@@ -101,7 +101,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					InteractionReadableUIFrame.CloseButton:SetScript("OnClick", function()
-						InteractionReadableUIFrame.HideWithAnimation()
+						InteractionReadableUIFrame:HideWithAnimation()
 					end)
 				end
 			end

@@ -1,10 +1,10 @@
-## Interface: 110010
+## Interface: 110010, 110015
 ## Title: Interaction
 ## Notes: Immersive lore and quest add-on.
 ## Notes-ruRU: Захватывающий аддон к сюжету и заданиям.
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.0.9
+## Version: 0.1.0
 ## SavedVariables: InteractionDB, InteractionLibraryDB_Global
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI

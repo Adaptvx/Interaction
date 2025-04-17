@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest
 
@@ -27,6 +27,10 @@ do  -- CONSTANTS
 	do -- MAIN
 		NS.Variables.QUEST_PATH = addon.Variables.PATH_ART .. "Quest/"
 		NS.Variables.FRAME_SIZE = { x = 625 * .75, y = 625 }
+
+		NS.Variables.FRAME_STRATA = "HIGH"
+		NS.Variables.FRAME_LEVEL = 99
+		NS.Variables.FRAME_LEVEL_MAX = 999
 	end
 
 	do -- PADDING
@@ -42,17 +46,11 @@ do  -- MAIN
 	end
 
 	do -- FRAME
-		NS.Variables.Buttons_Choice = {}
-		NS.Variables.Buttons_Reward = {}
-		NS.Variables.Buttons_Required = {}
-		NS.Variables.Buttons_Spell = {}
 		NS.Variables.Num_Choice = 0
 		NS.Variables.Num_Reward = 0
 		NS.Variables.Num_Required = 0
 		NS.Variables.Num_Spell = 0
 		NS.Variables.State = ""
-
-		NS.Variables.ChoiceSelected = false
 	end
 
 	do -- SCALE
@@ -67,6 +65,19 @@ do  -- MAIN
 			NS.Variables.ScaleModifier = scaleModifier
 		end
 	end
+
+	do -- ELEMENTS
+		NS.Variables.Elements = {}
+	end
+end
+
+do -- REFERENCES
+	NS.Variables.Buttons_Choice = nil
+	NS.Variables.Buttons_Reward = nil
+	NS.Variables.Buttons_Required = nil
+	NS.Variables.Buttons_Spell = nil
+
+	NS.Variables.Button_Choice_Selected = nil
 end
 
 --------------------------------

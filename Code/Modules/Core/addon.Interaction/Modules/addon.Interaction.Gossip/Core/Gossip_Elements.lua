@@ -1,6 +1,10 @@
+-- [!] [addon.interaction.Gossip] is a replacement for Blizzard's Gossip Frame.
+-- [Gossip_Elements.lua] creates the front-end (UI)
+-- for the addon.Interaction.Gossip module.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip
 
@@ -16,664 +20,175 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
-			InteractionGossipParent = CreateFrame("Frame", "InteractionGossipParent", InteractionFrame)
-			InteractionGossipParent:SetAllPoints(InteractionFrame)
-			InteractionGossipParent:SetFrameStrata("FULLSCREEN")
+		do -- ELEMENTS
+			InteractionFrame.GossipParent = CreateFrame("Frame", "$parent.GossipParent", InteractionFrame)
+			InteractionFrame.GossipParent:SetAllPoints(InteractionFrame)
+			InteractionFrame.GossipParent:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.GossipParent:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 
-			InteractionGossipFrame = CreateFrame("Frame", "InteractionGossipFrame", InteractionGossipParent)
-			InteractionGossipFrame:SetWidth(325)
-			InteractionGossipFrame:SetPoint("CENTER", InteractionGossipParent)
-			InteractionGossipFrame:SetFrameStrata("FULLSCREEN")
+			InteractionFrame.GossipFrame = CreateFrame("Frame", "$parent.GossipFrame", InteractionFrame.GossipParent)
+			InteractionFrame.GossipFrame:SetWidth(325)
+			InteractionFrame.GossipFrame:SetPoint("CENTER", InteractionFrame.GossipParent)
+			InteractionFrame.GossipFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.GossipFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL)
+
+			local Frame = InteractionFrame.GossipFrame
 
 			--------------------------------
 
-			local Frame = InteractionGossipFrame
-
-			--------------------------------
+			local PADDING = NS.Variables:RATIO(7.5)
+			local FRAME_MAIN_BUTTON_SPACING = NS.Variables:RATIO(11)
+			local FRAME_FOOTER_HEIGHT = 50
 
 			do -- MOUSE RESPONDER
-				InteractionGossipFrame.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", InteractionGossipFrame)
-				InteractionGossipFrame.MouseResponder:SetAllPoints(InteractionGossipFrame)
-				InteractionGossipFrame.MouseResponder:SetFrameStrata("FULLSCREEN")
-				InteractionGossipFrame.MouseResponder:SetFrameLevel(0)
-			end
-
-			do -- BUTTONS
-				do -- GOODBYE BUTTON
-					Frame.GoodbyeButton = addon.API.FrameTemplates:CreateCustomButton(Frame, Frame:GetWidth() - 125, 27.5, "FULLSCREEN", {
-						defaultTexture = "",
-						highlightTexture = "",
-						edgeSize = 25,
-						scale = .5,
-						theme = 2,
-						playAnimation = false,
-						customColor = nil,
-						customHighlightColor = nil,
-						customActiveColor = nil,
-					}, "$parent.GoodbyeButton")
-					Frame.GoodbyeButton:SetPoint("CENTER", Frame) -- Modified later in Gossip_Script.lua
-					Frame.GoodbyeButton:SetText(L["InteractionGossipFrame - Close"])
-					addon.API.FrameUtil:SetDynamicSize(Frame.GoodbyeButton, Frame, -125)
-
-					Frame.GoodbyeButton:SetAlpha(.5)
-					addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
-
-					--------------------------------
-
-					do -- ELEMENTS
-						do -- BACKGROUND
-							Frame.GoodbyeButton.Background, Frame.GoodbyeButton.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.GoodbyeButton, "HIGH", addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-							Frame.GoodbyeButton.Background:SetPoint("TOPLEFT", Frame.GoodbyeButton, 62.5, 25)
-							Frame.GoodbyeButton.Background:SetPoint("BOTTOMRIGHT", Frame.GoodbyeButton, -62.5, -25)
-							Frame.GoodbyeButton.Background:SetAlpha(.5)
-							Frame.GoodbyeButton.BackgroundTexture:SetAlpha(1)
-						end
-					end
-
-					do -- ANIMATIONS
-						do -- ON ENTER
-							function Frame.GoodbyeButton:Animation_OnEnter_StopEvent()
-								return not Frame.GoodbyeButton.isMouseOver
-							end
-
-							function Frame.GoodbyeButton:Animation_OnEnter()
-								addon.API.Animation:Fade(Frame.GoodbyeButton, .25, Frame.GoodbyeButton:GetAlpha(), .75, nil, Frame.GoodbyeButton.Animation_OnEnter_StopEvent)
-							end
-						end
-
-						do -- ON LEAVE
-							function Frame.GoodbyeButton:Animation_OnLeave_StopEvent()
-								return Frame.GoodbyeButton.isMouseOver
-							end
-
-							function Frame.GoodbyeButton:Animation_OnLeave()
-								addon.API.Animation:Fade(Frame.GoodbyeButton, .25, Frame.GoodbyeButton:GetAlpha(), .5, nil, Frame.GoodbyeButton.Animation_OnLeave_StopEvent)
-							end
-						end
-
-						do -- ON MOUSE DOWN
-							function Frame.GoodbyeButton:Animation_OnMouseDown_StopEvent()
-								return not Frame.GoodbyeButton.isMouseDown
-							end
-
-							function Frame.GoodbyeButton:Animation_OnMouseDown()
-
-							end
-						end
-
-						do -- ON MOUSE UP
-							function Frame.GoodbyeButton:Animation_OnMouseUp_StopEvent()
-								return Frame.GoodbyeButton.isMouseDown
-							end
-
-							function Frame.GoodbyeButton:Animation_OnMouseUp()
-
-							end
-						end
-
-						do -- PARALLAX
-							Frame.GoodbyeButton.API_ButtonTextFrame.API_Animation_Parallax_Weight = 2.5
-
-							addon.API.FrameUtil:AnchorToCenter(Frame.GoodbyeButton)
-							addon.API.Animation:AddParallax(Frame.GoodbyeButton.API_ButtonTextFrame, Frame.GoodbyeButton, function() return true end, function() return false end, addon.Input.Variables.IsController)
-						end
-					end
-
-					do -- LOGIC
-						Frame.GoodbyeButton.isMouseOver = false
-						Frame.GoodbyeButton.isMouseDown = false
-
-						--------------------------------
-
-						do -- FUNCTIONS
-							do -- LOGIC
-								local function Update()
-									do -- BACKGROUND
-										if NS.Variables.NumCurrentButtons < 1 then
-											Frame.GoodbyeButton.Background:Show()
-										else
-											Frame.GoodbyeButton.Background:Hide()
-										end
-									end
-
-									do -- KEYBIND
-										addon.API.Main:SetButtonToPlatform(Frame.GoodbyeButton, Frame.GoodbyeButton.Text, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Close))
-									end
-								end
-
-								CallbackRegistry:Add("GOSSIP_DATA_LOADED", Update, 0)
-							end
-						end
-
-						do -- EVENTS
-							function Frame.GoodbyeButton:Event_OnEnter()
-								Frame.GoodbyeButton.isMouseOver = true
-
-								--------------------------------
-
-								Frame.GoodbyeButton:Animation_OnEnter()
-							end
-
-							function Frame.GoodbyeButton:Event_OnLeave()
-								Frame.GoodbyeButton.isMouseOver = false
-
-								--------------------------------
-
-								Frame.GoodbyeButton:Animation_OnLeave()
-							end
-
-							function Frame.GoodbyeButton:Event_OnMouseDown()
-								Frame.GoodbyeButton.isMouseDown = true
-
-								--------------------------------
-
-								Frame.GoodbyeButton:Animation_OnMouseDown()
-							end
-
-							function Frame.GoodbyeButton:Event_OnMouseUp()
-								Frame.GoodbyeButton.isMouseDown = false
-
-								--------------------------------
-
-								Frame.GoodbyeButton:Animation_OnMouseUp()
-							end
-
-							addon.API.FrameTemplates:CreateMouseResponder(Frame.GoodbyeButton, { enterCallback = Frame.GoodbyeButton.Event_OnEnter, leaveCallback = Frame.GoodbyeButton.Event_OnLeave, mouseDownCallback = Frame.GoodbyeButton.Event_OnMouseDown, mouseUpCallback = Frame.GoodbyeButton.Event_OnMouseUp })
-						end
-					end
-				end
+				Frame.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", Frame)
+				Frame.MouseResponder:SetAllPoints(Frame)
+				Frame.MouseResponder:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.MouseResponder:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 			end
 
 			do -- CONTENT
 				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
-				Frame.Content:SetSize(Frame:GetWidth() - 20, 500)
-				Frame.Content:SetPoint("TOP", Frame)
-			end
-
-			do -- OPTIONS
-				local function CreateButton(parent, offsetCalculation, relativeTo)
-					local button = CreateFrame("Frame", nil, parent)
-					button:SetWidth(parent:GetWidth() - 20)
-					button:SetFrameStrata("FULLSCREEN")
-					button:SetFrameLevel(2)
-
-					--------------------------------
-
-					button.OptionFrame = nil
-					button.OptionType = nil
-					button.OptionID = nil
-					button.OrderIndex = nil
-					button.OptionIndex = nil
-
-					--------------------------------
-
-					button.UpdatePosition = function()
-						button:SetPoint("TOP", relativeTo, 0, offsetCalculation())
-					end
-
-					--------------------------------
-
-					button.Click = function()
-						CallbackRegistry:Trigger("GOSSIP_BUTTON_CLICKED", button)
-
-						--------------------------------
-
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Gossip_Button_MouseUp)
-					end
-
-					button.SelectOption = function()
-						if button.OptionFrame == "gossip" then
-							if button.OptionType == "available" then
-								C_GossipInfo.SelectAvailableQuest(button.OptionID)
-							elseif button.OptionType == "active" then
-								C_GossipInfo.SelectActiveQuest(button.OptionID)
-							elseif button.OptionType == "option" then
-								if not button.OptionID then
-									C_GossipInfo.SelectOptionByIndex(button.OrderIndex)
-								else
-									C_GossipInfo.SelectOption(button.OptionID)
-								end
-							end
-						elseif button.OptionFrame == "quest-greeting" then
-							if button.OptionType == "available" then
-								SelectAvailableQuest(button.OptionIndex)
-							elseif button.OptionType == "active" then
-								SelectActiveQuest(button.OptionIndex)
-							end
-						end
-					end
-
-					button.MouseDownCallback = function()
-						button.MouseDown()
-
-						--------------------------------
-
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Gossip_Button_MouseDown)
-					end
-
-					button.MouseEnterCallback = function()
-						button.Enter()
-
-						--------------------------------
-
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Gossip_Button_Enter)
-					end
-
-					button.MouseLeaveCallback = function()
-						button.Leave()
-
-						--------------------------------
-
-						addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Gossip_Button_Leave)
-					end
-
-					--------------------------------
-
-					button:SetScript("OnEnter", function()
-						button.MouseEnterCallback()
-					end)
-
-					button:SetScript("OnLeave", function()
-						button.MouseLeaveCallback()
-					end)
-
-					button:SetScript("OnMouseDown", function()
-						button.MouseDownCallback()
-					end)
-
-					button:SetScript("OnMouseUp", function()
-						button.Click()
-					end)
-
-					--------------------------------
-
-					do -- ICON
-						button.Icon, button.IconTexture = addon.API.FrameTemplates:CreateTexture(button, "FULLSCREEN", addon.Variables.PATH_ART .. "Icons/logo.png", "$parent.Icon")
-						button.Icon:SetSize(17.5, 17.5)
-						button.Icon:SetFrameStrata("FULLSCREEN")
-						button.Icon:SetFrameLevel(2)
-					end
-
-					do -- LABEL
-						button.Label = addon.API.FrameTemplates:CreateText(button, { r = 1, g = 1, b = 1 }, 14, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-						button.Label:SetHeight(button:GetHeight())
-						addon.API.FrameUtil:SetDynamicSize(button.Label, button, nil, 0)
-
-						--------------------------------
-
-						button.Label.Offset = 0
-					end
-
-					do -- STANDALONE
-						button.Standalone = CreateFrame("Frame", "$parent.Standalone", button)
-						button.Standalone:SetPoint("CENTER", button)
-						button.Standalone:SetFrameStrata("FULLSCREEN")
-						button.Standalone:SetFrameLevel(0)
-						addon.API.FrameUtil:SetDynamicSize(button.Standalone, button, -35, 0)
-
-						--------------------------------
-
-						do -- BACKGROUND
-							button.Standalone.Background, button.Standalone.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(button.Standalone, "FULLSCREEN", nil, { left = 128, top = 128, right = 128, bottom = 128 }, .0875, "$parent.Background", Enum.UITextureSliceMode.Stretched)
-							button.Standalone.Background:SetPoint("CENTER", button.Standalone)
-							button.Standalone.Background:SetFrameStrata("FULLSCREEN")
-							button.Standalone.Background:SetFrameLevel(1)
-							addon.API.FrameUtil:SetDynamicSize(button.Standalone.Background, button.Standalone, 0, -2.5)
-
-							--------------------------------
-
-							button.UpdateState = function()
-								local TEXTURE_Background
-								local TEXTURE_Highlighted
-
-								local TEXTURE_KeybindBackground
-								local TEXTURE_KeybindHighlighted
-
-								--------------------------------
-
-								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
-									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-dark.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-highlighted-nineslice-dark.png"
-
-									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-dark.png"
-									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
-								else
-									TEXTURE_Background = NS.Variables.PATH .. "background-nineslice-light.png"
-									TEXTURE_Highlighted = NS.Variables.PATH .. "background-highlighted-nineslice-light.png"
-
-									TEXTURE_KeybindBackground = NS.Variables.PATH .. "key-background-light.png"
-									TEXTURE_KeybindHighlighted = NS.Variables.PATH .. "key-background-highlighted.png"
-								end
-
-								--------------------------------
-
-								if button.selected then
-									button.Standalone.BackgroundTexture:SetTexture(TEXTURE_Highlighted)
-									button.Keybind.BackgroundTexture:SetTexture(TEXTURE_KeybindHighlighted)
-								else
-									button.Standalone.BackgroundTexture:SetTexture(TEXTURE_Background)
-									button.Keybind.BackgroundTexture:SetTexture(TEXTURE_KeybindBackground)
-								end
-							end
-						end
-					end
-
-					do -- KEYBIND
-						button.Keybind = CreateFrame("Frame")
-						button.Keybind:SetParent(button)
-						button.Keybind:SetSize(30, 30)
-						button.Keybind:SetPoint("LEFT", button.Standalone.Background, 15, 0)
-						button.Keybind:SetFrameStrata("FULLSCREEN")
-						button.Keybind:SetFrameLevel(3)
-
-						--------------------------------
-
-						do -- BACKGROUND
-							button.Keybind.Background, button.Keybind.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(button.Keybind, "MEDIUM", NS.Variables.PATH .. "key-background.png", 50, 1, "$parent.Background")
-							button.Keybind.Background:SetAllPoints(button.Keybind)
-							button.Keybind.Background:SetFrameStrata("FULLSCREEN")
-							button.Keybind.Background:SetFrameLevel(2)
-
-							--------------------------------
-
-							addon.API.Main:RegisterThemeUpdate(function()
-								local TEXTURE_Background
-
-								if addon.Theme.IsDarkTheme_Dialog or addon.Theme.IsRusticTheme_Dialog then
-									TEXTURE_Background = NS.Variables.PATH .. "key-background-dark.png"
-								else
-									TEXTURE_Background = NS.Variables.PATH .. "key-background-light.png"
-								end
-
-								button.Keybind.BackgroundTexture:SetTexture(TEXTURE_Background)
-							end, 5)
-						end
-
-						do -- LABEL
-							button.Keybind.Label = addon.API.FrameTemplates:CreateText(button.Keybind, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light)
-							button.Keybind.Label:SetSize(30, 30)
-							button.Keybind.Label:SetPoint("CENTER", button.Keybind)
-						end
-					end
-
-					do -- LAYOUT
-						if addon.Input.Variables.IsController or addon.Input.Variables.SimulateController then
-							if button:GetHeight() <= 45 then
-								button.Icon:ClearAllPoints()
-								button.Icon:SetPoint("LEFT", button.Standalone.Background, NS.Variables:RATIO(1.75), 0)
-
-								--------------------------------
-
-								button.Label:SetWidth(200)
-
-								if not button.Label.transition then
-									button.Label.Offset = NS.Variables:RATIO(1.5) + NS.Variables:RATIO(1)
-
-									--------------------------------
-
-									button.Label:ClearAllPoints()
-									button.Label:SetPoint("LEFT", button.Standalone.Background, button.Label.Offset, 0)
-								end
-
-								--------------------------------
-
-								button.Keybind:ClearAllPoints()
-								button.Keybind:Hide()
-							else
-								button.Icon:ClearAllPoints()
-								button.Icon:SetPoint("TOPLEFT", button.Standalone.Background, NS.Variables:RATIO(2.25) + NS.Variables:RATIO(.5), -NS.Variables:RATIO(1))
-
-								--------------------------------
-
-								button.Label:SetWidth(200)
-
-								if not button.Label.transition then
-									button.Label.Offset = NS.Variables:RATIO(2) + NS.Variables:RATIO(.5) + NS.Variables:RATIO(1.25)
-
-									--------------------------------
-
-									button.Label:ClearAllPoints()
-									button.Label:SetPoint("LEFT", button.Standalone.Background, button.Label.Offset, 0)
-								end
-
-								--------------------------------
-
-								button.Keybind:ClearAllPoints()
-								button.Keybind:Hide()
-							end
-						else
-							if button:GetHeight() <= 45 then
-								button.Icon:ClearAllPoints()
-								button.Icon:SetPoint("LEFT", button.Standalone.Background, NS.Variables:RATIO(1), 0)
-
-								--------------------------------
-
-								button.Label:SetWidth(200)
-
-								if not button.Label.transition then
-									button.Label.Offset = NS.Variables:RATIO(1) + NS.Variables:RATIO(1)
-
-									--------------------------------
-
-									button.Label:ClearAllPoints()
-									button.Label:SetPoint("LEFT", button.Standalone.Background, button.Label.Offset, 0)
-								end
-
-								--------------------------------
-
-								button.Keybind:ClearAllPoints()
-								button.Keybind:SetPoint("LEFT", button.Standalone.Background, -(button.Keybind:GetWidth() / 3), 0)
-							else
-								button.Icon:ClearAllPoints()
-								button.Icon:SetPoint("TOPLEFT", button.Standalone.Background, NS.Variables:RATIO(1.5) + NS.Variables:RATIO(.5), -NS.Variables:RATIO(1))
-
-								--------------------------------
-
-								button.Label:SetWidth(200)
-
-								if not button.Label.transition then
-									button.Label.Offset = NS.Variables:RATIO(1.5) + NS.Variables:RATIO(.5) + NS.Variables:RATIO(1.25)
-
-									--------------------------------
-
-									button.Label:ClearAllPoints()
-									button.Label:SetPoint("LEFT", button.Standalone.Background, button.Label.Offset, 0)
-								end
-
-								--------------------------------
-
-								button.Keybind:ClearAllPoints()
-								button.Keybind:SetPoint("TOPLEFT", button.Standalone.Background, NS.Variables:RATIO(1.5), -NS.Variables:RATIO(1.5))
-							end
-						end
-					end
-
-					do -- ANIMATION
-						button.Enter = function(skipAnimation)
-							if button.selected then
-								return
-							end
-
-							--------------------------------
-
-							if not button.transition then
-								button.HideButtons()
-							end
-
-							--------------------------------
-
-							button.selected = true
-
-							--------------------------------
-
-							Frame.UpdateAllButtonStates()
-
-							--------------------------------
-
-							if not skipAnimation then
-								button.AnimationState = "Enter"
-								addon.Libraries.AceTimer:ScheduleTimer(function()
-									if button.AnimationState == "Enter" then
-										button.AnimationState = nil
-									end
-								end, 1)
-
-								--------------------------------
-
-								do -- BUTTON
-									addon.API.Animation:Fade(button, .05, .75, 1, nil, function() return not button.selected end)
-								end
-
-								do -- STATE
-									local transitionID = GetTime()
-									button.Label.transition = true
-									button.Label.transitionID = transitionID
-
-									addon.Libraries.AceTimer:ScheduleTimer(function()
-										if button.Label.transitionID == transitionID then
-											button.Label.transition = false
-										end
-									end, 1)
-								end
-							else
-								do -- BUTTON
-									button:SetAlpha(1)
-								end
-
-								do -- STATE
-									button.Label.transition = false
-								end
-							end
-
-							--------------------------------
-
-							CallbackRegistry:Trigger("GOSSIP_BUTTON_ENTER")
-						end
-
-						button.Leave = function(skipAnimation)
-							local State = NS.Variables.State
-
-							--------------------------------
-
-							button.selected = false
-
-							--------------------------------
-
-							Frame.UpdateAllButtonStates()
-
-							--------------------------------
-
-							if not skipAnimation then
-								button.AnimationState = "Leave"
-								addon.Libraries.AceTimer:ScheduleTimer(function()
-									if button.AnimationState == "Leave" then
-										button.AnimationState = nil
-									end
-								end, 1)
-
-								--------------------------------
-
-								do -- BUTTON
-									addon.API.Animation:Fade(button, .05, 1, 1, nil, function() return button.selected end)
-								end
-
-								do -- STATE
-									local transitionID = GetTime()
-									button.Label.transition = true
-									button.Label.transitionID = transitionID
-
-									addon.Libraries.AceTimer:ScheduleTimer(function()
-										if button.Label.transitionID == transitionID then
-											button.Label.transition = false
-										end
-									end, 1)
-								end
-							else
-								do -- BUTTON
-									button:SetAlpha(1)
-								end
-
-								do -- STATE
-									button.Label.transition = false
-								end
-							end
-
-							--------------------------------
-
-							CallbackRegistry:Trigger("GOSSIP_BUTTON_LEAVE")
-						end
-
-						button.MouseDown = function(skipAnimation)
-							if not skipAnimation then
-								addon.API.Animation:Fade(button, .125, 1, .75)
-							else
-								button:SetAlpha(.75)
-							end
-						end
-
-						button.HideButtons = function()
-							local Buttons = Frame.GetButtons()
-
-							--------------------------------
-
-							if Buttons then
-								for i = 1, #Buttons do
-									Buttons[i].Leave(true)
-								end
-							end
-						end
-
-						--------------------------------
-
-						button.Standalone.Background.API_Animation_Parallax_Weight = 2.5
-						addon.API.Animation:AddParallax(button.Standalone.Background, button, function() return true end, function() return button.selected end, addon.Input.Variables.IsController)
-
-						--------------------------------
-
-						button.selected = false
-						button:SetAlpha(1)
-					end
-
-					--------------------------------
-
-					return button
-				end
+				Frame.Content:SetPoint("CENTER", Frame)
+				Frame.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+				addon.API.FrameUtil:SetDynamicSize(Frame.Content, Frame, 0, 0)
+
+				local Content = Frame.Content
 
 				--------------------------------
 
-				local spacing = NS.Variables.BUTTON_SPACING
-				local buttons = {}
+				do -- ELEMENTS
+					do -- LAYOUT GROUP
+						Content.LayoutGroup, Content.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Content, { point = "TOP", direction = "vertical", resize = true, padding = 0, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+						Content.LayoutGroup:SetPoint("CENTER", Content)
+						Content.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+						Content.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
+						addon.API.FrameUtil:SetDynamicSize(Content.LayoutGroup, Content, 0, nil)
+						addon.API.FrameUtil:SetDynamicSize(Frame, Content.LayoutGroup, nil, 0)
+						CallbackRegistry:Add("LayoutGroupSort Gossip.Content", Content.LayoutGroup_Sort)
 
-				for i = 1, 18 do
-					local button
+						local LayoutGroup = Content.LayoutGroup
 
-					if i > 1 then
-						local LastButton = buttons[i - 1]
+						--------------------------------
 
-						button = CreateButton(Frame.Content,
-							function()
-								return -(LastButton:GetHeight() + spacing)
-							end,
-							LastButton)
-					else
-						button = CreateButton(Frame.Content,
-							function()
-								return 0
-							end,
-							Frame.Content)
+						do -- MAIN
+							LayoutGroup.Main = CreateFrame("Frame", "$parent.Main", LayoutGroup)
+							LayoutGroup.Main:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							LayoutGroup.Main:SetFrameLevel(NS.Variables.FRAME_LEVEL + 3)
+							addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Main, LayoutGroup, 0, nil)
+							LayoutGroup:AddElement(LayoutGroup.Main)
+
+							local Main = LayoutGroup.Main
+
+							--------------------------------
+
+							do -- LAYOUT GROUP
+								Main.LayoutGroup, Main.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Main, { point = "TOP", direction = "vertical", resize = true, padding = FRAME_MAIN_BUTTON_SPACING, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+								Main.LayoutGroup:SetPoint("CENTER", Main)
+								Main.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+								Main.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 5)
+								addon.API.FrameUtil:SetDynamicSize(Main.LayoutGroup, Main, 0, nil)
+								addon.API.FrameUtil:SetDynamicSize(Main, Main.LayoutGroup, nil, 0)
+								CallbackRegistry:Add("LayoutGroupSort Gossip.Content.Main", Main.LayoutGroup_Sort)
+
+								local Main_LayoutGroup = Main.LayoutGroup
+
+								--------------------------------
+
+								do -- ELEMENTS
+									do -- BUTTONS
+										local buttons = {}
+
+										for i = 1, 18 do
+											local Button = PrefabRegistry:Create("Gossip.OptionButton", Main_LayoutGroup, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 4, "$parent.Button" .. i)
+											addon.API.FrameUtil:SetDynamicSize(Button, Main_LayoutGroup, 0, nil)
+											Main_LayoutGroup:AddElement(Button)
+
+											--------------------------------
+
+											table.insert(buttons, Button)
+										end
+
+										NS.Variables.Buttons = buttons
+									end
+								end
+							end
+						end
+
+						do -- FOOTER
+							LayoutGroup.Footer = CreateFrame("Frame", "$parent.Footer", LayoutGroup)
+							LayoutGroup.Footer:SetHeight(FRAME_FOOTER_HEIGHT)
+							LayoutGroup.Footer:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							LayoutGroup.Footer:SetFrameLevel(NS.Variables.FRAME_LEVEL + 3)
+							addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Footer, LayoutGroup, 0, nil)
+							LayoutGroup:AddElement(LayoutGroup.Footer)
+
+							local Footer = LayoutGroup.Footer
+
+							--------------------------------
+
+							do -- CONTENT
+								Footer.Content = CreateFrame("Frame", "$parent.Content", Footer)
+								Footer.Content:SetPoint("CENTER", Footer)
+								Footer.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+								Footer.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 4)
+								addon.API.FrameUtil:SetDynamicSize(Footer.Content, Footer, PADDING, PADDING)
+
+								local Footer_Content = Footer.Content
+
+								--------------------------------
+
+								do -- BUTTONS
+									do -- GOODBYE BUTTON
+										Footer_Content.GoodbyeButton = PrefabRegistry:Create("Gossip.Footer.Button.Goodbye", Footer_Content, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 5, "$parent.GoodbyeButton")
+										Footer_Content.GoodbyeButton:SetPoint("CENTER", Footer_Content)
+										Footer_Content.GoodbyeButton:SetFrameStrata(NS.Variables.FRAME_STRATA)
+										Footer_Content.GoodbyeButton:SetFrameLevel(NS.Variables.FRAME_LEVEL + 5)
+										addon.API.FrameUtil:SetDynamicSize(Footer_Content.GoodbyeButton, Footer_Content, 0, 0)
+									end
+								end
+							end
+						end
 					end
-
-					button.Label:SetText("Text")
-					button.Keybind.Label:SetText(i .. ".")
-
-					--------------------------------
-
-					table.insert(buttons, button)
 				end
 
-				Frame.Buttons = buttons
+				do -- LOGIC
+					do -- FUNCTIONS
+						do -- SET
+							function Content:UpdatePosition()
+								local numButtons = NS.Variables.NumCurrentButtons
+
+								--------------------------------
+
+								if numButtons > 0 then
+									Content:SetPoint("CENTER", Frame, 0, -FRAME_FOOTER_HEIGHT)
+								else
+									Content:SetPoint("CENTER", Frame, 0, 0)
+								end
+							end
+						end
+					end
+				end
 			end
+		end
+
+		do -- REFERENCES
+			local Frame = InteractionFrame.GossipFrame
+
+			--------------------------------
+
+			-- CORE
+			Frame.REF_MAIN = Frame.Content.LayoutGroup.Main
+			Frame.REF_FOOTER = Frame.Content.LayoutGroup.Footer
+			Frame.REF_MOUSE_RESPONDER = Frame.MouseResponder
+
+			-- MAIN
+			Frame.REF_MAIN_CONTENT = Frame.REF_MAIN.LayoutGroup
+
+			-- FOOTER
+			Frame.REF_FOOTER_CONTENT = Frame.REF_FOOTER.Content
+			Frame.REF_FOOTER_CONTENT_GOODBYE = Frame.REF_FOOTER_CONTENT.GoodbyeButton
 		end
 	end
 
@@ -681,7 +196,7 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionGossipFrame
+	local Frame = InteractionFrame.GossipFrame
 	local Callback = NS.Script
 
 	--------------------------------

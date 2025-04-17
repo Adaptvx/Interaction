@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -37,6 +37,8 @@ function NS:Load()
 		function addon.LoadedAddons:GetAddons()
 			addon.LoadedAddons.DynamicCam = addon.LoadedAddons:IsAddOnLoaded("DynamicCam")
 			addon.LoadedAddons.BtWQuests = addon.LoadedAddons:IsAddOnLoaded("BtWQuests")
+
+			CallbackRegistry:Trigger("LOADED_ADDONS_READY")
 		end
 	end
 
@@ -53,6 +55,6 @@ function NS:Load()
 	--------------------------------
 
 	do
-		addon.LoadedAddons:GetAddons()
+		addon.Libraries.AceTimer:ScheduleTimer(addon.LoadedAddons.GetAddons, addon.Variables.INIT_DELAY_LAST)
 	end
 end

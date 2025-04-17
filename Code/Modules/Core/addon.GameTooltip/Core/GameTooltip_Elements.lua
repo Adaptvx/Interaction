@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.GameTooltip
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionFrame.GameTooltip = CreateFrame("GameTooltip", "$parent.GameTooltip", InteractionFrame, "GameTooltipTemplate")
 			InteractionFrame.ShoppingTooltip1 = CreateFrame("GameTooltip", "$parent.ShoppingTooltip1", InteractionFrame, "GameTooltipTemplate")
 			InteractionFrame.ShoppingTooltip2 = CreateFrame("GameTooltip", "$parent.ShoppingTooltip2", InteractionFrame, "GameTooltipTemplate")
@@ -56,10 +56,6 @@ function NS.Elements:Load()
 				StyleTooltip(InteractionFrame.GameTooltip, addon.API.Presets.NINESLICE_TOOLTIP_CUSTOM, 1)
 				StyleTooltip(InteractionFrame.ShoppingTooltip1, addon.API.Presets.NINESLICE_TOOLTIP_CUSTOM, .75)
 				StyleTooltip(InteractionFrame.ShoppingTooltip2, addon.API.Presets.NINESLICE_TOOLTIP_CUSTOM, .75)
-
-				-- if not addon.Variables.IS_CLASSIC then
-				-- 	StyleTooltip(GarrisonFollowerTooltip)
-				-- end
 			end
 		end
 	end

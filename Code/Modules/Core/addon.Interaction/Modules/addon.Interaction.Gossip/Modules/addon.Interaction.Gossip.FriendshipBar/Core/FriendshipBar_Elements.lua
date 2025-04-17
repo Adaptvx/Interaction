@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip.FriendshipBar
 
@@ -15,7 +15,7 @@ function NS.Elements:Load()
 	-- CREATE ELEMENTS
     --------------------------------
 
-	do -- CREATE ELEMENTS
+	do -- ELEMENTS
         InteractionFriendshipBarParent = CreateFrame("Frame", "$parent.InteractionFriendshipBarParent", InteractionFrame)
         InteractionFriendshipBarParent:SetSize(350, 50)
         InteractionFriendshipBarParent:SetPoint("TOP", UIParent, 0, -(addon.API.Main:GetScreenHeight() * .025))

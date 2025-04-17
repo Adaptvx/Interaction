@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -47,7 +47,7 @@ do
 	end
 
 	function NS:IsAutoAccept()
-		if not addon.Variables.IS_CLASSIC then
+		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 			return QuestGetAutoAccept() and QuestFrameAcceptButton:IsVisible()
 		else
 			return false
@@ -136,9 +136,9 @@ do
 
 							--------------------------------
 
-							local IsPC = addon.Variables.Platform == 1
-							local IsPlaystation = addon.Variables.Platform == 2
-							local IsXbox = addon.Variables.Platform == 3
+							local IsPC = addon.Input.Variables.IsPC
+							local IsPlaystation = addon.Input.Variables.IsPlaystation
+							local IsXbox = addon.Input.Variables.IsXbox
 
 							local replaceWithImageList = {
 								["SPACE"] = addon.Variables.PATH_ART .. "Platform/Text-Platform-PC-Space.png",

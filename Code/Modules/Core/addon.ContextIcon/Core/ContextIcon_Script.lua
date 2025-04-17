@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.ContextIcon
 
@@ -13,13 +13,13 @@ NS.Script = {}
 local function MissingAPI()
 	return false
 end
+
 local function ReadyForTurnInMakeshiftAPI(questID)
-	local isRetail = not addon.Variables.IS_CLASSIC and not addon.Variables.IS_CLASSIC_ERA
 	local result = false
 
 	--------------------------------
 
-	if (isRetail and C_QuestLog.IsQuestComplete(questID)) or (not isRetail and IsQuestComplete(questID)) then
+	if (addon.Variables.IS_WOW_VERSION_RETAIL and C_QuestLog.IsQuestComplete(questID)) or (not addon.Variables.IS_WOW_VERSION_RETAIL and IsQuestComplete(questID)) then
 		result = true
 	else
 		if QuestFrameCompleteQuestButton:IsVisible() or QuestFrameCompleteButton:IsVisible() and QuestFrameCompleteButton:IsEnabled() then
@@ -81,7 +81,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				if NS.Variables.IsRetail then
+				if addon.Variables.IS_WOW_VERSION_RETAIL then
 					local questClassification = C_QuestInfoSystem.GetQuestClassification(questID)
 					local questType = C_QuestLog.GetQuestType(questID)
 
@@ -137,7 +137,7 @@ function NS.Script:Load()
 						isRaid25 = isRaid25,
 						isScenario = isScenario,
 					}
-				elseif NS.Variables.IsClassicCata or NS.Variables.IsClassicEra then
+				elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 					local results = {}
 					local questInfo = {}
 
@@ -277,7 +277,7 @@ function NS.Script:Load()
 				--------------------------------
 
 				do -- RETAIL
-					if NS.Variables.IsRetail then
+					if addon.Variables.IS_WOW_VERSION_RETAIL then
 						local resultPath
 
 						--------------------------------
@@ -403,7 +403,7 @@ function NS.Script:Load()
 				end
 
 				do -- CLASSIC CATA
-					if NS.Variables.IsClassicCata then
+					if addon.Variables.IS_WOW_VERSION_CLASSIC_PROGRESSION then
 						local resultPath
 
 						--------------------------------
@@ -477,7 +477,7 @@ function NS.Script:Load()
 				end
 
 				do -- CLASSIC ERA
-					if NS.Variables.IsClassicEra then
+					if addon.Variables.IS_WOW_VERSION_CLASSIC_ERA then
 						local resultPath
 
 						--------------------------------

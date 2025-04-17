@@ -107,17 +107,17 @@ do
 
 		--------------------------------
 
-		Frame.EnterCallbacks = {}
-		Frame.LeaveCallbacks = {}
-		Frame.MouseDownCallbacks = {}
-		Frame.MouseUpCallbacks = {}
+		Frame.enterCallbacks = {}
+		Frame.leaveCallbacks = {}
+		Frame.mouseDownCallbacks = {}
+		Frame.mouseUpCallbacks = {}
 
-		Frame.ListElementEnterCallbacks = {}
-		Frame.ListElementLeaveCallbacks = {}
-		Frame.ListElementMouseDownCallbacks = {}
-		Frame.ListElementMouseUpCallbacks = {}
+		Frame.enterCallbacks_listElement = {}
+		Frame.leaveCallbacks_listElement = {}
+		Frame.mouseDownCallbacks_listElement = {}
+		Frame.mouseUpCallbacks_listElement = {}
 
-		Frame.ValueChangedCallbacks = {}
+		Frame.valueChangedCallbacks = {}
 
 		--------------------------------
 
@@ -243,40 +243,40 @@ do
 				end
 
 				do -- LOGIC
-					function Frame.List.ShowList()
-						Frame.ShowListCallback()
+					function Frame.List:ShowList()
+						Frame:ShowListCallback()
 
 						--------------------------------
 
 						Frame.List:Show()
-						Frame.List.ResetPage()
+						Frame.List:ResetPage()
 					end
 
-					function Frame.List.HideList()
-						Frame.HideListCallback()
+					function Frame.List:HideList()
+						Frame:HideListCallback()
 
 						--------------------------------
 
 						Frame.List:Hide()
-						Frame.List.ResetPage()
+						Frame.List:ResetPage()
 					end
 
-					function Frame.List.ForceHideList()
+					function Frame.List:ForceHideList()
 						Frame.List:Hide()
-						Frame.List.ResetPage()
-						Frame.Leave()
+						Frame.List:ResetPage()
+						Frame:OnLeave()
 					end
 
-					function Frame.List.ToggleVisibility()
+					function Frame.List:ToggleVisibility()
 						if Frame.List:IsVisible() then
-							Frame.List.HideList()
+							Frame.List:HideList()
 						else
-							Frame.List.ShowList()
+							Frame.List:ShowList()
 						end
 
 						--------------------------------
 
-						Frame.List.ResetPage()
+						Frame.List:ResetPage()
 					end
 				end
 
@@ -285,8 +285,8 @@ do
 
 					--------------------------------
 
-					function Frame.List.ResetPage()
-						local minPage, maxPage = Frame.List.GetPageData()
+					function Frame.List:ResetPage()
+						local minPage, maxPage = Frame.List:GetPageData()
 						local pageLength = #Frame.List.Elements
 						local currentValue = Frame.Value
 						local targetPage
@@ -303,10 +303,10 @@ do
 
 						--------------------------------
 
-						Frame.List.UpdatePageData()
+						Frame.List:UpdatePageData()
 					end
 
-					function Frame.List.GetPageData()
+					function Frame.List:GetPageData()
 						local numEntries = #valueTable
 						local pageLength = #Frame.List.Elements
 						local minPage = 1
@@ -317,8 +317,8 @@ do
 						return minPage, maxPage
 					end
 
-					function Frame.List.NextPage()
-						local minPage, maxPage = Frame.List.GetPageData()
+					function Frame.List:NextPage()
+						local minPage, maxPage = Frame.List:GetPageData()
 
 						--------------------------------
 
@@ -328,11 +328,11 @@ do
 
 						--------------------------------
 
-						Frame.List.UpdatePageData()
+						Frame.List:UpdatePageData()
 					end
 
-					function Frame.List.PreviousPage()
-						local minPage, maxPage = Frame.List.GetPageData()
+					function Frame.List:PreviousPage()
+						local minPage, maxPage = Frame.List:GetPageData()
 
 						--------------------------------
 
@@ -342,11 +342,11 @@ do
 
 						--------------------------------
 
-						Frame.List.UpdatePageData()
+						Frame.List:UpdatePageData()
 					end
 
-					function Frame.List.UpdatePageData()
-						local minPage, maxPage = Frame.List.GetPageData()
+					function Frame.List:UpdatePageData()
+						local minPage, maxPage = Frame.List:GetPageData()
 						local currentPage = Frame.List.CurrentPage
 
 						--------------------------------
@@ -397,8 +397,8 @@ do
 						--------------------------------
 
 						Frame.List.Mouse:SetScript("OnMouseDown", function()
-							Frame.MouseUp()
-							Frame.Leave()
+							Frame:OnMouseUp()
+							Frame:OnLeave()
 						end)
 					end
 
@@ -472,10 +472,10 @@ do
 
 										--------------------------------
 
-										local listElementEnterCallbacks = Frame.ListElementEnterCallbacks
+										local enterCallbacks_listElement = Frame.enterCallbacks_listElement
 
-										for callback = 1, #listElementEnterCallbacks do
-											listElementEnterCallbacks[callback]()
+										for callback = 1, #enterCallbacks_listElement do
+											enterCallbacks_listElement[callback]()
 										end
 
 										--------------------------------
@@ -488,10 +488,10 @@ do
 
 										--------------------------------
 
-										local listElementLeaveCallbacks = Frame.ListElementLeaveCallbacks
+										local leaveCallbacks_listElement = Frame.leaveCallbacks_listElement
 
-										for callback = 1, #listElementLeaveCallbacks do
-											listElementLeaveCallbacks[callback]()
+										for callback = 1, #leaveCallbacks_listElement do
+											leaveCallbacks_listElement[callback]()
 										end
 
 										--------------------------------
@@ -504,10 +504,10 @@ do
 
 										--------------------------------
 
-										local listElementMouseDownCallbacks = Frame.ListElementMouseDownCallbacks
+										local mouseDownCallbacks_listElement = Frame.mouseDownCallbacks_listElement
 
-										for callback = 1, #listElementMouseDownCallbacks do
-											listElementMouseDownCallbacks[callback]()
+										for callback = 1, #mouseDownCallbacks_listElement do
+											mouseDownCallbacks_listElement[callback]()
 										end
 
 										--------------------------------
@@ -520,27 +520,27 @@ do
 
 										--------------------------------
 
-										Frame.SetValue(Element, Element.Index)
+										Frame:SetValue(Element, Element.Index)
 
 										--------------------------------
 
 										if autoCloseList then
-											Frame.MouseUp()
-											Frame.Leave()
+											Frame:OnMouseUp()
+											Frame:OnLeave()
 										end
 
 										--------------------------------
 
-										local listElementMouseUpCallbacks = Frame.ListElementMouseUpCallbacks
+										local mouseUpCallbacks_listElement = Frame.mouseUpCallbacks_listElement
 
-										for callback = 1, #listElementMouseUpCallbacks do
-											listElementMouseUpCallbacks[callback]()
+										for callback = 1, #mouseUpCallbacks_listElement do
+											mouseUpCallbacks_listElement[callback]()
 										end
 
 										--------------------------------
 
 										if Element.Index ~= Frame.Value then
-											local valueChangedCallbacks = Frame.ValueChangedCallbacks
+											local valueChangedCallbacks = Frame.valueChangedCallbacks
 
 											for callback = 1, #valueChangedCallbacks do
 												valueChangedCallbacks[callback]()
@@ -707,7 +707,7 @@ do
 									--------------------------------
 
 									Frame.List.Content.Index.ButtonContainer.PreviousPageButton:SetScript("OnClick", function()
-										Frame.List.PreviousPage()
+										Frame.List:PreviousPage()
 									end)
 								end
 
@@ -748,7 +748,7 @@ do
 									--------------------------------
 
 									Frame.List.Content.Index.ButtonContainer.NextPageButton:SetScript("OnClick", function()
-										Frame.List.NextPage()
+										Frame.List:NextPage()
 									end)
 								end
 							end
@@ -773,7 +773,7 @@ do
 					UpdateSize()
 
 					local function Toggle()
-						Frame.List.ToggleVisibility()
+						Frame.List:ToggleVisibility()
 						UpdateSize()
 					end
 
@@ -782,11 +782,11 @@ do
 					addon.API.FrameTemplates:CreateScrollResponder(Frame.List, {
 						mouseScrollCallback = function(self, delta)
 							if delta >= 1 then
-								Frame.List.PreviousPage()
+								Frame.List:PreviousPage()
 							end
 
 							if delta <= -1 then
-								Frame.List.NextPage()
+								Frame.List:NextPage()
 							end
 						end
 					})
@@ -802,12 +802,12 @@ do
 		--------------------------------
 
 		do -- STATE UPDATES
-			Frame.SetValue = function(element, value)
+			function Frame:SetValue(element, value)
 				setFunc(element, value)
-				Frame.UpdateDropdown()
+				Frame:UpdateDropdown()
 			end
 
-			Frame.ShowListCallback = function()
+			function Frame:ShowListCallback()
 				openListFunc()
 
 				--------------------------------
@@ -828,7 +828,7 @@ do
 				Frame.ArrowTexture:SetTexture(Frame._ArrowEnableTexture)
 			end
 
-			Frame.HideListCallback = function()
+			function Frame:HideListCallback()
 				closeListFunc()
 
 				--------------------------------
@@ -851,7 +851,7 @@ do
 		end
 
 		do -- CLICK EVENTS
-			Frame.Enter = function()
+			function Frame:OnEnter()
 				if enableFunc and not enableFunc() then
 					return
 				end
@@ -872,7 +872,7 @@ do
 
 					--------------------------------
 
-					local enterCallbacks = Frame.EnterCallbacks
+					local enterCallbacks = Frame.enterCallbacks
 
 					for callback = 1, #enterCallbacks do
 						enterCallbacks[callback]()
@@ -880,7 +880,7 @@ do
 				end
 			end
 
-			Frame.Leave = function()
+			function Frame:OnLeave()
 				if enableFunc and not enableFunc() then
 					return
 				end
@@ -901,7 +901,7 @@ do
 
 					--------------------------------
 
-					local leaveCallbacks = Frame.LeaveCallbacks
+					local leaveCallbacks = Frame.leaveCallbacks
 
 					for callback = 1, #leaveCallbacks do
 						leaveCallbacks[callback]()
@@ -909,51 +909,51 @@ do
 				end
 			end
 
-			Frame.MouseDown = function()
+			function Frame:OnMouseDown()
 				if enableFunc and not enableFunc() then
 					return
 				end
 
 				--------------------------------
 
-				local mouseDownCallbacks = Frame.MouseDownCallbacks
+				local mouseDownCallbacks = Frame.mouseDownCallbacks
 
 				for callback = 1, #mouseDownCallbacks do
 					mouseDownCallbacks[callback]()
 				end
 			end
 
-			Frame.MouseUp = function()
+			function Frame:OnMouseUp()
 				if enableFunc and not enableFunc() then
 					return
 				end
 
 				--------------------------------
 
-				Frame.List.ToggleVisibility()
+				Frame.List:ToggleVisibility()
 
 				--------------------------------
 
-				local mouseUpCallbacks = Frame.MouseDownCallbacks
+				local mouseUpCallbacks = Frame.mouseDownCallbacks
 
 				for callback = 1, #mouseUpCallbacks do
 					mouseUpCallbacks[callback]()
 				end
 			end
 
-			Frame:SetScript("OnEnter", Frame.Enter)
-			Frame:SetScript("OnLeave", Frame.Leave)
-			Frame:SetScript("OnMouseDown", Frame.MouseDown)
-			Frame:SetScript("OnMouseUp", Frame.MouseUp)
+			Frame:SetScript("OnEnter", Frame.OnEnter)
+			Frame:SetScript("OnLeave", Frame.OnLeave)
+			Frame:SetScript("OnMouseDown", Frame.OnMouseDown)
+			Frame:SetScript("OnMouseUp", Frame.OnMouseUp)
 		end
 
 		do -- EVENTS
-			Frame.UpdateDropdown = function()
+			function Frame:UpdateDropdown()
 				Frame.Value = getFunc()
 				Frame.Text:SetText(valueTable[Frame.Value])
 			end
 
-			Frame.UpdateDropdown()
+			Frame:UpdateDropdown()
 			hooksecurefunc(Frame, "Show", Frame.UpdateDropdown)
 		end
 

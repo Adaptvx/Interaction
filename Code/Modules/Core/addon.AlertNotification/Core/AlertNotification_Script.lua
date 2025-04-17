@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.AlertNotification
 
@@ -36,8 +36,8 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			Frame.ShowWithAnimation()
-			addon.Libraries.AceTimer:ScheduleTimer(function() Frame.HideWithAnimation() end, 2)
+			Frame:ShowWithAnimation()
+			addon.Libraries.AceTimer:ScheduleTimer(function() Frame:HideWithAnimation() end, 2)
 		end
 	end
 
@@ -46,84 +46,102 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation = function()
-			local animationID = math.random(1, 999999999)
-			Frame.AnimationID = animationID
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent(sessionID)
+				return Frame.showWithAnimation_sessionID ~= sessionID
+			end
 
-			--------------------------------
+			function Frame:ShowWithAnimation()
+				local showWithAnimation_sessionID = math.random(1, 9999999)
+				Frame.showWithAnimation_sessionID = showWithAnimation_sessionID
 
-			Frame:Show()
+				--------------------------------
 
-			--------------------------------
+				Frame:Show()
 
-			Frame.Text:SetAlpha(0)
-			Frame:SetScale(1)
+				--------------------------------
 
-			--------------------------------
+				Frame.Text:SetAlpha(0)
+				Frame:SetScale(1)
 
-			addon.API.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame.AnimationID ~= animationID end)
+				--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				addon.API.Animation:FadeText(Frame.Text, 1.5, 15, 1, addon.API.Animation.EaseExpo, function() return Frame.AnimationID ~= animationID end)
-			end, .2)
+				addon.API.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
-			--------------------------------
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					addon.API.Animation:FadeText(Frame.Text, 1.5, 15, 1, addon.API.Animation.EaseExpo, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+				end, .2)
 
-			Frame.Flare.PlayAnimation()
+				--------------------------------
 
-			--------------------------------
+				Frame.Flare:StartPlayback()
 
-			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.AlertNotification_Show)
+				--------------------------------
+
+				addon.SoundEffects:PlaySoundFile(addon.SoundEffects.AlertNotification_Show)
+			end
 		end
 
-		Frame.HideWithAnimation = function()
-			local animationID = Frame.AnimationID
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent(sessionID)
+				return Frame.showWithAnimation_sessionID ~= sessionID
+			end
 
-			--------------------------------
+			function Frame:HideWithAnimation()
+				local showWithAnimation_sessionID = Frame.showWithAnimation_sessionID
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.AnimationID == animationID then
-					Frame:Hide()
-				end
-			end, .5)
+				--------------------------------
 
-			--------------------------------
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
+						Frame:Hide()
+					end
+				end, .5)
 
-			addon.API.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
-			addon.API.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame.AnimationID ~= animationID end)
+				--------------------------------
 
-			--------------------------------
+				addon.API.Animation:Fade(Frame.Text, .5, 1, 0, nil, function() return Frame:HideWithAnimation_StopEvent(showWithAnimation_sessionID) end)
+				addon.API.Animation:Fade(Frame, .5, 1, 0, nil, function() return Frame:HideWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
-			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.AlertNotification_Hide)
+				--------------------------------
+
+				addon.SoundEffects:PlaySoundFile(addon.SoundEffects.AlertNotification_Hide)
+			end
 		end
 
-		Frame.Flare.PlayAnimation = function()
-			local animationID = GetTime()
-			Frame.Flare.AnimationID = animationID
+		do -- FLARE
+			function Frame.Flare:StartPlayback_StopEvent(sessionID)
+				return Frame.Flare.animationID ~= sessionID
+			end
 
-			--------------------------------
+			function Frame.Flare:StartPlayback()
+				local animationID = GetTime()
+				Frame.Flare.animationID = animationID
 
-			Frame.Flare:Show()
-			Frame.Flare:SetAlpha(0)
-			Frame.Flare:SetScale(.1)
+				--------------------------------
 
-			--------------------------------
+				Frame.Flare:Show()
+				Frame.Flare:SetAlpha(0)
+				Frame.Flare:SetScale(.1)
 
-			addon.API.Animation:Fade(Frame.Flare, .125, 0, 1, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
-			addon.API.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare.AnimationID ~= animationID end)
+				--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.Flare.AnimationID == animationID then
-					addon.API.Animation:Fade(Frame.Flare, 2, 1, 0, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
-					addon.API.Animation:Scale(Frame.Flare, 2, 1, .875, nil, addon.API.Animation.EaseExpo, function() return Frame.Flare.AnimationID ~= animationID end)
-				end
-			end, .125)
+				addon.API.Animation:Fade(Frame.Flare, .125, 0, 1, addon.API.Animation.EaseExpo, function() return Frame.Flare:StartPlayback_StopEvent(animationID) end)
+				addon.API.Animation:Scale(Frame.Flare, .125, .875, 1, function() return Frame.Flare:StartPlayback_StopEvent(animationID) end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if Frame.Flare.AnimationID == animationID then
-					Frame.Flare:Hide()
-				end
-			end, 2)
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.Flare.animationID == animationID then
+						addon.API.Animation:Fade(Frame.Flare, 2, 1, 0, addon.API.Animation.EaseExpo, function() return Frame.Flare:StartPlayback_StopEvent(animationID) end)
+						addon.API.Animation:Scale(Frame.Flare, 2, 1, .875, nil, addon.API.Animation.EaseExpo, function() return Frame.Flare:StartPlayback_StopEvent(animationID) end)
+					end
+				end, .125)
+
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.Flare.animationID == animationID then
+						Frame.Flare:Hide()
+					end
+				end, 2)
+			end
 		end
 	end
 
@@ -157,7 +175,7 @@ function NS.Script:Load()
 		Events:RegisterEvent("QUEST_TURNED_IN")
 		Events:SetScript("OnEvent", function(self, event, ...)
 			do -- QUEST
-				local valid = (InteractionQuestFrame.validForNotification)
+				local valid = (InteractionFrame.QuestFrame.validForNotification)
 				if not valid then
 					return
 				end

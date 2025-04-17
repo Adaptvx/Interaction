@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -18,19 +18,25 @@ do -- MAIN
 end
 
 do -- CONSTANTS
+	-- REFERENCE
 	NS.PATH = "Interface/AddOns/Interaction/"
 	NS.PATH_ART = NS.PATH .. "Art/"
 
-	NS.VERSION_STRING = "0.0.9"
-	NS.VERSION_NUMBER = 00000900 -- XX.XX.XX.XX
-	NS.IS_CLASSIC = select(4, GetBuildInfo()) < 110000
-	NS.IS_CLASSIC_ERA = select(4, GetBuildInfo()) < 20000
+	-- VERSION
+	NS.VERSION_STRING = "0.1.0"
+	NS.VERSION_NUMBER = 00001000 -- XX.XX.XX.XX
+	NS.IS_WOW_VERSION_RETAIL = (select(4, GetBuildInfo()) > 110000)
+	NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (select(4, GetBuildInfo()) < 110000 and select(4, GetBuildInfo()) >= 20000)
+	NS.IS_WOW_VERSION_CLASSIC_ERA = (select(4, GetBuildInfo()) < 20000)
+	NS.IS_WOW_VERSION_CLASSIC_ALL = (NS.IS_WOW_VERSION_CLASSIC_PROGRESSION or NS.IS_WOW_VERSION_CLASSIC_ERA)
 
+	-- INITALIZATION
 	NS.INIT_DELAY_1 = .025
 	NS.INIT_DELAY_2 = .05
 	NS.INIT_DELAY_3 = .075
 	NS.INIT_DELAY_LAST = .1
 
+	-- CONSTANTS
 	NS.GOLDEN_RATIO = 1.618034
 end
 
@@ -53,8 +59,10 @@ end
 --------------------------------
 
 do
-	C_Timer.After(NS.INIT_DELAY_1, function()
-		NS.Platform = addon.Database.DB_GLOBAL.profile.INT_PLATFORM
+	C_Timer.After(0, function()
+		CallbackRegistry:Add("ADDON_DATABASE_READY", function()
+			NS.Platform = addon.Database.DB_GLOBAL.profile.INT_PLATFORM
+		end, 0)
 	end)
 end
 

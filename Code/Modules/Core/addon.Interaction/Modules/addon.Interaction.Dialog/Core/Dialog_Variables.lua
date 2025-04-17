@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Dialog
 
@@ -13,21 +13,32 @@ NS.Variables = {}
 --------------------------------
 
 do -- MAIN
-	NS.Variables.IsInInteraction = false
-	NS.Variables.AllowAutoProgress = nil
-	NS.Variables.Finished = nil
-	NS.Variables.ThemeUpdateTransition = false
+	NS.Variables.info = {
+		["type"] = nil,
+		["npcInfo"] = {
+			["name"] = nil,
+			["guid"] = nil,
+		},
+		["contextIcon"] = nil,
+		["title"] = nil,
+		["contentInfo"] = {
+			["full"] = nil,
+			["split"] = nil,
+			["formatted"] = nil,
+			["emoteIndexes"] = nil,
+		},
+	}
 
-	NS.Variables.Temp_FrameType = nil
-	NS.Variables.Temp_CurrentIndex = nil
-	NS.Variables.Temp_DialogStringList = nil
-	NS.Variables.Temp_CurrentString = nil
-	NS.Variables.Temp_IsScrollDialog = nil
-	NS.Variables.Temp_IsEmoteDialog = nil
-	NS.Variables.Temp_Temp_IsEmoteDialog = nil
-	NS.Variables.Temp_IsEmoteDialogIndexes = nil
-	NS.Variables.Temp_NotEmoteDialogIndexes = nil
-	NS.Variables.Temp_IsStylisedDialog = nil
+	NS.Variables.Playback_Valid = nil
+	NS.Variables.Playback_Index = nil
+	NS.Variables.Playback_Freeze = nil
+	NS.Variables.Playback_AutoProgress = nil
+	NS.Variables.Playback_Finished = nil
+
+	NS.Variables.Style_IsDialog = nil
+	NS.Variables.Style_IsScroll = nil
+	NS.Variables.Style_IsRustic = nil
+	NS.Variables.Style_IsEmote = nil
 end
 
 do  -- CONSTANTS
@@ -43,7 +54,16 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
+		NS.Variables.FRAME_MAX_WIDTH = 350
 
+		NS.Variables.FRAME_STRATA = "BACKGROUND"
+		NS.Variables.FRAME_STRATA_MAX = "FULLSCREEN"
+		NS.Variables.FRAME_LEVEL = 1
+		NS.Variables.FRAME_LEVEL_MAX = 999
+	end
+
+	do -- PADDING
+		NS.Variables.PADDING = NS.Variables:RATIO(8)
 	end
 end
 

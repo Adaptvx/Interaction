@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic
 
@@ -10,7 +10,7 @@ NS.Script = {}
 
 --------------------------------
 
-local GetGlidingInfo = not addon.Variables.IS_CLASSIC and C_PlayerInfo.GetGlidingInfo or nil
+local GetGlidingInfo = not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_PlayerInfo.GetGlidingInfo or nil
 
 --------------------------------
 
@@ -46,7 +46,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					if (addon.Variables.Platform == 1) and (isPan or isActionCamSide) then
+					if (addon.Input.Variables.IsPC) and (isPan or isActionCamSide) then
 						SaveView(3)
 					end
 
@@ -61,7 +61,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					if (addon.Variables.Platform == 1) and (isPan or isActionCamSide) then
+					if (addon.Input.Variables.IsPC) and (isPan or isActionCamSide) then
 						SetView(3)
 					else
 						NS.Util:SetCameraZoom(NS.Variables.Saved_Zoom, true)
@@ -255,11 +255,11 @@ function NS.Script:Load()
 
 			do -- VIGNETTE
 				function NS.Script:StartCinematicVignette()
-					InteractionFrame.CinematicMode.Vignette.ShowWithAnimation()
+					InteractionFrame.CinematicMode.Vignette:ShowWithAnimation()
 				end
 
 				function NS.Script:StopCinematicVignette()
-					InteractionFrame.CinematicMode.Vignette.HideWithAnimation()
+					InteractionFrame.CinematicMode.Vignette:HideWithAnimation()
 				end
 			end
 		end
@@ -514,12 +514,24 @@ function NS.Script:Load()
 		end
 
 		do -- ANIMATION
-			InteractionFrame.CinematicMode.Vignette.ShowWithAnimation = function()
-				addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .5, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 1)
+			do -- SHOW
+				function InteractionFrame.CinematicMode.Vignette:ShowWithAnimation_StopEvent()
+
+				end
+
+				function InteractionFrame.CinematicMode.Vignette:ShowWithAnimation()
+					addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .5, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 1)
+				end
 			end
 
-			InteractionFrame.CinematicMode.Vignette.HideWithAnimation = function()
-				addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .25, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 0)
+			do -- HIDE
+				function InteractionFrame.CinematicMode.Vignette:HideWithAnimation_StopEvent()
+
+				end
+
+				function InteractionFrame.CinematicMode.Vignette:HideWithAnimation()
+					addon.API.Animation:Fade(InteractionFrame.CinematicMode.Vignette, .25, InteractionFrame.CinematicMode.Vignette:GetAlpha(), 0)
+				end
 			end
 		end
 	end
@@ -540,7 +552,7 @@ function NS.Script:Load()
 				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
 				local isStaticNPC = ((UnitName("npc") and not UnitExists("npc")) or (UnitName("questnpc") and not UnitExists("questnpc")))
 				local inInstance = (IsInInstance())
-				local isSkyriding = not addon.Variables.IS_CLASSIC and select(1, GetGlidingInfo()) or false
+				local isSkyriding = GetGlidingInfo and select(1, GetGlidingInfo()) or false
 
 				if interactTargetIsSelf or isStaticNPC or inInstance or isSkyriding then
 					return
@@ -596,7 +608,7 @@ function NS.Script:Load()
 				local Events = CreateFrame("Frame")
 				Events:RegisterEvent("STOP_MOVIE")
 				Events:RegisterEvent("CINEMATIC_STOP")
-				if not addon.Variables.IS_CLASSIC then Events:RegisterEvent("PERKS_PROGRAM_CLOSE") end
+				if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then Events:RegisterEvent("PERKS_PROGRAM_CLOSE") end
 
 				Events:SetScript("OnEvent", function()
 					InteractionFrame.CinematicMode.Vignette:SetAlpha(0)

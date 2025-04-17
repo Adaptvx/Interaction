@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 local AceDB = LibStub("AceDB-3.0")
@@ -359,7 +359,13 @@ do
 			NS.DB_GLOBAL_PERSISTENT = AceDB:New("InteractionLibraryDB_Global", NS.DEFAULTS_GLOBAL_PERSISTENT, true)
 			NS.DB_LOCAL_PERSISTENT = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL_PERSISTENT, true)
 
+			--------------------------------
+
 			NS:SetDynamicCinematicVariables()
+
+			--------------------------------
+
+			CallbackRegistry:Trigger("ADDON_DATABASE_READY")
 		end, 0)
 	end
 

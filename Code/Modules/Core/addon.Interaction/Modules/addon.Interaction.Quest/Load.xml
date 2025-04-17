@@ -8,6 +8,11 @@
 	<Script file="Core/Quest_Script.lua"/>
 	<Script file="Core/Quest_Variables.lua"/>
 
+	<!-- Prefabs -->
+	<Script file="Prefabs/Prefabs_Quest.lua"/>
+	<Script file="Prefabs/Prefabs_Quest_Templates_Mixin.lua"/>
+	<Include file="Prefabs/Prefabs_Quest_Templates.xml"/>
+
 	<!-- Modules -->
 	<Include file="Modules/addon.Interaction.Quest.Target/Load.xml"/>
 </Ui>

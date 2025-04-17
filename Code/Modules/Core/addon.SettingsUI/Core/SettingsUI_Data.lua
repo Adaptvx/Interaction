@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -65,7 +65,7 @@ function NS.Data:Load()
 	end
 
 	do -- CONTENT
-		do -- <- Before you get started
+		do -- TEMPLATES
 			-- Button = {
 			-- 	name = "Default",
 			-- 	tooltipImage = "",
@@ -256,13 +256,6 @@ function NS.Data:Load()
 						end
 					end,
 					get = function() return addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME end,
-					setCriteria = function(_, val)
-						if not InteractionFrame.ThemeTransition then
-							return true
-						else
-							return false
-						end
-					end,
 					set = function(_, val)
 						if val ~= addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME then
 							addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -300,13 +293,6 @@ function NS.Data:Load()
 					end,
 					grid = true,
 					get = function() return addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME end,
-					setCriteria = function(_, val)
-						if not addon.Interaction.Gossip.Variables.ThemeUpdateTransition then
-							return true
-						else
-							return false
-						end
-					end,
 					set = function(_, val)
 						if val ~= addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME then
 							addon.Libraries.AceTimer:ScheduleTimer(function()
@@ -531,10 +517,36 @@ function NS.Data:Load()
 						addon.Database.DB_GLOBAL.profile.INT_CONTENT_PREVIEW_ALPHA = val
 					end
 				},
+				Title_Gossip = {
+					name = L["Title - Gossip"],
+					type = "Title",
+					order = 15,
+					hidden = function() return false end,
+					category = Appearance,
+				},
+				Checkbox_Gossip_AlwaysShowGossip = {
+					name = L["Checkbox - Always Show Gossip Frame"],
+					tooltipImage = "",
+					tooltipText = L["Checkbox - Always Show Gossip Frame - Tooltip"],
+					tooltipTextDynamic = nil,
+					tooltipImageType = "Small",
+					type = "Checkbox",
+					order = 16,
+					hidden = function() return false end,
+					locked = function() return addon.Interaction.Variables.Active end,
+					subcategory = 0,
+					category = Appearance,
+					get = function() return addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP end,
+					set = function(_, val)
+						if not addon.Variables.Active then
+							addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP = val
+						end
+					end
+				},
 				Title_Quest = {
 					name = L["Title - Quest"],
 					type = "Title",
-					order = 15,
+					order = 17,
 					hidden = function() return false end,
 					category = Appearance,
 				},
@@ -545,7 +557,7 @@ function NS.Data:Load()
 					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
-					order = 16,
+					order = 18,
 					hidden = function() return false end,
 					locked = function() return addon.Interaction.Variables.Active end,
 					subcategory = 0,
@@ -1535,9 +1547,9 @@ function NS.Data:Load()
 										--------------------------------
 
 										if val ~= addon.Variables.Platform then
-											NS.Utils.ReloadPrompt()
+											NS.Utils:Prompt_Reload()
 										else
-											NS.Utils.ClearPrompt()
+											NS.Utils:Prompt_Clear()
 										end
 									end
 
@@ -1825,8 +1837,8 @@ function NS.Data:Load()
 					type = "Group",
 					order = 2,
 					category = Gameplay,
-					hidden = function() return addon.Variables.IS_CLASSIC end,
-					locked = function() return addon.Variables.IS_CLASSIC end,
+					hidden = function() return addon.Variables.IS_WOW_VERSION_CLASSIC_ALL end,
+					locked = function() return addon.Variables.IS_WOW_VERSION_CLASSIC_ALL end,
 					args = {
 						Title_Waypoint = {
 							name = L["Title - Waypoint"],
@@ -1850,7 +1862,7 @@ function NS.Data:Load()
 							category = Gameplay,
 							get = function() return addon.Database.DB_GLOBAL.profile.INT_WAYPOINT end,
 							set = function(_, val)
-								NS.Utils.ReloadPrompt()
+								NS.Utils:Prompt_Reload()
 
 								addon.Database.DB_GLOBAL.profile.INT_WAYPOINT = val
 							end,
@@ -1911,7 +1923,7 @@ function NS.Data:Load()
 							get = function() return addon.Database.DB_GLOBAL.profile.INT_READABLE end,
 							set = function(_, val)
 								if not InteractionReadableUIFrame:IsVisible() then
-									NS.Utils.ReloadPrompt()
+									NS.Utils:Prompt_Reload()
 
 									--------------------------------
 
@@ -2315,7 +2327,7 @@ function NS.Data:Load()
 							subcategory = 0,
 							category = More,
 							set = function()
-								NS.Utils.ConfirmationPrompt(L["Prompt - Reset Settings"], L["Prompt - Reset Settings Button 1"], L["Prompt - Reset Settings Button 2"], function()
+								NS.Utils:Prompt_Confirm(L["Prompt - Reset Settings"], L["Prompt - Reset Settings Button 1"], L["Prompt - Reset Settings Button 2"], function()
 									addon.Database:ResetSettings()
 
 									--------------------------------

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -46,7 +46,7 @@ function NS.LibraryUI.Script:Load()
 	--------------------------------
 
 	do
-		LibraryUI.Content.Sidebar.UpdateLayout = function()
+		function LibraryUI.Content.Sidebar:UpdateLayout()
 			local CurrentOffset = 0
 			local Padding = NS.Variables:RATIO(9)
 
@@ -68,7 +68,7 @@ function NS.LibraryUI.Script:Load()
 			end
 		end
 
-		LibraryUI.Content.Sidebar.ResetToDefaults = function()
+		function LibraryUI.Content.Sidebar:ResetToDefaults()
 			Frame.LibraryUIFrame.Content.Sidebar.Search:SetText("")
 			Frame.LibraryUIFrame.Content.Sidebar.Search:SetFocus(false)
 
@@ -78,7 +78,7 @@ function NS.LibraryUI.Script:Load()
 			Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checkbox:SetChecked(false)
 		end
 
-		LibraryUI.Content.ContentFrame.ScrollFrame.RefreshLayout = function()
+		function LibraryUI.Content.ContentFrame.ScrollFrame:RefreshLayout()
 			local CurrentOffset = 0
 			local Padding = NS.Variables:RATIO(9)
 
@@ -98,15 +98,15 @@ function NS.LibraryUI.Script:Load()
 			LibraryUI.Content.ContentFrame.ScrollChildFrame:SetHeight(CurrentOffset)
 		end
 
-		LibraryUI.Content.ContentFrame.ScrollFrame.RefreshButtonGradient = function()
+		function LibraryUI.Content.ContentFrame.ScrollFrame:RefreshButtonGradient()
 			local Elements = LibraryUI.Buttons
 
 			for i = 1, #Elements do
-				Elements[i].UpdateGradientAlpha()
+				Elements[i]:UpdateGradientAlpha()
 			end
 		end
 
-		LibraryUI.Content.ContentFrame.ScrollFrame.UpdateScrollIndicator = function()
+		function LibraryUI.Content.ContentFrame.ScrollFrame:UpdateScrollIndicator()
 			local Current = LibraryUI.Content.ContentFrame.ScrollFrame:GetVerticalScroll()
 			local Min = 5
 			local Max = LibraryUI.Content.ContentFrame.ScrollFrame:GetVerticalScrollRange() - 5
@@ -172,22 +172,34 @@ function NS.LibraryUI.Script:Load()
 	--------------------------------
 
 	do
-		LibraryUI.ShowWithAnimation = function()
-			LibraryUI:Show()
+		do -- SHOW
+			function LibraryUI:ShowWithAnimation_StopEvent()
+				return not Frame:IsVisible() or not Frame:GetAlpha() == 1
+			end
 
-			--------------------------------
+			function LibraryUI:ShowWithAnimation()
+				LibraryUI:Show()
 
-			addon.API.Animation:Fade(LibraryUI, .5, 0, 1, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
+				--------------------------------
+
+				addon.API.Animation:Fade(LibraryUI, .5, 0, 1, nil, LibraryUI.ShowWithAnimation_StopEvent)
+			end
 		end
 
-		LibraryUI.HideWithAnimation = function()
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				LibraryUI:Hide()
-			end, .5)
+		do -- HIDE
+			function LibraryUI:HideWithAnimation_StopEvent()
+				return not Frame:IsVisible() or not Frame:GetAlpha() == 1
+			end
 
-			--------------------------------
+			function LibraryUI:HideWithAnimation()
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					LibraryUI:Hide()
+				end, .5)
 
-			addon.API.Animation:Fade(LibraryUI, .5, LibraryUI:GetAlpha(), 0, nil, function() return not Frame:IsVisible() or not Frame:GetAlpha() == 1 end)
+				--------------------------------
+
+				addon.API.Animation:Fade(LibraryUI, .5, LibraryUI:GetAlpha(), 0, nil, LibraryUI.HideWithAnimation_StopEvent)
+			end
 		end
 	end
 
@@ -262,11 +274,11 @@ function NS.LibraryUI.Script:Load()
 
 			function LibraryCallback:GetAllFilteredEntries()
 				local Group_Letters = LibraryCallback:GetAllTypeEntries("Letter")
-				local Alphabetical_Letters = addon.API.Util:SortListByAlphabeticalOrder(Group_Letters, "Title")
+				local Alphabetical_Letters = addon.API.Util:SortListByAlphabeticalOrder(Group_Letters, { "Title" })
 				local Group_Books = LibraryCallback:GetAllTypeEntries("Book")
-				local Alphabetical_Books = addon.API.Util:SortListByAlphabeticalOrder(Group_Books, "Title")
+				local Alphabetical_Books = addon.API.Util:SortListByAlphabeticalOrder(Group_Books, { "Title" })
 				local Group_Slates = LibraryCallback:GetAllTypeEntries("Stone")
-				local Alphabetical_Slates = addon.API.Util:SortListByAlphabeticalOrder(Group_Slates, "Title")
+				local Alphabetical_Slates = addon.API.Util:SortListByAlphabeticalOrder(Group_Slates, { "Title" })
 
 				local Group_Combined = {}
 
@@ -294,16 +306,16 @@ function NS.LibraryUI.Script:Load()
 					Frame.LibraryUIFrame.Content.ContentFrame.ScrollFrame:SetVerticalScroll(0)
 
 					-- TITLE
-					Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Title", nil, SearchText, true, false)
+					Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), { "Title" }, SearchText, true, false)
 
 					-- ZONE
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "Zone", nil, SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), { "Zone" }, SearchText, true, false)
 					end
 
 					-- NUM PAGES
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "NumPages", nil, SearchText, true, false)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), { "NumPages" }, SearchText, true, false)
 					end
 
 					-- IS ADDED FROM BAGS
@@ -311,13 +323,13 @@ function NS.LibraryUI.Script:Load()
 						local Text = SearchText
 
 						if addon.API.Util:FindString("added from bags", string.lower(Text)) then
-							Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), "IsItemInInventory", nil, SearchText, true, false)
+							Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), { "IsItemInInventory" }, SearchText, true, false)
 						end
 					end
 
 					-- CONTENT
 					if #Entries == 0 then
-						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, nil, function(item)
+						Entries = addon.API.Util:FilterListByVariable(LibraryCallback:GetAllEntries(), nil, nil, nil, nil, function(item)
 							if addon.API.Util:FindString(string.lower(item.Content[1]), string.lower(SearchText)) then
 								return true
 							end
@@ -326,17 +338,17 @@ function NS.LibraryUI.Script:Load()
 						end)
 					end
 
-					Entries = addon.API.Util:SortListByAlphabeticalOrder(Entries, "Title")
+					Entries = addon.API.Util:SortListByAlphabeticalOrder(Entries, { "Title" })
 				end
 
 				--------------------------------
 
-				local Type_Letter = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.Checkbox.Checked
-				local Type_Book = Frame.LibraryUIFrame.Content.Sidebar.Type_Book.Checkbox.Checked
-				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checkbox.Checked
-				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checkbox.Checked
+				local Type_Letter = Frame.LibraryUIFrame.Content.Sidebar.Type_Letter.Checkbox.checked
+				local Type_Book = Frame.LibraryUIFrame.Content.Sidebar.Type_Book.Checkbox.checked
+				local Type_Slate = Frame.LibraryUIFrame.Content.Sidebar.Type_Slate.Checkbox.checked
+				local Type_InWorld = Frame.LibraryUIFrame.Content.Sidebar.Type_InWorld.Checkbox.checked
 
-				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, nil, function(item)
+				local TypeList = addon.API.Util:FilterListByVariable(Entries, nil, nil, nil, nil, function(item)
 					local Result
 
 					local Type = item.Type
@@ -512,7 +524,7 @@ function NS.LibraryUI.Script:Load()
 					LibraryUI.Content.ContentFrame.Index:Hide()
 				end
 
-				LibraryUI.Content.ContentFrame.ScrollFrame.UpdateSize()
+				LibraryUI.Content.ContentFrame.ScrollFrame:UpdateSize()
 			end
 
 			function LibraryCallback:SetPageButtons(playAnimation, userInput)
@@ -563,7 +575,7 @@ function NS.LibraryUI.Script:Load()
 						--------------------------------
 
 						Buttons[i]:Show()
-						Buttons[i].ID = CurrentEntry.Content[1]
+						Buttons[i].id = CurrentEntry.Content[1]
 
 						--------------------------------
 
@@ -801,14 +813,14 @@ function NS.LibraryUI.Script:Load()
 				--------------------------------
 
 				if selectedEntry then
-					InteractionPromptFrame.Set(isLocal and L["Readable - Library - Prompt - Delete - Local"] or L["Readable - Library - Prompt - Delete - Global"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
+					addon.Prompt.Script:Set(isLocal and L["Readable - Library - Prompt - Delete - Local"] or L["Readable - Library - Prompt - Delete - Global"], L["Readable - Library - Prompt - Delete Button 1"], L["Readable - Library - Prompt - Delete Button 2"],
 						function()
 							NS.LibraryUI.Variables.LibraryDB[ID] = nil
 							LibraryCallback:SetPageButtons(true)
 
-							InteractionPromptFrame.Clear()
+							addon.Prompt.Script:Clear()
 						end, function()
-							InteractionPromptFrame.Clear()
+							addon.Prompt.Script:Clear()
 						end
 						, true, false)
 				end
@@ -830,7 +842,7 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				Frame.TransitionToType("ReadableUI")
+				Frame:TransitionToType("READABLE")
 
 				--------------------------------
 
@@ -861,9 +873,9 @@ function NS.LibraryUI.Script:Load()
 				--------------------------------
 
 				if isLocal then
-					addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export - Local"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+					addon.PromptText:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Local"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 				else
-					addon.PromptTextShowTextFrame(L["Readable - Library - TextPrompt - Export - Global"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+					addon.PromptText:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Global"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 				end
 			end
 
@@ -880,11 +892,11 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				addon.PromptTextShowTextFrame(isLocal and L["Readable - Library - TextPrompt - Import - Local"] or L["Readable - Library - TextPrompt - Import - Global"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
+				addon.PromptText:ShowTextFrame(isLocal and L["Readable - Library - TextPrompt - Import - Local"] or L["Readable - Library - TextPrompt - Import - Global"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
 					local success, values = LibraryCallback:Import(val)
 
 					if val ~= "" and success then
-						InteractionPromptFrame.Set(isLocal and L["Readable - Library - Prompt - Import - Local"] or L["Readable - Library - Prompt - Import - Global"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
+						addon.Prompt.Script:Set(isLocal and L["Readable - Library - Prompt - Import - Local"] or L["Readable - Library - Prompt - Import - Global"], L["Readable - Library - Prompt - Import Button 1"], L["Readable - Library - Prompt - Import Button 2"], function()
 								if isLocal then
 									addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE = values
 								else
@@ -894,7 +906,7 @@ function NS.LibraryUI.Script:Load()
 								ReloadUI()
 							end,
 							function()
-								InteractionPromptFrame.Clear()
+								addon.Prompt.Script:Clear()
 							end
 							, true, false)
 
@@ -918,7 +930,7 @@ function NS.LibraryUI.Script:Load()
 
 						--------------------------------
 
-						Buttons[i].Update()
+						Buttons[i]:Update()
 					end
 				end
 			end
@@ -964,7 +976,7 @@ function NS.LibraryUI.Script:Load()
 
 	do
 		CallbackRegistry:Add("START_LIBRARY", function()
-			LibraryUI.Content.Sidebar.ResetToDefaults()
+			LibraryUI.Content.Sidebar:ResetToDefaults()
 
 			--------------------------------
 
@@ -991,6 +1003,6 @@ function NS.LibraryUI.Script:Load()
 
 		--------------------------------
 
-		LibraryUI.Content.Sidebar.UpdateLayout()
+		LibraryUI.Content.Sidebar:UpdateLayout()
 	end
 end

@@ -1,5 +1,4 @@
 local addonName, addon = ...
-local NS = addon.CallbackRegistry
 local L = addon.Locales
 
 --------------------------------

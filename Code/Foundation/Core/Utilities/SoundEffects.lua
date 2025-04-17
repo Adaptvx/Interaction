@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -212,32 +212,32 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -264,32 +264,32 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
@@ -320,40 +320,40 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
 				end)
 			end
 
-			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, ValueChanged)
+			if frame.valueChangedCallbacks then
+				table.insert(frame.valueChangedCallbacks, ValueChanged)
 			else
 				frame:HookScript("OnValueChanged", function(self, new, userInput)
 					if userInput then
@@ -386,40 +386,40 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
 				end)
 			end
 
-			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, ValueChanged)
+			if frame.valueChangedCallbacks then
+				table.insert(frame.valueChangedCallbacks, ValueChanged)
 			else
 				frame:HookScript("OnTextChanged", function(self, userInput)
 					if userInput then
@@ -468,56 +468,56 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
 				end)
 			end
 
-			if frame.ListElementEnterCallbacks then
-				table.insert(frame.ListElementEnterCallbacks, ListElementEnter)
+			if frame.enterCallbacks_listElement then
+				table.insert(frame.enterCallbacks_listElement, ListElementEnter)
 			end
 
-			if frame.ListElementLeaveCallbacks then
-				table.insert(frame.ListElementLeaveCallbacks, ListElementLeave)
+			if frame.leaveCallbacks_listElement then
+				table.insert(frame.leaveCallbacks_listElement, ListElementLeave)
 			end
 
-			if frame.ListElementMouseDownCallbacks then
-				table.insert(frame.ListElementMouseDownCallbacks, ListElementMouseDown)
+			if frame.mouseDownCallbacks_listElement then
+				table.insert(frame.mouseDownCallbacks_listElement, ListElementMouseDown)
 			end
 
-			if frame.ListElementMouseUpCallbacks then
-				table.insert(frame.ListElementMouseUpCallbacks, ListElementMouseUp)
+			if frame.mouseUpCallbacks_listElement then
+				table.insert(frame.mouseUpCallbacks_listElement, ListElementMouseUp)
 			end
 
-			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, ValueChanged)
+			if frame.valueChangedCallbacks then
+				table.insert(frame.valueChangedCallbacks, ValueChanged)
 			end
 		end
 
@@ -544,40 +544,40 @@ function NS:Load()
 
 			--------------------------------
 
-			if frame.EnterCallbacks then
-				table.insert(frame.EnterCallbacks, Enter)
+			if frame.enterCallbacks then
+				table.insert(frame.enterCallbacks, Enter)
 			else
 				frame:HookScript("OnEnter", function()
 					NS:PlaySoundFile(enter)
 				end)
 			end
 
-			if frame.LeaveCallbacks then
-				table.insert(frame.LeaveCallbacks, Leave)
+			if frame.leaveCallbacks then
+				table.insert(frame.leaveCallbacks, Leave)
 			else
 				frame:HookScript("OnLeave", function()
 					NS:PlaySoundFile(leave)
 				end)
 			end
 
-			if frame.MouseDownCallbacks then
-				table.insert(frame.MouseDownCallbacks, MouseDown)
+			if frame.mouseDownCallbacks then
+				table.insert(frame.mouseDownCallbacks, MouseDown)
 			else
 				frame:HookScript("OnMouseDown", function()
 					NS:PlaySoundFile(mouseDown)
 				end)
 			end
 
-			if frame.MouseUpCallbacks then
-				table.insert(frame.MouseUpCallbacks, MouseUp)
+			if frame.mouseUpCallbacks then
+				table.insert(frame.mouseUpCallbacks, MouseUp)
 			else
 				frame:HookScript("OnMouseUp", function()
 					NS:PlaySoundFile(mouseUp)
 				end)
 			end
 
-			if frame.ValueChangedCallbacks then
-				table.insert(frame.ValueChangedCallbacks, ValueChanged)
+			if frame.valueChangedCallbacks then
+				table.insert(frame.valueChangedCallbacks, ValueChanged)
 			end
 		end
 	end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.PlayerStatusBar
 
@@ -23,19 +23,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.Enter = function()
-			Frame.Notch:SetAlpha(1)
-			Frame.Progress:SetAlpha(1)
-		end
 
-		Frame.Leave = function()
-			Frame.Notch:SetAlpha(.5)
-			Frame.Progress:SetAlpha(.5)
-		end
-
-		--------------------------------
-
-		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = function() Frame.Enter() end, leaveCallback = function() Frame.Leave() end })
 	end
 
 	--------------------------------
@@ -59,7 +47,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			if unitIsMaxLevel then
-				Frame.HideWithAnimation()
+				Frame:HideWithAnimation()
 
 				--------------------------------
 
@@ -109,32 +97,44 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Frame.ShowWithAnimation = function()
-			if not Frame.hidden then
-				return
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent()
+				return Frame.hidden
 			end
-			Frame.hidden = false
-			Frame:Show()
 
-			--------------------------------
+			function Frame:ShowWithAnimation()
+				if not Frame.hidden then
+					return
+				end
+				Frame.hidden = false
+				Frame:Show()
 
-			addon.API.Animation:Fade(Frame, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame.hidden end)
+				--------------------------------
+
+				addon.API.Animation:Fade(Frame, .5, 0, 1, addon.API.Animation.EaseSine, Frame.ShowWithAnimation_StopEvent)
+			end
 		end
 
-		Frame.HideWithAnimation = function()
-			if Frame.hidden then
-				return
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent()
+				return not Frame.hidden
 			end
-			Frame.hidden = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+
+			function Frame:HideWithAnimation()
 				if Frame.hidden then
-					Frame:Hide()
+					return
 				end
-			end, 1)
+				Frame.hidden = true
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.hidden then
+						Frame:Hide()
+					end
+				end, 1)
 
-			--------------------------------
+				--------------------------------
 
-			addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, addon.API.Animation.EaseSine, function() return not Frame.hidden end)
+				addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, addon.API.Animation.EaseSine, Frame.HideWithAnimation_StopEvent)
+			end
 		end
 	end
 
@@ -143,6 +143,20 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		function Frame:OnEnter()
+			Frame.Notch:SetAlpha(1)
+			Frame.Progress:SetAlpha(1)
+		end
+
+		function Frame:OnLeave()
+			Frame.Notch:SetAlpha(.5)
+			Frame.Progress:SetAlpha(.5)
+		end
+
+		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave})
+
+		--------------------------------
+
 		hooksecurefunc(Frame, "Show", function()
 			CallbackRegistry:Trigger("START_STATUSBAR")
 		end)
@@ -161,13 +175,13 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame.ShowWithAnimation()
+					Frame:ShowWithAnimation()
 				end
 			end, 0)
 		end, 0)
 
 		CallbackRegistry:Add("STOP_INTERACTION", function()
-			Frame.HideWithAnimation()
+			Frame:HideWithAnimation()
 		end, 0)
 
 		local Events = CreateFrame("Frame")

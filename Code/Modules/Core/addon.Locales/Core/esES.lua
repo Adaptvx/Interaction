@@ -1,7 +1,7 @@
 -- Localization and translation El1as1989
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -78,6 +78,8 @@ local function Load()
 		L["Range - Dialog / Content Preview Alpha"] = "Opacidad de la vista previa del texto"
 		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Establece la opacidad de la vista previa del texto del diálogo.\n\nPor defecto: 50%."
 		L["Title - Quest"] = "Misión"
+		L["Checkbox - Always Show Gossip Frame"] = "Always Show Gossip Frame"
+		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Always show the gossip frame when available instead of only after dialog.\n\nDefault: On."
 		L["Checkbox - Always Show Quest Frame"] = "Mostrar siempre el Tablón de Misiones"
 		L["Checkbox - Always Show Quest Frame - Tooltip"] = "Muestra siempre el tablón de misiones cuando esté disponible, en lugar de hacerlo sólo después del diálogo.\n\nPor defecto: Activado."
 
@@ -322,19 +324,19 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionQuestFrame - Objectives"] = "Objetivos de la misión"
-		L["InteractionQuestFrame - Rewards"] = "Recompensas"
-		L["InteractionQuestFrame - Required Items"] = "Itens Necesarios"
+		L["InteractionFrame.QuestFrame - Objectives"] = "Objetivos de la misión"
+		L["InteractionFrame.QuestFrame - Rewards"] = "Recompensas"
+		L["InteractionFrame.QuestFrame - Required Items"] = "Itens Necesarios"
 
-		L["InteractionQuestFrame - Accept - Quest Log Full"] = "Registro de misiones Completo"
-		L["InteractionQuestFrame - Accept - Auto Accept"] = "Aceptar automáticamente"
-		L["InteractionQuestFrame - Accept"] = "Aceptar"
-		L["InteractionQuestFrame - Decline"] = "Rechazar"
-		L["InteractionQuestFrame - Goodbye"] = "Adiós"
-		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Entendido"
-		L["InteractionQuestFrame - Continue"] = "Continuar"
-		L["InteractionQuestFrame - In Progress"] = "En proceso"
-		L["InteractionQuestFrame - Complete"] = "Completar"
+		L["InteractionFrame.QuestFrame - Accept - Quest Log Full"] = "Registro de misiones Completo"
+		L["InteractionFrame.QuestFrame - Accept - Auto Accept"] = "Aceptar automáticamente"
+		L["InteractionFrame.QuestFrame - Accept"] = "Aceptar"
+		L["InteractionFrame.QuestFrame - Decline"] = "Rechazar"
+		L["InteractionFrame.QuestFrame - Goodbye"] = "Adiós"
+		L["InteractionFrame.QuestFrame - Goodbye - Auto Accept"] = "Entendido"
+		L["InteractionFrame.QuestFrame - Continue"] = "Continuar"
+		L["InteractionFrame.QuestFrame - In Progress"] = "En proceso"
+		L["InteractionFrame.QuestFrame - Complete"] = "Completar"
 	end
 
 	--------------------------------
@@ -342,7 +344,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionDialogFrame - Skip"] = "SALTAR"
+		L["InteractionFrame.DialogFrame - Skip"] = "SALTAR"
 	end
 
 	--------------------------------
@@ -350,7 +352,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionGossipFrame - Close"] = "Adiós"
+		L["InteractionFrame.GossipFrame - Close"] = "Adiós"
 	end
 
 	--------------------------------
@@ -464,7 +466,7 @@ local function Load()
 		L["GossipData - Trigger - Movie 1"] = "%(Reproducir%)"
 		L["GossipData - Trigger - Movie 2"] = "%(Reproducir video%)"
 		L["GossipData - Trigger - NPC Dialog"] = "%<Quédate un rato y escucha.%>"
-		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Quédate un rato y escucha."
+		L["GossipData - Trigger - NPC Dialog - Append"] = "Quédate un rato y escucha."
 	end
 
 	--------------------------------

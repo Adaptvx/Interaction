@@ -1,11 +1,11 @@
 --- AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules.\\
 -- Options tables can be registered as raw tables, OR as function refs that return a table.\\
--- Such functions receive three arguments: "uiType", "uiName", "appName". \\
--- * Valid **uiTypes**: "cmd", "dropdown", "dialog". This is verified by the library at call time. \\
+-- Such functions receive three arguments: "type", "uiName", "appName". \\
+-- * Valid **types**: "cmd", "dropdown", "dialog". This is verified by the library at call time. \\
 -- * The **uiName** field is expected to contain the full name of the calling addon, including version, e.g. "FooBar-1.0". This is verified by the library at call time.\\
 -- * The **appName** field is the options table name as given at registration time \\
 --
--- :IterateOptionsTables() (and :GetOptionsTable() if only given one argument) return a function reference that the requesting config handling addon must call with valid "uiType", "uiName".
+-- :IterateOptionsTables() (and :GetOptionsTable() if only given one argument) return a function reference that the requesting config handling addon must call with valid "type", "uiName".
 -- @class file
 -- @name AceConfigRegistry-3.0
 -- @release $Id: AceConfigRegistry-3.0.lua 1296 2022-11-04 18:50:10Z nevcairiel $
@@ -298,10 +298,10 @@ end
 
 -- validateGetterArgs: helper function for :GetOptionsTable (or, rather, the getter functions returned by it)
 
-local function validateGetterArgs(uiType, uiName, errlvl)
+local function validateGetterArgs(type, uiName, errlvl)
 	errlvl=(errlvl or 0)+2
-	if uiType~="cmd" and uiType~="dropdown" and uiType~="dialog" then
-		error(MAJOR..": Requesting options table: 'uiType' - invalid configuration UI type, expected 'cmd', 'dropdown' or 'dialog'", errlvl)
+	if type~="cmd" and type~="dropdown" and type~="dialog" then
+		error(MAJOR..": Requesting options table: 'type' - invalid configuration UI type, expected 'cmd', 'dropdown' or 'dialog'", errlvl)
 	end
 	if not strmatch(uiName, "[A-Za-z]%-[0-9]") then	-- Expecting e.g. "MyLib-1.2"
 		error(MAJOR..": Requesting options table: 'uiName' - badly formatted or missing version number. Expected e.g. 'MyLib-1.2'", errlvl)
@@ -318,23 +318,23 @@ function AceConfigRegistry:RegisterOptionsTable(appName, options, skipValidation
 		if options.type~="group" then	-- quick sanity checker
 			error(MAJOR..": RegisterOptionsTable(appName, options): 'options' - missing type='group' member in root group", 2)
 		end
-		AceConfigRegistry.tables[appName] = function(uiType, uiName, errlvl)
+		AceConfigRegistry.tables[appName] = function(type, uiName, errlvl)
 			errlvl=(errlvl or 0)+1
-			validateGetterArgs(uiType, uiName, errlvl)
-			if not AceConfigRegistry.validated[uiType][appName] and not skipValidation then
+			validateGetterArgs(type, uiName, errlvl)
+			if not AceConfigRegistry.validated[type][appName] and not skipValidation then
 				AceConfigRegistry:ValidateOptionsTable(options, appName, errlvl)	-- upgradable
-				AceConfigRegistry.validated[uiType][appName] = true
+				AceConfigRegistry.validated[type][appName] = true
 			end
 			return options
 		end
 	elseif type(options)=="function" then
-		AceConfigRegistry.tables[appName] = function(uiType, uiName, errlvl)
+		AceConfigRegistry.tables[appName] = function(type, uiName, errlvl)
 			errlvl=(errlvl or 0)+1
-			validateGetterArgs(uiType, uiName, errlvl)
-			local tab = assert(options(uiType, uiName, appName))
-			if not AceConfigRegistry.validated[uiType][appName] and not skipValidation then
+			validateGetterArgs(type, uiName, errlvl)
+			local tab = assert(options(type, uiName, appName))
+			if not AceConfigRegistry.validated[type][appName] and not skipValidation then
 				AceConfigRegistry:ValidateOptionsTable(tab, appName, errlvl)	-- upgradable
-				AceConfigRegistry.validated[uiType][appName] = true
+				AceConfigRegistry.validated[type][appName] = true
 			end
 			return tab
 		end
@@ -353,19 +353,19 @@ end
 
 --- Query the registry for a specific options table.
 -- If only appName is given, a function is returned which you
--- can call with (uiType,uiName) to get the table.\\
--- If uiType&uiName are given, the table is returned.
+-- can call with (type,uiName) to get the table.\\
+-- If type&uiName are given, the table is returned.
 -- @param appName The application name as given to `:RegisterOptionsTable()`
--- @param uiType The type of UI to get the table for, one of "cmd", "dropdown", "dialog"
+-- @param type The type of UI to get the table for, one of "cmd", "dropdown", "dialog"
 -- @param uiName The name of the library/addon querying for the table, e.g. "MyLib-1.0"
-function AceConfigRegistry:GetOptionsTable(appName, uiType, uiName)
+function AceConfigRegistry:GetOptionsTable(appName, type, uiName)
 	local f = AceConfigRegistry.tables[appName]
 	if not f then
 		return nil
 	end
 
-	if uiType then
-		return f(uiType,uiName,1)	-- get the table for us
+	if type then
+		return f(type,uiName,1)	-- get the table for us
 	else
 		return f	-- return the function
 	end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.BlizzardMinimapIcon
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			local function OnTooltipShowCallback(tooltip)
 				NS.Script:OnTooltipShow(tooltip)
 			end
@@ -25,7 +25,7 @@ function NS.Elements:Load()
 				type = "data source",
 				icon = NS.Variables.PATH .. "library.png",
 				OnClick = function()
-					InteractionReadableUIFrame.ShowLibrary()
+					InteractionReadableUIFrame:ShowLibrary()
 				end,
 				OnTooltipShow = OnTooltipShowCallback,
 			})

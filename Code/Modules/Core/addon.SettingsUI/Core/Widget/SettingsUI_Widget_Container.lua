@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -48,14 +48,10 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 	end
 
 	do -- TOOLTIP
-		Frame.Enter = function(skipAnimation)
+		function Frame:OnEnter(skipAnimation)
 			if background then
 				if not InteractionSettingsFrame.PreventMouse or addon.Input.Variables.IsControllerEnabled then
-					if skipAnimation then
-						Frame.Background:SetAlpha(1)
-					else
-						Frame.Background:SetAlpha(1)
-					end
+					Frame.Background:SetAlpha(1)
 				end
 			end
 
@@ -75,11 +71,11 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			end
 
 			if Frame.Button then
-				Frame.Button.Enter()
+				Frame.Button:OnEnter()
 			end
 		end
 
-		Frame.Leave = function(skipAnimation, keepTooltip)
+		function Frame:OnLeave(skipAnimation, keepTooltip)
 			if background then
 				if skipAnimation then
 					Frame.Background:SetAlpha(0)
@@ -97,12 +93,12 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 			end
 
 			if Frame.Button then
-				Frame.Button.Leave()
+				Frame.Button:OnLeave()
 			end
 		end
 
 		if background or tooltipText then
-			Frame.hoverFrame = addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = function() Frame.Enter() end, leaveCallback = function() Frame.Leave() end })
+			Frame.hoverFrame = addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave })
 		end
 	end
 
@@ -138,7 +134,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 		do -- BACKGROUND
 			if background then
-				Frame.Background, Frame.backgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
+				Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.Container, Frame:GetFrameStrata(), Frame.TEXTURE_Background, 50, 1)
 				Frame.Background:SetSize(Frame:GetWidth(), Frame:GetHeight())
 				Frame.Background:SetPoint("CENTER", Frame)
 				Frame.Background:SetFrameLevel(0)
@@ -146,7 +142,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 
 				-- THEME
 				addon.API.Main:RegisterThemeUpdate(function()
-					Frame.backgroundTexture:SetVertexColor(Frame.COLOR_Background.r, Frame.COLOR_Background.g, Frame.COLOR_Background.b, Frame.COLOR_Background.a)
+					Frame.BackgroundTexture:SetVertexColor(Frame.COLOR_Background.r, Frame.COLOR_Background.g, Frame.COLOR_Background.b, Frame.COLOR_Background.a)
 				end, 5)
 			end
 		end

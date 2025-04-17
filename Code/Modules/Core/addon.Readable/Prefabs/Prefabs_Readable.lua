@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Readable
 
@@ -279,12 +279,33 @@ function NS.Prefabs:Load()
 								end
 
 								do -- EVENTS
-									function Frame:Enter(skipAnimation)
+									local function Logic_OnEnter()
+
+									end
+
+									local function Logic_OnLeave()
+
+									end
+
+									local function Logic_OnMouseDown()
+
+									end
+
+									local function Logic_OnMouseUp()
+
+									end
+
+									local function Logic_OnClick()
+										tab:SelectButton(buttonIndex)
+									end
+
+									function Frame:OnEnter(skipAnimation)
 										Frame.isMouseOver = true
 
 										--------------------------------
 
 										Frame:Animation_OnEnter()
+										Logic_OnEnter()
 
 										--------------------------------
 
@@ -299,12 +320,13 @@ function NS.Prefabs:Load()
 										end
 									end
 
-									function Frame:Leave(skipAnimation)
+									function Frame:OnLeave(skipAnimation)
 										Frame.isMouseOver = false
 
 										--------------------------------
 
 										Frame:Animation_OnLeave()
+										Logic_OnLeave()
 
 										--------------------------------
 
@@ -319,12 +341,13 @@ function NS.Prefabs:Load()
 										end
 									end
 
-									function Frame:MouseDown(skipAnimation)
+									function Frame:OnMouseDown(button, skipAnimation)
 										Frame.isMouseDown = true
 
 										--------------------------------
 
 										Frame:Animation_OnMouseDown()
+										Logic_OnMouseDown()
 
 										--------------------------------
 
@@ -339,16 +362,14 @@ function NS.Prefabs:Load()
 										end
 									end
 
-									function Frame:MouseUp(skipAnimation)
+									function Frame:OnMouseUp(button, skipAnimation)
 										Frame.isMouseDown = false
 
 										--------------------------------
 
-										Frame:Click()
-
-										--------------------------------
-
 										Frame:Animation_OnMouseUp()
+										Logic_OnMouseUp()
+										Logic_OnClick()
 
 										--------------------------------
 
@@ -361,12 +382,6 @@ function NS.Prefabs:Load()
 												end
 											end
 										end
-									end
-
-									function Frame:Click()
-										tab:SelectButton(buttonIndex)
-
-										--------------------------------
 
 										do -- ON CLICK
 											if #Frame.clickCallbacks >= 1 then
@@ -379,12 +394,12 @@ function NS.Prefabs:Load()
 										end
 									end
 
-									addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.Enter, leaveCallback = Frame.Leave, mouseDownCallback = Frame.MouseDown, mouseUpCallback = Frame.MouseUp })
+									addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave, mouseDownCallback = Frame.OnMouseDown, mouseUpCallback = Frame.OnMouseUp })
 								end
 							end
 
 							do -- SETUP
-								Frame:Leave(true)
+								Frame:OnLeave(true)
 							end
 
 							--------------------------------
@@ -543,7 +558,7 @@ function NS.Prefabs:Load()
 
 						do -- ELEMENTS
 							do -- CHECKBOX
-								Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame, "FULLSCREEN", {
+								Frame.Checkbox = addon.API.FrameTemplates:CreateCheckbox(Frame, frameStrata, frameLevel + 1, {
 									defaultTexture = NS.Variables.NINESLICE_RUSTIC_BORDER,
 									highlightTexture = NS.Variables.NINESLICE_RUSTIC,
 									checkTexture = NS.Variables.TEXTURE_CHECK,

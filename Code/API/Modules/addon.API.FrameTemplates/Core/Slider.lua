@@ -56,12 +56,6 @@ do
 		frame._CustomColor = customColor
 		frame._CustomThumbColor = customThumbColor
 
-		frame.EnterCallbacks = {}
-		frame.LeaveCallbacks = {}
-		frame.MouseDownCallbacks = {}
-		frame.MouseUpCallbacks = {}
-		frame.ValueChangedCallbacks = {}
-
 		--------------------------------
 
 		do -- THEME
@@ -89,15 +83,26 @@ do
 		end
 
 		do -- ELEMENTS
+			do -- BLIZZARD
+				frame.Left:Hide()
+				frame.Middle:Hide()
+				frame.Right:Hide()
+				frame.Thumb:SetAlpha(0)
+			end
+
 			do -- BACKGROUND
 				frame.Background, frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, 1, "$parent.Background")
 				frame.Background:SetPoint("BOTTOM", frame, 0, 5)
 				frame.Background:SetFrameLevel(frame:GetFrameLevel() - 2)
 				frame.BackgroundTexture:SetAlpha(.125)
 
-				addon.API.Main:RegisterThemeUpdateWithNativeAPI(function()
-					frame.BackgroundTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
-				end, 5)
+				--------------------------------
+
+				do -- THEME
+					addon.API.Main:RegisterThemeUpdateWithNativeAPI(function()
+						frame.BackgroundTexture:SetVertexColor(frame._BackgroundColor.r, frame._BackgroundColor.g, frame._BackgroundColor.b, frame._BackgroundColor.a)
+					end, 5)
+				end
 			end
 
 			do -- THUMB
@@ -105,9 +110,13 @@ do
 				frame.ThumbNew:SetFrameLevel(frame:GetFrameLevel() - 1)
 				frame.ThumbNewTexture:SetAlpha(1)
 
-				addon.API.Main:RegisterThemeUpdateWithNativeAPI(function()
-					frame.ThumbNewTexture:SetVertexColor(frame._ThumbColor.r, frame._ThumbColor.g, frame._ThumbColor.b, frame._ThumbColor.a)
-				end, 5)
+				--------------------------------
+
+				do -- THEME
+					addon.API.Main:RegisterThemeUpdateWithNativeAPI(function()
+						frame.ThumbNewTexture:SetVertexColor(frame._ThumbColor.r, frame._ThumbColor.g, frame._ThumbColor.b, frame._ThumbColor.a)
+					end, 5)
+				end
 			end
 
 			do -- GRIDS
@@ -154,128 +163,214 @@ do
 			end
 		end
 
-		do -- CLICK EVENTS
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				frame:HookScript("OnValueChanged", function(self, new, userInput)
-					frame.Background:SetSize(frame:GetWidth(), 2.5)
+		do -- ANIMATIONS
+			do -- ON ENTER
+				function frame:Animation_OnEnter_StopEvent()
+					return not frame.isMouseOver
+				end
 
-					--------------------------------
-
-					local value = frame:GetValue()
-					local min, max = frame:GetMinMaxValues()
-					local stepSize = frame:GetValueStep()
-					local numSteps = (max / stepSize) + 1
-
-					local thumbWidth = (frame:GetWidth()) / (numSteps - 1)
-					if thumbWidth < 20 then
-						thumbWidth = 20
-					end
-					local thumbPosition
-					if value > min then
-						thumbPosition = (frame:GetWidth() - thumbWidth) / ((max - min) / (value - min))
-					else
-						thumbPosition = 0
-					end
-
-					frame.ThumbNew:SetSize(thumbWidth, 5)
-					frame.ThumbNew:SetPoint("BOTTOMLEFT", thumbPosition, 5)
-
-					--------------------------------
-
-					if frame.Grids then
-						for i = 1, #frame.Grids do
-							local currentGrid = frame.Grids[i]
-
-							currentGrid:Hide()
-						end
-
-						for i = 1, numSteps do
-							local currentGrid = frame.Grids[i]
-
-							currentGrid:Show()
-							currentGrid:ClearAllPoints()
-							currentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - currentGrid:GetHeight()) / (numSteps - 1)) * (i - 1), 7.5)
-						end
-					end
-
-					--------------------------------
-
-					if userInput then
-						local valueChangedCallbacks = frame.ValueChangedCallbacks
-
-						for i = 1, #valueChangedCallbacks do
-							valueChangedCallbacks[i]()
-						end
-					end
-				end)
-			end, .1)
-
-			frame.Enter = function()
-				frame.ThumbNewTexture:SetTexture(frame._ThumbHighlightTexture)
-
-				--------------------------------
-
-				local enterCallbacks = frame.EnterCallbacks
-
-				for callback = 1, #enterCallbacks do
-					enterCallbacks[callback]()
+				function frame:Animation_OnEnter(skipAnimation)
+					frame.ThumbNewTexture:SetTexture(frame._ThumbHighlightTexture)
 				end
 			end
 
-			frame.Leave = function()
-				frame.ThumbNewTexture:SetTexture(frame._ThumbTexture)
+			do -- ON LEAVE
+				function frame:Animation_OnLeave_StopEvent()
+					return frame.isMouseOver
+				end
 
-				--------------------------------
-
-				local leaveCallbacks = frame.LeaveCallbacks
-
-				for callback = 1, #leaveCallbacks do
-					leaveCallbacks[callback]()
+				function frame:Animation_OnLeave(skipAnimation)
+					frame.ThumbNewTexture:SetTexture(frame._ThumbTexture)
 				end
 			end
 
-			frame.MouseDown = function()
-				local mouseDownCallbacks = frame.MouseDownCallbacks
+			do -- ON MOUSE DOWN
+				function frame:Animation_OnMouseDown_StopEvent()
+					return not frame.isMouseDown
+				end
 
-				for callback = 1, #mouseDownCallbacks do
-					mouseDownCallbacks[callback]()
+				function frame:Animation_OnMouseDown(skipAnimation)
+
 				end
 			end
 
-			frame.MouseUp = function()
-				local mouseUpCallbacks = frame.MouseUpCallbacks
+			do -- ON MOUSE UP
+				function frame:Animation_OnMouseUp_StopEvent()
+					return frame.isMouseDown
+				end
 
-				for callback = 1, #mouseUpCallbacks do
-					mouseUpCallbacks[callback]()
+				function frame:Animation_OnMouseUp(skipAnimation)
+
 				end
 			end
-
-			addon.API.FrameTemplates:CreateMouseResponder(frame, { enterCallback = frame.Enter, leaveCallback = frame.Leave })
-
-			frame.ThumbNew:SetScript("OnEnter", function()
-				frame.ThumbNew:SetAlpha(.75)
-			end)
-
-			frame.ThumbNew:SetScript("OnLeave", function()
-				frame.ThumbNew:SetAlpha(1)
-			end)
-
-			frame:SetScript("OnMouseDown", function()
-				frame.MouseDown()
-			end)
-
-			frame:SetScript("OnMouseUp", function()
-				frame.MouseUp()
-			end)
 		end
 
-		--------------------------------
+		do -- LOGIC
+			frame.isMouseOver = false
+			frame.isMouseDown = false
 
-		do -- BLIZZARD
-			frame.Left:Hide()
-			frame.Middle:Hide()
-			frame.Right:Hide()
-			frame.Thumb:SetAlpha(0)
+			frame.enterCallbacks = {}
+			frame.leaveCallbacks = {}
+			frame.mouseDownCallbacks = {}
+			frame.mouseUpCallbacks = {}
+			frame.valueChangedCallbacks = {}
+
+			--------------------------------
+
+			do -- FUNCTIONS
+
+			end
+
+			do -- EVENTS
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					frame:HookScript("OnValueChanged", function(self, new, userInput)
+						frame.Background:SetSize(frame:GetWidth(), 2.5)
+
+						--------------------------------
+
+						local value = frame:GetValue()
+						local min, max = frame:GetMinMaxValues()
+						local stepSize = frame:GetValueStep()
+						local numSteps = (max / stepSize) + 1
+
+						local thumbWidth = (frame:GetWidth()) / (numSteps - 1)
+						if thumbWidth < 20 then
+							thumbWidth = 20
+						end
+						local thumbPosition
+						if value > min then
+							thumbPosition = (frame:GetWidth() - thumbWidth) / ((max - min) / (value - min))
+						else
+							thumbPosition = 0
+						end
+
+						frame.ThumbNew:SetSize(thumbWidth, 5)
+						frame.ThumbNew:SetPoint("BOTTOMLEFT", thumbPosition, 5)
+
+						--------------------------------
+
+						if frame.Grids then
+							for i = 1, #frame.Grids do
+								local currentGrid = frame.Grids[i]
+
+								currentGrid:Hide()
+							end
+
+							for i = 1, numSteps do
+								local currentGrid = frame.Grids[i]
+
+								currentGrid:Show()
+								currentGrid:ClearAllPoints()
+								currentGrid:SetPoint("BOTTOMLEFT", frame, ((frame:GetWidth() - currentGrid:GetHeight()) / (numSteps - 1)) * (i - 1), 7.5)
+							end
+						end
+
+						--------------------------------
+
+						if userInput then
+							local valueChangedCallbacks = frame.valueChangedCallbacks
+
+							for i = 1, #valueChangedCallbacks do
+								valueChangedCallbacks[i]()
+							end
+						end
+					end)
+				end, .1)
+
+				function frame:OnEnter(skipAnimation)
+					frame.isMouseOver = true
+
+					--------------------------------
+
+					frame:Animation_OnEnter(skipAnimation)
+
+					--------------------------------
+
+					do -- ON ENTER
+						if #frame.enterCallbacks >= 1 then
+							local enterCallbacks = frame.enterCallbacks
+
+							for callback = 1, #enterCallbacks do
+								enterCallbacks[callback](skipAnimation)
+							end
+						end
+					end
+				end
+
+				function frame:OnLeave(skipAnimation)
+					frame.isMouseOver = false
+
+					--------------------------------
+
+					frame:Animation_OnLeave(skipAnimation)
+
+					--------------------------------
+
+					do -- ON LEAVE
+						if #frame.leaveCallbacks >= 1 then
+							local leaveCallbacks = frame.leaveCallbacks
+
+							for callback = 1, #leaveCallbacks do
+								leaveCallbacks[callback](skipAnimation)
+							end
+						end
+					end
+				end
+
+				function frame:OnMouseDown(button, skipAnimation)
+					frame.isMouseDown = true
+
+					--------------------------------
+
+					frame:Animation_OnMouseDown(skipAnimation)
+
+					--------------------------------
+
+					do -- ON MOUSE DOWN
+						if #frame.mouseDownCallbacks >= 1 then
+							local mouseDownCallbacks = frame.mouseDownCallbacks
+
+							for callback = 1, #mouseDownCallbacks do
+								mouseDownCallbacks[callback](skipAnimation)
+							end
+						end
+					end
+				end
+
+				function frame:OnMouseUp()
+					frame.isMouseDown = false
+
+					--------------------------------
+
+					frame:Animation_OnMouseUp()
+
+					--------------------------------
+
+					do -- ON MOUSE UP
+						if #frame.mouseUpCallbacks >= 1 then
+							local mouseUpCallbacks = frame.mouseUpCallbacks
+
+							for callback = 1, #mouseUpCallbacks do
+								mouseUpCallbacks[callback]()
+							end
+						end
+					end
+				end
+
+				addon.API.FrameTemplates:CreateMouseResponder(frame, { enterCallback = frame.OnEnter, leaveCallback = frame.OnLeave, mouseDownCallback = frame.OnMouseDown, mouseUpCallback = frame.OnMouseUp })
+
+				frame.ThumbNew:SetScript("OnEnter", function()
+					frame.ThumbNew:SetAlpha(.75)
+				end)
+
+				frame.ThumbNew:SetScript("OnLeave", function()
+					frame.ThumbNew:SetAlpha(1)
+				end)
+			end
+		end
+
+		do -- SETUP
+			frame:OnLeave(true)
 		end
 	end
 

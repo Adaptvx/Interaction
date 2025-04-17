@@ -184,7 +184,7 @@ local function Constructor()
 	colorSwatch:SetPoint("LEFT")
 
 	local texture = frame:CreateTexture(nil, "BACKGROUND")
-	colorSwatch.background = texture
+	colorSwatch.Background = texture
 	texture:SetWidth(16)
 	texture:SetHeight(16)
 	texture:SetColorTexture(1, 1, 1)

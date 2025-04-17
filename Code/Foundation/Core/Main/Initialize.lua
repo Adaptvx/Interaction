@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -55,6 +55,10 @@ function NS:Load()
 
 			addon.Libraries.AceTimer:ScheduleTimer(function()
 				NS.Ready = true
+
+				--------------------------------
+
+				CallbackRegistry:Trigger("ADDON_READY")
 			end, 2.5)
 		end
 

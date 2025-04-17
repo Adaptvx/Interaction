@@ -1,6 +1,10 @@
+-- [!] [addon.Interaction.Quest] is a replacement for Blizzard's Quest Frame.
+-- [Quest_Elements.lua] is the front-end (UI)
+-- for the custom Quest Frame.
+
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest
 
@@ -16,27 +20,36 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
-			InteractionQuestParent = CreateFrame("Frame", "InteractionQuestParent", InteractionFrame)
-			InteractionQuestParent:SetAllPoints(InteractionFrame)
-			InteractionQuestParent:SetFrameStrata("HIGH")
+		do -- ELEMENTS
+			InteractionFrame.QuestParent = CreateFrame("Frame", "$parent.QuestParent", InteractionFrame)
+			InteractionFrame.QuestParent:SetAllPoints(InteractionFrame)
+			InteractionFrame.QuestParent:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.QuestParent:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 
-			InteractionQuestFrame = CreateFrame("Frame", "InteractionQuestFrame", InteractionQuestParent)
-			InteractionQuestFrame:SetSize(NS.Variables.FRAME_SIZE.x, NS.Variables.FRAME_SIZE.y)
-			InteractionQuestFrame:SetPoint("CENTER", nil)
-			InteractionQuestFrame:SetFrameStrata("HIGH")
+			InteractionFrame.QuestFrame = CreateFrame("Frame", "$parent.QuestFrame", InteractionFrame.QuestParent)
+			InteractionFrame.QuestFrame:SetSize(NS.Variables.FRAME_SIZE.x, NS.Variables.FRAME_SIZE.y)
+			InteractionFrame.QuestFrame:SetPoint("CENTER", nil)
+			InteractionFrame.QuestFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.QuestFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL)
+
+            local Frame = InteractionFrame.QuestFrame
 
 			--------------------------------
 
-			local Frame = InteractionQuestFrame
+			local TITLE_TEXT_SIZE = 25
+			local CONTENT_TEXT_SIZE = 15
+			local TOOLTIP_TEXT_SIZE = 12.5
 
-			--------------------------------
+			local PADDING = NS.Variables:RATIO(7.5)
+			local FRAME_MAIN_INSET_WIDTH = 37.5
+			local FRAME_MAIN_INSET_HEIGHT = PADDING
+			local FRAME_FOOTER_HEIGHT = 55
 
 			do -- BACKGROUND
 				do -- BACKGROUND
 					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Background:SetFrameStrata("HIGH")
-					Frame.Background:SetFrameLevel(2)
+					Frame.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Frame.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
 
 					--------------------------------
 
@@ -59,8 +72,8 @@ function NS.Elements:Load()
 
 				do -- BORDER
 					Frame.Border, Frame.BorderTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Border:SetFrameStrata("HIGH")
-					Frame.Border:SetFrameLevel(3)
+					Frame.Border:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Frame.Border:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
 
 					--------------------------------
 
@@ -80,142 +93,25 @@ function NS.Elements:Load()
 						Frame.BorderTexture:SetTexture(TEXTURE_Background)
 					end, 5)
 				end
-
-				do -- SCROLL FRAME INDICATOR
-					Frame.Background.ScrollFrameIndicator, Frame.Background.ScrollFrameIndicatorTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", nil)
-					Frame.Background.ScrollFrameIndicator:SetPoint("BOTTOM", Frame, 0, 42.5)
-					Frame.Background.ScrollFrameIndicator:SetFrameLevel(500)
-					Frame.Background.ScrollFrameIndicator:SetAlpha(.25)
-
-					--------------------------------
-
-					addon.API.Main:RegisterThemeUpdate(function()
-						local ScrollFrameIndicatorTexture
-
-						if addon.Theme.IsDarkTheme then
-							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-dark.png"
-						else
-							ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-light.png"
-						end
-
-						Frame.Background.ScrollFrameIndicatorTexture:SetTexture(ScrollFrameIndicatorTexture)
-					end, 5)
-				end
-			end
-
-			do -- BUTTONS
-				Frame.ButtonContainer = CreateFrame("Frame", "$parent.ButtonContainer", Frame)
-				Frame.ButtonContainer:SetHeight(NS.Variables:RATIO(5.75))
-				Frame.ButtonContainer:SetPoint("BOTTOM", Frame, 0, 0)
-
-				--------------------------------
-
-				local function CreateButton(name, color, highlightColor, color_darkTheme, highlightColor_darkTheme)
-					local button = CreateFrame("Button", name, Frame.ButtonContainer, "UIPanelButtonTemplate")
-					button.Text = _G[button:GetDebugName() .. "Text"]
-
-					--------------------------------
-
-					addon.API.FrameTemplates.Styles:Button(button, {
-						defaultTexture = addon.API.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT,
-						highlightTexture = addon.API.Presets.NINESLICE_INSCRIBED_FILLED_HIGHLIGHT,
-						edgeSize = 25,
-						scale = .5,
-						playAnimation = false,
-						customColor = color,
-						customHighlightColor = highlightColor,
-						customTextColor = addon.Theme.RGB_WHITE,
-					})
-
-					--------------------------------
-
-					addon.API.Main:RegisterThemeUpdate(function()
-						local FilledColor
-						local FilledHighlightColor
-
-						--------------------------------
-
-						if addon.Theme.IsDarkTheme then
-							FilledColor = color_darkTheme
-							FilledHighlightColor = highlightColor_darkTheme
-						else
-							FilledColor = color
-							FilledHighlightColor = highlightColor
-						end
-
-						--------------------------------
-
-						addon.API.FrameTemplates.Styles:UpdateButton(button, {
-							customColor = FilledColor,
-							customHighlightColor = FilledHighlightColor
-						})
-					end, 3)
-
-					--------------------------------
-
-					return button
-				end
-
-				--------------------------------
-
-				do -- ACCEPT
-					Frame.ButtonContainer.AcceptButton = CreateButton("$parent.AcceptButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
-					Frame.ButtonContainer.AcceptButton:SetSize(NS.Variables:RATIO(3), Frame.ButtonContainer:GetHeight())
-					Frame.ButtonContainer.AcceptButton:SetPoint("LEFT", Frame.ButtonContainer)
-				end
-
-				do -- CONTINUE
-					Frame.ButtonContainer.ContinueButton = CreateButton("$parent.ContinueButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
-					Frame.ButtonContainer.ContinueButton:SetSize(NS.Variables:RATIO(3), Frame.ButtonContainer:GetHeight())
-					Frame.ButtonContainer.ContinueButton:SetPoint("LEFT", Frame.ButtonContainer)
-				end
-
-				do -- COMPLETE
-					Frame.ButtonContainer.CompleteButton = CreateButton("$parent.CompleteButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
-					Frame.ButtonContainer.CompleteButton:SetSize(NS.Variables:RATIO(3), Frame.ButtonContainer:GetHeight())
-					Frame.ButtonContainer.CompleteButton:SetPoint("LEFT", Frame.ButtonContainer)
-				end
-
-				do -- DECLINE
-					Frame.ButtonContainer.DeclineButton = CreateButton("$parent.DeclineButton", addon.Theme.Quest.Highlight_Tertiary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.Quest.Highlight_Tertiary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme)
-					Frame.ButtonContainer.DeclineButton:SetSize(NS.Variables:RATIO(3), Frame.ButtonContainer:GetHeight())
-					Frame.ButtonContainer.DeclineButton:SetPoint("RIGHT", Frame.ButtonContainer)
-				end
-
-				do -- GOODBYE
-					Frame.ButtonContainer.GoodbyeButton = CreateButton("$parent.GoodbyeButton", addon.Theme.Quest.Highlight_Tertiary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.Quest.Highlight_Tertiary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme)
-					Frame.ButtonContainer.GoodbyeButton:SetSize(NS.Variables:RATIO(3), Frame.ButtonContainer:GetHeight())
-					Frame.ButtonContainer.GoodbyeButton:SetPoint("RIGHT", Frame.ButtonContainer)
-				end
-			end
-
-			do -- SCROLL FRAME
-				Frame.ScrollFrame, Frame.ScrollChildFrame = addon.API.FrameTemplates:CreateScrollFrame(Frame, { direction = "vertical", smoothScrollingRatio = 5 }, "$parent.ScrollFrame", "$parent.ScrollChildFrame")
-				Frame.ScrollFrame:SetPoint("BOTTOM", Frame, 0, 65)
-
-				--------------------------------
-
-				do -- SCROLL BAR
-					Frame.ScrollFrame.ScrollBar:Hide()
-				end
 			end
 
 			do -- CONTEXT ICON
 				Frame.ContextIcon = CreateFrame("Frame", "$parent.ContextIcon", Frame)
 				Frame.ContextIcon:SetSize(NS.Variables:RATIO(3), NS.Variables:RATIO(3))
 				Frame.ContextIcon:SetPoint("TOPLEFT", Frame, -Frame.ContextIcon:GetWidth() * .5625, Frame.ContextIcon:GetHeight() * .5875)
-				Frame.ContextIcon:SetFrameStrata("HIGH")
-				Frame.ContextIcon:SetFrameLevel(10)
-
+				Frame.ContextIcon:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.ContextIcon:SetFrameLevel(NS.Variables.FRAME_LEVEL + 10)
 				addon.API.FrameUtil:AnchorToCenter(Frame.ContextIcon)
+
+				local ContextIcon = Frame.ContextIcon
 
 				--------------------------------
 
 				do -- BACKGROUND
-					Frame.ContextIcon.Background, Frame.ContextIcon.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.ContextIcon, "HIGH", nil, "$parent.Background")
-					Frame.ContextIcon.Background:SetAllPoints(Frame.ContextIcon, true)
-					Frame.ContextIcon.Background:SetFrameStrata("HIGH")
-					Frame.ContextIcon.Background:SetFrameLevel(9)
+					ContextIcon.Background, ContextIcon.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(ContextIcon, NS.Variables.FRAME_STRATA, nil, "$parent.Background")
+					ContextIcon.Background:SetAllPoints(ContextIcon, true)
+					ContextIcon.Background:SetFrameStrata("HIGH")
+					ContextIcon.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL + 9)
 
 					--------------------------------
 
@@ -232,1105 +128,572 @@ function NS.Elements:Load()
 
 						--------------------------------
 
-						Frame.ContextIcon.BackgroundTexture:SetTexture(TEXTURE_Background)
+						ContextIcon.BackgroundTexture:SetTexture(TEXTURE_Background)
 					end, 5)
 				end
 
-				do -- LABEL
-					Frame.ContextIcon.Label = addon.API.FrameTemplates:CreateText(Frame.ContextIcon, addon.Theme.RGB_WHITE, 35, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Label")
-					Frame.ContextIcon.Label:SetPoint("TOPLEFT", Frame.ContextIcon, 1, -1)
-					Frame.ContextIcon.Label:SetPoint("BOTTOMRIGHT", Frame.ContextIcon, 1, -1)
+				do -- TEXT
+					ContextIcon.Text = addon.API.FrameTemplates:CreateText(ContextIcon, addon.Theme.RGB_WHITE, 35, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+					ContextIcon.Text:SetPoint("TOPLEFT", ContextIcon, 1, -1)
+					ContextIcon.Text:SetPoint("BOTTOMRIGHT", ContextIcon, 1, -1)
 				end
 			end
 
 			do -- CONTENT
-				local SCROLL_FRAME = Frame.ScrollChildFrame
+				Frame.Content = CreateFrame("Frame", "$parent.Content", Frame)
+				Frame.Content:SetPoint("CENTER", Frame, 0, -7.5)
+				Frame.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 5)
+				addon.API.FrameUtil:SetDynamicSize(Frame.Content, Frame, 0, 0)
 
-				local TITLE_TEXT_SIZE = 25
-				local CONTENT_TEXT_SIZE = 15
-				local TOOLTIP_TEXT_SIZE = 12.5
-
-				--------------------------------
-
-				SCROLL_FRAME.Elements = {}
+				local Content = Frame.Content
 
 				--------------------------------
 
-				local function CreateHeader(parent)
-					local Header = CreateFrame("Frame", "$parent.Header", parent)
-					Header:SetHeight(NS.Variables:RATIO(5.25))
-					addon.API.FrameUtil:SetDynamicSize(Header, SCROLL_FRAME, 0, nil)
+				do -- LAYOUT GROUP
+					Content.LayoutGroup, Content.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Content, { point = "TOP", direction = "vertical", resize = false, padding = 0, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil}, "$parent.LayoutGroup")
+					Content.LayoutGroup:SetPoint("CENTER", Content)
+					Content.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Content.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 6)
+					addon.API.FrameUtil:SetDynamicSize(Content.LayoutGroup, Content, 0, 0)
+					CallbackRegistry:Add("LayoutGroupSort Quest.Content", Content.LayoutGroup_Sort)
+
+					local LayoutGroup = Content.LayoutGroup
 
 					--------------------------------
 
-					do -- BACKGROUND
-						Header.Background, Header.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Header, "HIGH", NS.Variables.THEME.INSCRIBED_HEADER, 86, .125, "$parent.Header", Enum.UITextureSliceMode.Stretched)
-						Header.Background:SetPoint("TOPLEFT", Header, -3.75, 2.5)
-						Header.Background:SetPoint("BOTTOMRIGHT", Header, 3.75, -2.5)
-					end
-
-					do -- TEXT
-						local PADDING = NS.Variables:RATIO(6.5)
-
-						Header.Label = addon.API.FrameTemplates:CreateText(Header, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-						Header.Label:SetPoint("TOPLEFT", Header, (PADDING / 2), -(PADDING / 2))
-						Header.Label:SetPoint("BOTTOMRIGHT", Header, -(PADDING / 2), (PADDING / 2))
-						Header.Label:SetAlpha(.75)
-					end
-
-					--------------------------------
-
-					return Header
-				end
-
-				local function CreateRewardText(parent)
-					local Background, BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(parent, "HIGH", nil, 50, 3.25, "$parent.Background")
-					Background:SetHeight(NS.Variables:RATIO(6.5))
-					addon.API.FrameUtil:SetDynamicSize(Background, SCROLL_FRAME, 0, nil)
-
-					addon.API.Main:RegisterThemeUpdate(function()
-						local COLOR_Background
-
-						if addon.Theme.IsDarkTheme then
-							COLOR_Background = addon.Theme.Quest.Highlight_Tertiary_DarkTheme
-						else
-							COLOR_Background = addon.Theme.Quest.Highlight_Tertiary_LightTheme
-						end
-
-						BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-					end, 5)
-
-					--------------------------------
-
-					do -- TEXT
-						local PADDING = NS.Variables:RATIO(7.5)
-
-						Background.Text = addon.API.FrameTemplates:CreateText(Background, { r = 1, g = 1, b = 1 }, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
-						Background.Text:SetPoint("TOPLEFT", Background, 0, -(PADDING / 2))
-						Background.Text:SetPoint("BOTTOMRIGHT", Background, 0, PADDING / 2)
-						Background.Text:SetAlpha(.75)
-					end
-
-					--------------------------------
-
-					return Background, Background.Text
-				end
-
-				local function CreateReward(parent, selectable)
-					local PADDING = NS.Variables:RATIO(9.5)
-					local TEXT_PADDING = NS.Variables:RATIO(7.5)
-
-					--------------------------------
-
-					local Button = CreateFrame("Frame", nil, parent)
-					Button:SetHeight(NS.Variables:RATIO(5.5))
-					Button:SetPoint("CENTER", parent)
-					addon.API.FrameUtil:SetDynamicSize(Button, parent, 0, nil)
-
-					--------------------------------
-
-					Button.Index = nil
-					Button.Type = nil
-					Button.Callback = nil
-					Button.Quality = nil
-					Button.State = "DEFAULT"
-					Button.SelectionState = "DEFAULT"
-
-					Button.MouseOver = false
-
-					--------------------------------
-
-					do -- STATE
-						Button.SetState = function(state, SelectionState)
-							Button.State = state
-							Button.SelectionState = SelectionState
-
-							--------------------------------
-
-							Button.UpdateState()
-						end
-
-						Button.SetStateAuto = function()
-							if not Button.Type or not Button.Index then
-								return
-							end
-
-							--------------------------------
-
-							local type = Button.Type
-							local index = Button.Index
-
-							local state
-							local selectionState
-							local selectedReward = QuestInfoFrame.itemChoice
-
-							--------------------------------
-
-							do -- STATE
-								if type ~= "spell" then
-									local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, index)
-
-									--------------------------------
-
-									if addon.Variables.IS_CLASSIC and not isUsable then
-										state = "INVALID"
-									else
-										state = "DEFAULT"
-									end
-								else
-									state = "DEFAULT"
-								end
-							end
-
-							do -- STATE (SELECTION)
-								if selectedReward == index then
-									selectionState = "SELECTED"
-								else
-									selectionState = "DEFAULT"
-								end
-							end
-
-							--------------------------------
-
-							Button.SetState(state, selectionState)
-							Button.UpdateState()
-						end
-
-						Button.UpdateState = function()
-							local state = Button.State
-							local selectionState = Button.SelectionState
-
-							--------------------------------
-
-							do -- STATE
-								if state == "DEFAULT" then
-									local quality = Button.Quality
-									local qualityColors = {
-										[0] = { addon.Theme.Quest.Gradient_Quality_Poor_Start, addon.Theme.Quest.Gradient_Quality_Poor_End, addon.Theme.Quest.Text_Quality_Poor },
-										[1] = { addon.Theme.Quest.Gradient_Quality_Common_Start, addon.Theme.Quest.Gradient_Quality_Common_End, addon.Theme.Quest.Text_Quality_Common },
-										[2] = { addon.Theme.Quest.Gradient_Quality_Uncommon_Start, addon.Theme.Quest.Gradient_Quality_Uncommon_End, addon.Theme.Quest.Text_Quality_Uncommon },
-										[3] = { addon.Theme.Quest.Gradient_Quality_Rare_Start, addon.Theme.Quest.Gradient_Quality_Rare_End, addon.Theme.Quest.Text_Quality_Rare },
-										[4] = { addon.Theme.Quest.Gradient_Quality_Epic_Start, addon.Theme.Quest.Gradient_Quality_Epic_End, addon.Theme.Quest.Text_Quality_Epic },
-										[5] = { addon.Theme.Quest.Gradient_Quality_Legendary_Start, addon.Theme.Quest.Gradient_Quality_Legendary_End, addon.Theme.Quest.Text_Quality_Legendary },
-										[6] = { addon.Theme.Quest.Gradient_Quality_Artifact_Start, addon.Theme.Quest.Gradient_Quality_Artifact_End, addon.Theme.Quest.Text_Quality_Artifact },
-										[7] = { addon.Theme.Quest.Gradient_Quality_Heirloom_Start, addon.Theme.Quest.Gradient_Quality_Heirloom_End, addon.Theme.Quest.Text_Quality_Heirloom },
-										[8] = { addon.Theme.Quest.Gradient_Quality_WoWToken_Start, addon.Theme.Quest.Gradient_Quality_WoWToken_End, addon.Theme.Quest.Text_Quality_WoWToken },
-									}
-
-									local colors = qualityColors[quality] or (addon.Theme.IsDarkTheme and { addon.Theme.Quest.Highlight_Primary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme, addon.Theme.RGB_WHITE } or { addon.Theme.Quest.Highlight_Primary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.RGB_WHITE })
-									local GRADIENT_Start, GRADIENT_End, COLOR_Text = unpack(colors)
-
-									local COLOR_Background = addon.Theme.IsDarkTheme and addon.Theme.Quest.Highlight_Tertiary_DarkTheme or addon.Theme.Quest.Highlight_Tertiary_LightTheme
-									local COLOR_Image = { r = 1, g = 1, b = 1, a = 1 }
-
-									Button.Label:SetTextColor(COLOR_Text.r, COLOR_Text.g, COLOR_Text.b, 1)
-									Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-									Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
-									Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_Start, GRADIENT_End)
-								end
-
-								if state == "INVALID" then
-									local COLOR_Background
-									local COLOR_Image
-									local GRADIENT_START_Image_Background
-									local GRADIENT_END_Image_Background
-
-									if addon.Theme.IsDarkTheme then
-										COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_DarkTheme
-										COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
-
-										local colorStart = addon.Theme.Quest.Invalid_Primary_DarkTheme
-										local colorEnd = addon.Theme.Quest.Invalid_Secondary_DarkTheme
-										GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-										GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
-									else
-										COLOR_Background = addon.Theme.Quest.Invalid_Tertiary_LightTheme
-										COLOR_Image = addon.Theme.Quest.Invalid_Tint_DarkTheme
-
-										local colorStart = addon.Theme.Quest.Invalid_Primary_LightTheme
-										local colorEnd = addon.Theme.Quest.Invalid_Secondary_LightTheme
-										GRADIENT_START_Image_Background = CreateColor(colorStart.r, colorStart.g, colorStart.b, colorStart.a)
-										GRADIENT_END_Image_Background = CreateColor(colorEnd.r, colorEnd.g, colorEnd.b, colorEnd.a)
-									end
-
-									Button.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
-									Button.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
-									Button.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_START_Image_Background, GRADIENT_END_Image_Background)
-								end
-							end
-
-							do -- STATE (SELECTION)
-								local isSelectable = selectable
-								local numChoices = NS.Variables.Num_Choice
-								local selectedReward = QuestInfoFrame.itemChoice
-
-								local currentAlpha = Button:GetAlpha()
-								local targetAlpha = 1
-
-								--------------------------------
-
-								if selectionState == "SELECTED" or selectedReward == 0 then
-									targetAlpha = 1
-								elseif isSelectable and numChoices > 1 then
-									targetAlpha = .25
-								end
-
-								--------------------------------
-
-								if currentAlpha ~= targetAlpha then
-									addon.API.Animation:Fade(Button, .25, currentAlpha, targetAlpha, addon.API.Animation.EaseExpo)
-								else
-									Button:SetAlpha(targetAlpha)
-								end
-							end
-						end
-					end
-
-					do -- CLICK EVENTS
-						Button.CanClick = function()
-							if selectable then
-								if NS.Variables.Num_Choice > 1 and QuestFrameCompleteQuestButton:IsVisible() then
-									return true
-								else
-									return false
-								end
-							end
-						end
-
-						Button.Click = function()
-							Button.Callback:Click()
-
-							--------------------------------
-
-							if Button.Type == "choice" then
-								Frame.SetChoiceSelected()
-							end
-
-							--------------------------------
-
-							CallbackRegistry:Trigger("QUEST_REWARD_SELECTED", Button)
-
-							--------------------------------
-
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseUp)
-						end
-
-						Button.MouseDownCallback = function()
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_MouseDown)
-						end
-
-						Button.MouseEnterCallback = function()
-							InteractionFrame.GameTooltip.RewardButton = Button
-
-							--------------------------------
-
-							if Button.Callback then
-								-- Lua Taint?
-								-- Blizzard GameTooltip Code
-
-								local rewardType = NS.Script:GetQuestRewardType(Button.Type, Button.Index)
-
-								--------------------------------
-
-								InteractionFrame.GameTooltip:SetOwner(Button, "ANCHOR_TOPRIGHT", 0, 0);
-
-								if (Button.Type == "spell") then
-									if (Button.Callback.factionID) then
-										local wrapText = false
-										GameTooltip_SetTitle(InteractionFrame.GameTooltip, QUEST_REPUTATION_REWARD_TITLE:format(Button.Callback.factionName), HIGHLIGHT_FONT_COLOR, wrapText)
-										if C_Reputation.IsAccountWideReputation(Button.Callback.factionID) then
-											GameTooltip_AddColoredLine(InteractionFrame.GameTooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR)
-										end
-										GameTooltip_AddNormalLine(InteractionFrame.GameTooltip, QUEST_REPUTATION_REWARD_TOOLTIP:format(Button.Callback.rewardAmount, Button.Callback.factionName))
-									else
-										InteractionFrame.GameTooltip:SetSpellByID(Button.Callback.rewardSpellID)
-									end
-								elseif (rewardType == "item") then
-									InteractionFrame.GameTooltip:SetQuestItem(Button.Callback.type, Button.Callback:GetID())
-									InteractionFrame.GameTooltip:ShowComparison(InteractionFrame.GameTooltip)
-								elseif (rewardType == "currency") then
-									InteractionFrame.GameTooltip:SetQuestCurrency(Button.Callback.type, Button.Callback:GetID())
-								end
-
-								if (Button.Callback.rewardContextLine) then
-									GameTooltip_AddBlankLineToTooltip(InteractionFrame.GameTooltip)
-									GameTooltip_AddColoredLine(InteractionFrame.GameTooltip, Button.Callback.rewardContextLine, QUEST_REWARD_CONTEXT_FONT_COLOR)
-								end
-
-								InteractionFrame.GameTooltip:Show()
-								CursorUpdate(Button.Callback)
-
-								--------------------------------
-
-								InteractionQuestFrame.UpdateGameTooltip()
-							end
-
-							--------------------------------
-
-							Button.Enter()
-
-							--------------------------------
-
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Enter)
-						end
-
-						Button.MouseLeaveCallback = function()
-							InteractionFrame.GameTooltip.RewardButton = nil
-
-							--------------------------------
-
-							InteractionFrame.GameTooltip:Hide()
-							InteractionQuestFrame.UpdateGameTooltip()
-
-							--------------------------------
-
-							if Button.Callback then
-								InteractionFrame.GameTooltip:Hide()
-							end
-
-							--------------------------------
-
-							Button.Leave()
-
-							--------------------------------
-
-							addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Button_Leave)
-						end
+					do -- HEADER
+						LayoutGroup.Header = CreateFrame("Frame", "$parent.Header", LayoutGroup)
+						LayoutGroup.Header:SetFrameStrata(NS.Variables.FRAME_STRATA)
+						LayoutGroup.Header:SetFrameLevel(NS.Variables.FRAME_LEVEL + 7)
+						addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Header, LayoutGroup, FRAME_MAIN_INSET_WIDTH, nil)
+						LayoutGroup:AddElement(LayoutGroup.Header)
+
+						local Header = LayoutGroup.Header
 
 						--------------------------------
 
-						Button:SetScript("OnEnter", function()
-							Button.MouseEnterCallback()
-						end)
+						local HEADER_WIDTH_INSET = NS.Variables:RATIO(5.75)
+						local HEADER_HEIGHT_INSET_TOP = NS.Variables:RATIO(8.75)
+						local HEADER_HEIGHT_INSET_BOTTOM = NS.Variables:RATIO(6.25)
 
-						Button:SetScript("OnLeave", function()
-							Button.MouseLeaveCallback()
-						end)
-
-						Button:SetScript("OnMouseDown", function()
-							Button.MouseDownCallback()
-						end)
-
-						Button:SetScript("OnMouseUp", function()
-							Button.Click()
-						end)
-					end
-
-					do -- ELEMENTS
-						do -- BACKGROUND
-							Button.Background, Button.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Button, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 50, 3.25, "$parent.Background")
-							Button.Background:SetPoint("TOPLEFT", Button, -1.25, 1.25)
-							Button.Background:SetPoint("BOTTOMRIGHT", Button, 1.25, -1.25)
-							Button.Background:SetFrameStrata("HIGH")
-							Button.Background:SetFrameLevel(1)
-						end
-
-						do -- IMAGE
-							Button.Image = CreateFrame("Frame", "$parent.Image", Button)
-							Button.Image:SetPoint("LEFT", Button)
-							Button.Image:SetFrameLevel(2)
-							addon.API.FrameUtil:SetDynamicSize(Button.Image, Button, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
-
-							--------------------------------
-
-							do -- BACKGROUND
-								Button.Image.Background, Button.Image.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Button.Image, "HIGH", addon.API.Presets.BASIC_SQUARE, "$parent.Background")
-								Button.Image.Background:SetAllPoints(Button.Image, true)
-								Button.Image.Background:SetFrameLevel(3)
-							end
-
-							do -- ICON
-								Button.Image.Icon, Button.Image.IconTexture = addon.API.FrameTemplates:CreateTexture(Button.Image, "HIGH", nil, "$parent.Texture")
-								Button.Image.Icon:SetPoint("TOPLEFT", Button.Image, (PADDING / 2), -(PADDING / 2))
-								Button.Image.Icon:SetPoint("BOTTOMRIGHT", Button.Image, -(PADDING / 2), (PADDING / 2))
-								Button.Image.Icon:SetFrameLevel(4)
-								Button.Image.IconTexture:SetTexCoord(.15, .85, .15, .85)
-							end
-
-							do -- TEXT
-								Button.Image.Text = CreateFrame("Frame", "$parent.Text", Button.Image)
-								Button.Image.Text:SetPoint("BOTTOM", Button.Image, 0, PADDING / 2)
-								Button.Image.Text:SetFrameLevel(6)
-								addon.API.FrameUtil:SetDynamicSize(Button.Image.Text, Button.Image, function(relativeWidth, relativeHeight) return relativeWidth - PADDING end, function(relativeWidth, relativeHeight) return relativeHeight / (addon.Variables.GOLDEN_RATIO ^ 2) end)
-
-								--------------------------------
-
-								do -- BACKGROUND
-									Button.Image.Text.Background, Button.Image.Text.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Button.Image.Text, "HIGH", addon.API.Presets.BASIC_SQUARE, "$parent.Background")
-									Button.Image.Text.Background:SetAllPoints(Button.Image.Text, true)
-									Button.Image.Text.Background:SetFrameLevel(5)
-									Button.Image.Text.BackgroundTexture:SetVertexColor(.1, .1, .1, .825)
-								end
-
-								do -- LABEL
-									Button.Image.Text.Label = addon.API.FrameTemplates:CreateText(Button.Image.Text, { r = 1, g = 1, b = 1 }, TOOLTIP_TEXT_SIZE, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
-									Button.Image.Text.Label:SetAllPoints(Button.Image.Text, true)
-								end
-							end
-						end
-
-						do -- LABEL
-							Button.Label = addon.API.FrameTemplates:CreateText(Button, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-							Button.Label:SetPoint("LEFT", Button, Button.Image:GetWidth() + TEXT_PADDING, 0)
-							Button.Label:SetAlpha(.75)
-							addon.API.FrameUtil:SetDynamicSize(Button.Label, Button, function(relativeWidth, relativeHeight) return relativeWidth - TEXT_PADDING - Button.Image:GetWidth() - TEXT_PADDING end, 0)
-						end
-
-						do -- HIGHLIGHT
-							Button.Highlight = CreateFrame("Frame", "$parent.Highlight", Button)
-							Button.Highlight:SetAllPoints(Button, true)
-							Button.Highlight:SetFrameStrata("HIGH")
-							Button.Highlight:SetFrameLevel(5)
-
-							--------------------------------
-
-							do -- BACKGROUND
-								Button.Highlight.Background, Button.Highlight.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Button.Highlight, "HIGH", NS.Variables.QUEST_PATH .. "reward-highlight-add.png", "$parent.Texture")
-								Button.Highlight.Background:SetAllPoints(Button.Highlight, true)
-								Button.Highlight.Background:SetFrameStrata("HIGH")
-								Button.Highlight.Background:SetFrameLevel(99)
-
-								Button.Highlight.BackgroundTexture:SetBlendMode("ADD")
-							end
-						end
-
-						do -- ANIMATION
-							Button.Enter = function()
-								Button.MouseOver = true
-
-								--------------------------------
-
-								addon.API.Animation:Fade(Button.Highlight, .075, Button.Highlight:GetAlpha(), 1, addon.API.Animation.EaseExpo, function() return not Button.MouseOver end)
-							end
-
-							Button.Leave = function()
-								Button.MouseOver = false
-
-								--------------------------------
-
-								addon.API.Animation:Fade(Button.Highlight, .075, Button.Highlight:GetAlpha(), 0, addon.API.Animation.EaseSine, function() return Button.MouseOver end)
-							end
-
-							--------------------------------
-
-							Button.Highlight:SetAlpha(0)
-						end
-
-						do -- EVENTS
-							CallbackRegistry:Add("START_QUEST", function() Button.SetStateAuto() end, 0)
-							CallbackRegistry:Add("QUEST_REWARD_SELECTED", function() Button.SetStateAuto() end, 0)
-
-							--------------------------------
-
-							addon.API.Main:RegisterThemeUpdate(function()
-								Button.UpdateState()
-							end, 10)
-						end
-					end
-
-					--------------------------------
-
-					return Button
-				end
-
-				local function SetAutoTextHeight(frame, customWidthModifier)
-					local function UpdateSize()
-						frame:SetWidth(Frame.ScrollChildFrame:GetWidth() * (customWidthModifier or 1))
-						frame:SetHeight(10000)
-					end
-					UpdateSize()
-
-					--------------------------------
-
-					hooksecurefunc(frame, "SetText", UpdateSize)
-				end
-
-				local function RegisterElement(frame, type)
-					frame.type = type
-					table.insert(Frame.ScrollChildFrame.Elements, frame)
-				end
-
-				--------------------------------
-
-				do -- TITLE
-					Frame.Title = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, TITLE_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
-					Frame.Title:SetPoint("TOPLEFT", Frame, 55, NS.Variables:RATIO(7))
-
-					--------------------------------
-
-					SetAutoTextHeight(Frame.Title, .85)
-				end
-
-				do -- TITLE HEADER
-					Frame.TitleHeader, Frame.TitleHeaderTexture = addon.API.FrameTemplates:CreateTexture(Frame, "HIGH", nil, "$parent.TitleHeader")
-					Frame.TitleHeader:SetSize(Frame:GetWidth() - 20, (Frame:GetWidth() - 20) * .14)
-					Frame.TitleHeader:SetPoint("TOP", Frame.ScrollFrame, 0, (Frame.TitleHeader:GetHeight() + NS.Variables.PADDING))
-
-					--------------------------------
-
-					do -- MOUSE RESPONDER
-						local SIZE = 50
-
-						Frame.TitleHeader.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", Frame.TitleHeader)
-						Frame.TitleHeader.MouseResponder:SetSize(SIZE, SIZE)
-						Frame.TitleHeader.MouseResponder:SetPoint("BOTTOMRIGHT", Frame.TitleHeader, SIZE / 4, -SIZE / 4)
-					end
-
-					do -- EVENTS
-						local function UpdateSize()
-							Frame.TitleHeader:SetSize(Frame:GetWidth() - 20, (Frame:GetWidth() - 20) * .14)
-							Frame.TitleHeader:SetPoint("TOP", Frame.ScrollFrame, 0, (Frame.TitleHeader:GetHeight() + NS.Variables.PADDING))
-						end
-
-						Frame:HookScript("OnSizeChanged", UpdateSize)
-					end
-				end
-
-				do -- STORYLINE
-					local PADDING = NS.Variables:RATIO(9)
-					local BACKGROUND_ALPHA_DEFAULT = .125
-					local BACKGROUND_ALPHA_HIGHLIGHT = .25
-					local BACKGROUND_ALPHA_CLICK = .175
-
-					Frame.Storyline = CreateFrame("Frame", "$parent.Storyline", Frame)
-					Frame.Storyline:SetPoint("BOTTOMLEFT", Frame.TitleHeader, 45, 17.5)
-					Frame.Storyline:SetFrameLevel(4)
-
-					local Storyline = Frame.Storyline
-
-					--------------------------------
-
-					do -- ELEMENTS
 						do -- CONTENT
-							Storyline.Content = CreateFrame("Frame", "$parent.Content", Storyline)
-							Storyline.Content:SetPoint("CENTER", Storyline)
-							Storyline.Content:SetFrameLevel(5)
-							addon.API.FrameUtil:SetDynamicSize(Storyline.Content, Storyline, 0, 0)
+							Header.Content = CreateFrame("Frame", "$parent.Content", Header)
+							Header.Content:SetPoint("RIGHT", Header)
+							Header.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							Header.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 8)
+							addon.API.FrameUtil:SetDynamicSize(Header.Content, Header, HEADER_WIDTH_INSET, 0)
 
-							local Content = Storyline.Content
+							local Header_Content = Header.Content
+
+							--------------------------------
+
+							do -- LAYOUT GROUP
+								Header_Content.LayoutGroup, Header_Content.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Header_Content, { point = "TOP", direction = "vertical", resize = true, padding = PADDING / 2, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+								Header_Content.LayoutGroup:SetPoint("TOP", Header_Content, 0, -HEADER_HEIGHT_INSET_TOP)
+								Header_Content.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+								Header_Content.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 9)
+								addon.API.FrameUtil:SetDynamicSize(Header_Content.LayoutGroup, Header_Content, 0, nil)
+								addon.API.FrameUtil:SetDynamicSize(Header, Header_Content.LayoutGroup, nil, -HEADER_HEIGHT_INSET_BOTTOM)
+								CallbackRegistry:Add("LayoutGroupSort Quest.Content.Header", Header_Content.LayoutGroup_Sort)
+
+								local Header_LayoutGroup = Header_Content.LayoutGroup
+
+								--------------------------------
+
+								local STORYLINE_HEIGHT = NS.Variables:RATIO(6.25)
+
+								do -- ELEMENTS
+									do -- TITLE FRAME
+										Header_LayoutGroup.TitleFrame = CreateFrame("Frame", "$parent.TitleFrame", Header_LayoutGroup)
+										Header_LayoutGroup.TitleFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+										Header_LayoutGroup.TitleFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL + 10)
+										addon.API.FrameUtil:SetDynamicSize(Header_LayoutGroup.TitleFrame, Header_LayoutGroup, 0, nil)
+										Header_LayoutGroup:AddElement(Header_LayoutGroup.TitleFrame)
+
+										local TitleFrame = Header_LayoutGroup.TitleFrame
+
+										--------------------------------
+
+										do -- TEXT
+											TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, TITLE_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+											TitleFrame.Text:SetPoint("LEFT", TitleFrame)
+											addon.API.FrameUtil:SetDynamicTextSize(TitleFrame.Text, TitleFrame, nil, nil, nil, nil)
+											addon.API.FrameUtil:SetDynamicSize(TitleFrame, TitleFrame.Text, nil, 0)
+										end
+									end
+
+									do -- STORYLINE FRAME
+										Header_LayoutGroup.StorylineFrame = CreateFrame("Frame", "$parent.StorylineFrame", Header_LayoutGroup)
+										Header_LayoutGroup.StorylineFrame:SetHeight(STORYLINE_HEIGHT)
+										Header_LayoutGroup.StorylineFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+										Header_LayoutGroup.StorylineFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL + 10)
+										addon.API.FrameUtil:SetDynamicSize(Header_LayoutGroup.StorylineFrame, Header_LayoutGroup, 0, nil)
+										Header_LayoutGroup:AddElement(Header_LayoutGroup.StorylineFrame)
+
+										local StorylineFrame = Header_LayoutGroup.StorylineFrame
+
+										--------------------------------
+
+										do -- STORYLINE
+											StorylineFrame.Storyline = PrefabRegistry:Create("Quest.Storyline", StorylineFrame, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 11, "$parent.Storyline")
+											StorylineFrame.Storyline:SetPoint("LEFT", StorylineFrame, 0, 0)
+											StorylineFrame.Storyline:SetFrameStrata(NS.Variables.FRAME_STRATA)
+											StorylineFrame.Storyline:SetFrameLevel(NS.Variables.FRAME_LEVEL + 11)
+											addon.API.FrameUtil:SetDynamicSize(StorylineFrame.Storyline, StorylineFrame, nil, 0)
+										end
+									end
+								end
+							end
+						end
+
+						do -- DIVIDER
+							local TEXTURE_RATIO = .14
+
+							--------------------------------
+
+							Header.Divider = CreateFrame("Frame", "$parent.Divider", Header)
+							Header.Divider:SetPoint("BOTTOM", Header, "BOTTOM", 0, 0)
+							Header.Divider:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							Header.Divider:SetFrameLevel(NS.Variables.FRAME_LEVEL + 8)
+							addon.API.FrameUtil:SetDynamicSize(Header.Divider, Header, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeWidth * TEXTURE_RATIO end)
+
+							local Divider = Header.Divider
 
 							----------------------------------
 
 							do -- BACKGROUND
-								Content.Background, Content.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Content, "HIGH", NS.Variables.THEME.INSCRIBED_BACKGROUND, 25, .5, "$parent.Background")
-								Content.Background:SetAllPoints(Content, true)
-								Content.Background:SetFrameLevel(3)
-								Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
+								Divider.Background, Divider.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Divider, NS.Variables.FRAME_STRATA, nil, "$parent.Background")
+								Divider.Background:SetAllPoints(Divider)
+								Divider.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
+								Divider.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL + 9)
 							end
 
-							do -- CONTENT
-								Content.Content = CreateFrame("Frame", "$parent.Content", Content)
-								Content.Content:SetPoint("CENTER", Content)
-								Content.Content:SetFrameLevel(5)
-								Content.Content:SetAlpha(.5)
-								addon.API.FrameUtil:SetDynamicSize(Content.Content, Content, (PADDING * 2), (PADDING * 2))
+							do -- MOUSE RESPONDER
+								local SIZE = 50
 
-								local Subcontent = Content.Content
-
-								----------------------------------
-
-								do -- LAYOUT GROUP
-									Subcontent.LayoutGroup = addon.API.FrameTemplates:CreateLayoutGroup(Subcontent, { point = "LEFT", direction = "horizontal", resize = false, padding = (PADDING / 2), distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
-									Subcontent.LayoutGroup:SetPoint("CENTER", Subcontent)
-									Subcontent.LayoutGroup:SetFrameLevel(6)
-									addon.API.FrameUtil:SetDynamicSize(Subcontent.LayoutGroup, Subcontent, 0, 0)
-
-									local LayoutGroup = Subcontent.LayoutGroup
-
-									----------------------------------
-
-									do -- IMAGE FRAME
-										LayoutGroup.ImageFrame = CreateFrame("Frame", "$parent.ImageFrame", LayoutGroup)
-										LayoutGroup.ImageFrame:SetFrameLevel(7)
-										addon.API.FrameUtil:SetDynamicSize(LayoutGroup.ImageFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
-										LayoutGroup:AddElement(LayoutGroup.ImageFrame)
-
-										local ImageFrame = LayoutGroup.ImageFrame
-
-										----------------------------------
-
-										do -- BACKGROUND
-											ImageFrame.Background, ImageFrame.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(ImageFrame, "HIGH", nil, "$parent.Background")
-											ImageFrame.Background:SetAllPoints(ImageFrame, true)
-											ImageFrame.Background:SetFrameLevel(7)
-										end
-									end
-
-									do -- TEXT FRAME
-										LayoutGroup.TextFrame = CreateFrame("Frame", "$parent.TextFrame", LayoutGroup)
-										LayoutGroup.TextFrame:SetFrameLevel(7)
-										addon.API.FrameUtil:SetDynamicSize(LayoutGroup.TextFrame, LayoutGroup, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeHeight - 2.5 end)
-										LayoutGroup:AddElement(LayoutGroup.TextFrame)
-
-										local TextFrame = LayoutGroup.TextFrame
-
-										----------------------------------
-
-										do -- TEXT
-											TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
-											TextFrame.Text:SetAllPoints(TextFrame, true)
-										end
-									end
-								end
+								Divider.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", Divider)
+								Divider.MouseResponder:SetSize(SIZE, SIZE)
+								Divider.MouseResponder:SetPoint("BOTTOMRIGHT", Divider, SIZE / 4, -SIZE / 4)
 							end
 						end
 					end
 
-					do -- ANIMATIONS
-						do -- ON ENTER
-							function Frame:Animation_OnEnter_StopEvent()
-								return not Storyline.isMouseOver
-							end
+					do -- MAIN
+						LayoutGroup.Main = CreateFrame("Frame", "$parent.Main", LayoutGroup)
+						LayoutGroup.Main:SetPoint("CENTER", LayoutGroup)
+						LayoutGroup.Main:SetFrameStrata(NS.Variables.FRAME_STRATA)
+						LayoutGroup.Main:SetFrameLevel(NS.Variables.FRAME_LEVEL + 7)
+						CallbackRegistry:Add("UpdateDynamicSize Quest.Content.Main", addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Main, LayoutGroup, 0, function(relativeWidth, relativeHeight) return relativeHeight - LayoutGroup.Header:GetHeight() - FRAME_FOOTER_HEIGHT end, nil, nil, "Quest.Main"))
+						LayoutGroup:AddElement(LayoutGroup.Main)
 
-							function Frame:Animation_OnEnter(skipAnimation)
-								if skipAnimation then
-									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
-								else
-									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
+						local Main = LayoutGroup.Main
+
+						----------------------------------
+
+						do -- CONTENT
+							Main.Content = CreateFrame("Frame", "$parent.Content", Main)
+							Main.Content:SetPoint("CENTER", Main)
+							Main.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							Main.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 8)
+							addon.API.FrameUtil:SetDynamicSize(Main.Content, Main, FRAME_MAIN_INSET_WIDTH, FRAME_MAIN_INSET_HEIGHT)
+
+							local Main_Content = Main.Content
+
+							----------------------------------
+
+							do -- SCROLL FRAME
+								Main_Content.ScrollFrame, Main_Content.ScrollChildFrame = addon.API.FrameTemplates:CreateScrollFrame(Main_Content, { direction = "vertical", smoothScrollingRatio = 5 }, "$parent.ScrollFrame", "$parent.ScrollChildFrame")
+								Main_Content.ScrollFrame:SetPoint("CENTER", Main_Content)
+								Main_Content.ScrollFrame:SetFrameStrata(NS.Variables.FRAME_STRATA)
+								Main_Content.ScrollFrame:SetFrameLevel(NS.Variables.FRAME_LEVEL + 9)
+								addon.API.FrameUtil:SetDynamicSize(Main_Content.ScrollFrame, Main_Content, 0, 0)
+
+								local ScrollFrame, ScrollChildFrame = Main_Content.ScrollFrame, Main_Content.ScrollChildFrame
+
+								--------------------------------
+
+								do -- SCROLL BAR
+									ScrollFrame.ScrollBar:Hide()
 								end
-							end
-						end
 
-						do -- ON LEAVE
-							function Frame:Animation_OnLeave_StopEvent()
-								return Storyline.isMouseOver
-							end
-
-							function Frame:Animation_OnLeave(skipAnimation)
-								if skipAnimation then
-									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
-								else
-									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnLeave_StopEvent)
-								end
-							end
-						end
-
-						do -- ON MOUSE DOWN
-							function Frame:Animation_OnMouseDown_StopEvent()
-								return not Storyline.isMouseDown
-							end
-
-							function Frame:Animation_OnMouseDown(skipAnimation)
-								if skipAnimation then
-									Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_CLICK)
-								else
-									addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_CLICK, nil, Frame.Animation_OnEnter_StopEvent)
-								end
-							end
-						end
-
-						do -- ON MOUSE UP
-							function Frame:Animation_OnMouseUp_StopEvent()
-								return Storyline.isMouseDown
-							end
-
-							function Frame:Animation_OnMouseUp(skipAnimation)
-								if skipAnimation then
-									if Storyline.isMouseOver then
-										Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_HIGHLIGHT)
-									else
-										Storyline.Content.Background:SetAlpha(BACKGROUND_ALPHA_DEFAULT)
-									end
-								else
-									if Storyline.isMouseOver then
-										addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_HIGHLIGHT, nil, Frame.Animation_OnEnter_StopEvent)
-									else
-										addon.API.Animation:Fade(Storyline.Content.Background, .125, Storyline.Content.Background:GetAlpha(), BACKGROUND_ALPHA_DEFAULT, nil, Frame.Animation_OnEnter_StopEvent)
-									end
-								end
-							end
-						end
-					end
-
-					do -- LOGIC
-						Storyline.enabled = false
-						Storyline.isMouseOver = false
-						Storyline.isMouseDown = false
-
-						Storyline.onEnabledCallbacks = {}
-						Storyline.enterCallbacks = {}
-						Storyline.leaveCallbacks = {}
-						Storyline.mouseDownCallbacks = {}
-						Storyline.mouseUpCallbacks = {}
-						Storyline.clickCallbacks = {}
-
-						--------------------------------
-
-						do -- FUNCTIONS
-							do -- SET
-								function Storyline:SetEnabled(enabled)
-									Storyline.enabled = enabled
+								do -- SCROLL INDICATOR
+									local TEXTURE_RATIO = .25
 
 									--------------------------------
 
-									if enabled then
-										Storyline:Leave(true, true)
-									else
-										Storyline:Leave(true, true)
-									end
+									ScrollFrame.ScrollIndicator, ScrollFrame.ScrollIndicatorTexture = addon.API.FrameTemplates:CreateTexture(Frame, NS.Variables.FRAME_STRATA, nil, "$parent.ScrollIndicator")
+									ScrollFrame.ScrollIndicator:SetPoint("BOTTOM", ScrollFrame, "BOTTOM", 0, -PADDING)
+									ScrollFrame.ScrollIndicator:SetFrameStrata(NS.Variables.FRAME_STRATA)
+									ScrollFrame.ScrollIndicator:SetFrameLevel(NS.Variables.FRAME_LEVEL_MAX)
+									addon.API.FrameUtil:SetDynamicSize(ScrollFrame.ScrollIndicator, Main, function(relativeWidth, relativeHeight) return relativeWidth end, function(relativeWidth, relativeHeight) return relativeWidth * TEXTURE_RATIO end)
+									ScrollFrame.ScrollIndicator:SetAlpha(.25)
+
+									--------------------------------
+
+									addon.API.Main:RegisterThemeUpdate(function()
+										local ScrollFrameIndicatorTexture
+
+										if addon.Theme.IsDarkTheme then
+											ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-dark.png"
+										else
+											ScrollFrameIndicatorTexture = NS.Variables.QUEST_PATH .. "footer-light.png"
+										end
+
+										ScrollFrame.ScrollIndicatorTexture:SetTexture(ScrollFrameIndicatorTexture)
+									end, 5)
 								end
 
-								function Storyline:SetClick(callback)
-									Storyline.clickCallbacks = {}
-									table.insert(Storyline.clickCallbacks, callback)
-								end
+								do -- LAYOUT GROUP
+									ScrollChildFrame.LayoutGroup, ScrollChildFrame.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(ScrollChildFrame, { point = "TOP", direction = "vertical", resize = true, padding = NS.Variables.PADDING, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+									ScrollChildFrame.LayoutGroup:SetPoint("TOP", ScrollChildFrame)
+									ScrollChildFrame.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+									ScrollChildFrame.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 5)
+									addon.API.FrameUtil:SetDynamicSize(ScrollChildFrame.LayoutGroup, ScrollChildFrame, 0, nil)
+									addon.API.FrameUtil:SetDynamicSize(ScrollChildFrame, ScrollChildFrame.LayoutGroup, nil, 0)
+									CallbackRegistry:Add("LayoutGroupSort Quest.Content.Main", ScrollChildFrame.LayoutGroup_Sort)
 
-								function Storyline:SetInfo(text, image, enabled, tooltipText, callback)
-									do -- SET
-										if image then
-											Storyline.Content.Content.LayoutGroup.ImageFrame:Show(); Storyline.Content.Content.LayoutGroup.ImageFrame.BackgroundTexture:SetTexture(image)
-										else Storyline.Content.Content.LayoutGroup.ImageFrame:Hide() end
-										if text then Storyline.Content.Content.LayoutGroup.TextFrame.Text:SetText(text) end
+									local ScrollChildFrame_LayoutGroup = ScrollChildFrame.LayoutGroup
 
-										--------------------------------
+									--------------------------------
 
-										local IMAGE_WIDTH = Storyline.Content.Content.LayoutGroup.ImageFrame:GetWidth()
-										local TEXT_WIDTH = Storyline.Content.Content.LayoutGroup.TextFrame.Text:GetStringWidth()
-
-										Storyline:SetSize(PADDING + (image and (IMAGE_WIDTH + PADDING / 2) or 0) + (TEXT_WIDTH or 0) + PADDING, 27.5)
-										Storyline.Content.Content.LayoutGroup:Sort()
-									end
-
-									do -- ENABLED
-										Storyline:SetEnabled(enabled)
-
-										--------------------------------
-
-										if enabled then
-											Storyline:SetClick(callback)
+									do -- ELEMENTS
+										local function CreateHeader(parent)
+											local Header = PrefabRegistry:Create("Quest.Content.Header", parent, ScrollChildFrame_LayoutGroup, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 4, "$parent.Header")
 
 											--------------------------------
 
-											addon.API.Util:AddTooltip(Storyline, tooltipText, "ANCHOR_BOTTOM", 0, -12.5, false, false)
-										else
-											addon.API.Util:RemoveTooltip(Storyline)
+											return Header
 										end
-									end
-								end
-							end
 
-							do -- LOGIC
+										local function CreateHeaderReward(parent)
+											local Header = PrefabRegistry:Create("Quest.Content.Header.Reward", parent, ScrollChildFrame_LayoutGroup, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 4, "$parent.HeaderReward")
+											return Header
+										end
 
-							end
-						end
+										local function CreateReward(parent, selectable)
+											local Reward = PrefabRegistry:Create("Quest.Content.Reward", parent, selectable, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 4, "$parent.Reward")
+											return Reward
+										end
 
-						do -- EVENTS
-							function Storyline:Enter(bypass, skipAnimation)
-								if bypass or Storyline.enabled then
-									Storyline.isMouseOver = true
+										local function CreateText(parent)
+											local Text = addon.API.FrameTemplates:CreateText(parent, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
+											Text:SetAlpha(.75)
+											addon.API.FrameUtil:SetDynamicTextSize(Text, parent, function(relativeWidth, relativeHeight) return relativeWidth end, nil, true, nil)
 
-									--------------------------------
+											--------------------------------
 
-									Frame:Animation_OnEnter(skipAnimation)
+											return Text
+										end
 
-									--------------------------------
+										local function RegisterElement(frame, type)
+											frame.type = type
 
-									do -- ON ENTER
-										if #Storyline.enterCallbacks >= 1 then
-											local enterCallbacks = Storyline.enterCallbacks
+											--------------------------------
 
-											for callback = 1, #enterCallbacks do
-												enterCallbacks[callback](Storyline)
+											ScrollChildFrame_LayoutGroup:AddElement(frame)
+											table.insert(NS.Variables.Elements, frame)
+										end
+
+										--------------------------------
+
+										do -- OBJECTIVES
+											do -- HEADER
+												ScrollChildFrame_LayoutGroup.Objectives_Header = CreateHeader(ScrollChildFrame_LayoutGroup)
+												ScrollChildFrame_LayoutGroup.Objectives_Header:SetText(L["InteractionFrame.QuestFrame - Objectives"])
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Objectives_Header, "Header")
+											end
+
+											do -- TEXT
+												ScrollChildFrame_LayoutGroup.Objectives_Text = CreateText(ScrollChildFrame_LayoutGroup)
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Objectives_Text, "Text")
+											end
+										end
+
+										do -- REWARDS
+											do -- HEADER
+												ScrollChildFrame_LayoutGroup.Rewards_Header = CreateHeader(ScrollChildFrame_LayoutGroup)
+												ScrollChildFrame_LayoutGroup.Rewards_Header:SetText(L["InteractionFrame.QuestFrame - Rewards"])
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Header, "Header")
+											end
+
+											--------------------------------
+
+											do -- EXPERIENCE TEXT
+												ScrollChildFrame_LayoutGroup.Rewards_Experience = CreateHeaderReward(ScrollChildFrame_LayoutGroup)
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Experience, "RewardText")
+											end
+
+											do -- CURRENCY TEXT
+												ScrollChildFrame_LayoutGroup.Rewards_Currency = CreateHeaderReward(ScrollChildFrame_LayoutGroup)
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Currency, "RewardText")
+											end
+
+											do -- HONOR TEXT
+												ScrollChildFrame_LayoutGroup.Rewards_Honor = CreateHeaderReward(ScrollChildFrame_LayoutGroup)
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Honor, "RewardText")
+											end
+
+											do -- CHOICE
+												do -- CHOICE
+													ScrollChildFrame_LayoutGroup.Rewards_Choice = CreateText(ScrollChildFrame_LayoutGroup)
+
+													--------------------------------
+
+													RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Choice, "Text")
+												end
+
+												do -- CHOICE BUTTONS
+													local buttons = {}
+													for i = 1, 10 do
+														local Button = CreateReward(ScrollChildFrame_LayoutGroup, true)
+
+														--------------------------------
+
+														RegisterElement(Button, "Button")
+
+														--------------------------------
+
+														table.insert(buttons, Button)
+													end
+
+													--------------------------------
+
+													NS.Variables.Buttons_Choice = buttons
+												end
+											end
+
+											do -- RECEIVE
+												do -- TEXT
+													ScrollChildFrame_LayoutGroup.Rewards_Receive = CreateText(ScrollChildFrame_LayoutGroup)
+
+													--------------------------------
+
+													RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Receive, "Text")
+												end
+
+												do -- RECEIVE BUTTONS
+													local buttons = {}
+													for i = 1, 10 do
+														local Button = CreateReward(ScrollChildFrame_LayoutGroup, false)
+
+														--------------------------------
+
+														RegisterElement(Button, "Button")
+
+														--------------------------------
+
+														table.insert(buttons, Button)
+													end
+
+													--------------------------------
+
+													NS.Variables.Buttons_Reward = buttons
+												end
+											end
+
+											do -- SPELL
+												do -- TEXT
+													ScrollChildFrame_LayoutGroup.Rewards_Spell = CreateText(ScrollChildFrame_LayoutGroup)
+
+													--------------------------------
+
+													RegisterElement(ScrollChildFrame_LayoutGroup.Rewards_Spell, "Text")
+												end
+
+												do -- SPELL BUTTONS
+													local buttons = {}
+													for i = 1, 10 do
+														local Button = CreateReward(ScrollChildFrame_LayoutGroup, false)
+
+														--------------------------------
+
+														RegisterElement(Button, "Button")
+
+														--------------------------------
+
+														table.insert(buttons, Button)
+													end
+
+													--------------------------------
+
+													NS.Variables.Buttons_Spell = buttons
+												end
+											end
+										end
+
+										do -- PROGRESS
+											do -- HEADER
+												ScrollChildFrame_LayoutGroup.Progress_Header = CreateHeader(ScrollChildFrame_LayoutGroup)
+												ScrollChildFrame_LayoutGroup.Progress_Header:SetText(L["InteractionFrame.QuestFrame - Required Items"])
+
+												--------------------------------
+
+												RegisterElement(ScrollChildFrame_LayoutGroup.Progress_Header, "Header")
+											end
+
+											do -- REQUIRED ITEM BUTTONS
+												local buttons = {}
+												for i = 1, 10 do
+													local Button = CreateReward(ScrollChildFrame_LayoutGroup, false)
+
+													--------------------------------
+
+													RegisterElement(Button, "Button")
+
+													--------------------------------
+
+													table.insert(buttons, Button)
+												end
+
+												--------------------------------
+
+												NS.Variables.Buttons_Required = buttons
 											end
 										end
 									end
 								end
 							end
+						end
+					end
 
-							function Storyline:Leave(bypass, skipAnimation)
-								if bypass or Storyline.enabled then
-									Storyline.isMouseOver = false
+					do -- FOOTER
+						LayoutGroup.Footer = CreateFrame("Frame", "$parent.Footer", LayoutGroup)
+						LayoutGroup.Footer:SetHeight(FRAME_FOOTER_HEIGHT)
+						LayoutGroup.Footer:SetFrameStrata(NS.Variables.FRAME_STRATA)
+						LayoutGroup.Footer:SetFrameLevel(NS.Variables.FRAME_LEVEL + 7)
+						addon.API.FrameUtil:SetDynamicSize(LayoutGroup.Footer, LayoutGroup, 0, nil)
+						LayoutGroup:AddElement(LayoutGroup.Footer)
 
-									--------------------------------
+						local Footer = LayoutGroup.Footer
 
-									Frame:Animation_OnLeave(skipAnimation)
+						----------------------------------
 
-									--------------------------------
+						do -- CONTENT
+							Footer.Content = CreateFrame("Frame", "$parent.Content", Footer)
+							Footer.Content:SetPoint("CENTER", Footer)
+							Footer.Content:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							Footer.Content:SetFrameLevel(NS.Variables.FRAME_LEVEL + 8)
+							addon.API.FrameUtil:SetDynamicSize(Footer.Content, Footer, PADDING, PADDING)
 
-									do -- ON LEAVE
-										if #Storyline.leaveCallbacks >= 1 then
-											local leaveCallbacks = Storyline.leaveCallbacks
+							local Footer_Content = Footer.Content
 
-											for callback = 1, #leaveCallbacks do
-												leaveCallbacks[callback](Storyline)
-											end
-										end
-									end
+							----------------------------------
+
+							do -- BUTTONS
+								local function CreateButton(name, color, highlightColor, color_darkTheme, highlightColor_darkTheme)
+									local Button = PrefabRegistry:Create("Quest.ButtonContainer.Button", Footer_Content, color, highlightColor, color_darkTheme, highlightColor_darkTheme, NS.Variables.FRAME_STRATA, NS.Variables.FRAME_LEVEL + 9, name)
+									return Button
+								end
+
+								--------------------------------
+
+								do -- ACCEPT
+									Footer_Content.AcceptButton = CreateButton("$parent.AcceptButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
+									Footer_Content.AcceptButton:SetWidth(NS.Variables:RATIO(3))
+									Footer_Content.AcceptButton:SetPoint("LEFT", Footer_Content)
+									addon.API.FrameUtil:SetDynamicSize(Footer_Content.AcceptButton, Footer_Content, nil, 0)
+								end
+
+								do -- CONTINUE
+									Footer_Content.ContinueButton = CreateButton("$parent.ContinueButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
+									Footer_Content.ContinueButton:SetWidth(NS.Variables:RATIO(3))
+									Footer_Content.ContinueButton:SetPoint("LEFT", Footer_Content)
+									addon.API.FrameUtil:SetDynamicSize(Footer_Content.ContinueButton, Footer_Content, nil, 0)
+								end
+
+								do -- COMPLETE
+									Footer_Content.CompleteButton = CreateButton("$parent.CompleteButton", addon.Theme.Quest.Secondary_LightTheme, addon.Theme.Quest.Primary_LightTheme, addon.Theme.Quest.Secondary_DarkTheme, addon.Theme.Quest.Primary_DarkTheme)
+									Footer_Content.CompleteButton:SetWidth(NS.Variables:RATIO(3))
+									Footer_Content.CompleteButton:SetPoint("LEFT", Footer_Content)
+									addon.API.FrameUtil:SetDynamicSize(Footer_Content.CompleteButton, Footer_Content, nil, 0)
+								end
+
+								do -- DECLINE
+									Footer_Content.DeclineButton = CreateButton("$parent.DeclineButton", addon.Theme.Quest.Highlight_Tertiary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.Quest.Highlight_Tertiary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme)
+									Footer_Content.DeclineButton:SetWidth(NS.Variables:RATIO(3))
+									Footer_Content.DeclineButton:SetPoint("RIGHT", Footer_Content)
+									addon.API.FrameUtil:SetDynamicSize(Footer_Content.DeclineButton, Footer_Content, nil, 0)
+								end
+
+								do -- GOODBYE
+									Footer_Content.GoodbyeButton = CreateButton("$parent.GoodbyeButton", addon.Theme.Quest.Highlight_Tertiary_LightTheme, addon.Theme.Quest.Highlight_Secondary_LightTheme, addon.Theme.Quest.Highlight_Tertiary_DarkTheme, addon.Theme.Quest.Highlight_Secondary_DarkTheme)
+									Footer_Content.GoodbyeButton:SetWidth(NS.Variables:RATIO(3))
+									Footer_Content.GoodbyeButton:SetPoint("RIGHT", Footer_Content)
+									addon.API.FrameUtil:SetDynamicSize(Footer_Content.GoodbyeButton, Footer_Content, nil, 0)
 								end
 							end
-
-							function Storyline:MouseDown(bypass, skipAnimation)
-								if bypass or Storyline.enabled then
-									Storyline.isMouseDown = true
-
-									--------------------------------
-
-									Frame:Animation_OnMouseDown(skipAnimation)
-
-									--------------------------------
-
-									do -- ON MOUSE DOWN
-										if #Storyline.mouseDownCallbacks >= 1 then
-											local mouseDownCallbacks = Storyline.mouseDownCallbacks
-
-											for callback = 1, #mouseDownCallbacks do
-												mouseDownCallbacks[callback](Storyline)
-											end
-										end
-									end
-								end
-							end
-
-							function Storyline:MouseUp(bypass, skipAnimation)
-								if bypass or Storyline.enabled then
-									Storyline.isMouseDown = false
-
-									--------------------------------
-
-									Frame:Animation_OnMouseUp(skipAnimation)
-
-									--------------------------------
-
-									do -- ON MOUSE UP
-										if #Storyline.mouseUpCallbacks >= 1 then
-											local mouseUpCallbacks = Storyline.mouseUpCallbacks
-
-											for callback = 1, #mouseUpCallbacks do
-												mouseUpCallbacks[callback](Storyline)
-											end
-										end
-									end
-
-									do -- ON CLICK
-										Storyline:Click()
-									end
-								end
-							end
-
-							function Storyline:Click()
-								do -- ON CLICK
-									if #Storyline.clickCallbacks >= 1 then
-										local clickCallbacks = Storyline.clickCallbacks
-
-										for callback = 1, #clickCallbacks do
-											clickCallbacks[callback](Storyline)
-										end
-									end
-								end
-							end
-
-							addon.API.FrameTemplates:CreateMouseResponder(Storyline, { enterCallback = Storyline.Enter, leaveCallback = Storyline.Leave, mouseDownCallback = Storyline.MouseDown, mouseUpCallback = Storyline.MouseUp })
 						end
-					end
-
-					do -- SETUP
-						Storyline:Leave(true, true)
-						Storyline:SetEnabled(false)
-					end
-				end
-
-				do -- OBJECTIVES
-					do -- HEADER
-						Frame.Objectives_Header = CreateHeader(SCROLL_FRAME)
-						Frame.Objectives_Header.Label:SetText(L["InteractionQuestFrame - Objectives"])
-
-						--------------------------------
-
-						RegisterElement(Frame.Objectives_Header, "Header")
-					end
-
-					do -- TEXT
-						Frame.Objectives_Text = addon.API.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
-						Frame.Objectives_Text:SetAlpha(.75)
-
-						--------------------------------
-
-						SetAutoTextHeight(Frame.Objectives_Text)
-						RegisterElement(Frame.Objectives_Text, "Text")
-					end
-				end
-
-				do -- REWARDS
-					do -- HEADER
-						Frame.Rewards_Header = CreateHeader(SCROLL_FRAME)
-						Frame.Rewards_Header.Label:SetText(L["InteractionQuestFrame - Rewards"])
-
-						--------------------------------
-
-						RegisterElement(Frame.Rewards_Header, "Header")
-					end
-
-					--------------------------------
-
-					do -- EXPERIENCE TEXT
-						Frame.Rewards_Experience = CreateRewardText(SCROLL_FRAME)
-
-						--------------------------------
-
-						RegisterElement(Frame.Rewards_Experience, "RewardText")
-					end
-
-					do -- CURRENCY TEXT
-						Frame.Rewards_Currency = CreateRewardText(SCROLL_FRAME)
-
-						--------------------------------
-
-						RegisterElement(Frame.Rewards_Currency, "RewardText")
-					end
-
-					do -- HONOR TEXT
-						Frame.Rewards_Honor = CreateRewardText(SCROLL_FRAME)
-
-						--------------------------------
-
-						RegisterElement(Frame.Rewards_Honor, "RewardText")
-					end
-
-					do -- CHOICE
-						do -- CHOICE
-							Frame.Rewards_Choice = addon.API.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
-							Frame.Rewards_Choice:SetAlpha(.75)
-
-							--------------------------------
-
-							SetAutoTextHeight(Frame.Rewards_Choice)
-							RegisterElement(Frame.Rewards_Choice, "Text")
-						end
-
-						do -- CHOICE BUTTONS
-							local buttons = {}
-							for i = 1, 10 do
-								local Button = CreateReward(SCROLL_FRAME, true)
-
-								--------------------------------
-
-								RegisterElement(Button, "Button")
-
-								--------------------------------
-
-								table.insert(buttons, Button)
-							end
-
-							--------------------------------
-
-							NS.Variables.Buttons_Choice = buttons
-						end
-					end
-
-					do -- RECEIVE
-						do -- TEXT
-							Frame.Rewards_Receive = addon.API.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
-							Frame.Rewards_Receive:SetAlpha(.75)
-
-							--------------------------------
-
-							SetAutoTextHeight(Frame.Rewards_Receive)
-							RegisterElement(Frame.Rewards_Receive, "Text")
-						end
-
-						do -- RECEIVE BUTTONS
-							local buttons = {}
-							for i = 1, 10 do
-								local Button = CreateReward(SCROLL_FRAME, false)
-
-								--------------------------------
-
-								RegisterElement(Button, "Button")
-
-								--------------------------------
-
-								table.insert(buttons, Button)
-							end
-
-							--------------------------------
-
-							NS.Variables.Buttons_Reward = buttons
-						end
-					end
-
-					do -- SPELL
-						do -- TEXT
-							Frame.Rewards_Spell = addon.API.FrameTemplates:CreateText(SCROLL_FRAME, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
-							Frame.Rewards_Spell:SetAlpha(.75)
-
-							--------------------------------
-
-							SetAutoTextHeight(Frame.Rewards_Spell)
-							RegisterElement(Frame.Rewards_Spell, "Text")
-						end
-
-						do -- SPELL BUTTONS
-							local buttons = {}
-							for i = 1, 10 do
-								local Button = CreateReward(SCROLL_FRAME, false)
-
-								--------------------------------
-
-								RegisterElement(Button, "Button")
-
-								--------------------------------
-
-								table.insert(buttons, Button)
-							end
-
-							--------------------------------
-
-							NS.Variables.Buttons_Spell = buttons
-						end
-					end
-				end
-
-				do -- PROGRESS
-					do -- HEADER
-						Frame.Progress_Header = CreateHeader(SCROLL_FRAME)
-						Frame.Progress_Header.Label:SetText(L["InteractionQuestFrame - Required Items"])
-
-						--------------------------------
-
-						RegisterElement(Frame.Progress_Header, "Header")
-					end
-
-					do -- REQUIRED ITEM BUTTONS
-						local buttons = {}
-						for i = 1, 10 do
-							local Button = CreateReward(SCROLL_FRAME, false)
-
-							--------------------------------
-
-							RegisterElement(Button, "Button")
-
-							--------------------------------
-
-							table.insert(buttons, Button)
-						end
-
-						--------------------------------
-
-						NS.Variables.Buttons_Required = buttons
 					end
 				end
 			end
 
 			do -- EVENTS
 				local function UpdateSize()
-					Frame.Background:ClearAllPoints()
-					Frame.Background:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
-					Frame.Background:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
+					do -- BACKGROUND
+						Frame.Background:ClearAllPoints()
+						Frame.Background:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
+						Frame.Background:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
+					end
 
-					Frame.Border:ClearAllPoints()
-					Frame.Border:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
-					Frame.Border:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
+					do -- BORDER
+						Frame.Border:ClearAllPoints()
+						Frame.Border:SetPoint("TOPLEFT", Frame, (-57.5 * NS.Variables.ScaleModifier), (65 * NS.Variables.ScaleModifier))
+						Frame.Border:SetPoint("BOTTOMRIGHT", Frame, (57.5 * NS.Variables.ScaleModifier), (-70 * NS.Variables.ScaleModifier))
+					end
 
-					Frame.ContextIcon:SetScale(1 * NS.Variables.ScaleModifier)
-
-					Frame.Background.ScrollFrameIndicator:SetSize(Frame:GetWidth() - 50, (Frame:GetWidth() - 50) * .25)
-					Frame.ButtonContainer:SetWidth(Frame:GetWidth() - NS.Variables:RATIO(7))
-					Frame.ScrollFrame:SetSize(Frame:GetWidth() - NS.Variables:RATIO(5.5), Frame:GetHeight() - 70 - 35)
+					do -- CONTEXT ICON
+						Frame.ContextIcon:SetScale(1 * NS.Variables.ScaleModifier)
+					end
 				end
 
 				Frame:HookScript("OnSizeChanged", UpdateSize)
-				CallbackRegistry:Add("Quest.Settings_QuestFrameSize", UpdateSize, 0)
+				CallbackRegistry:Add("Quest.Settings_QuestFrameSize", UpdateSize)
 			end
+		end
+
+		do -- REFERENCES
+			local Frame = InteractionFrame.QuestFrame
+
+			--------------------------------
+
+			-- CORE
+			Frame.REF_CONTEXTICON = Frame.ContextIcon
+			Frame.REF_HEADER = Frame.Content.LayoutGroup.Header
+			Frame.REF_MAIN = Frame.Content.LayoutGroup.Main
+			Frame.REF_FOOTER = Frame.Content.LayoutGroup.Footer
+
+			-- HEADER
+			Frame.REF_HEADER_TITLE = Frame.REF_HEADER.Content.LayoutGroup.TitleFrame
+			Frame.REF_HEADER_STORYLINE = Frame.REF_HEADER.Content.LayoutGroup.StorylineFrame
+			Frame.REF_HEADER_DIVIDER = Frame.REF_HEADER.Divider
+
+			-- MAIN
+			Frame.REF_MAIN_SCROLLFRAME = Frame.REF_MAIN.Content.ScrollFrame
+			Frame.REF_MAIN_SCROLLCHILDFRAME = Frame.REF_MAIN.Content.ScrollChildFrame
+			Frame.REF_MAIN_SCROLLFRAME_SCROLLINDICATOR = Frame.REF_MAIN_SCROLLFRAME.ScrollIndicator
+			Frame.REF_MAIN_SCROLLFRAME_CONTENT = Frame.REF_MAIN_SCROLLCHILDFRAME.LayoutGroup
+
+			-- FOOTER
+			Frame.REF_FOOTER_CONTENT = Frame.REF_FOOTER.Content
 		end
 	end
 
@@ -1338,7 +701,7 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionQuestFrame
+	local Frame = InteractionFrame.QuestFrame
 	local Callback = NS.Script
 
 	--------------------------------

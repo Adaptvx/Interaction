@@ -118,22 +118,22 @@ do
 			end
 		end)
 
-		Frame:SetScript("OnMouseDown", function()
+		Frame:SetScript("OnMouseDown", function(_, button)
 			if mouseDownCallback then
 				if mouseDownCallbackValue then
 					mouseDownCallback(mouseDownCallbackValue)
 				else
-					mouseDownCallback()
+					mouseDownCallback(button)
 				end
 			end
 		end)
 
-		Frame:SetScript("OnMouseUp", function()
+		Frame:SetScript("OnMouseUp", function(_, button)
 			if mouseUpCallback then
 				if mouseUpCallbackValue then
 					mouseUpCallback(mouseUpCallbackValue)
 				else
-					mouseUpCallback()
+					mouseUpCallback(button)
 				end
 			end
 		end)

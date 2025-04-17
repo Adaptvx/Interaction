@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Cinematic.Effects
 
@@ -29,7 +29,9 @@ do  -- CONSTANTS
 	end
 
 	do -- MAIN
-
+		NS.Variables.FRAME_STRATA = "HIGH"
+		NS.Variables.FRAME_LEVEL = 1
+		NS.Variables.FRAME_LEVEL_MAX = 999
 	end
 end
 

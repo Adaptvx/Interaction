@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.BlizzardSound
 
@@ -64,7 +64,7 @@ function NS.Script:Load()
 			NS.Script:UnmuteDialog()
 		end
 
-		CallbackRegistry:Add("INITIATE_INTERACTION", StartInteraction, 0)
+		CallbackRegistry:Add("START_INTERACTION", StartInteraction, 0)
 		CallbackRegistry:Add("STOP_INTERACTION", StopInteraction, 0)
 	end
 end

@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Waypoint
 
@@ -34,7 +34,7 @@ function NS.Variables:Load()
 		NS.Variables.ANIMATION_HEIGHT = 25
 		NS.Variables.LINE_WIDTH = 2
 		NS.Variables.LINE_HEIGHT = 100
-		NS.Variables.BACKGROUND_PADDING = 50
+		NS.Variables.Background_PADDING = 50
 	end
 
 	do -- ANIMATION

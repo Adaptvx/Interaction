@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Alert
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			InteractionFrame.AlertFrame = CreateFrame("Frame", "$parent.AlertFrame", InteractionFrame)
 			InteractionFrame.AlertFrame:SetSize(325, 50)
 			InteractionFrame.AlertFrame:SetScale(1.125)
@@ -24,9 +24,7 @@ function NS.Elements:Load()
 			InteractionFrame.AlertFrame:SetFrameStrata("FULLSCREEN_DIALOG")
 			InteractionFrame.AlertFrame:SetFrameLevel(50)
 
-			--------------------------------
-
-			local Frame = InteractionFrame.AlertFrame
+            local Frame = InteractionFrame.AlertFrame
 
 			--------------------------------
 

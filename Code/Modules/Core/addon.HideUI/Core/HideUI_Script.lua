@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.HideUI
 
@@ -199,7 +199,7 @@ function NS.Script:Load()
 			CinematicFrame:RegisterEvent("CINEMATIC_START")
 			CinematicFrame:RegisterEvent("STOP_MOVIE")
 			CinematicFrame:RegisterEvent("CINEMATIC_STOP")
-			if not addon.Variables.IS_CLASSIC then
+			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				CinematicFrame:RegisterEvent("PERKS_PROGRAM_CLOSE")
 			end
 			CinematicFrame:SetScript("OnEvent", function(self, event, ...)

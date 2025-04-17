@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.SettingsUI
 
@@ -17,7 +17,7 @@ function NS.Widgets:CreateKeybindButton(parent, getFunc, setFunc, enableFunc, su
 	--------------------------------
 
 	do -- KEYBIND
-		Frame.KeybindButton = addon.API.FrameTemplates:CreateKeybindButton(Frame.Container, Frame:GetFrameStrata(), {
+		Frame.KeybindButton = addon.API.FrameTemplates:CreateKeybindButton(Frame.Container, Frame:GetFrameStrata(), Frame:GetFrameLevel() + 1, {
 			getFunc = getFunc,
 			setFunc = setFunc,
 			enableFunc = enableFunc

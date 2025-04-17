@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Quest.Target
 
@@ -32,10 +32,12 @@ do -- CONSTANTS
 		NS.Variables.PADDING = NS.Variables:RATIO(9)
 		NS.Variables.CONTENT_PADDING = NS.Variables:RATIO(8.5)
 		NS.Variables.PATH = addon.Variables.PATH_ART .. "QuestTarget/"
+
+		NS.Variables.FRAME_STRATA = "FULLSCREEN"
+		NS.Variables.FRAME_LEVEL = 999
+		NS.Variables.FRAME_LEVEL_MAX = 1999
 	end
 end
-
-
 
 --------------------------------
 -- EVENTS

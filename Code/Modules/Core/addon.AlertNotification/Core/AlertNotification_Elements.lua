@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.AlertNotification
 
@@ -16,7 +16,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	do
-		do -- CREATE ELEMENTS
+		do -- ELEMENTS
 			local TextColorPreset = {}
 			if addon.Theme.IsDarkTheme then
 				TextColorPreset = { r = 1, g = 1, b = 1 }
@@ -31,9 +31,7 @@ function NS.Elements:Load()
 			InteractionAlertNotificationFrame:SetFrameStrata("FULLSCREEN")
 			InteractionAlertNotificationFrame:SetFrameLevel(50)
 
-			--------------------------------
-
-			local Frame = InteractionAlertNotificationFrame
+            local Frame = InteractionAlertNotificationFrame
 			Frame:SetScript("OnUpdate", function()
 				Frame:SetWidth(Frame.Image:GetWidth() + Frame.Text:GetStringWidth() + 17.5)
 			end)

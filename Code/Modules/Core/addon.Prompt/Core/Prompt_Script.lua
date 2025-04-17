@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Prompt
 
@@ -12,15 +12,22 @@ NS.Script = {}
 
 function NS.Script:Load()
 	--------------------------------
+	-- REFERENCES
+	--------------------------------
+
+	local Frame = InteractionFrame.PromptFrame
+	local Callback = NS.Script
+
+	--------------------------------
 	-- FUNCTIONS (BUTTONS)
 	--------------------------------
 
 	do
-		InteractionPromptFrame.Content.ButtonArea.Button1:SetScript("OnClick", function()
+		Frame.REF_BUTTONFRAME_CONTENT.Button1:SetScript("OnClick", function()
 			NS.Variables.Button1Callback()
 		end)
 
-		InteractionPromptFrame.Content.ButtonArea.Button2:SetScript("OnClick", function()
+		Frame.REF_BUTTONFRAME_CONTENT.Button2:SetScript("OnClick", function()
 			NS.Variables.Button2Callback()
 		end)
 	end
@@ -30,45 +37,49 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		InteractionPromptFrame.Set = function(text, button1Text, button2Text, button1Callback, button2Callback, button1Active, button2Active)
-			NS.Variables.Text = text
-			NS.Variables.Button1Text = button1Text
-			NS.Variables.Button2Text = button2Text
+		function Frame:UpdateLayout()
+			CallbackRegistry:Trigger("LayoutGroupSort Prompt.Content")
+			CallbackRegistry:Trigger("LayoutGroupSort Prompt.Content.ButtonFrame")
+		end
+	end
+
+	--------------------------------
+	-- FUNCTIONS (MAIN)
+	--------------------------------
+
+	do
+		function Callback:Set(text, button1Text, button2Text, button1Callback, button2Callback, button1Active, button2Active)
+			NS.Variables.Text = text or ""
+			NS.Variables.Button1Text = button1Text or ""
+			NS.Variables.Button2Text = button2Text or ""
 			NS.Variables.Button1Callback = button1Callback
 			NS.Variables.Button2Callback = button2Callback
-			addon.Prompt.Button1Active = button1Active
-			addon.Prompt.Button2Active = button2Active
+			addon.Prompt.Button1Active = button1Active or false
+			addon.Prompt.Button2Active = button2Active or false
 
 			--------------------------------
 
-			InteractionPromptFrame.Content.TextArea.Text:SetText(NS.Variables.Text)
-			InteractionPromptFrame.Content.ButtonArea.Button1:SetText(NS.Variables.Button1Text)
-			InteractionPromptFrame.Content.ButtonArea.Button2:SetText(NS.Variables.Button2Text)
+			do -- SET
+				Frame.REF_TEXTFRAME.Text:SetText(NS.Variables.Text)
 
-			addon.API.Main:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button1, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Accept))
-			addon.API.Main:SetButtonToPlatform(InteractionPromptFrame.Content.ButtonArea.Button2, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Decline))
-
-			InteractionPromptFrame.Content.ButtonArea.Button1.SetActive(addon.Prompt.Button1Active)
-			InteractionPromptFrame.Content.ButtonArea.Button2.SetActive(addon.Prompt.Button2Active)
-
-			--------------------------------
-
-			if not InteractionPromptFrame.hidden then
-				InteractionPromptFrame.hidden = true
+				Callback:SetButton(1, NS.Variables.Button1Text, addon.Prompt.Button1Active)
+				Callback:SetButton(2, NS.Variables.Button2Text, addon.Prompt.Button2Active)
+				addon.API.Main:SetButtonToPlatform(Frame.REF_BUTTONFRAME_CONTENT.Button1, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Accept))
+				addon.API.Main:SetButtonToPlatform(Frame.REF_BUTTONFRAME_CONTENT.Button2, nil, addon.Input.Variables:GetKeybindForPlatform(addon.Input.Variables.Key_Prompt_Decline))
 			end
 
-			InteractionPromptFrame.ShowWithAnimation()
-
 			--------------------------------
 
-			CallbackRegistry:Trigger("START_PROMPT")
-
-			--------------------------------
-
+			Frame:ShowWithAnimation()
 			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Prompt_Show)
+
+			--------------------------------
+
+			Frame:UpdateLayout()
+			CallbackRegistry:Trigger("START_PROMPT")
 		end
 
-		InteractionPromptFrame.Clear = function()
+		function Callback:Clear()
 			NS.Variables.Text = nil
 			NS.Variables.Button1Text = nil
 			NS.Variables.Button2Text = nil
@@ -79,15 +90,21 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			InteractionPromptFrame.HideWithAnimation()
+			Frame:HideWithAnimation()
+			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Prompt_Hide)
 
 			--------------------------------
 
 			CallbackRegistry:Trigger("STOP_PROMPT")
+		end
 
-			--------------------------------
+		function Callback:SetButton(index, text, active)
+			Frame.REF_BUTTONFRAME_CONTENT["Button" .. index]:SetText(text)
+			Frame.REF_BUTTONFRAME_CONTENT["Button" .. index]:SetActive(active)
+		end
 
-			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Prompt_Hide)
+		function Callback:ClickButton(index)
+			Frame.REF_BUTTONFRAME_CONTENT["Button" .. index]:Click()
 		end
 	end
 
@@ -96,47 +113,53 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		InteractionPromptFrame.ShowWithAnimation = function()
-			if not InteractionPromptFrame.hidden then
-				return
+		do -- SHOW
+			function Frame:ShowWithAnimation_StopEvent()
+				return Frame.hidden
 			end
 
-			--------------------------------
+			function Frame:ShowWithAnimation()
+				if not Frame.hidden then
+					return
+				end
+				Frame.hidden = false
+				Frame:Show()
 
-			InteractionPromptFrame:Show()
-			InteractionPromptFrame.hidden = false
+				--------------------------------
 
-			--------------------------------
+				addon.API.Animation:Fade(Frame, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Move(Frame, .5, "TOP", 25, -35, "y", addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
 
-			addon.API.Animation:Fade(InteractionPromptFrame, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
-			addon.API.Animation:Move(InteractionPromptFrame, .5, "TOP", 25, -35, "y", addon.API.Animation.EaseExpo, function() return InteractionPromptFrame.hidden end)
-
-			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
-			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, 0, 1, nil, function() return InteractionPromptFrame.hidden end)
+				addon.API.Animation:Fade(Frame.REF_BUTTONFRAME_CONTENT.Button1, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.REF_BUTTONFRAME_CONTENT.Button2, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+			end
 		end
 
-		InteractionPromptFrame.HideWithAnimation = function()
-			if InteractionPromptFrame.hidden then
-				return
+		do -- HIDE
+			function Frame:HideWithAnimation_StopEvent()
+				return not Frame.hidden
 			end
 
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				if InteractionPromptFrame.hidden then
-					InteractionPromptFrame:Hide()
+			function Frame:HideWithAnimation()
+				if Frame.hidden then
+					return
 				end
-			end, .5)
+				Frame.hidden = true
 
-			InteractionPromptFrame.hidden = true
+				addon.Libraries.AceTimer:ScheduleTimer(function()
+					if Frame.hidden then
+						Frame:Hide()
+					end
+				end, .5)
 
-			--------------------------------
+				--------------------------------
 
-			addon.API.Animation:Fade(InteractionPromptFrame, .25, InteractionPromptFrame:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
-			addon.API.Animation:Move(InteractionPromptFrame, .5, "TOP", -35, 5, "y", addon.API.Animation.EaseExpo, function() return not InteractionPromptFrame.hidden end)
+				addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Move(Frame, .5, "TOP", -35, 5, "y", addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
 
-			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button1, .25, InteractionPromptFrame.Content.ButtonArea.Button1:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
-			addon.API.Animation:Fade(InteractionPromptFrame.Content.ButtonArea.Button2, .25, InteractionPromptFrame.Content.ButtonArea.Button2:GetAlpha(), 0, nil, function() return not InteractionPromptFrame.hidden end)
+				addon.API.Animation:Fade(Frame.REF_BUTTONFRAME_CONTENT.Button1, .25, Frame.REF_BUTTONFRAME_CONTENT.Button1:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+				addon.API.Animation:Fade(Frame.REF_BUTTONFRAME_CONTENT.Button2, .25, Frame.REF_BUTTONFRAME_CONTENT.Button2:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			end
 		end
 	end
 
@@ -145,111 +168,110 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		local GossipEvents = CreateFrame("Frame")
-		GossipEvents:RegisterEvent("GOSSIP_CONFIRM")
-		GossipEvents:RegisterEvent("GOSSIP_CLOSED")
-		GossipEvents:SetScript("OnEvent", function(self, event, ...)
-			if event == "GOSSIP_CONFIRM" then
-				local gossipID, text, cost = ...
+		do -- GOSSIP
+			local POPUPS = {
+				"StaticPopup1",
+				"StaticPopup2"
+			}
+
+			local function GetPopup(text)
+				local frame
 
 				--------------------------------
 
-				local Popups = {
-					"StaticPopup1",
-					"StaticPopup2"
-				}
+				for i = 1, #POPUPS do
+					if _G[POPUPS[i] .. "Text"]:GetText() == text then
+						frame = POPUPS[i]
+					end
+				end
 
 				--------------------------------
 
-				local function GetPopup()
-					local frame
+				return frame
+			end
+
+
+			local GossipEvents = CreateFrame("Frame")
+			GossipEvents:RegisterEvent("GOSSIP_CONFIRM")
+			GossipEvents:RegisterEvent("GOSSIP_CLOSED")
+			GossipEvents:SetScript("OnEvent", function(self, event, ...)
+				if event == "GOSSIP_CONFIRM" then
+					local gossipID, text, cost = ...
 
 					--------------------------------
 
-					for i = 1, #Popups do
-						if _G[Popups[i] .. "Text"]:GetText() == text then
-							frame = Popups[i]
+					local DesiredPopup = GetPopup(text)
+					local Popup = _G[DesiredPopup]
+					local Text = _G[DesiredPopup .. "Text"]:GetText()
+					local Button1 = _G[DesiredPopup .. "Button1"]
+					local Button2 = _G[DesiredPopup .. "Button2"]
+
+					--------------------------------
+
+					local FormattedText
+					if cost and cost > 0 then
+						local gold, silver, copper = addon.API.Util:FormatMoney(cost)
+
+						--------------------------------
+
+						local text_gold, text_silver, text_copper
+
+						--------------------------------
+
+						if gold > 0 then
+							text_gold = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
 						end
+
+						if silver > 0 then
+							text_silver = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
+						end
+
+						if copper > 0 then
+							text_copper = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
+						end
+
+						--------------------------------
+
+						FormattedText = Text .. "\n\n" .. (text_gold or "") .. (text_silver or "") .. (text_copper or "") .. "\n"
+					else
+						FormattedText = Text
 					end
 
 					--------------------------------
 
-					return frame
+					Frame:Set(FormattedText, Button1:GetText(), Button2:GetText(), function()
+						Callback:SetButton(1); Callback:Clear()
+					end, function()
+						Callback:SetButton(2); Callback:Clear()
+					end, true, false)
+
+					--------------------------------
+
+					-- Hide Interaction Prompt Frame when the Popup is shown to prevent
+					-- the visible prompt buttons to interact with unrelated actions
+
+					-- Example: Interaction Prompt for Skipping quest-chain and clicking Exit Game which
+					-- will cause the "Skip" button to click on the "Exit Game" button.
+
+					if not Popup.hookedFunc then
+						Popup.hookedFunc = true
+
+						hooksecurefunc(Popup, "Show", function()
+							Popup:SetAlpha(1)
+							Frame:Clear()
+						end)
+					end
+
+					--------------------------------
+
+					Popup:SetAlpha(0)
 				end
 
-				--------------------------------
-
-				local DesiredPopup = GetPopup()
-				local Popup = _G[DesiredPopup]
-				local Text = _G[DesiredPopup .. "Text"]:GetText()
-				local Button1 = _G[DesiredPopup .. "Button1"]
-				local Button2 = _G[DesiredPopup .. "Button2"]
-
-				--------------------------------
-
-				local FormattedText
-				if cost and cost > 0 then
-					local gold, silver, copper = addon.API.Util:FormatMoney(cost)
-
-					--------------------------------
-
-					local text_gold, text_silver, text_copper
-
-					--------------------------------
-
-					if gold > 0 then
-						text_gold = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/gold.png", 20, 20, 0, 0) .. "" .. gold .. " "
-					end
-
-					if silver > 0 then
-						text_silver = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/silver.png", 20, 20, 0, 0) .. "" .. silver .. " "
-					end
-
-					if copper > 0 then
-						text_copper = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/copper.png", 20, 20, 0, 0) .. "" .. copper .. " "
-					end
-
-					--------------------------------
-
-					FormattedText = Text .. "\n\n" .. (text_gold or "") .. (text_silver or "") .. (text_copper or "") .. "\n"
-				else
-					FormattedText = Text
+				if event == "GOSSIP_CLOSED" then
+					Callback:Clear()
 				end
-
-				--------------------------------
-
-				InteractionPromptFrame.Set(FormattedText, Button1:GetText(), Button2:GetText(), function()
-					Button1:Click(); InteractionPromptFrame.Clear()
-				end, function()
-					Button2:Click(); InteractionPromptFrame.Clear()
-				end, true, false)
-
-				--------------------------------
-
-				-- Hide Interaction Prompt Frame when the Popup is shown to prevent
-				-- the visible prompt buttons to interact with unrelated actions
-
-				-- Example: Interaction Prompt for Skipping quest-chain and clicking Exit Game which
-				-- will cause the "Skip" button to click on the "Exit Game" button.
-
-				if not Popup.hookedFunc then
-					Popup.hookedFunc = true
-
-					hooksecurefunc(Popup, "Show", function()
-						Popup:SetAlpha(1)
-						InteractionPromptFrame.Clear()
-					end)
-				end
-
-				--------------------------------
-
-				Popup:SetAlpha(0)
-			end
-
-			if event == "GOSSIP_CLOSED" then
-				InteractionPromptFrame.Clear()
-			end
-		end)
+			end)
+		end
 	end
 
 	--------------------------------

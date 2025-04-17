@@ -1,6 +1,6 @@
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 local NS = addon.Interaction.Gossip
 
@@ -15,9 +15,6 @@ NS.Variables = {}
 do -- MAIN
 	NS.Variables.NumCurrentButtons = 0
 	NS.Variables.State = ""
-	NS.Variables.NPC = ""
-	NS.Variables.LastNPC = ""
-	NS.Variables.ThemeUpdateTransition = false
 end
 
 do  -- CONSTANTS
@@ -36,7 +33,15 @@ do  -- CONSTANTS
 	do -- MAIN
 		NS.Variables.PATH = addon.Variables.PATH_ART .. "Gossip/"
 		NS.Variables.PADDING = 10
+
+		NS.Variables.FRAME_STRATA = "HIGH"
+		NS.Variables.FRAME_LEVEL = 99
+		NS.Variables.FRAME_LEVEL_MAX = 999
 	end
+end
+
+do -- REFERENCES
+	NS.Variables.Buttons = {}
 end
 
 --------------------------------

@@ -1,8 +1,8 @@
 -- Localization and translation ZamestoTV
 
 local addonName, addon = ...
-local PrefabRegistry = addon.PrefabRegistry
 local CallbackRegistry = addon.CallbackRegistry
+local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
 
 --------------------------------
@@ -79,6 +79,8 @@ local function Load()
 		L["Range - Dialog / Content Preview Alpha"] = "Предварительный просмотр непрозрачности"
 		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Устанавливает непрозрачность предварительного просмотра текста диалогового окна.\n\nПо умолчанию: 50%."
 		L["Title - Quest"] = "Задание"
+		L["Checkbox - Always Show Gossip Frame"] = "Always Show Gossip Frame"
+		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Always show the gossip frame when available instead of only after dialog.\n\nDefault: On."
 		L["Checkbox - Always Show Quest Frame"] = "Всегда показывать окно задания"
 		L["Checkbox - Always Show Quest Frame - Tooltip"] = "Всегда показывать окно задания, когда оно доступно, а не только после диалога.\n\nПо умолчанию: Вкл."
 
@@ -321,19 +323,19 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionQuestFrame - Objectives"] = "Цели"
-		L["InteractionQuestFrame - Rewards"] = "Награды"
-		L["InteractionQuestFrame - Required Items"] = "Необходимые предметы"
+		L["InteractionFrame.QuestFrame - Objectives"] = "Цели"
+		L["InteractionFrame.QuestFrame - Rewards"] = "Награды"
+		L["InteractionFrame.QuestFrame - Required Items"] = "Необходимые предметы"
 
-		L["InteractionQuestFrame - Accept - Quest Log Full"] = "Журнал заданий заполнен"
-		L["InteractionQuestFrame - Accept - Auto Accept"] = "Автоматически принято"
-		L["InteractionQuestFrame - Accept"] = "Принять"
-		L["InteractionQuestFrame - Decline"] = "Отклонить"
-		L["InteractionQuestFrame - Goodbye"] = "До встречи"
-		L["InteractionQuestFrame - Goodbye - Auto Accept"] = "Понятно"
-		L["InteractionQuestFrame - Continue"] = "Продолжить"
-		L["InteractionQuestFrame - In Progress"] = "В ходе выполнения"
-		L["InteractionQuestFrame - Complete"] = "Завершенное"
+		L["InteractionFrame.QuestFrame - Accept - Quest Log Full"] = "Журнал заданий заполнен"
+		L["InteractionFrame.QuestFrame - Accept - Auto Accept"] = "Автоматически принято"
+		L["InteractionFrame.QuestFrame - Accept"] = "Принять"
+		L["InteractionFrame.QuestFrame - Decline"] = "Отклонить"
+		L["InteractionFrame.QuestFrame - Goodbye"] = "До встречи"
+		L["InteractionFrame.QuestFrame - Goodbye - Auto Accept"] = "Понятно"
+		L["InteractionFrame.QuestFrame - Continue"] = "Продолжить"
+		L["InteractionFrame.QuestFrame - In Progress"] = "В ходе выполнения"
+		L["InteractionFrame.QuestFrame - Complete"] = "Завершенное"
 	end
 
 	--------------------------------
@@ -341,7 +343,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionDialogFrame - Skip"] = "ПРОПУСК"
+		L["InteractionFrame.DialogFrame - Skip"] = "ПРОПУСК"
 	end
 
 	--------------------------------
@@ -349,7 +351,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionGossipFrame - Close"] = "До встречи"
+		L["InteractionFrame.GossipFrame - Close"] = "До встречи"
 	end
 
 	--------------------------------
@@ -413,7 +415,7 @@ local function Load()
 		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
 		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Записи"
 		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Вход"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Зап."
 		L["MinimapIcon - Tooltip - Entries - Empty"] = "Нет записей."
 	end
 
@@ -463,7 +465,7 @@ local function Load()
 		L["GossipData - Trigger - Movie 1"] = "%(Воспроизвести%)"
 		L["GossipData - Trigger - Movie 2"] = "%(Воспроизвести ролик%)"
 		L["GossipData - Trigger - NPC Dialog"] = "%<Останься немного и послушай.%>"
-		L["GossipData - Trigger - NPC Dialog - Subtext 1"] = "Останься немного и послушай."
+		L["GossipData - Trigger - NPC Dialog - Append"] = "Останься немного и послушай."
 	end
 
 	--------------------------------
@@ -488,7 +490,7 @@ local function Load()
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] = "|r"
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] = addon.Theme.RGB_GRAY_HEXCODE
 			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] = "|r"
-			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Click to open quest chain in BtWQuests" .. "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Нажмите, чтобы открыть цепочку заданий в BtWQuests" .. "|r"
 		end
 	end
 end
