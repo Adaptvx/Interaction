@@ -239,7 +239,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Frame:Set(FormattedText, Button1:GetText(), Button2:GetText(), function()
+					Callback:Set(FormattedText, Button1:GetText(), Button2:GetText(), function()
 						Callback:SetButton(1); Callback:Clear()
 					end, function()
 						Callback:SetButton(2); Callback:Clear()
@@ -258,7 +258,7 @@ function NS.Script:Load()
 
 						hooksecurefunc(Popup, "Show", function()
 							Popup:SetAlpha(1)
-							Frame:Clear()
+							Callback:Clear()
 						end)
 					end
 

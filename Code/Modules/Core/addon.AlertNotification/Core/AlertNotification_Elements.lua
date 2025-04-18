@@ -17,50 +17,69 @@ function NS.Elements:Load()
 
 	do
 		do -- ELEMENTS
-			local TextColorPreset = {}
-			if addon.Theme.IsDarkTheme then
-				TextColorPreset = { r = 1, g = 1, b = 1 }
-			else
-				TextColorPreset = { r = 1, g = 1, b = 1 }
-			end
+			InteractionFrame.AlertNotification = CreateFrame("Frame", "$parent.AlertNotification", InteractionFrame)
+			InteractionFrame.AlertNotification:SetSize(250, 50)
+			InteractionFrame.AlertNotification:SetFrameStrata(NS.Variables.FRAME_STRATA)
+			InteractionFrame.AlertNotification:SetFrameLevel(NS.Variables.FRAME_LEVEL)
+
+			local Frame = InteractionFrame.AlertNotification
 
 			--------------------------------
 
-			InteractionAlertNotificationFrame = CreateFrame("Frame", "$parent.InteractionAlertNotificationFrame", InteractionFrame)
-			InteractionAlertNotificationFrame:SetSize(250, 50)
-			InteractionAlertNotificationFrame:SetFrameStrata("FULLSCREEN")
-			InteractionAlertNotificationFrame:SetFrameLevel(50)
-
-            local Frame = InteractionAlertNotificationFrame
-			Frame:SetScript("OnUpdate", function()
-				Frame:SetWidth(Frame.Image:GetWidth() + Frame.Text:GetStringWidth() + 17.5)
-			end)
-			Frame:Hide()
-
-			--------------------------------
+			local PADDING = NS.Variables.PADDING
 
 			do -- NOTIFICATION
+				Frame.Notification = CreateFrame("Frame", "$parent.Notification", Frame)
+				Frame.Notification:SetHeight(50)
+				Frame.Notification:SetPoint("CENTER", Frame)
+				Frame.Notification:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Notification:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+
+				local Notification = Frame.Notification
+
+				--------------------------------
+
 				do -- BACKGROUND
-					Frame.Background, Frame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame, "FULLSCREEN", addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
-					Frame.Background:SetPoint("TOPLEFT", Frame, -12.5, 12.5)
-					Frame.Background:SetPoint("BOTTOMRIGHT", Frame, 12.5, -12.5)
-					Frame.Background:SetFrameStrata("FULLSCREEN")
-					Frame.Background:SetFrameLevel(49)
-					Frame.BackgroundTexture:SetVertexColor(.5, .5, .5)
+					Notification.Background, Notification.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Notification, NS.Variables.FRAME_STRATA, addon.Variables.PATH_ART .. "Gradient/backdrop-nineslice.png", 128, .5, "$parent.Background")
+					Notification.Background:SetPoint("CENTER", Notification)
+					Notification.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Notification.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL - 1)
+					addon.API.FrameUtil:SetDynamicSize(Notification.Background, Notification, -25, -25)
+					Notification.BackgroundTexture:SetVertexColor(.5, .5, .5)
 				end
 
-				do -- TEXT
-					Frame.Text = addon.API.FrameTemplates:CreateText(Frame, TextColorPreset, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
-					Frame.Text:SetSize(Frame:GetWidth() - Frame:GetHeight(), Frame:GetHeight())
-					Frame.Text:SetPoint("LEFT", Frame, Frame:GetHeight(), 0)
-				end
+				do -- LAYOUT GROUP
+					Notification.LayoutGroup, Notification.LayoutGroup_Sort = addon.API.FrameTemplates:CreateLayoutGroup(Notification, { point = "LEFT", direction = "horizontal", resize = true, padding = PADDING, distribute = false, distributeResizeElements = false, excludeHidden = true, autoSort = true, customOffset = nil, customLayoutSort = nil }, "$parent.LayoutGroup")
+					Notification.LayoutGroup:SetPoint("CENTER", Notification)
+					Notification.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Notification.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
+					addon.API.FrameUtil:SetDynamicSize(Notification.LayoutGroup, Notification, nil, 0)
+					addon.API.FrameUtil:SetDynamicSize(Notification, Notification.LayoutGroup, -35, nil)
+					CallbackRegistry:Add("LayoutGroupSort AlertNotification.Notification", Notification.LayoutGroup_Sort)
 
-				do -- IMAGE
-					Frame.Image, Frame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "checked.png")
-					Frame.Image:SetSize(Frame:GetHeight(), Frame:GetHeight())
-					Frame.Image:SetPoint("LEFT", Frame)
-					Frame.Image:SetFrameStrata("FULLSCREEN")
-					Frame.Image:SetFrameLevel(50)
+					local LayoutGroup = Notification.LayoutGroup
+
+					--------------------------------
+
+					do -- ELEMENTS
+						local IMAGE_SIZE = 17.5
+
+						--------------------------------
+
+						do -- IMAGE
+							LayoutGroup.Image, LayoutGroup.ImageTexture = addon.API.FrameTemplates:CreateTexture(LayoutGroup, NS.Variables.FRAME_STRATA, NS.Variables.PATH .. "check.png")
+							LayoutGroup.Image:SetSize(IMAGE_SIZE, IMAGE_SIZE)
+							LayoutGroup.Image:SetFrameStrata(NS.Variables.FRAME_STRATA)
+							LayoutGroup.Image:SetFrameLevel(NS.Variables.FRAME_LEVEL + 3)
+							LayoutGroup:AddElement(LayoutGroup.Image)
+						end
+
+						do -- TEXT
+							LayoutGroup.Text = addon.API.FrameTemplates:CreateText(LayoutGroup, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+							addon.API.FrameUtil:SetDynamicTextSize(LayoutGroup.Text, LayoutGroup, 10000, nil)
+							LayoutGroup:AddElement(LayoutGroup.Text)
+						end
+					end
 				end
 			end
 
@@ -68,20 +87,40 @@ function NS.Elements:Load()
 				Frame.Flare = CreateFrame("Frame", "$parent.Flare", Frame)
 				Frame.Flare:SetSize(1000, 150)
 				Frame.Flare:SetPoint("CENTER", Frame)
+				Frame.Flare:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.Flare:SetFrameLevel(NS.Variables.FRAME_LEVEL_MAX)
 				Frame.Flare:SetIgnoreParentScale(true)
 				Frame.Flare:SetIgnoreParentAlpha(true)
 
-				Frame.Flare:Hide()
+				local Flare = Frame.Flare
 
 				--------------------------------
 
 				do -- BACKGROUND
-					Frame.Flare.Background, Frame.Flare.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Frame.Flare, "FULLSCREEN_DIALOG", NS.Variables.PATH .. "flare.png")
-					Frame.Flare.Background:SetSize(Frame.Flare:GetWidth(), Frame.Flare:GetHeight())
-					Frame.Flare.Background:SetPoint("CENTER", Frame.Flare)
-					Frame.Flare.Background:SetAlpha(1)
+					Flare.Background, Flare.BackgroundTexture = addon.API.FrameTemplates:CreateTexture(Flare, NS.Variables.FRAME_STRATA, NS.Variables.PATH .. "flare.png")
+					Flare.Background:SetPoint("CENTER", Frame.Flare)
+					Flare.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
+					Flare.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL_MAX - 1)
+					addon.API.FrameUtil:SetDynamicSize(Flare.Background, Flare, 0, 0)
 				end
 			end
+		end
+
+		do -- REFERENCES
+			local Frame = InteractionFrame.AlertNotification
+
+			--------------------------------
+
+			-- CORE
+			Frame.REF_NOTIFICATION = Frame.Notification
+			Frame.REF_FLARE = Frame.Flare
+
+			-- NOTIFICATION
+			Frame.REF_NOTIFICATION_TEXT = Frame.REF_NOTIFICATION.LayoutGroup.Text
+			Frame.REF_NOTIFICATION_IMAGE = Frame.REF_NOTIFICATION.LayoutGroup.Image
+
+			-- FLARE
+			Frame.REF_FLARE_BACKGROUND = Frame.REF_FLARE.Background
 		end
 	end
 
@@ -89,10 +128,16 @@ function NS.Elements:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = InteractionAlertNotificationFrame
+	local Frame = InteractionFrame.AlertNotification
 	local Callback = NS.Script
 
 	--------------------------------
 	-- SETUP
 	--------------------------------
+
+	do
+		Frame:Hide()
+		Frame.Flare:Hide()
+		Frame.hidden = true
+	end
 end

@@ -77,11 +77,11 @@ function NS.Script:Load()
 		end)
 
 		Frame.REF_HEADER_DIVIDER.MouseResponder:SetScript("OnEnter", function()
-			Frame.REF_HEADER_TITLE:SetAlpha(.75)
+			Frame.REF_HEADER_DIVIDER:SetAlpha(.75)
 		end)
 
 		Frame.REF_HEADER_DIVIDER.MouseResponder:SetScript("OnLeave", function()
-			Frame.REF_HEADER_TITLE:SetAlpha(1)
+			Frame.REF_HEADER_DIVIDER:SetAlpha(1)
 		end)
 	end
 
@@ -718,7 +718,7 @@ function NS.Script:Load()
 					--------------------------------
 
 					do -- TEXT (STORYLINE)
-						Frame.REF_HEADER_STORYLINE:SetShown(storylineInfo and not TITLE_PROGRESS:IsVisible())
+						Frame.REF_HEADER_STORYLINE:SetShown(storylineInfo)
 
 						--------------------------------
 

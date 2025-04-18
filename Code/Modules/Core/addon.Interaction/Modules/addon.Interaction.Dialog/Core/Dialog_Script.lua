@@ -364,6 +364,7 @@ function NS.Script:Load()
 				if text_split then
 					for i = 1, #text_split do
 						local formatted = RemoveAngledBrackets(text_split[i])
+						formatted = formatted:gsub("%.%.%.", "…")
 						table.insert(text_formatted, formatted)
 					end
 				end
@@ -382,19 +383,26 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				local isInEmote = false
+				local isInEmote = nil
+				local skipNextLineEmote = nil
 				for line = 1, #splitText do
 					local currentLine = splitText[line]
 					local isSameLineEmote = false
 
 					--------------------------------
 
+					if skipNextLineEmote then
+						isInEmote = false
+						skipNextLineEmote = nil
+					end
+
 					if addon.API.Util:FindString(currentLine, "<") then
 						isInEmote = true
 					end
 
 					if addon.API.Util:FindString(currentLine, ">") then
-						isInEmote = false
+						isInEmote = true
+						skipNextLineEmote = true
 					end
 
 					if addon.API.Util:FindString(currentLine, "<") and addon.API.Util:FindString(currentLine, ">") then
@@ -433,15 +441,19 @@ function NS.Script:Load()
 				NS.Variables.info.contentInfo.emoteIndexes = emoteIndexes
 			end
 
-			function Callback:SetLineToIndex(index, skipAnimation)
+			function Callback:SetLineToIndex(index, skipAnimation, preventAutoProgress)
 				local info = NS.Variables.info
 
 				--------------------------------
 
 				NS.Variables.Playback_Index = index
-				NS.Variables.Playback_AutoProgress = skipAnimation and false or addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS
+				if skipAnimation or preventAutoProgress then NS.Variables.Playback_AutoProgress = false else NS.Variables.Playback_AutoProgress = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end
 
 				--------------------------------
+
+				do -- STYLE
+					Frame:UpdateStyle()
+				end
 
 				do -- SET
 					local isAlwaysShowQuest = addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST
@@ -470,7 +482,7 @@ function NS.Script:Load()
 					end
 
 					do -- CONTENT TEXT
-						Frame.REF_CONTENT_TEXT:SetText(info.contentInfo.split[index])
+						Frame.REF_CONTENT_TEXT:SetText(info.contentInfo.formatted[index])
 					end
 				end
 
@@ -496,7 +508,7 @@ function NS.Script:Load()
 					local playGossip = addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP
 					local gender = UnitSex("npc")
 					local voice =
-						NS.Variables.Temp_IsEmoteTheme and addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE or
+						NS.Variables.Style_IsEmote and addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE or
 						gender == 3 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 or
 						gender == 2 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 or
 						gender == 1 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
@@ -515,7 +527,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.split[index])
+					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.formatted[index])
 				end
 
 				--------------------------------
@@ -529,7 +541,13 @@ function NS.Script:Load()
 		end
 
 		do -- STATE
-			function Callback:IncrementIndex()
+			function Callback:IncrementIndex(preventAutoProgress)
+				if addon.Interaction.Gossip.Variables.RefreshInProgress then
+					return
+				end
+
+				--------------------------------
+
 				if NS.Variables.Playback_Index < #NS.Variables.info.contentInfo.split then
 					NS.Variables.Playback_Index = NS.Variables.Playback_Index + 1
 
@@ -541,7 +559,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Callback:SetLineToIndex(NS.Variables.Playback_Index)
+					Callback:SetLineToIndex(NS.Variables.Playback_Index, false, preventAutoProgress)
 
 					--------------------------------
 
@@ -555,7 +573,13 @@ function NS.Script:Load()
 				end
 			end
 
-			function Callback:DecrementIndex()
+			function Callback:DecrementIndex(preventAutoProgress)
+				if addon.Interaction.Gossip.Variables.RefreshInProgress then
+					return
+				end
+
+				--------------------------------
+
 				if NS.Variables.Playback_Finished then
 					Callback:Restart()
 				elseif not NS.Variables.Finished and (NS.Variables.Playback_Index > 1) then
@@ -569,7 +593,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Callback:SetLineToIndex(NS.Variables.Playback_Index, true)
+					Callback:SetLineToIndex(NS.Variables.Playback_Index, true, preventAutoProgress)
 
 					--------------------------------
 
@@ -585,7 +609,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Callback:SetLineToIndex(NS.Variables.Playback_Index, true)
+					Callback:SetLineToIndex(NS.Variables.Playback_Index, true, preventAutoProgress)
 
 					--------------------------------
 
@@ -595,15 +619,14 @@ function NS.Script:Load()
 
 			function Callback:AutoIncrement()
 				local isAutoClose = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
-				local isValid = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS and NS.Variables.Playback_AutoProgress
 				local isDialog = (Frame:IsVisible())
 				local isGossip = (InteractionFrame.GossipFrame:IsVisible())
 
 				--------------------------------
 
-				if isDialog and isValid then
+				if isDialog then
 					if NS.Variables.Playback_Index < #NS.Variables.info.contentInfo.split then
-						Callback:IncrementIndex()
+						Callback:IncrementIndex(false)
 					else
 						if isAutoClose and isGossip then
 							local numButtons = #InteractionFrame.GossipFrame:GetButtons()
@@ -644,7 +667,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				Callback:SetLineToIndex(index, skipAnimation)
+				Callback:SetLineToIndex(index, skipAnimation, false)
 				Frame:ShowWithAnimation()
 
 				--------------------------------
@@ -710,12 +733,15 @@ function NS.Script:Load()
 
 			do -- FUNCTIONS
 				function AutoProgress:Init()
+					local isValid = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS and NS.Variables.Playback_AutoProgress
 					local autoProgressDelay = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_DELAY
 
 					--------------------------------
 
-					AutoProgress:Cancel()
-					AutoProgress.Timer = C_Timer.NewTimer(autoProgressDelay, Callback.AutoIncrement)
+					if isValid then
+						AutoProgress:Cancel()
+						AutoProgress.Timer = C_Timer.NewTimer(autoProgressDelay, Callback.AutoIncrement)
+					end
 				end
 
 				function AutoProgress:Cancel()
@@ -912,7 +938,6 @@ function NS.Script:Load()
 
 		do -- FRAME
 			local isTransition
-			local isInvalidDialogTransition
 			local savedDialogText
 
 			--------------------------------
@@ -956,26 +981,8 @@ function NS.Script:Load()
 				end
 			end
 
-			do -- PREVIOUS DIALOG
-				function Frame:Animation_Previous()
-					addon.API.Animation:Fade(Frame.REF_CONTENT, .5, 0, 1)
-				end
-			end
-
 			do -- INVALID DIALOG
 				function Frame:Animation_Invalid()
-					if isTransition or isInvalidDialogTransition then
-						return
-					end
-					isInvalidDialogTransition = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						if isInvalidDialogTransition then
-							isInvalidDialogTransition = false
-						end
-					end, .25)
-
-					--------------------------------
-
 					if (NS.Variables.Style_IsDialog or NS.Variables.Style_IsScroll) and not (NS.Variables.Style_IsEmote) then addon.API.Animation:Scale(Frame.REF_CLIP, 1, .95, 1) end
 					if NS.Variables.Style_IsDialog then addon.API.Animation:Scale(Frame.REF_BACKGROUND_DIALOG, 1, .95, 1) end
 					if NS.Variables.Style_IsScroll then addon.API.Animation:Scale(Frame.REF_BACKGROUND_SCROLL, 1, .95, 1) end
@@ -997,7 +1004,7 @@ function NS.Script:Load()
 					--------------------------------
 
 					isTransition = true
-					savedDialogText = nil
+					savedDialogText = NS.Variables.info.contentInfo.split[NS.Variables.Playback_Index]
 					addon.Libraries.AceTimer:ScheduleTimer(function()
 						if not Frame.hidden then
 							isTransition = false
@@ -1184,15 +1191,15 @@ function NS.Script:Load()
 			local function Logic_OnMouseUp(button)
 				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE then
 					if button == "LeftButton" then
-						Callback:DecrementIndex()
+						Callback:DecrementIndex(true)
 					else
-						Callback:IncrementIndex()
+						Callback:IncrementIndex(true)
 					end
 				else
 					if button == "LeftButton" then
-						Callback:IncrementIndex()
+						Callback:IncrementIndex(true)
 					else
-						Callback:DecrementIndex()
+						Callback:DecrementIndex(true)
 					end
 				end
 			end

@@ -15,6 +15,7 @@ NS.Variables = {}
 do -- MAIN
 	NS.Variables.NumCurrentButtons = 0
 	NS.Variables.State = ""
+	NS.Variables.RefreshInProgress = false
 end
 
 do  -- CONSTANTS

@@ -298,7 +298,7 @@ function NS.Script:Load()
 										--------------------------------
 
 										addon.Interaction.Dialog.Variables.Playback_AutoProgress = false
-										addon.Interaction.Dialog.Script:IncrementIndex()
+										addon.Interaction.Dialog.Script:IncrementIndex(true)
 
 										--------------------------------
 
@@ -311,7 +311,7 @@ function NS.Script:Load()
 
 										--------------------------------
 
-										addon.Interaction.Dialog.Script:DecrementIndex()
+										addon.Interaction.Dialog.Script:DecrementIndex(true)
 
 										--------------------------------
 
@@ -403,44 +403,39 @@ function NS.Script:Load()
 
 							if Buttons then
 								for _ = 1, #Buttons do
+									local function SelectButton(index)
+										if not addon.Interaction.Gossip.Variables.RefreshInProgress then
+											if Buttons[index].isMouseOver == false then
+												Buttons[index]:OnEnter()
+												Buttons[index]:OnMouseUp()
+											end
+
+											--------------------------------
+
+											addon.Libraries.AceTimer:ScheduleTimer(function()
+												if Buttons[index].isMouseOver == true then
+													Buttons[index]:OnLeave()
+												end
+											end, .125)
+										end
+									end
+
+									--------------------------------
+
 									if not IsShiftKeyDown() and key == tostring(_) then
 										Callback.Input:PreventInput()
-										Result = false
 
 										--------------------------------
 
-										if Buttons[_].isMouseOver == false then
-											Buttons[_]:OnEnter()
-											Buttons[_]:OnMouseUp()
-										end
-
-										--------------------------------
-
-										addon.Libraries.AceTimer:ScheduleTimer(function()
-											if Buttons[_].isMouseOver == true then
-												Buttons[_]:OnLeave()
-											end
-										end, .125)
+										SelectButton(_)
 									end
 
 									if IsShiftKeyDown() and key == tostring(_ - 9) then
 										Callback.Input:PreventInput()
-										Result = false
 
 										--------------------------------
 
-										if Buttons[_].isMouseOver == false then
-											Buttons[_]:OnEnter()
-										end
-
-										--------------------------------
-
-										addon.Libraries.AceTimer:ScheduleTimer(function()
-											if Buttons[_].isMouseOver == true then
-												Buttons[_]:OnLeave()
-												Buttons[_]:OnMouseUp()
-											end
-										end, .125)
+										SelectButton(_)
 									end
 								end
 							end

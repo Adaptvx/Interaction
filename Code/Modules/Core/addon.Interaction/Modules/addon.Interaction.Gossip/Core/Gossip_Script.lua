@@ -51,10 +51,10 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					result = string.gsub(result, L["DialogData - Trigger - Quest"], "")
-					result = string.gsub(result, L["DialogData - Trigger - Movie 1"], "")
-					result = string.gsub(result, L["DialogData - Trigger - Movie 2"], "")
-					result = string.gsub(result, L["DialogData - Trigger - NPC Dialog"], "")
+					result = result:gsub(L["GossipData - Trigger - Quest"], "")
+					result = result:gsub(L["GossipData - Trigger - Movie 1"], "")
+					result = result:gsub(L["GossipData - Trigger - Movie 2"], "")
+					result = result:gsub(L["GossipData - Trigger - NPC Dialog"], "")
 
 					--------------------------------
 
@@ -696,10 +696,7 @@ function NS.Script:Load()
 						--------------------------------
 
 						if isGossipOrQuestGreetingStillVisible then
-							if Frame.refreshInProgress then
-								return
-							end
-							Frame.refreshInProgress = true
+							NS.Variables.RefreshInProgress = true
 
 							--------------------------------
 
@@ -714,18 +711,15 @@ function NS.Script:Load()
 					end
 
 					function Frame:RefreshWithAnimation_End()
+						NS.Variables.RefreshInProgress = false
+
+						--------------------------------
+
 						local isGossipOrQuestGreetingStillVisible = (GossipFrame:IsVisible() or QuestFrameGreetingPanel:IsVisible())
 
 						--------------------------------
 
 						if isGossipOrQuestGreetingStillVisible then
-							if not Frame.refreshInProgress then
-								return
-							end
-							Frame.refreshInProgress = false
-
-							--------------------------------
-
 							addon.Libraries.AceTimer:ScheduleTimer(function()
 								if not Frame:RefreshWithAnimation_End_StopEvent() then
 									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, Frame.RefreshWithAnimation_End_StopEvent)
@@ -834,10 +828,18 @@ function NS.Script:Load()
 
 	do
 		hooksecurefunc(Frame, "Show", function()
+			NS.Variables.RefreshInProgress = false
+
+			--------------------------------
+
 			CallbackRegistry:Trigger("START_GOSSIP")
 		end)
 
 		hooksecurefunc(Frame, "Hide", function()
+			NS.Variables.RefreshInProgress = false
+
+			--------------------------------
+
 			CallbackRegistry:Trigger("STOP_GOSSIP")
 		end)
 
@@ -845,7 +847,7 @@ function NS.Script:Load()
 		Events:RegisterEvent("QUEST_LOG_UPDATE")
 		Events:SetScript("OnEvent", function(self, event, ...)
 			if event == "QUEST_LOG_UPDATE" then
-				if not Frame.refreshInProgress then
+				if not NS.Variables.RefreshInProgress then
 					Frame:UpdateOptions()
 				end
 			end

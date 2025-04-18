@@ -40,12 +40,13 @@ function NS.Script:Load()
 
 				local isController = (addon.Input.Variables.IsControllerEnabled or addon.Input.Variables.SimulateController)
 				local isGossipOption = (addon.Interaction.Gossip.Variables.NumCurrentButtons > 0)
+				local isGossipRefresh = (addon.Interaction.Gossip.Variables.RefreshInProgress)
 
 				--------------------------------
 
 				local data = {}
 
-				if isInteraction then
+				if isInteraction and not isGossipRefresh then
 					if isDialog then
 						local nextAvailable = (not addon.Interaction.Dialog.Variables.Playback_Finished)
 

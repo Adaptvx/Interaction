@@ -36,6 +36,7 @@ function NS.Script:Load()
 
 		do -- SET
 			local function OnModelLoaded()
+				Frame.REF_MODELFRAME:Show()
 				Frame.REF_MODELFRAME_MODEL:SetCamera(0)
 				Frame.REF_MODELFRAME_MODEL:SetPortraitZoom(1)
 				Frame.REF_MODELFRAME_MODEL:FreezeAnimation(0, 0, 0)
@@ -44,15 +45,15 @@ function NS.Script:Load()
 				--------------------------------
 
 				Frame.REF_MODELFRAME_MODEL:SetScript("OnModelLoaded", nil)
+
+				--------------------------------
+
+				Frame:UpdateLayout()
 			end
 
-			function Frame:SetModel(modelID, mountModelID)
+			function Frame:SetModel(modelID)
 				if modelID then
-					Frame.REF_MODELFRAME:Show()
-
-					--------------------------------
-
-					Frame.REF_MODELFRAME_MODEL:SetDisplayInfo(modelID, mountModelID)
+					Frame.REF_MODELFRAME_MODEL:SetDisplayInfo(modelID)
 					Frame.REF_MODELFRAME_MODEL:SetScript("OnModelLoaded", OnModelLoaded)
 				else
 					Frame.REF_MODELFRAME:Hide()
@@ -64,13 +65,13 @@ function NS.Script:Load()
 				Frame.REF_DESCRIPTIONFRAME_TEXT:SetText(description)
 
 				if model then
-					local modelID, mountModelID = model.modelID, model.mountModelID
+					local modelID = model.modelID
 
 					--------------------------------
 
-					Frame:SetModel(modelID, mountModelID)
+					Frame:SetModel(modelID)
 				else
-					Frame:SetModel(nil, nil)
+					Frame:SetModel(nil)
 				end
 
 				--------------------------------
@@ -181,7 +182,9 @@ function NS.Script:Load()
 			end)
 
 			CallbackRegistry:Add("START_QUEST", function()
-				Frame:ShowWithAnimation()
+				if QuestModelScene and QuestModelScene:IsVisible() then
+					Frame:ShowWithAnimation()
+				end
 			end, 0)
 
 			CallbackRegistry:Add("STOP_QUEST", function()
