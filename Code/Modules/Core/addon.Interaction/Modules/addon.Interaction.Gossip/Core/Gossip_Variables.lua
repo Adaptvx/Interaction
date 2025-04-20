@@ -16,6 +16,9 @@ do -- MAIN
 	NS.Variables.NumCurrentButtons = 0
 	NS.Variables.State = ""
 	NS.Variables.RefreshInProgress = false
+	NS.Variables.CurrentSession = {
+		["npc"] = nil
+	}
 end
 
 do  -- CONSTANTS

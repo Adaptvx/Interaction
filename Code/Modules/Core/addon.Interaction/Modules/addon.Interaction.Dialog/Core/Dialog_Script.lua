@@ -363,8 +363,20 @@ function NS.Script:Load()
 				local text_formatted = {}
 				if text_split then
 					for i = 1, #text_split do
-						local formatted = RemoveAngledBrackets(text_split[i])
-						formatted = formatted:gsub("%.%.%.", "…")
+						local formatted = {
+							["skipAnimation"] = false,
+							["text"] = RemoveAngledBrackets(text_split[i]),
+						}
+
+						--------------------------------
+
+						formatted.text = formatted.text:gsub("%.%.%.", "…")
+						if string.find(formatted.text, "|cFFFF0000") then
+							formatted.skipAnimation = true
+						end
+
+						--------------------------------
+
 						table.insert(text_formatted, formatted)
 					end
 				end
@@ -448,6 +460,7 @@ function NS.Script:Load()
 
 				NS.Variables.Playback_Index = index
 				if skipAnimation or preventAutoProgress then NS.Variables.Playback_AutoProgress = false else NS.Variables.Playback_AutoProgress = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end
+				if info.contentInfo.formatted[index].skipAnimation then skipAnimation = true end
 
 				--------------------------------
 
@@ -482,7 +495,7 @@ function NS.Script:Load()
 					end
 
 					do -- CONTENT TEXT
-						Frame.REF_CONTENT_TEXT:SetText(info.contentInfo.formatted[index])
+						Frame.REF_CONTENT_TEXT:SetText(info.contentInfo.formatted[index].text)
 					end
 				end
 
@@ -527,7 +540,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.formatted[index])
+					addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.formatted[index].text)
 				end
 
 				--------------------------------

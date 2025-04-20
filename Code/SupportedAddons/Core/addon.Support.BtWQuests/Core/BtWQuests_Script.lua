@@ -316,12 +316,14 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						if currentQuest_isCompleted then
-							text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] .. "\n"
-						elseif currentQuest_isActive then
-							text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] .. "\n"
-						else
-							text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] .. "\n"
+						if currentQuest_questName then
+							if currentQuest_isCompleted then
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] .. "\n"
+							elseif currentQuest_isActive then
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] .. "\n"
+							else
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] .. "\n"
+							end
 						end
 					end
 

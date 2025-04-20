@@ -705,7 +705,7 @@ function NS.Script:Load()
 					local HEADER_REQUIRE = QuestProgressRequiredItemsText
 
 					local questID = GetQuestID()
-					local storylineInfo = (not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_QuestLine.GetQuestLineInfo(questID)) and C_QuestLine.GetQuestLineInfo(questID).questLineName or nil
+					local storylineInfo = (not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_QuestLine.GetQuestLineInfo(questID) and C_QuestLine.GetQuestLineInfo(questID).questLineName) or (addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and nil)
 					local experience = UnitLevel("player") < GetMaxPlayerLevel() and GetRewardXP() or nil
 					local experiencePercentage = string.format("%.2f%%", tostring((GetRewardXP() / UnitXPMax("player")) * 100))
 					local gold, silver, copper = addon.API.Util:FormatMoney(GetRewardMoney())
@@ -1245,7 +1245,9 @@ function NS.Script:Load()
 
 			do -- UPDATE
 				addon.Libraries.AceTimer:ScheduleTimer(function()
-					Frame:UpdateAll()
+					if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
+						Frame:UpdateAll()
+					end
 				end, .225)
 			end
 

@@ -16,12 +16,18 @@ do -- MAIN
 	-- STATE
 	NS.Variables.Active = false
 	NS.Variables.LastActive = nil
+	NS.Variables.CurrentSession = {
+		["type"] = nil,
+		["questID"] = nil,
+		["dialogText"] = nil,
+		["npc"] = nil
+	}
 
 	-- QUEST
 	NS.Variables.LastQuestNPC = nil
 
 	-- INFO
-	NS.Variables.Type = nil
+	NS.Variables.CurrentSession.type = nil
 end
 
 do -- CONSTANTS

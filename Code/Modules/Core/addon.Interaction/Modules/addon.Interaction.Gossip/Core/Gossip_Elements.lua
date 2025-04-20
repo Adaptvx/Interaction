@@ -162,7 +162,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								if numButtons > 0 then
-									Content:SetPoint("CENTER", Frame, 0, -FRAME_FOOTER_HEIGHT)
+									Content:SetPoint("CENTER", Frame, 0, -FRAME_FOOTER_HEIGHT / 2)
 								else
 									Content:SetPoint("CENTER", Frame, 0, 0)
 								end

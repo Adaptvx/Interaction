@@ -223,7 +223,7 @@ function NS.Script:Load()
 
 				do -- ENTRIES
 					do -- GET (GOSSIP)
-						if addon.Interaction.Variables.Type == "gossip" then
+						if addon.Interaction.Variables.CurrentSession.type == "gossip" then
 							availableQuests = C_GossipInfo.GetAvailableQuests()
 							activeQuests = C_GossipInfo.GetActiveQuests()
 							options = C_GossipInfo.GetOptions()
@@ -316,7 +316,7 @@ function NS.Script:Load()
 					end
 
 					do -- GET (QUEST GREETING)
-						if addon.Interaction.Variables.Type == "quest-greeting" then
+						if addon.Interaction.Variables.CurrentSession.type == "quest-greeting" then
 							local numAvailableQuests = GetNumAvailableQuests()
 							local numActiveQuests = GetNumActiveQuests()
 							local currentIndex = 0
@@ -641,8 +641,8 @@ function NS.Script:Load()
 					return Frame.hidden
 				end
 
-				function Frame:ShowWithAnimation()
-					if not Frame.hidden then
+				function Frame:ShowWithAnimation(bypass)
+					if not Frame.hidden and not bypass then
 						return
 					end
 					Frame.hidden = false
@@ -658,6 +658,10 @@ function NS.Script:Load()
 						Frame:UpdateAll()
 						Frame:ShowButtonsWithAnimation()
 					end)
+
+					--------------------------------
+
+					NS.Variables.CurrentSession.npc = UnitName("npc") or UnitName("questnpc")
 				end
 			end
 
@@ -666,8 +670,8 @@ function NS.Script:Load()
 					return not Frame.hidden
 				end
 
-				function Frame:HideWithAnimation()
-					if Frame.hidden then
+				function Frame:HideWithAnimation(bypass)
+					if Frame.hidden and not bypass then
 						return
 					end
 					Frame.hidden = true
@@ -681,6 +685,10 @@ function NS.Script:Load()
 					--------------------------------
 
 					addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+
+					--------------------------------
+
+					NS.Variables.CurrentSession.npc = nil
 				end
 			end
 

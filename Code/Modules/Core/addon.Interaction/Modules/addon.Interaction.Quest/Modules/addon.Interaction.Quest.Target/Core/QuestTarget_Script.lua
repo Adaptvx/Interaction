@@ -184,6 +184,8 @@ function NS.Script:Load()
 			CallbackRegistry:Add("START_QUEST", function()
 				if QuestModelScene and QuestModelScene:IsVisible() then
 					Frame:ShowWithAnimation()
+				else
+					Frame:HideWithAnimation(true, true)
 				end
 			end, 0)
 

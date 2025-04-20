@@ -18,7 +18,7 @@ function NS.Elements:Load()
 	do
 		do -- ELEMENTS
 			InteractionFrame.AlertNotification = CreateFrame("Frame", "$parent.AlertNotification", InteractionFrame)
-			InteractionFrame.AlertNotification:SetSize(250, 50)
+			InteractionFrame.AlertNotification:SetHeight(50)
 			InteractionFrame.AlertNotification:SetFrameStrata(NS.Variables.FRAME_STRATA)
 			InteractionFrame.AlertNotification:SetFrameLevel(NS.Variables.FRAME_LEVEL)
 
@@ -30,10 +30,10 @@ function NS.Elements:Load()
 
 			do -- NOTIFICATION
 				Frame.Notification = CreateFrame("Frame", "$parent.Notification", Frame)
-				Frame.Notification:SetHeight(50)
 				Frame.Notification:SetPoint("CENTER", Frame)
 				Frame.Notification:SetFrameStrata(NS.Variables.FRAME_STRATA)
 				Frame.Notification:SetFrameLevel(NS.Variables.FRAME_LEVEL + 1)
+				addon.API.FrameUtil:SetDynamicSize(Frame.Notification, Frame, 0, 0)
 
 				local Notification = Frame.Notification
 
@@ -54,7 +54,7 @@ function NS.Elements:Load()
 					Notification.LayoutGroup:SetFrameStrata(NS.Variables.FRAME_STRATA)
 					Notification.LayoutGroup:SetFrameLevel(NS.Variables.FRAME_LEVEL + 2)
 					addon.API.FrameUtil:SetDynamicSize(Notification.LayoutGroup, Notification, nil, 0)
-					addon.API.FrameUtil:SetDynamicSize(Notification, Notification.LayoutGroup, -35, nil)
+					addon.API.FrameUtil:SetDynamicSize(Frame, Notification.LayoutGroup, -35, nil)
 					CallbackRegistry:Add("LayoutGroupSort AlertNotification.Notification", Notification.LayoutGroup_Sort)
 
 					local LayoutGroup = Notification.LayoutGroup

@@ -239,11 +239,7 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					Callback:Set(FormattedText, Button1:GetText(), Button2:GetText(), function()
-						Callback:SetButton(1); Callback:Clear()
-					end, function()
-						Callback:SetButton(2); Callback:Clear()
-					end, true, false)
+					Callback:Set(FormattedText, Button1:GetText(), Button2:GetText(), function() Button1:Click(); Callback:Clear() end, function() Button2:Click(); Callback:Clear() end, true, false)
 
 					--------------------------------
 

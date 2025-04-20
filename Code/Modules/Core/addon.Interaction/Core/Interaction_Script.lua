@@ -18,30 +18,9 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		local LastNPC
-		local LastFrameType
-		local LastQuestID
-		local LastDialog
-
-		--------------------------------
-
 		function NS.Script:SetActiveState(value)
 			NS.Variables.LastActive = NS.Variables.Active
 			NS.Variables.Active = value
-		end
-
-		function NS.Script:IsNewQuestNPC(hideSameNPC)
-			local isSameQuestNPC = (not hideSameNPC or hideSameNPC == nil) and (UnitName("questnpc") == NS.Variables.LastQuestNPC)
-			local isStaticNPC = (addon.API.Util:FindItemInInventory(UnitName("questnpc")))
-			NS.Variables.LastQuestNPC = UnitName("questnpc")
-
-			--------------------------------
-
-			if (isStaticNPC) and not (isSameQuestNPC) and (NS.Variables.Active) then
-				return true
-			else
-				return false
-			end
 		end
 
 		local function CloseInteraction(deselectTarget)
@@ -78,11 +57,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			LastNPC = nil
-			LastFrameType = nil
-			LastQuestID = nil
-
-			NS.Variables.Type = nil
+			NS.Variables.CurrentSession.type = nil
+			NS.Variables.CurrentSession.questID = nil
+			NS.Variables.CurrentSession.dialogText = nil
+			NS.Variables.CurrentSession.npc = nil
 
 			--------------------------------
 
@@ -115,7 +93,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			if (LastNPC == NPC) and (LastFrameType == frameType) and (LastQuestID == QuestID) and (LastDialog == TEXT) then
+			if (NS.Variables.CurrentSession.npc == NPC) and (NS.Variables.CurrentSession.type == frameType) and (NS.Variables.CurrentSession.questID == QuestID) and (NS.Variables.CurrentSession.dialogText == TEXT) then
 				return
 			end
 
@@ -136,12 +114,10 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			LastNPC = NPC
-			LastFrameType = frameType
-			LastQuestID = QuestID
-			LastDialog = TEXT
-
-			NS.Variables.Type = frameType
+			NS.Variables.CurrentSession.type = frameType
+			NS.Variables.CurrentSession.questID = QuestID
+			NS.Variables.CurrentSession.dialogText = TEXT
+			NS.Variables.CurrentSession.npc = NPC
 
 			--------------------------------
 
@@ -159,7 +135,7 @@ function NS.Script:Load()
 
 	do
 		function NS.Script:Manager_Dialog_Start()
-			local frameType = NS.Variables.Type
+			local frameType = NS.Variables.CurrentSession.type
 
 			--------------------------------
 
@@ -187,22 +163,23 @@ function NS.Script:Load()
 		end
 
 		function NS.Script:Manager_Gossip_Visibility()
+			local isNewNPC = (NS.Variables.CurrentSession.npc ~= addon.Interaction.Gossip.Variables.CurrentSession.npc)
 			local isFinishedDialog = (addon.Interaction.Dialog.Variables.Playback_Finished)
 			local isValidDialog = (addon.Interaction.Dialog.Variables.Playback_Valid)
-			local isGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
-			local isQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
+			local isGossip = (NS.Variables.CurrentSession.type == "gossip" or NS.Variables.CurrentSession.type == "quest-greeting")
+			local isQuest = (NS.Variables.CurrentSession.type == "quest-detail" or NS.Variables.CurrentSession.type == "quest-reward" or NS.Variables.CurrentSession.type == "quest-progress")
 
 			--------------------------------
 
 			if addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_GOSSIP then
 				if (isGossip) then
-					InteractionFrame.GossipFrame:ShowWithAnimation()
+					InteractionFrame.GossipFrame:ShowWithAnimation(isNewNPC)
 				else
 					InteractionFrame.GossipFrame:HideWithAnimation()
 				end
 			else
 				if (isGossip) and (not isValidDialog or (isValidDialog and isFinishedDialog)) then
-					InteractionFrame.GossipFrame:ShowWithAnimation()
+					InteractionFrame.GossipFrame:ShowWithAnimation(isNewNPC)
 				else
 					InteractionFrame.GossipFrame:HideWithAnimation()
 				end
@@ -212,8 +189,8 @@ function NS.Script:Load()
 		function NS.Script:Manager_Quest_Visibility()
 			local isFinishedDialog = (addon.Interaction.Dialog.Variables.Playback_Finished)
 			local isValidDialog = (addon.Interaction.Dialog.Variables.Playback_Valid)
-			local isGossip = (NS.Variables.Type == "gossip" or NS.Variables.Type == "quest-greeting")
-			local isQuest = (NS.Variables.Type == "quest-detail" or NS.Variables.Type == "quest-reward" or NS.Variables.Type == "quest-progress")
+			local isGossip = (NS.Variables.CurrentSession.type == "gossip" or NS.Variables.CurrentSession.type == "quest-greeting")
+			local isQuest = (NS.Variables.CurrentSession.type == "quest-detail" or NS.Variables.CurrentSession.type == "quest-reward" or NS.Variables.CurrentSession.type == "quest-progress")
 
 			--------------------------------
 
