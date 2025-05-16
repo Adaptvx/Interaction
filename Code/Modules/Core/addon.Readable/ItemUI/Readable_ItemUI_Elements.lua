@@ -52,7 +52,7 @@ function NS.ItemUI.Elements:Load()
 				--------------------------------
 
 				do -- TEXT
-					ReadableUIFrame.Title.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.Title, addon.Theme.RGB_WHITE, 22.5, "CENTER", "TOP", addon.API.Fonts.Title_Bold, "$parent.Text")
+					ReadableUIFrame.Title.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.Title, addon.Theme.RGB_WHITE, 22.5, "CENTER", "TOP", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 					ReadableUIFrame.Title.Text:SetSize(ReadableUIFrame.Title:GetWidth(), 25)
 					ReadableUIFrame.Title.Text:SetPoint("TOP", ReadableUIFrame.Title, 0, 0)
 				end
@@ -66,7 +66,7 @@ function NS.ItemUI.Elements:Load()
 				end
 
 				do -- CURRENT PAGE TEXT
-					ReadableUIFrame.Title.CurrentPageText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.Title, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Title_Medium, "$parent.CurrentPageText")
+					ReadableUIFrame.Title.CurrentPageText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.Title, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_MEDIUM, "$parent.CurrentPageText")
 					ReadableUIFrame.Title.CurrentPageText:SetSize(ReadableUIFrame.Title:GetWidth(), 25)
 					ReadableUIFrame.Title.CurrentPageText:SetPoint("TOP", ReadableUIFrame.Title, 0, -25)
 				end
@@ -374,13 +374,13 @@ function NS.ItemUI.Elements:Load()
 
 					do -- TEXT
 						do -- MEASUREMENT
-							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollFrame, addon.Theme.RGB_BLACK, TEXT_SIZE_ITEM, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.MeasurementText", true)
+							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollFrame, addon.Theme.RGB_BLACK, TEXT_SIZE_ITEM, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.MeasurementText", true)
 							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetWidth(ReadableUIFrame.ItemFrame.ScrollFrame:GetWidth())
 							ReadableUIFrame.ItemFrame.ScrollFrame.MeasurementText:SetAlpha(0)
 						end
 
 						do -- TEXT
-							ReadableUIFrame.ItemFrame.ScrollFrame.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollChild, addon.Theme.RGB_BLACK, addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+							ReadableUIFrame.ItemFrame.ScrollFrame.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.ItemFrame.ScrollChild, addon.Theme.RGB_BLACK, addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetSize(ReadableUIFrame.ItemFrame.ScrollChild:GetWidth(), 5000)
 							ReadableUIFrame.ItemFrame.ScrollFrame.Text:SetPoint("TOP", ReadableUIFrame.ItemFrame.ScrollChild)
 						end
@@ -487,7 +487,7 @@ function NS.ItemUI.Elements:Load()
 						--------------------------------
 
 						do -- TITLE
-							ReadableUIFrame.BookFrame.FrontPage.Text.Title = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.FrontPage.Text, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+							ReadableUIFrame.BookFrame.FrontPage.Text.Title = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.FrontPage.Text, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 							ReadableUIFrame.BookFrame.FrontPage.Text.Title:SetSize(ReadableUIFrame.BookFrame.FrontPage:GetWidth() * .7, 150)
 							ReadableUIFrame.BookFrame.FrontPage.Text.Title:SetPoint("TOP", ReadableUIFrame.BookFrame.FrontPage, -NS.Variables.SCREEN_HEIGHT * .05)
 						end
@@ -605,13 +605,13 @@ function NS.ItemUI.Elements:Load()
 
 							do -- TEXT
 								do -- MEASUREMENT
-									ReadableUIFrame.BookFrame.Content.Left.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.MeasurementText", true)
+									ReadableUIFrame.BookFrame.Content.Left.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.MeasurementText", true)
 									ReadableUIFrame.BookFrame.Content.Left.MeasurementText:SetWidth(ReadableUIFrame.BookFrame.Content.Left:GetWidth())
 									ReadableUIFrame.BookFrame.Content.Left.MeasurementText:SetAlpha(0)
 								end
 
 								do -- TEXT
-									ReadableUIFrame.BookFrame.Content.Left.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.LeftScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text", true)
+									ReadableUIFrame.BookFrame.Content.Left.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.LeftScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text", true)
 									ReadableUIFrame.BookFrame.Content.Left.Text:SetSize(ReadableUIFrame.BookFrame.Content.LeftScrollChild:GetWidth(), ReadableUIFrame.BookFrame.Content.LeftScrollChild:GetHeight())
 									ReadableUIFrame.BookFrame.Content.Left.Text:SetPoint("TOP", ReadableUIFrame.BookFrame.Content.LeftScrollChild)
 
@@ -650,7 +650,7 @@ function NS.ItemUI.Elements:Load()
 							end
 
 							do -- FOOTER
-								ReadableUIFrame.BookFrame.Content.Left.Footer = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, 10, "LEFT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Footer")
+								ReadableUIFrame.BookFrame.Content.Left.Footer = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Left, addon.Theme.RGB_BLACK, 10, "LEFT", "BOTTOM", addon.API.Fonts.CONTENT_LIGHT, "$parent.Footer")
 								ReadableUIFrame.BookFrame.Content.Left.Footer:SetSize(100, 100)
 								ReadableUIFrame.BookFrame.Content.Left.Footer:SetPoint("BOTTOMLEFT", ReadableUIFrame.BookFrame.Content.Left, 0, -17.5)
 								ReadableUIFrame.BookFrame.Content.Left.Footer:SetIgnoreParentScale(true)
@@ -690,13 +690,13 @@ function NS.ItemUI.Elements:Load()
 
 							do -- TEXT
 								do -- MEASUREMENT
-									ReadableUIFrame.BookFrame.Content.Right.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.MeasurementText", true)
+									ReadableUIFrame.BookFrame.Content.Right.MeasurementText = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.MeasurementText", true)
 									ReadableUIFrame.BookFrame.Content.Right.MeasurementText:SetWidth(ReadableUIFrame.BookFrame.Content.Right:GetWidth())
 									ReadableUIFrame.BookFrame.Content.Right.MeasurementText:SetAlpha(0)
 								end
 
 								do -- TEXT
-									ReadableUIFrame.BookFrame.Content.Right.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.RightScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text", true)
+									ReadableUIFrame.BookFrame.Content.Right.Text = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.RightScrollChild, addon.Theme.RGB_BLACK, TEXT_SIZE_BOOK, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text", true)
 									ReadableUIFrame.BookFrame.Content.Right.Text:SetSize(ReadableUIFrame.BookFrame.Content.Right:GetWidth(), ReadableUIFrame.BookFrame.Content.Right:GetHeight())
 									ReadableUIFrame.BookFrame.Content.Right.Text:SetPoint("TOP", ReadableUIFrame.BookFrame.Content.RightScrollChild)
 
@@ -735,7 +735,7 @@ function NS.ItemUI.Elements:Load()
 							end
 
 							do -- FOOTER
-								ReadableUIFrame.BookFrame.Content.Right.Footer = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, 10, "RIGHT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Footer")
+								ReadableUIFrame.BookFrame.Content.Right.Footer = addon.API.FrameTemplates:CreateText(ReadableUIFrame.BookFrame.Content.Right, addon.Theme.RGB_BLACK, 10, "RIGHT", "BOTTOM", addon.API.Fonts.CONTENT_LIGHT, "$parent.Footer")
 								ReadableUIFrame.BookFrame.Content.Right.Footer:SetSize(100, 100)
 								ReadableUIFrame.BookFrame.Content.Right.Footer:SetPoint("BOTTOMRIGHT", ReadableUIFrame.BookFrame.Content.Right, 0, -17.5)
 								ReadableUIFrame.BookFrame.Content.Right.Footer:SetIgnoreParentScale(true)

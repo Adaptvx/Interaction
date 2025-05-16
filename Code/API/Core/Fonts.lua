@@ -31,23 +31,25 @@ function NS.Fonts:Load()
 	do
 		function NS.Fonts:GetFonts()
 			if NS.Fonts.LOCALE == "enUS" then
-				NS.Fonts.Title_Light = NS.Fonts.PATH .. "Cinzel-Regular.ttf"
-				NS.Fonts.Title_Medium = NS.Fonts.PATH .. "Cinzel-Medium.ttf"
-				NS.Fonts.Title_Bold = NS.Fonts.PATH .. "Cinzel-Bold.ttf"
-				NS.Fonts.Title_ExtraBold = NS.Fonts.PATH .. "Cinzel-ExtraBold.ttf"
+				NS.Fonts.TITLE_LIGHT = NS.Fonts.PATH .. "Cinzel-Regular.ttf"
+				NS.Fonts.TITLE_MEDIUM = NS.Fonts.PATH .. "Cinzel-Medium.ttf"
+				NS.Fonts.TITLE_BOLD = NS.Fonts.PATH .. "Cinzel-Bold.ttf"
+				NS.Fonts.TITLE_EXTRABOLD = NS.Fonts.PATH .. "Cinzel-ExtraBold.ttf"
 
-				NS.Fonts.Content_Light = NS.Fonts.PATH .. "Frizqt__.ttf"
-				NS.Fonts.Content_Bold = NS.Fonts.PATH .. "Cardo-Bold.ttf"
-				NS.Fonts.Content_Italic = NS.Fonts.PATH .. "Cardo-Italic.ttf"
+				NS.Fonts.CONTENT_DEFAULT = GameFontNormal:GetFont()
+				NS.Fonts.CONTENT_LIGHT = NS.Fonts.PATH .. "Frizqt__.ttf"
+				NS.Fonts.CONTENT_BOLD = NS.Fonts.PATH .. "Cardo-Bold.ttf"
+				NS.Fonts.CONTENT_ITALIC = NS.Fonts.PATH .. "Cardo-Italic.ttf"
 			else
-				NS.Fonts.Title_Light = GameFontNormal:GetFont()
-				NS.Fonts.Title_Medium = GameFontNormal:GetFont()
-				NS.Fonts.Title_Bold = GameFontNormal:GetFont()
-				NS.Fonts.Title_ExtraBold = GameFontNormal:GetFont()
+				NS.Fonts.TITLE_LIGHT = GameFontNormal:GetFont()
+				NS.Fonts.TITLE_MEDIUM = GameFontNormal:GetFont()
+				NS.Fonts.TITLE_BOLD = GameFontNormal:GetFont()
+				NS.Fonts.TITLE_EXTRABOLD = GameFontNormal:GetFont()
 
-				NS.Fonts.Content_Light = GameFontNormal:GetFont()
-				NS.Fonts.Content_Bold = GameFontNormal:GetFont()
-				NS.Fonts.Content_Italic = GameFontNormal:GetFont()
+				NS.Fonts.CONTENT_DEFAULT = GameFontNormal:GetFont()
+				NS.Fonts.CONTENT_LIGHT = GameFontNormal:GetFont()
+				NS.Fonts.CONTENT_BOLD = GameFontNormal:GetFont()
+				NS.Fonts.CONTENT_ITALIC = GameFontNormal:GetFont()
 			end
 		end
 	end

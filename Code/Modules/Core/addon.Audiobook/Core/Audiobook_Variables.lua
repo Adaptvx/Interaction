@@ -24,18 +24,19 @@ do -- MAIN
 	NS.Variables.Lines = nil
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
 		NS.Variables.FRAME_WIDTH = 350
 		NS.Variables.FRAME_HEIGHT = 50
 
-		NS.Variables.BASELINE_WIDTH = NS.Variables.FRAME_WIDTH
-		NS.Variables.BASELINE_HEIGHT = NS.Variables.FRAME_HEIGHT
+		NS.Variables.RATIO_REFERENCE = 50
 
 		--------------------------------
 
-		function NS.Variables:RATIO(level)
-			return NS.Variables.BASELINE_HEIGHT / addon.Variables:RAW_RATIO(level)
+		do -- FUNCTIONS
+			function NS.Variables:RATIO(level)
+				return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
+			end
 		end
 	end
 

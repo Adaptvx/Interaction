@@ -102,7 +102,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							do -- TEXT
-								TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+								TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_RECOMMENDED, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								TextFrame.Text:SetPoint("CENTER", TextFrame)
 								addon.API.FrameUtil:SetDynamicTextSize(TextFrame.Text, TextFrame, nil, nil)
 								addon.API.FrameUtil:SetDynamicSize(TextFrame, TextFrame.Text, nil, 0)

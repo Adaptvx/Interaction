@@ -105,7 +105,7 @@ do
 			end
 
 			do -- TEXT
-				Frame.Text = addon.API.FrameTemplates:CreateText(Frame, Frame._TextColor, Frame._TextSize, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+				Frame.Text = addon.API.FrameTemplates:CreateText(Frame, Frame._TextColor, Frame._TextSize, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 				Frame.Text:SetAllPoints(Frame, true)
 
 				--------------------------------

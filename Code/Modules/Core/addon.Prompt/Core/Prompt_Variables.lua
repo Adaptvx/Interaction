@@ -20,15 +20,16 @@ do -- MAIN
 	NS.Variables.Button2Callback = nil
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
-		NS.Variables.BASELINE_WIDTH = 350
-		NS.Variables.BASELINE_HEIGHT = 55
+		NS.Variables.RATIO_REFERENCE = 350
 
 		--------------------------------
 
-		function NS.Variables:RATIO(level)
-			return NS.Variables.BASELINE_WIDTH / addon.Variables:RAW_RATIO(level)
+		do -- FUNCTIONS
+			function NS.Variables:RATIO(level)
+				return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
+			end
 		end
 	end
 

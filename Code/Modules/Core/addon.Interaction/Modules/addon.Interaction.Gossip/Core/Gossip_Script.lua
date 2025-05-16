@@ -469,10 +469,10 @@ function NS.Script:Load()
 									end
 
 									do -- TRIGGER ICON
-										text = (string.gsub(text, L["GossipData - Trigger - Quest"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-quest.png", 25, 64, 0, 0)))
-										text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-										text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-movie.png", 25, 64, 0, 0)))
-										text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "ContextIcons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Append"]))
+										text = (string.gsub(text, L["GossipData - Trigger - Quest"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/trigger-quest.png", 25, 64, 0, 0)))
+										text = (string.gsub(text, L["GossipData - Trigger - Movie 1"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/trigger-movie.png", 25, 64, 0, 0)))
+										text = (string.gsub(text, L["GossipData - Trigger - Movie 2"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/trigger-movie.png", 25, 64, 0, 0)))
+										text = (string.gsub(text, L["GossipData - Trigger - NPC Dialog"], addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/trigger-npcdialog.png", 12.5, 12.5, 0, 0) .. " " .. L["GossipData - Trigger - NPC Dialog - Append"]))
 									end
 
 									--------------------------------

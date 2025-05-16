@@ -448,6 +448,7 @@ local function Load()
 			"?",
 			".",
 			",",
+			";",
 		}
 
 		-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.

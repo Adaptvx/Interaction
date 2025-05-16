@@ -81,7 +81,7 @@ function NS.Widgets:CreateTabButton(parent, setFunc)
 		do -- TEXT
 			Frame.Button.Text = Frame.Button:GetFontString()
 			Frame.Button.Text:SetSize(Frame.Button:GetWidth() - NS.Variables:RATIO(6), Frame.Button:GetWidth() - NS.Variables:RATIO(6))
-			Frame.Button.Text:SetFont(addon.API.Fonts.Content_Light, 17.5, "")
+			Frame.Button.Text:SetFont(addon.API.Fonts.CONTENT_LIGHT, 17.5, "")
 			Frame.Button.Text:SetJustifyH("LEFT")
 			Frame.Button.Text:SetJustifyV("MIDDLE")
 		end

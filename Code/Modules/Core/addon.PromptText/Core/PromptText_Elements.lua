@@ -80,7 +80,7 @@ function NS.Elements:Load()
 
 				do -- TITLE
 					do -- TEXT
-						Frame.TitleArea.Title = addon.API.FrameTemplates:CreateText(Frame.TitleArea, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
+						Frame.TitleArea.Title = addon.API.FrameTemplates:CreateText(Frame.TitleArea, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Title")
 						Frame.TitleArea.Title:SetSize(Frame.TitleArea:GetWidth(), Frame.TitleArea:GetHeight())
 						Frame.TitleArea.Title:SetPoint("CENTER", Frame.TitleArea)
 					end
@@ -120,7 +120,7 @@ function NS.Elements:Load()
 					Frame.InputArea.InputBox = CreateFrame("EditBox", "$parent.InputBox", Frame.InputArea)
 					Frame.InputArea.InputBox:SetSize(Frame.InputArea:GetWidth(), Frame.InputArea:GetHeight())
 					Frame.InputArea.InputBox:SetPoint("TOP", Frame.InputArea)
-					Frame.InputArea.InputBox:SetFont(addon.API.Fonts.Content_Light, 12.5, "")
+					Frame.InputArea.InputBox:SetFont(addon.API.Fonts.CONTENT_LIGHT, 12.5, "")
 					Frame.InputArea.InputBox:SetTextColor(addon.Theme.RGB_WHITE.r, addon.Theme.RGB_WHITE.g, addon.Theme.RGB_WHITE.b)
 					Frame.InputArea.InputBox:SetMultiLine(true)
 					Frame.InputArea.InputBox:SetAutoFocus(false)
@@ -133,7 +133,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- HINT
-						Frame.InputArea.InputBox.Hint = addon.API.FrameTemplates:CreateText(Frame.InputArea.InputBox, addon.Theme.RGB_WHITE, 12.5, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Hint")
+						Frame.InputArea.InputBox.Hint = addon.API.FrameTemplates:CreateText(Frame.InputArea.InputBox, addon.Theme.RGB_WHITE, 12.5, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Hint")
 						Frame.InputArea.InputBox.Hint:SetSize(Frame.InputArea.InputBox:GetSize())
 						Frame.InputArea.InputBox.Hint:SetPoint("TOP", Frame.InputArea.InputBox)
 						Frame.InputArea.InputBox.Hint:SetAlpha(.75)

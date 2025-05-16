@@ -210,7 +210,7 @@ do
 				end
 
 				do -- TEXT
-					Frame.Text = addon.API.FrameTemplates:CreateText(Frame, Frame._DefaultTextColor, Frame._TextSize, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label", false)
+					Frame.Text = addon.API.FrameTemplates:CreateText(Frame, Frame._DefaultTextColor, Frame._TextSize, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label", false)
 					Frame.Text:SetPoint("TOPLEFT", Frame, PADDING, 0)
 					Frame.Text:SetPoint("BOTTOMRIGHT", Frame.Arrow, "BOTTOMLEFT", -PADDING, 0)
 					Frame.Text:SetMaxLines(1)
@@ -596,7 +596,7 @@ do
 									end
 
 									do -- TEXT
-										Element.Text = addon.API.FrameTemplates:CreateText(Element, Frame._ListElementTextColor, Frame._TextSize, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text", false)
+										Element.Text = addon.API.FrameTemplates:CreateText(Element, Frame._ListElementTextColor, Frame._TextSize, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text", false)
 										Element.Text:SetPoint("LEFT", Element, PADDING, 0)
 										Element.Text:SetMaxLines(1)
 
@@ -651,7 +651,7 @@ do
 							end
 
 							do -- LABEL
-								Frame.List.Content.Index.Label = addon.API.FrameTemplates:CreateText(Frame.List.Content.Index, Frame._ListPrimaryColor, Frame._TextSizeTitle, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+								Frame.List.Content.Index.Label = addon.API.FrameTemplates:CreateText(Frame.List.Content.Index, Frame._ListPrimaryColor, Frame._TextSizeTitle, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 								Frame.List.Content.Index.Label:SetAllPoints(Frame.List.Content.Index, true)
 								Frame.List.Content.Index.Label:SetText("1/5")
 

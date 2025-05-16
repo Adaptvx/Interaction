@@ -152,7 +152,7 @@ function NS.Prefabs:Load()
 								----------------------------------
 
 								do -- TEXT
-									TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+									TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 									TextFrame.Text:SetAllPoints(TextFrame, true)
 								end
 							end
@@ -449,7 +449,7 @@ function NS.Prefabs:Load()
 					end
 
 					do -- TEXT
-						Frame.Text = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+						Frame.Text = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 						Frame.Text:SetPoint("TOPLEFT", Frame, (PADDING / 2), -(PADDING / 2))
 						Frame.Text:SetPoint("BOTTOMRIGHT", Frame, -(PADDING / 2), (PADDING / 2))
 						Frame.Text:SetAlpha(.75)
@@ -517,7 +517,7 @@ function NS.Prefabs:Load()
 					end
 
 					do -- TEXT
-						Frame.Text = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+						Frame.Text = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, CONTENT_TEXT_SIZE, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 						Frame.Text:SetPoint("CENTER", Frame)
 						Frame.Text:SetAlpha(.75)
 						addon.API.FrameUtil:SetDynamicSize(Frame.Text, Frame, 0, HEADER_REWARD_PADDING)
@@ -616,14 +616,14 @@ function NS.Prefabs:Load()
 							end
 
 							do -- LABEL
-								Frame.Image.Text.Label = addon.API.FrameTemplates:CreateText(Frame.Image.Text, { r = 1, g = 1, b = 1 }, TOOLTIP_TEXT_SIZE, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+								Frame.Image.Text.Label = addon.API.FrameTemplates:CreateText(Frame.Image.Text, { r = 1, g = 1, b = 1 }, TOOLTIP_TEXT_SIZE, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 								Frame.Image.Text.Label:SetAllPoints(Frame.Image.Text, true)
 							end
 						end
 					end
 
 					do -- LABEL
-						Frame.Label = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+						Frame.Label = addon.API.FrameTemplates:CreateText(Frame, { r = 1, g = 1, b = 1 }, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 						Frame.Label:SetPoint("LEFT", Frame, Frame.Image:GetWidth() + TEXT_PADDING, 0)
 						Frame.Label:SetAlpha(.75)
 						addon.API.FrameUtil:SetDynamicSize(Frame.Label, Frame, function(relativeWidth, relativeHeight) return relativeWidth - TEXT_PADDING - Frame.Image:GetWidth() - TEXT_PADDING end, 0)

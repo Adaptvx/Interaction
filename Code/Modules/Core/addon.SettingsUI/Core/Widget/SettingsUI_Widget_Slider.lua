@@ -65,7 +65,7 @@ function NS.Widgets:CreateSlider(parent, valueStep, min, max, grid, valueTextFun
 		end
 
 		do -- TEXT
-			Frame.SliderFrame.Text = addon.API.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 14, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light)
+			Frame.SliderFrame.Text = addon.API.FrameTemplates:CreateText(Frame.SliderFrame, addon.Theme.RGB_RECOMMENDED, 14, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 			Frame.SliderFrame.Text:SetSize(Frame.SliderFrame:GetWidth(), Frame.Container:GetHeight())
 			Frame.SliderFrame.Text:SetPoint("CENTER", Frame.SliderFrame, 0, 7.5)
 			Frame.SliderFrame.Text:SetAlpha(.75)

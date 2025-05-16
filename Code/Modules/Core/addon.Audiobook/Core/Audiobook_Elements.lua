@@ -287,13 +287,13 @@ function NS.Elements:Load()
 							end
 
 							do -- TEXT
-								Frame.Content.Text.Index.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Text.Index, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+								Frame.Content.Text.Index.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Text.Index, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								Frame.Content.Text.Index.Text:SetAllPoints(Frame.Content.Text.Index, true)
 							end
 						end
 
 						do -- TITLE
-							Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
+							Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Title")
 							Frame.Content.Text.Title:SetHeight(Frame.Content.Text:GetHeight())
 							Frame.Content.Text.Title:SetPoint("LEFT", Frame.Content.Text, 0, 0)
 						end
@@ -347,7 +347,7 @@ function NS.Elements:Load()
 						--------------------------------
 
 						do -- TEXT
-							Frame.TextPreviewFrame.Content.Text = addon.API.FrameTemplates:CreateText(Frame.TextPreviewFrame.Content, addon.Theme.RGB_CHAT_MSG_SAY, 12.5, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+							Frame.TextPreviewFrame.Content.Text = addon.API.FrameTemplates:CreateText(Frame.TextPreviewFrame.Content, addon.Theme.RGB_CHAT_MSG_SAY, 12.5, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 							Frame.TextPreviewFrame.Content.Text:SetSize(Frame.TextPreviewFrame.Content:GetSize())
 							Frame.TextPreviewFrame.Content.Text:SetPoint("CENTER", Frame.TextPreviewFrame.Content)
 							addon.API.FrameUtil:SetDynamicSize(Frame.TextPreviewFrame.Content.Text, Frame.TextPreviewFrame.Content, 0, 0)

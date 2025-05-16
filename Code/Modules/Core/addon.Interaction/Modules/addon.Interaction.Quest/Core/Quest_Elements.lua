@@ -133,7 +133,7 @@ function NS.Elements:Load()
 				end
 
 				do -- TEXT
-					ContextIcon.Text = addon.API.FrameTemplates:CreateText(ContextIcon, addon.Theme.RGB_WHITE, 35, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+					ContextIcon.Text = addon.API.FrameTemplates:CreateText(ContextIcon, addon.Theme.RGB_WHITE, 35, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 					ContextIcon.Text:SetPoint("TOPLEFT", ContextIcon, 1, -1)
 					ContextIcon.Text:SetPoint("BOTTOMRIGHT", ContextIcon, 1, -1)
 				end
@@ -216,7 +216,7 @@ function NS.Elements:Load()
 										--------------------------------
 
 										do -- TEXT
-											TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, TITLE_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+											TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, TITLE_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 											TitleFrame.Text:SetPoint("LEFT", TitleFrame)
 											addon.API.FrameUtil:SetDynamicTextSize(TitleFrame.Text, TitleFrame, nil, nil, nil, nil)
 											addon.API.FrameUtil:SetDynamicSize(TitleFrame, TitleFrame.Text, nil, 0)
@@ -377,7 +377,7 @@ function NS.Elements:Load()
 										end
 
 										local function CreateText(parent)
-											local Text = addon.API.FrameTemplates:CreateText(parent, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
+											local Text = addon.API.FrameTemplates:CreateText(parent, addon.Theme.RGB_WHITE, CONTENT_TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT)
 											Text:SetAlpha(.75)
 											addon.API.FrameUtil:SetDynamicTextSize(Text, parent, function(relativeWidth, relativeHeight) return relativeWidth end, nil, true, nil)
 

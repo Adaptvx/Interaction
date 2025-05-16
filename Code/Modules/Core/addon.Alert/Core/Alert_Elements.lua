@@ -55,7 +55,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- TEXT
-						Title.Text = addon.API.FrameTemplates:CreateText(Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+						Title.Text = addon.API.FrameTemplates:CreateText(Title, addon.Theme.RGB_WHITE, 17.5, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 						Title.Text:SetAllPoints(Frame.Title, true)
 					end
 				end

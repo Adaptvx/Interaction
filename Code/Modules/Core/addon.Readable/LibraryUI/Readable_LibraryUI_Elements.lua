@@ -73,7 +73,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Title.Main.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 30, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+							LibraryUIFrame.Content.Title.Main.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 30, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 							LibraryUIFrame.Content.Title.Main.Text:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Text:SetPoint("TOP", LibraryUIFrame.Content.Title)
 							LibraryUIFrame.Content.Title.Main.Text:SetAlpha(.75)
@@ -86,7 +86,7 @@ function NS.LibraryUI.Elements:Load()
 
 							--------------------------------
 
-							LibraryUIFrame.Content.Title.Main.Subtext = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Subtext")
+							LibraryUIFrame.Content.Title.Main.Subtext = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Title.Main, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Subtext")
 							LibraryUIFrame.Content.Title.Main.Subtext:SetSize(LibraryUIFrame.Content.Title:GetWidth(), new)
 							LibraryUIFrame.Content.Title.Main.Subtext:SetPoint("BOTTOM", LibraryUIFrame.Content.Title.Main)
 							LibraryUIFrame.Content.Title.Main.Subtext:SetAlpha(.5)
@@ -216,7 +216,7 @@ function NS.LibraryUI.Elements:Load()
 						--------------------------------
 
 						do -- LABEL (SHOW)
-							LibraryUIFrame.Content.Sidebar.Label_Show = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Sidebar, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label_Show")
+							LibraryUIFrame.Content.Sidebar.Label_Show = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.Sidebar, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label_Show")
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetSize(LibraryUIFrame.Content.Sidebar:GetWidth(), 35)
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetAlpha(.5)
 							LibraryUIFrame.Content.Sidebar.Label_Show:SetText(L["Readable - Library - Show"])
@@ -357,7 +357,7 @@ function NS.LibraryUI.Elements:Load()
 							--------------------------------
 
 							do -- TEXT
-								LibraryUIFrame.Content.ContentFrame.Index.Content.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.Index.Content, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+								LibraryUIFrame.Content.ContentFrame.Index.Content.Text = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.Index.Content, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetPoint("CENTER", LibraryUIFrame.Content.ContentFrame.Index.Content)
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetText("1/2")
 								LibraryUIFrame.Content.ContentFrame.Index.Content.Text:SetAlpha(.5)
@@ -498,7 +498,7 @@ function NS.LibraryUI.Elements:Load()
 								end
 
 								do -- LABEL
-									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.ScrollFrame, addon.Theme.RGB_WHITE, 20, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label = addon.API.FrameTemplates:CreateText(LibraryUIFrame.Content.ContentFrame.ScrollFrame, addon.Theme.RGB_WHITE, 20, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetAllPoints(LibraryUIFrame.Content.ContentFrame.ScrollFrame)
 									LibraryUIFrame.Content.ContentFrame.ScrollFrame.Label:SetAlpha(.25)
 								end
@@ -613,7 +613,7 @@ function NS.LibraryUI.Elements:Load()
 											--------------------------------
 
 											do -- DETAIL
-												Frame.Content.Text.Detail = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Detail")
+												Frame.Content.Text.Detail = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 10, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Detail")
 												Frame.Content.Text.Detail:SetSize(Frame.Content.Text:GetSize())
 												Frame.Content.Text.Detail:SetPoint("LEFT", Frame.Content.Text)
 												Frame.Content.Text.Detail:SetAlpha(.5)
@@ -621,7 +621,7 @@ function NS.LibraryUI.Elements:Load()
 											end
 
 											do -- TITLE
-												Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", addon.API.Fonts.Content_Light, "$parent.Title")
+												Frame.Content.Text.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Text, addon.Theme.RGB_WHITE, 15, "LEFT", "BOTTOM", addon.API.Fonts.CONTENT_LIGHT, "$parent.Title")
 												Frame.Content.Text.Title:SetSize(Frame.Content.Text:GetSize())
 												Frame.Content.Text.Title:SetPoint("LEFT", Frame.Content.Text)
 												Frame.Content.Text.Title:SetAlpha(.75)

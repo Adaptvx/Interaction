@@ -75,7 +75,7 @@ function NS.Elements:Load()
 						end
 
 						do -- TEXT
-							LayoutGroup.Text = addon.API.FrameTemplates:CreateText(LayoutGroup, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+							LayoutGroup.Text = addon.API.FrameTemplates:CreateText(LayoutGroup, addon.Theme.RGB_WHITE, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 							addon.API.FrameUtil:SetDynamicTextSize(LayoutGroup.Text, LayoutGroup, 10000, nil)
 							LayoutGroup:AddElement(LayoutGroup.Text)
 						end

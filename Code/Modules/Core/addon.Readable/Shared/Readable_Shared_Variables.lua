@@ -18,15 +18,16 @@ do -- MAIN
 	NS.Variables.LibraryUIFrame = nil
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
-		NS.Variables.BASELINE_WIDTH = addon.API.Main:GetScreenHeight()
-		NS.Variables.BASELINE_HEIGHT = addon.API.Main:GetScreenHeight()
+		NS.Variables.RATIO_REFERENCE = addon.API.Main:GetScreenHeight()
 
 		--------------------------------
 
-		function NS.Variables:RATIO(level)
-			return NS.Variables.BASELINE_HEIGHT / addon.Variables:RAW_RATIO(level)
+		do -- FUNCTIONS
+			function NS.Variables:RATIO(level)
+				return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
+			end
 		end
 	end
 

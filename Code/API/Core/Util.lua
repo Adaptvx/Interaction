@@ -619,13 +619,14 @@ do
 		--- @param table table
 		--- @param indexValue any
 		--- @param searchVariable string
-		function addon.API.Util:FindVariableValuePositionInTable(table, indexValue, searchVariable)
+		function addon.API.Util:FindVariableValuePositionInTable(table, subVariableList, value)
 			for i = 1, #table do
 				local currentEntry = table[i]
 
 				--------------------------------
 
-				if currentEntry[searchVariable] == indexValue then
+				local subVariable = addon.API.Util:GetSubVariableFromList(currentEntry, subVariableList)
+				if subVariable == value then
 					return i
 				end
 			end
@@ -848,7 +849,7 @@ do
 	end
 
 	do -- METHOD
-		-- Creates a method chain. Input a list of variables names to keep track and set. The variables can be called at anytime.
+		-- Creates a method chain. Input a list of variables names to keep track and set. The variables can be called at anytime within the declaration method.
 		--
 		-- DECLARATION
 		-- 		local chain = AddMethodChain({ "onFinish" })
@@ -916,6 +917,24 @@ do
 			--------------------------------
 
 			return reversed
+		end
+
+		-- Generates a random hash
+		---@return string hash
+		function addon.API.Util:gen_hash()
+			local hash = ""
+			local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+			--------------------------------
+
+			for i = 1, 16 do
+				local rand = math.random(1, #chars)
+				hash = hash .. chars:sub(rand, rand)
+			end
+
+			--------------------------------
+
+			return hash
 		end
 	end
 end

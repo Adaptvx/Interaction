@@ -20,7 +20,7 @@ function NS.Widgets:CreateTitle(parent, isSubtitle, textSize, subcategory, toolt
         local offsetX = isSubtitle and 12.5 or 0
         local offsetY = 0
 
-		Frame.Label = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+		Frame.Label = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, textSize, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 		Frame.Label:SetSize(width, height)
 		Frame.Label:SetPoint("LEFT", Frame.Container, offsetX, offsetY)
 		Frame.Label:SetAlpha(1)

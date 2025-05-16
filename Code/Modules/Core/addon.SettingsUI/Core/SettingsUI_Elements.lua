@@ -100,8 +100,8 @@ function NS.Elements:Load()
 
 				local PADDING = (NS.Variables:RATIO(9))
 
-				local CONTENT_WIDTH = (NS.Variables.BASELINE_WIDTH - NS.Variables:RATIO(9))
-				local CONTENT_HEIGHT = (NS.Variables.BASELINE_HEIGHT - NS.Variables:RATIO(9))
+				local CONTENT_WIDTH = (NS.Variables.FRAME_SIZE.x - NS.Variables:RATIO(9))
+				local CONTENT_HEIGHT = (NS.Variables.FRAME_SIZE.y - NS.Variables:RATIO(9))
 				local SECONDARY_WIDTH = (addon.Variables:RATIO(CONTENT_WIDTH, 3))
 				local PRIMARY_WIDTH = (CONTENT_WIDTH - addon.Variables:RATIO(CONTENT_WIDTH, 3) - NS.Variables:RATIO(8))
 				local PRIMARY_CONTENT_WIDTH = (PRIMARY_WIDTH - NS.Variables:RATIO(6))
@@ -110,7 +110,7 @@ function NS.Elements:Load()
 				local DIVIDER_WIDTH = NS.Variables:RATIO(11)
 				local DIVIDER_HEIGHT = CONTENT_HEIGHT
 				local DIVIDER_POS = {
-					["x"] = (SECONDARY_WIDTH + (NS.Variables.BASELINE_WIDTH - (SECONDARY_WIDTH + PRIMARY_WIDTH)) / 2) - (DIVIDER_WIDTH),
+					["x"] = (SECONDARY_WIDTH + (NS.Variables.FRAME_SIZE.x - (SECONDARY_WIDTH + PRIMARY_WIDTH)) / 2) - (DIVIDER_WIDTH),
 					["y"] = 0
 				}
 
@@ -211,7 +211,7 @@ function NS.Elements:Load()
 							end
 
 							do -- TITLE
-								Frame.Content.Header.Content.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Header, addon.Theme.RGB_RECOMMENDED, 17.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Title")
+								Frame.Content.Header.Content.Title = addon.API.FrameTemplates:CreateText(Frame.Content.Header, addon.Theme.RGB_RECOMMENDED, 17.5, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Title")
 								Frame.Content.Header.Content.Title:SetSize(Frame.Content.Header.Content:GetWidth(), Frame.Content.Header.Content:GetHeight())
 								Frame.Content.Header.Content.Title:SetPoint("LEFT", Frame.Content.Header.Content, NS.Variables:RATIO(8), 0)
 							end
@@ -512,7 +512,7 @@ function NS.Elements:Load()
 				end
 
 				do -- TEXT
-					Frame.Tooltip.Content.Text = addon.API.FrameTemplates:CreateText(Frame.Tooltip.Content, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+					Frame.Tooltip.Content.Text = addon.API.FrameTemplates:CreateText(Frame.Tooltip.Content, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 					Frame.Tooltip.Content.Text:SetSize(Frame.Tooltip.Content:GetWidth(), 250)
 				end
 

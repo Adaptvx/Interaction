@@ -234,7 +234,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							do -- TEXT
-								PrefixFrame.Text = addon.API.FrameTemplates:CreateText(PrefixFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+								PrefixFrame.Text = addon.API.FrameTemplates:CreateText(PrefixFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								PrefixFrame.Text:SetPoint("CENTER", PrefixFrame)
 								PrefixFrame.Text.targetAlpha = .5 -- Animation reference parameter in ShowWithAnimation.
 								addon.API.FrameUtil:SetDynamicTextSize(PrefixFrame.Text, PrefixFrame, 10000, nil)
@@ -254,7 +254,7 @@ function NS.Elements:Load()
 							--------------------------------
 
 							do -- TEXT
-								TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+								TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								TitleFrame.Text:SetPoint("CENTER", TitleFrame)
 								addon.API.FrameUtil:SetDynamicTextSize(TitleFrame.Text, TitleFrame, 10000, nil)
 								addon.API.FrameUtil:SetDynamicSize(TitleFrame, TitleFrame.Text, nil, 0)
@@ -471,7 +471,7 @@ function NS.Elements:Load()
 
 					--------------------------------
 
-					Content.Text = addon.API.FrameTemplates:CreateText(Frame.Content, addon.Theme.RGB_WHITE, TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.Content_Light)
+					Content.Text = addon.API.FrameTemplates:CreateText(Frame.Content, addon.Theme.RGB_WHITE, TEXT_SIZE, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT)
 					Content.Text:SetPoint("CENTER", Content, 0, 0)
 					Content.Text:SetShadowOffset(0, 0)
 					CallbackRegistry:Add("UpdateDynamicTextSize Dialog.Content.Text", addon.API.FrameUtil:SetDynamicTextSize(Content.Text, Content, FRAME_TEXT_WIDTH, nil))

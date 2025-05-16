@@ -71,7 +71,7 @@ function NS.Elements:Load()
 					end
 
 					do -- TEXT
-						Frame.Content.Title.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Title, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", addon.API.Fonts.Title_Bold, "$parent.Text")
+						Frame.Content.Title.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Title, addon.Theme.RGB_WHITE, 25, "CENTER", "MIDDLE", addon.API.Fonts.TITLE_BOLD, "$parent.Text")
 						Frame.Content.Title.Text:SetSize(Frame.Content.Title:GetWidth(), Frame.Content.Title:GetHeight())
 						Frame.Content.Title.Text:SetPoint("CENTER", Frame.Content.Title)
 					end
@@ -87,7 +87,7 @@ function NS.Elements:Load()
 					--------------------------------
 
 					do -- TEXT
-						Frame.Content.Shortcut.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Shortcut, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Bold, "$parent.Text")
+						Frame.Content.Shortcut.Text = addon.API.FrameTemplates:CreateText(Frame.Content.Shortcut, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_BOLD, "$parent.Text")
 						Frame.Content.Shortcut.Text:SetSize(Frame.Content.Shortcut:GetWidth(), Frame.Content.Shortcut:GetHeight())
 						Frame.Content.Shortcut.Text:SetPoint("CENTER", Frame.Content.Shortcut)
 					end

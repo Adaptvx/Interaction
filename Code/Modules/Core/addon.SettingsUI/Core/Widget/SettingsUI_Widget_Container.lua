@@ -150,7 +150,7 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 		do -- TEXT
 			local Padding = 10
 
-			Frame.Text = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light)
+			Frame.Text = addon.API.FrameTemplates:CreateText(Frame.Container, addon.Theme.RGB_RECOMMENDED, 15, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT)
 			Frame.Text:SetSize(Frame.Container:GetWidth() - 150 - Padding, Frame.Container:GetHeight())
 			Frame.Text:SetPoint("LEFT", Frame.Container, Padding / 2, 0)
 			Frame.Text:SetAlpha(.75)

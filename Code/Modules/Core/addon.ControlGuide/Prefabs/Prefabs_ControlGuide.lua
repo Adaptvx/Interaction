@@ -37,7 +37,7 @@ function NS.Prefabs:Load()
 
 				do -- CONTENT
 					do -- TEXT
-						Content.Text = addon.API.FrameTemplates:CreateText(Content, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+						Content.Text = addon.API.FrameTemplates:CreateText(Content, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 						Content.Text:SetPoint("CENTER", Content)
 						Content.Text:SetAlpha(.75)
 						addon.API.FrameUtil:SetDynamicTextSize(Content.Text, Content, 10000, 10000)

@@ -143,7 +143,7 @@ function NS.Elements:Load()
 							----------------------------------
 
 							do -- TEXT
-								TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, 15, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+								TitleFrame.Text = addon.API.FrameTemplates:CreateText(TitleFrame, addon.Theme.RGB_WHITE, 15, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								TitleFrame.Text:SetPoint("CENTER", TitleFrame)
 								addon.API.FrameUtil:SetDynamicTextSize(TitleFrame.Text, TitleFrame, function(relativeWidth, relativeHeight) return relativeWidth end, nil, true, nil)
 								addon.API.FrameUtil:SetDynamicSize(TitleFrame, TitleFrame.Text, nil, 0)
@@ -162,7 +162,7 @@ function NS.Elements:Load()
 							----------------------------------
 
 							do -- TEXT
-								DescriptionFrame.Text = addon.API.FrameTemplates:CreateText(DescriptionFrame, addon.Theme.RGB_WHITE, 12, "LEFT", "TOP", addon.API.Fonts.Content_Light, "$parent.Text")
+								DescriptionFrame.Text = addon.API.FrameTemplates:CreateText(DescriptionFrame, addon.Theme.RGB_WHITE, 12, "LEFT", "TOP", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 								DescriptionFrame.Text:SetPoint("CENTER", DescriptionFrame)
 								DescriptionFrame.Text:SetAlpha(.75)
 								addon.API.FrameUtil:SetDynamicTextSize(DescriptionFrame.Text, DescriptionFrame, function(relativeWidth, relativeHeight) return relativeWidth; end, nil, true, nil)

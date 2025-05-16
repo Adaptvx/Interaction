@@ -68,7 +68,7 @@ do
 			end
 
 			do -- PLACEHOLDER
-				Frame.PlaceholderText = addon.API.FrameTemplates:CreateText(Frame, textColor, fontSize, justifyH or "LEFT", justifyV or "MIDDLE", addon.API.Fonts.Content_Light, "$parent.PlaceholderText")
+				Frame.PlaceholderText = addon.API.FrameTemplates:CreateText(Frame, textColor, fontSize, justifyH or "LEFT", justifyV or "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.PlaceholderText")
 				Frame.PlaceholderText:SetAllPoints(Frame)
 				Frame.PlaceholderText:SetText(hint)
 				Frame.PlaceholderText:SetAlpha(.5)

@@ -108,7 +108,7 @@ do
 						end
 
 						do -- TEXT
-							Frame.KeybindFrame.Text = addon.API.FrameTemplates:CreateText(Frame.KeybindFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+							Frame.KeybindFrame.Text = addon.API.FrameTemplates:CreateText(Frame.KeybindFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 							Frame.KeybindFrame.Text:SetAllPoints(Frame.KeybindFrame, true)
 							Frame.KeybindFrame.Text:SetAlpha(.75)
 						end

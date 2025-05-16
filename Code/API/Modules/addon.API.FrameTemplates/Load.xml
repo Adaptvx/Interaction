@@ -10,6 +10,7 @@
 	<Script file="Core/InputBox.lua"/>
 	<Script file="Core/Keybind.lua"/>
 	<Script file="Core/LayoutGroup.lua"/>
+	<Script file="Core/ModelFrame.lua"/>
 	<Script file="Core/MouseResponder.lua"/>
 	<Script file="Core/ProgressBar.lua"/>
 	<Script file="Core/ScrollBar.lua"/>

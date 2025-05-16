@@ -106,7 +106,7 @@ function NS.Prefabs:Load()
 								end
 
 								do -- LABEL
-									Keybind.Text = addon.API.FrameTemplates:CreateText(Keybind, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+									Keybind.Text = addon.API.FrameTemplates:CreateText(Keybind, addon.Theme.RGB_WHITE, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 									Keybind.Text:SetPoint("CENTER", Keybind)
 									addon.API.FrameUtil:SetDynamicSize(Keybind.Text, Keybind, 0, 0)
 								end
@@ -157,7 +157,7 @@ function NS.Prefabs:Load()
 									--------------------------------
 
 									do -- TEXT
-										TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, 14, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Text")
+										TextFrame.Text = addon.API.FrameTemplates:CreateText(TextFrame, addon.Theme.RGB_WHITE, 14, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
 										TextFrame.Text:SetPoint("CENTER", TextFrame)
 										addon.API.FrameUtil:SetDynamicTextSize(TextFrame.Text, TextFrame, nil, nil, true, false)
 										addon.API.FrameUtil:SetDynamicSize(TextFrame, TextFrame.Text, nil, 0)

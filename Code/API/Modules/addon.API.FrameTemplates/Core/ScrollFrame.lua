@@ -108,11 +108,11 @@ do
 
 			do -- FUNCTIONS
 				function Frame:GetContentWidth()
-					return Frame.API_Content.ScrollChildFrame:GetWidth()
+					return Frame.API_Content.ScrollChildFrame:GetWidth() - Frame:GetWidth()
 				end
 
 				function Frame:GetContentHeight()
-					return Frame.API_Content.ScrollChildFrame:GetHeight()
+					return Frame.API_Content.ScrollChildFrame:GetHeight() - Frame:GetHeight()
 				end
 
 				function Frame:SetVerticalScroll(value, interpolate)
@@ -468,6 +468,10 @@ do
 				function Frame:ScrollToEnd()
 					local maxPosition = Frame:GetMaxVerticalScroll()
 					Frame:SetVerticalScroll(maxPosition)
+				end
+
+				function Frame:SetElementInfo(prefabTemplate, elementCallback)
+					Frame.ScrollView:SetElementInitializer(prefabTemplate, elementCallback)
 				end
 			end
 

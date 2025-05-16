@@ -577,7 +577,7 @@ function NS.Prefabs:Load()
 							end
 
 							do -- DETAIL
-								Frame.Detail = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Detail")
+								Frame.Detail = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Detail")
 								Frame.Detail:SetWidth(22.5)
 								addon.API.FrameUtil:SetDynamicSize(Frame.Detail, Frame, nil, function(relativeWidth, relativeHeight) return relativeHeight end)
 								Frame:AddElement(Frame.Detail)
@@ -586,7 +586,7 @@ function NS.Prefabs:Load()
 							end
 
 							do -- LABEL
-								Frame.Label = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+								Frame.Label = addon.API.FrameTemplates:CreateText(Frame, addon.Theme.RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 								addon.API.FrameUtil:SetDynamicSize(Frame.Label, Frame, function(relativeWidth, relativeHeight) return relativeWidth - relativeHeight - PADDING - relativeHeight end, function(relativeWidth, relativeHeight) return relativeHeight end)
 								Frame:AddElement(Frame.Label)
 

@@ -100,7 +100,7 @@ do
 			frame._Color = nil
 			frame._HighlightColor = nil
 			frame._ActiveColor = nil
-			frame._Font = addon.API.Fonts.Content_Light or GameFontNormal:GetFont()
+			frame._Font = addon.API.Fonts.CONTENT_LIGHT or GameFontNormal:GetFont()
 			frame._FontSize = 12.5
 
 			frame._CustomDefaultTexture = defaultTexture

@@ -23,6 +23,7 @@ do -- CONSTANTS
 	NS.RGB_WHITE = { r = 255 / 255, g = 255 / 255, b = 255 / 255 }
 	NS.RGB_BLACK = { r = 25 / 255, g = 25 / 255, b = 25 / 255 }
 	NS.RGB_ORANGE = { r = 255 / 255, g = 166 / 255, b = 0 / 255 }
+	NS.RGB_YELLOW = { r = 255 / 255, g = 204 / 255, b = 26 / 255 }
 	NS.RGB_GREEN = { r = 82 / 255, g = 204 / 255, b = 51 / 255 }
 	NS.RGB_GREEN_02 = { r = 82 / 255, g = 175 / 255, b = 51 / 255 }
 	NS.RGB_RED = { r = 208 / 255, g = 85 / 255, b = 85 / 255 }
@@ -34,6 +35,7 @@ do -- CONSTANTS
 	NS.RGB_WHITE_HEXCODE = "|cffFFFFFF"
 	NS.RGB_BLACK_HEXCODE = "|cff000000"
 	NS.RGB_ORANGE_HEXCODE = "|cffFFA500"
+	NS.RGB_YELLOW_HEXCODE = "|cffFFCC1A"
 	NS.RGB_GREEN_HEXCODE = "|cff54CB34"
 	NS.RGB_GREEN_02_HEXCODE = "|cff52AF33"
 	NS.RGB_RED_HEXCODE = "|cffD05555"

@@ -59,7 +59,7 @@ function NS.Elements:Load()
 				end
 
 				do -- LABEL
-					InteractionPinpointFrame.Label = addon.API.FrameTemplates:CreateText(InteractionPinpointFrame.Background, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Label")
+					InteractionPinpointFrame.Label = addon.API.FrameTemplates:CreateText(InteractionPinpointFrame.Background, { r = 1, g = 1, b = 1 }, 15, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Label")
 					InteractionPinpointFrame.Label:SetSize(InteractionPinpointFrame:GetWidth() - 15, InteractionPinpointFrame:GetHeight() - 15)
 					InteractionPinpointFrame.Label:SetPoint("CENTER", InteractionPinpointFrame)
 				end
@@ -120,7 +120,7 @@ function NS.Elements:Load()
 				end
 
 				do -- DISTANCE
-					InteractionWaypointFrame.Distance = addon.API.FrameTemplates:CreateText(InteractionWaypointFrame, { r = 1, g = .8, b = .1 }, 27.5, "CENTER", "MIDDLE", addon.API.Fonts.Content_Light, "$parent.Distance")
+					InteractionWaypointFrame.Distance = addon.API.FrameTemplates:CreateText(InteractionWaypointFrame, { r = 1, g = .8, b = .1 }, 27.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Distance")
 					InteractionWaypointFrame.Distance:SetParent(InteractionWaypointFrame)
 					InteractionWaypointFrame.Distance:SetSize(200, 200)
 					InteractionWaypointFrame.Distance:SetPoint("BOTTOM", InteractionWaypointFrame, 0, -125)

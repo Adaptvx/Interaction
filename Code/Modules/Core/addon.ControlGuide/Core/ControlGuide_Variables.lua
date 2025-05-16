@@ -16,15 +16,16 @@ do -- MAIN
 
 end
 
-do -- CONSTANTS
+do  -- CONSTANTS
 	do -- SCALE
-		NS.Variables.BASELINE_WIDTH = 500
-		NS.Variables.BASELINE_HEIGHT = 35
+		NS.Variables.RATIO_REFERENCE = 35
 
 		--------------------------------
 
-		function NS.Variables:RATIO(level)
-			return NS.Variables.BASELINE_HEIGHT / addon.Variables:RAW_RATIO(level)
+		do -- FUNCTIONS
+			function NS.Variables:RATIO(level)
+				return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
+			end
 		end
 	end
 

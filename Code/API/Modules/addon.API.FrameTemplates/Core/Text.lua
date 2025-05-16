@@ -67,9 +67,9 @@ do
 
 				Frame.Html = CreateFrame("SimpleHTML", (name and name .. "HTML") or nil, Frame)
 				Frame.Html:SetFont("P", QuestFont:GetFont(), fontHeight, "")
-				Frame.Html:SetFont("H1", addon.API.Fonts.Title_Medium, 48, "")
+				Frame.Html:SetFont("H1", addon.API.Fonts.TITLE_MEDIUM, 48, "")
 				Frame.Html:SetFont("H2", Game20Font:GetFont(), fontHeight, "")
-				Frame.Html:SetFont("H3", addon.API.Fonts.Title_Medium, 28, "")
+				Frame.Html:SetFont("H3", addon.API.Fonts.TITLE_MEDIUM, 28, "")
 				Frame.Html:SetTextColor("P", textColor.r, textColor.g, textColor.b)
 				Frame.Html:SetTextColor("H1", textColor.r, textColor.g, textColor.b)
 				Frame.Html:SetTextColor("H2", textColor.r, textColor.g, textColor.b)
