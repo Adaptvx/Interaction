@@ -79,8 +79,8 @@ local function Load()
 		L["Range - Dialog / Content Preview Alpha"] = "Предварительный просмотр непрозрачности"
 		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Устанавливает непрозрачность предварительного просмотра текста диалогового окна.\n\nПо умолчанию: 50%."
 		L["Title - Quest"] = "Задание"
-		L["Checkbox - Always Show Gossip Frame"] = "Always Show Gossip Frame"
-		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Always show the gossip frame when available instead of only after dialog.\n\nDefault: On."
+		L["Checkbox - Always Show Gossip Frame"] = "Всегда показывать окно сплетен"
+		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Всегда показывать окно сплетен, когда он доступен, а не только после диалога.\n\nПо умолчанию: Вкл."
 		L["Checkbox - Always Show Quest Frame"] = "Всегда показывать окно задания"
 		L["Checkbox - Always Show Quest Frame - Tooltip"] = "Всегда показывать окно задания, когда оно доступно, а не только после диалога.\n\nПо умолчанию: Вкл."
 
