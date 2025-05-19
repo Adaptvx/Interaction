@@ -299,7 +299,7 @@ function NS.Script:Load()
 
 				local chain = NS.Variables.QuestChains[NS.Variables.QuestChainReferences[questID]];
 
-				if chain then
+				if chain and chain.name then
 					local quests = chain.quests
 
 					--------------------------------
