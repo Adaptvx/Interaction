@@ -1,7 +1,9 @@
 ## Interface: 110105
 ## Title: Interaction
+## Title-zhCN: Interaction 超炫交互
 ## Notes: A new take to immersive questing.
 ## Notes-ruRU: Захватывающий аддон к сюжету и заданиям.
+## Notes-zhCN: 一种沉浸式任务体验的全新尝试。
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
 ## Version: 0.1.1
