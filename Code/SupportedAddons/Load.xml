@@ -5,4 +5,5 @@
 
 	<!-- Modules -->
 	<Include file="Core/addon.Support.BtWQuests/Load.xml"/>
+	<Include file="Core/addon.Support.ElvUI/Load.xml"/>
 </Ui>

@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Readable
+local NS = addon.Readable; addon.Readable = NS
 
 --------------------------------
 
@@ -131,7 +132,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionReadableUIFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

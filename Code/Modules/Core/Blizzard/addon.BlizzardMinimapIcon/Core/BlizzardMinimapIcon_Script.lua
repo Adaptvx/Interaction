@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.BlizzardMinimapIcon
+local NS = addon.BlizzardMinimapIcon; addon.BlizzardMinimapIcon = NS
 
 --------------------------------
 
@@ -16,7 +17,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Icon = NS.Variables.Icon
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (FRAME)

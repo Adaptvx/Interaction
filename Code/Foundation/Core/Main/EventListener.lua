@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -8,7 +9,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.EventListener = {}
-local NS = addon.EventListener
+local NS = addon.EventListener; addon.EventListener = NS
 
 do -- MAIN
 

@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.ContextIcon
+local NS = addon.ContextIcon; addon.ContextIcon = NS
 
 --------------------------------
 
@@ -43,7 +44,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS

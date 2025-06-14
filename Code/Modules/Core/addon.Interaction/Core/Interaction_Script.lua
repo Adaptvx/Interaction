@@ -1,10 +1,11 @@
 -- [!] [addon.Interaction] is used to manage NPC interaction custom logic such as displaying Quest/Gossip frame etc.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction
+local NS = addon.Interaction; addon.Interaction = NS
 
 --------------------------------
 

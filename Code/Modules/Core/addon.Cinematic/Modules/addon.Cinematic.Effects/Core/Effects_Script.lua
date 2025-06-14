@@ -2,11 +2,12 @@
 -- [Effects_Script.lua] is the back-end (logic & behavior)
 -- for [Effects_Elements.lua].
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Cinematic.Effects
+local NS = addon.Cinematic.Effects; addon.Cinematic.Effects = NS
 
 --------------------------------
 
@@ -20,7 +21,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.EffectsFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (MAIN)
@@ -152,8 +153,8 @@ function NS.Script:Load()
 		-- 		end
 		-- 	end
 
-		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSERESPONDERS_LEFT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Leave() end end })
-		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSERESPONDERS_RIGHT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Leave() end end })
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSE_RESPONDERS_LEFT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 1 then Frame.REF_GRADIENT.Leave() end end })
+		-- 	addon.API.FrameTemplates:CreateMouseResponder(Frame.REF_MOUSE_RESPONDERS_RIGHT, { enterCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Enter() end end, leaveCallback = function() if addon.Database.DB_GLOBAL.profile.INT_UIDIRECTION == 2 then Frame.REF_GRADIENT.Leave() end end })
 		-- end
 	end
 

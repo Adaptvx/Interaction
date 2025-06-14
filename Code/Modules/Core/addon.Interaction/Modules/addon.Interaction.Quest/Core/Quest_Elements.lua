@@ -2,11 +2,12 @@
 -- [Quest_Elements.lua] is the front-end (UI)
 -- for the custom Quest Frame.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Quest
+local NS = addon.Interaction.Quest; addon.Interaction.Quest = NS
 
 --------------------------------
 
@@ -702,7 +703,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.QuestFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

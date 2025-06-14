@@ -2,11 +2,12 @@
 -- [ControlGuide_Elements.lua] creates the front-end (UI)
 -- for the addon.ControlGuide module.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.ControlGuide
+local NS = addon.ControlGuide; addon.ControlGuide = NS
 
 --------------------------------
 
@@ -92,7 +93,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.ControlGuideFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

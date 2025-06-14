@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Gossip.AutoSelectOptions
+local NS = addon.Interaction.Gossip.AutoSelect; addon.Interaction.Gossip.AutoSelect = NS
 
 --------------------------------
 
@@ -15,7 +16,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (MAIN)
@@ -40,8 +41,8 @@ function NS.Script:Load()
 	local Events = CreateFrame("Frame")
 	Events:RegisterEvent("GOSSIP_SHOW")
 	Events:SetScript("OnEvent", function(self, event, ...)
-		local AutoSelectOptions = addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION
-		if not AutoSelectOptions then
+		local AutoSelect = addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION
+		if not AutoSelect then
 			return
 		end
 

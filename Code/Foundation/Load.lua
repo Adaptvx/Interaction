@@ -1,11 +1,12 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 
 --------------------------------
 -- VARIABLES
 --------------------------------
 
 addon.Foundation = {}
-local NS = addon.Foundation
+local NS = addon.Foundation; addon.Foundation = NS
 
 do -- MAIN
 	NS.Initalized = false

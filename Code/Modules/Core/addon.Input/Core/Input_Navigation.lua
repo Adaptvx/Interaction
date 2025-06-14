@@ -1,11 +1,12 @@
 -- [Input_Navigation.lua] is used to link module elements
 -- to use the [Input_Script.lua] system.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Input
+local NS = addon.Input; addon.Input = NS
 
 --------------------------------
 
@@ -18,7 +19,7 @@ function NS.Navigation:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- NAVIGATION

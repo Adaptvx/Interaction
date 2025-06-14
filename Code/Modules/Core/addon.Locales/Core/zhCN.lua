@@ -1,4 +1,7 @@
-local addonName, addon = ...
+-- Localization and translation huchang47
+
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -9,6 +12,10 @@ local function Load()
 	if GetLocale() ~= "zhCN" then
 		return
 	end
+
+	--------------------------------
+	-- SETTINGS
+	--------------------------------
 
 	do
 		-- WARNINGS
@@ -245,6 +252,8 @@ local function Load()
 		L["Title - Credits / AKArenan - Tooltip"] = "特别感谢 AKArenan 提供的巴西葡萄牙语翻译！"
 		L["Title - Credits / El1as1989"] = "El1as1989 | 翻译者 - 西班牙语"
 		L["Title - Credits / El1as1989 - Tooltip"] = "特别感谢 El1as1989 提供的西班牙语翻译！"
+		L["Title - Credits / huchang47"] = "huchang47 | Translator - Chinese (Simplified)"
+		L["Title - Credits / huchang47 - Tooltip"] = "Special thanks to huchang47 for the Chinese (Simplified) translations!"
 	end
 
 	--------------------------------

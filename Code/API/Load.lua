@@ -1,9 +1,10 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 
 --------------------------------
 
 addon.API = {}
-local NS = addon.API
+local NS = addon.API; addon.API = NS
 
 --------------------------------
 

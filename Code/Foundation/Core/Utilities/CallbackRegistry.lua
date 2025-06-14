@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local L = addon.Locales
 
 --------------------------------
@@ -6,7 +7,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.CallbackRegistry = {}
-local NS = addon.CallbackRegistry
+local NS = addon.CallbackRegistry; addon.CallbackRegistry = NS
 
 do -- MAIN
 	NS.callbacks = {}

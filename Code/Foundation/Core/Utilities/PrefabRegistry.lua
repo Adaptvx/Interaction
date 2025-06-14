@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local L = addon.Locales
 
 --------------------------------
@@ -6,7 +7,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.PrefabRegistry = {}
-local NS = addon.PrefabRegistry
+local NS = addon.PrefabRegistry; addon.PrefabRegistry = NS
 
 do -- MAIN
 	NS.Prefabs = {}

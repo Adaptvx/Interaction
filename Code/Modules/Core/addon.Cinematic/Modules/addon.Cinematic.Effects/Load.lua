@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -6,7 +7,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.Cinematic.Effects = {}
-local NS = addon.Cinematic.Effects
+local NS = addon.Cinematic.Effects; addon.Cinematic.Effects = NS
 
 --------------------------------
 

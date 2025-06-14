@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -6,7 +7,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.Interaction.Gossip = {}
-local NS = addon.Interaction.Gossip
+local NS = addon.Interaction.Gossip; addon.Interaction.Gossip = NS
 
 --------------------------------
 
@@ -21,7 +22,7 @@ function NS:Load()
 	end
 
 	local function Submodules()
-		NS.AutoSelectOptions:Load()
+		NS.AutoSelect:Load()
 		NS.FriendshipBar:Load()
 	end
 

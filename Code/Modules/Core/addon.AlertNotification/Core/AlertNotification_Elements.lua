@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.AlertNotification
+local NS = addon.AlertNotification; addon.AlertNotification = NS
 
 --------------------------------
 
@@ -129,7 +130,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.AlertNotification
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

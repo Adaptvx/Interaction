@@ -2,11 +2,12 @@
 -- [Gossip_Script.lua] is the back-end (logic & behavior)
 -- for [Gossip_Elements.lua].
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Gossip
+local NS = addon.Interaction.Gossip; addon.Interaction.Gossip = NS
 
 --------------------------------
 
@@ -25,7 +26,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.GossipFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (BUTTONS)

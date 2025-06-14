@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Prompt
+local NS = addon.Prompt; addon.Prompt = NS
 
 --------------------------------
 
@@ -197,7 +198,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.PromptFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

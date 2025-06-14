@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -8,11 +9,12 @@ local L = addon.Locales
 --------------------------------
 
 addon.LoadedAddons = {}
-local NS = addon.LoadedAddons
+local NS = addon.LoadedAddons; addon.LoadedAddons = NS
 
 do -- MAIN
 	NS.DynamicCam = false
 	NS.BtWQuests = false
+	NS.ElvUI = false
 end
 
 do -- CONSTANTS
@@ -37,6 +39,7 @@ function NS:Load()
 		function addon.LoadedAddons:GetAddons()
 			addon.LoadedAddons.DynamicCam = addon.LoadedAddons:IsAddOnLoaded("DynamicCam")
 			addon.LoadedAddons.BtWQuests = addon.LoadedAddons:IsAddOnLoaded("BtWQuests")
+			addon.LoadedAddons.ElvUI = addon.LoadedAddons:IsAddOnLoaded("ElvUI")
 
 			CallbackRegistry:Trigger("LOADED_ADDONS_READY")
 		end

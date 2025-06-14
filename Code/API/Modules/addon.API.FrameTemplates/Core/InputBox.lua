@@ -1,5 +1,6 @@
-local addonName, addon = ...
-local NS = addon.API.FrameTemplates
+---@class addon
+local addon = select(2, ...)
+local NS = addon.API.FrameTemplates; addon.API.FrameTemplates = NS
 local CallbackRegistry = addon.CallbackRegistry
 
 --------------------------------

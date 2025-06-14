@@ -15,5 +15,5 @@
 
 	<!-- Modules -->
 	<Include file="Modules/addon.Interaction.Gossip.FriendshipBar/Load.xml"/>
-	<Include file="Modules/addon.Interaction.Gossip.AutoSelectOptions/Load.xml"/>
+	<Include file="Modules/addon.Interaction.Gossip.AutoSelect/Load.xml"/>
 </Ui>

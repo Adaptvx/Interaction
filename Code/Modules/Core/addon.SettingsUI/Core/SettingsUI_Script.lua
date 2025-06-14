@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.SettingsUI
+local NS = addon.SettingsUI; addon.SettingsUI = NS
 
 --------------------------------
 
@@ -16,7 +17,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionSettingsFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (TOOLTIP)

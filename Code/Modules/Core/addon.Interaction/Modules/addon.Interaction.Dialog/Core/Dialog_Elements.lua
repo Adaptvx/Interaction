@@ -2,11 +2,12 @@
 -- [Dialog_Elements.lua] creates the front-end (UI)
 -- for the addon.Interaction.Dialog module.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Dialog
+local NS = addon.Interaction.Dialog; addon.Interaction.Dialog = NS
 
 --------------------------------
 
@@ -37,11 +38,11 @@ function NS.Elements:Load()
 			local PADDING_BACKGROUND_EMOTE = 30
 
 			do -- MOUSE RESPONDER
-				Frame.REF_MOUSERESPONDER = CreateFrame("Frame", "$parent.MouseResponder", Frame)
-				Frame.REF_MOUSERESPONDER:SetPoint("CENTER", Frame)
-				Frame.REF_MOUSERESPONDER:SetFrameStrata(NS.Variables.FRAME_STRATA)
-				Frame.REF_MOUSERESPONDER:SetFrameLevel(NS.Variables.FRAME_LEVEL_MAX)
-				addon.API.FrameUtil:SetDynamicSize(Frame.REF_MOUSERESPONDER, Frame, -PADDING_MOUSERESPONDER, -PADDING_MOUSERESPONDER)
+				Frame.MouseResponder = CreateFrame("Frame", "$parent.MouseResponder", Frame)
+				Frame.MouseResponder:SetPoint("CENTER", Frame)
+				Frame.MouseResponder:SetFrameStrata(NS.Variables.FRAME_STRATA)
+				Frame.MouseResponder:SetFrameLevel(NS.Variables.FRAME_LEVEL_MAX)
+				addon.API.FrameUtil:SetDynamicSize(Frame.MouseResponder, Frame, -PADDING_MOUSERESPONDER, -PADDING_MOUSERESPONDER)
 			end
 
 			do -- BACKGROUND
@@ -486,6 +487,7 @@ function NS.Elements:Load()
 			--------------------------------
 
 			-- CORE
+			Frame.REF_MOUSE_RESPONDER = Frame.MouseResponder
 			Frame.REF_BACKGROUND = Frame.Background
 			Frame.REF_TITLE = Frame.Title
 			Frame.REF_CLIP = Frame.Clip
@@ -516,7 +518,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.DialogFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

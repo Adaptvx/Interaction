@@ -1,11 +1,12 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 
 --------------------------------
 -- VARIABLES
 --------------------------------
 
 addon.API.FrameUtil = {}
-local NS = addon.API.FrameUtil
+local NS = addon.API.FrameUtil; addon.API.FrameUtil = NS
 
 do -- MAIN
 

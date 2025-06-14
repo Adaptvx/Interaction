@@ -3,7 +3,7 @@
 	<!-- Load -->
 	<Script file="Load.lua"/>
 
-	<!-- Core -->
-	<Script file="Core/AutoSelectOptions_Script.lua"/>
-	<Script file="Core/AutoSelectOptions_Variables.lua"/>
+	<!-- Modules -->
+	<Script file="Core/ElvUI_Script.lua"/>
+	<Script file="Core/ElvUI_Variables.lua"/>
 </Ui>

@@ -2,11 +2,12 @@
 -- [Effects_Elements.lua] is the front-end (UI)
 -- for the module.
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Cinematic.Effects
+local NS = addon.Cinematic.Effects; addon.Cinematic.Effects = NS
 
 --------------------------------
 
@@ -79,12 +80,12 @@ function NS.Elements:Load()
 			--------------------------------
 
 			-- CORE
-			Frame.REF_MOUSERESPONDERS = Frame.MouseResponders
+			Frame.REF_MOUSE_RESPONDERS = Frame.MouseResponders
 			Frame.REF_GRADIENT = Frame.Gradient
 
 			-- MOUSE RESPONDERS
-			Frame.REF_MOUSERESPONDERS_LEFT = Frame.REF_MOUSERESPONDERS.Left
-			Frame.REF_MOUSERESPONDERS_RIGHT = Frame.REF_MOUSERESPONDERS.Right
+			Frame.REF_MOUSE_RESPONDERS_LEFT = Frame.REF_MOUSE_RESPONDERS.Left
+			Frame.REF_MOUSE_RESPONDERS_RIGHT = Frame.REF_MOUSE_RESPONDERS.Right
 		end
 	end
 
@@ -93,7 +94,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.EffectsFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -8,7 +9,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.API.Main = {}
-local NS = addon.API.Main
+local NS = addon.API.Main; addon.API.Main = NS
 
 do -- MAIN
 	NS.UIScale = .75

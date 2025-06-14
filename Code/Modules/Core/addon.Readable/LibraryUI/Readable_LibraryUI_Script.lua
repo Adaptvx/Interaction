@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Readable
+local NS = addon.Readable; addon.Readable = NS
 
 --------------------------------
 
@@ -18,7 +19,7 @@ function NS.LibraryUI.Script:Load()
 	NS.Variables.LIBRARY_LOCAL = addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE
 	NS.Variables.LIBRARY_GLOBAL = addon.Database.DB_GLOBAL_PERSISTENT.profile.READABLE
 
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 	local LibraryCallback = NS.LibraryUI.Script
 
 	local Frame = NS.Variables.Frame

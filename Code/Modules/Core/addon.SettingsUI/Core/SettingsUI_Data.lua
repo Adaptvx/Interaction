@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.SettingsUI
+local NS = addon.SettingsUI; addon.SettingsUI = NS
 
 --------------------------------
 
@@ -2239,7 +2240,7 @@ function NS.Data:Load()
 							subcategory = 0,
 							category = Gameplay,
 						},
-						Checkbox_AutoSelectOptions = {
+						Checkbox_AutoSelect = {
 							name = L["Checkbox - Gameplay / Auto Select Option"],
 							tooltipImage = "",
 							tooltipText = L["Checkbox - Gameplay / Auto Select Option - Tooltip"],
@@ -2406,10 +2407,24 @@ function NS.Data:Load()
 							subcategory = 0,
 							category = More,
 						},
+						Title_Credits_huchang47 = {
+							name = L["Title - Credits / huchang47"],
+							tooltipImage = NS.Variables.TOOLTIP_PATH .. "Acknowledgement.png",
+							tooltipText = L["Title - Credits / huchang47 - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Large",
+							type = "Title",
+							order = 14,
+							isSubtitle = true,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 0,
+							category = More,
+						},
 						Spacer_Credits_Footer = {
 							name = L["Title - Credits"],
 							type = "Spacer",
-							order = 14,
+							order = 15,
 							spacing = 1,
 							hidden = function() return false end,
 							locked = function() return false end,

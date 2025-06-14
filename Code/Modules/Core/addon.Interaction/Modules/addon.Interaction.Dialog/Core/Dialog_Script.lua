@@ -2,11 +2,12 @@
 -- [Dialog_Script.lua] is the back-end (logic & behavior)
 -- for [Dialog_Elements.lua].
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Dialog
+local NS = addon.Interaction.Dialog; addon.Interaction.Dialog = NS
 
 --------------------------------
 
@@ -24,7 +25,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.DialogFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (FRAME)
@@ -1301,10 +1302,10 @@ function NS.Script:Load()
 				end
 			end
 
-			Frame.REF_MOUSERESPONDER:SetScript("OnEnter", function() Frame:OnEnter() end)
-			Frame.REF_MOUSERESPONDER:SetScript("OnLeave", function() Frame:OnLeave() end)
-			Frame.REF_MOUSERESPONDER:SetScript("OnMouseDown", function(_, button) Frame:OnMouseDown(button) end)
-			Frame.REF_MOUSERESPONDER:SetScript("OnMouseUp", function(_, button) Frame:OnMouseUp(button) end)
+			Frame.REF_MOUSE_RESPONDER:SetScript("OnEnter", function() Frame:OnEnter() end)
+			Frame.REF_MOUSE_RESPONDER:SetScript("OnLeave", function() Frame:OnLeave() end)
+			Frame.REF_MOUSE_RESPONDER:SetScript("OnMouseDown", function(_, button) Frame:OnMouseDown(button) end)
+			Frame.REF_MOUSE_RESPONDER:SetScript("OnMouseUp", function(_, button) Frame:OnMouseUp(button) end)
 		end
 
 		Frame:SetScript("OnUpdate", function()

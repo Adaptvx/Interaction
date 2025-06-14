@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local NS = LibStub and LibStub("AdaptiveTimer-1.0", true)
 
 --------------------------------
@@ -12,7 +13,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (MAIN)

@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Waypoint
+local NS = addon.Waypoint; addon.Waypoint = NS
 
 --------------------------------
 
@@ -17,7 +18,7 @@ function NS.Script:Load()
 
 	local WaypointFrame = InteractionWaypointFrame
 	local PinpointFrame = InteractionPinpointFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (FRAME)

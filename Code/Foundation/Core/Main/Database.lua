@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -10,7 +11,7 @@ local AceDB = LibStub("AceDB-3.0")
 --------------------------------
 
 addon.Database = {}
-local NS = addon.Database
+local NS = addon.Database; addon.Database = NS
 
 do                             -- MAIN
 	NS.DB_GLOBAL = nil         -- Settings, config etc

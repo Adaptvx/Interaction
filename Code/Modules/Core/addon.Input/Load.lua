@@ -1,11 +1,12 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local L = addon.Input
 
 --------------------------------
 
 addon.Input = {}
-local NS = addon.Input
+local NS = addon.Input; addon.Input = NS
 
 --------------------------------
 

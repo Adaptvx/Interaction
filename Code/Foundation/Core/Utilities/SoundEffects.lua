@@ -1,4 +1,5 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -8,7 +9,7 @@ local L = addon.Locales
 --------------------------------
 
 addon.SoundEffects = {}
-local NS = addon.SoundEffects
+local NS = addon.SoundEffects; addon.SoundEffects = NS
 
 do -- CONSTANTS
 	NS.PATH = addon.Variables.PATH_ART .. "Audio/"

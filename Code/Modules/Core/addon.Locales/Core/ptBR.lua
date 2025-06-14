@@ -1,5 +1,7 @@
 -- Localization and translation AKArenan
-local addonName, addon = ...
+
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -249,6 +251,8 @@ local function Load()
 		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimentos especiais a AKArenan pelas traduções para o Português do Brasil!"
 		L["Title - Credits / El1as1989"] = "El1as1989 | Tradução - Espanhol"
 		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimentos especiais a El1as1989 pelas traduções em Espanhol!"
+		L["Title - Credits / huchang47"] = "huchang47 | Translator - Chinese (Simplified)"
+		L["Title - Credits / huchang47 - Tooltip"] = "Special thanks to huchang47 for the Chinese (Simplified) translations!"
 	end
 
 	--------------------------------

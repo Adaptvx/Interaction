@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.GameTooltip
+local NS = addon.GameTooltip; addon.GameTooltip = NS
 
 --------------------------------
 
@@ -18,7 +19,7 @@ function NS.Script:Load()
 	local InteractionFrame_GameTooltip = InteractionFrame.GameTooltip
 	local InteractionFrame_ShoppingTooltip1 = InteractionFrame.ShoppingTooltip1
 	local InteractionFrame_ShoppingTooltip2 = InteractionFrame.ShoppingTooltip2
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (MAIN)

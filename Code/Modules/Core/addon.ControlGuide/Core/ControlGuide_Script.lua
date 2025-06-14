@@ -2,11 +2,12 @@
 -- [ControlGuide_Script.lua] is the back-end (logic & behavior)
 -- for [ControlGuide_Elements.lua].
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.ControlGuide
+local NS = addon.ControlGuide; addon.ControlGuide = NS
 
 --------------------------------
 
@@ -20,7 +21,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.ControlGuideFrame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (MAIN)

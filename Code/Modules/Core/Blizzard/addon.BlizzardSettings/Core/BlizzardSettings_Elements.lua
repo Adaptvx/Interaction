@@ -1,8 +1,9 @@
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.BlizzardSettings
+local NS = addon.BlizzardSettings; addon.BlizzardSettings = NS
 
 --------------------------------
 
@@ -101,7 +102,7 @@ function NS.Elements:Load()
 	--------------------------------
 
 	local Frame = NS.Variables.Frame
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- SETUP

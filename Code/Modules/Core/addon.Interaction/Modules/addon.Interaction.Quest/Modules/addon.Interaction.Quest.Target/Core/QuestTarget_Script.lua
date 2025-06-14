@@ -2,11 +2,12 @@
 -- [QuestTarget_Script.lua] is the back-end (logic & behavior)
 -- for [QuestTarget_Elements.lua].
 
-local addonName, addon = ...
+---@class addon
+local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
-local NS = addon.Interaction.Quest.Target
+local NS = addon.Interaction.Quest.Target; addon.Interaction.Quest.Target = NS
 
 --------------------------------
 
@@ -20,7 +21,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	local Frame = InteractionFrame.QuestFrame.Target
-	local Callback = NS.Script
+	local Callback = NS.Script; NS.Script = Callback
 
 	--------------------------------
 	-- FUNCTIONS (FRAME)
