@@ -251,8 +251,8 @@ local function Load()
 		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimentos especiais a AKArenan pelas traduções para o Português do Brasil!"
 		L["Title - Credits / El1as1989"] = "El1as1989 | Tradução - Espanhol"
 		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimentos especiais a El1as1989 pelas traduções em Espanhol!"
-		L["Title - Credits / huchang47"] = "huchang47 | Translator - Chinese (Simplified)"
-		L["Title - Credits / huchang47 - Tooltip"] = "Special thanks to huchang47 for the Chinese (Simplified) translations!"
+		L["Title - Credits / huchang47"] = "huchang47 | Tradução - Chinês (Simplificado)"
+		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimentos especiais a huchang47 pelas traduções em Chinês (Simplificado)!"
 	end
 
 	--------------------------------
@@ -289,7 +289,7 @@ local function Load()
 			L["Readable - Library - Letters"] = "Cartas"
 			L["Readable - Library - Books"] = "Livros"
 			L["Readable - Library - Slates"] = "Anotções"
-			L["Readable - Library - Show only World"] = "Somente o mundo"
+			L["Readable - Library - Show only World"] = "Itens não Colecionáveis"
 
 			-- TITLE
 			L["Readable - Library - Name Text - Global"] = "Livraria Bando de Guerra"
