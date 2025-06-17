@@ -182,7 +182,7 @@ local function Load()
 		L["Range - Platform"] = "平台"
 		L["Range - Platform - Tooltip"] = "需要重载界面才能生效。"
 		L["Range - Platform - PC"] = "PC"
-		L["Range - Platform - Playstation"] = "PlayStation"
+		L["Range - Platform - Playstation"] = "Playstation"
 		L["Range - Platform - Xbox"] = "Xbox"
 		L["Title - PC"] = "PC"
 		L["Title - PC / Keyboard"] = "键盘"
@@ -252,8 +252,8 @@ local function Load()
 		L["Title - Credits / AKArenan - Tooltip"] = "特别感谢 AKArenan 提供的巴西葡萄牙语翻译！"
 		L["Title - Credits / El1as1989"] = "El1as1989 | 翻译者 - 西班牙语"
 		L["Title - Credits / El1as1989 - Tooltip"] = "特别感谢 El1as1989 提供的西班牙语翻译！"
-		L["Title - Credits / huchang47"] = "huchang47 | Translator - Chinese (Simplified)"
-		L["Title - Credits / huchang47 - Tooltip"] = "Special thanks to huchang47 for the Chinese (Simplified) translations!"
+		L["Title - Credits / huchang47"] = "huchang47 | 翻译者 - 简体中文"
+		L["Title - Credits / huchang47 - Tooltip"] = "特别感谢 huchang47 提供的简体中文翻译！"
 	end
 
 	--------------------------------
@@ -279,7 +279,7 @@ local function Load()
 			L["Readable - Library - TextPrompt - Import Button 1"] = "导入"
 
 			L["Readable - Library - TextPrompt - Export - Local"] = "将玩家数据复制到剪贴板"
-			L["Readable - Library - TextPrompt - Export - Global"] = "Copy Warband Data to Clipboard "
+			L["Readable - Library - TextPrompt - Export - Global"] = "将战团数据复制到剪贴板 "
 			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "无效的导出代码"
 
 			-- SIDEBAR
