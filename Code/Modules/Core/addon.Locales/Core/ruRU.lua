@@ -417,9 +417,9 @@ local function Load()
 	do
 		L["MinimapIcon - Tooltip - Title"] = "Библиотека взаимодействия"
 		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Записи"
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Записей"
 		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Зап."
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Запись(ей)"
 		L["MinimapIcon - Tooltip - Entries - Empty"] = "Нет записей."
 	end
 
