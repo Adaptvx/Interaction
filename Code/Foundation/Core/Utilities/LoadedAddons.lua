@@ -15,6 +15,7 @@ do -- MAIN
 	NS.DynamicCam = false
 	NS.BtWQuests = false
 	NS.ElvUI = false
+	NS.WaypointUI = false
 end
 
 do -- CONSTANTS
@@ -40,6 +41,7 @@ function NS:Load()
 			addon.LoadedAddons.DynamicCam = addon.LoadedAddons:IsAddOnLoaded("DynamicCam")
 			addon.LoadedAddons.BtWQuests = addon.LoadedAddons:IsAddOnLoaded("BtWQuests")
 			addon.LoadedAddons.ElvUI = addon.LoadedAddons:IsAddOnLoaded("ElvUI")
+			addon.LoadedAddons.WaypointUI = addon.LoadedAddons:IsAddOnLoaded("WaypointUI")
 
 			CallbackRegistry:Trigger("LOADED_ADDONS_READY")
 		end

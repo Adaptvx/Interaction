@@ -479,14 +479,14 @@ function NS.Script:Load()
 					do -- TITLE TEXT
 						if isAlwaysShowQuest and isQuestVisible and isQuestType then
 							Frame.REF_TITLE_PREFIXFRAME:Hide()
-							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.npcInfo.name)
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. (info.npcInfo.name or ""))
 						elseif isQuestType then
 							Frame.REF_TITLE_PREFIXFRAME:Show()
-							Frame.REF_TITLE_PREFIXFRAME_TEXT:SetText(info.npcInfo.name)
-							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.title)
+							Frame.REF_TITLE_PREFIXFRAME_TEXT:SetText(info.npcInfo.name or "")
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. (info.title or ""))
 						else
 							Frame.REF_TITLE_PREFIXFRAME:Hide()
-							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. info.title)
+							Frame.REF_TITLE_TITLEFRAME_TEXT:SetText(info.contextIcon .. " " .. (info.title or ""))
 						end
 					end
 

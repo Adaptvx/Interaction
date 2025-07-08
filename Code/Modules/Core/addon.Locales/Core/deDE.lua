@@ -1,3 +1,5 @@
+-- Localization and translation muiqo
+
 ---@class addon
 local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
@@ -251,65 +253,65 @@ local function Load()
 	--------------------------------
 
 	do
-	do -- LIBRARY
-		-- PROMPTS
-		L["Readable - Library - Prompt - Delete - Local"] = "Dies wird diesen Eintrag permanent aus deiner SPIELER-Bibliothek entfernen."
-		L["Readable - Library - Prompt - Delete - Global"] = "Dies wird diesen Eintrag permanent aus der KRIEGSTRUPP-Bibliothek entfernen."
-		L["Readable - Library - Prompt - Delete Button 1"] = "Entfernen"
-		L["Readable - Library - Prompt - Delete Button 2"] = "Abbrechen"
+		do -- LIBRARY
+			-- PROMPTS
+			L["Readable - Library - Prompt - Delete - Local"] = "Dies wird diesen Eintrag permanent aus deiner SPIELER-Bibliothek entfernen."
+			L["Readable - Library - Prompt - Delete - Global"] = "Dies wird diesen Eintrag permanent aus der KRIEGSTRUPP-Bibliothek entfernen."
+			L["Readable - Library - Prompt - Delete Button 1"] = "Entfernen"
+			L["Readable - Library - Prompt - Delete Button 2"] = "Abbrechen"
 
-		L["Readable - Library - Prompt - Import - Local"] = "Das Importieren eines gespeicherten Zustands überschreibt deine SPIELER-Bibliothek."
-		L["Readable - Library - Prompt - Import - Global"] = "Das Importieren eines gespeicherten Zustands überschreibt die KRIEGSTRUPP-Bibliothek."
-		L["Readable - Library - Prompt - Import Button 1"] = "Importieren und Neuladen"
-		L["Readable - Library - Prompt - Import Button 2"] = "Abbrechen"
+			L["Readable - Library - Prompt - Import - Local"] = "Das Importieren eines gespeicherten Zustands überschreibt deine SPIELER-Bibliothek."
+			L["Readable - Library - Prompt - Import - Global"] = "Das Importieren eines gespeicherten Zustands überschreibt die KRIEGSTRUPP-Bibliothek."
+			L["Readable - Library - Prompt - Import Button 1"] = "Importieren und Neuladen"
+			L["Readable - Library - Prompt - Import Button 2"] = "Abbrechen"
 
-		L["Readable - Library - TextPrompt - Import - Local"] = "In Spieler-Bibliothek importieren"
-		L["Readable - Library - TextPrompt - Import - Global"] = "In Kriegstrupp-Bibliothek importieren"
-		L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Datentext eingeben"
-		L["Readable - Library - TextPrompt - Import Button 1"] = "Importieren"
+			L["Readable - Library - TextPrompt - Import - Local"] = "In Spieler-Bibliothek importieren"
+			L["Readable - Library - TextPrompt - Import - Global"] = "In Kriegstrupp-Bibliothek importieren"
+			L["Readable - Library - TextPrompt - Import Input Placeholder"] = "Datentext eingeben"
+			L["Readable - Library - TextPrompt - Import Button 1"] = "Importieren"
 
-		L["Readable - Library - TextPrompt - Export - Local"] = "Spielerdaten in Zwischenablage kopieren"
-		L["Readable - Library - TextPrompt - Export - Global"] = "Kriegstrupp-Daten in Zwischenablage kopieren"
-		L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Ungültiger Export-Code"
+			L["Readable - Library - TextPrompt - Export - Local"] = "Spielerdaten in Zwischenablage kopieren"
+			L["Readable - Library - TextPrompt - Export - Global"] = "Kriegstrupp-Daten in Zwischenablage kopieren"
+			L["Readable - Library - TextPrompt - Export Input Placeholder"] = "Ungültiger Export-Code"
 
-		-- SIDEBAR
-		L["Readable - Library - Search Input Placeholder"] = "Suchen"
-		L["Readable - Library - Export Button"] = "Exportieren"
-		L["Readable - Library - Import Button"] = "Importieren"
-		L["Readable - Library - Show"] = "Anzeigen"
-		L["Readable - Library - Letters"] = "Briefe"
-		L["Readable - Library - Books"] = "Bücher"
-		L["Readable - Library - Slates"] = "Tafeln"
-		L["Readable - Library - Show only World"] = "Nur Welt"
+			-- SIDEBAR
+			L["Readable - Library - Search Input Placeholder"] = "Suchen"
+			L["Readable - Library - Export Button"] = "Exportieren"
+			L["Readable - Library - Import Button"] = "Importieren"
+			L["Readable - Library - Show"] = "Anzeigen"
+			L["Readable - Library - Letters"] = "Briefe"
+			L["Readable - Library - Books"] = "Bücher"
+			L["Readable - Library - Slates"] = "Tafeln"
+			L["Readable - Library - Show only World"] = "Nur Welt"
 
-		-- TITLE
-		L["Readable - Library - Name Text - Global"] = "Kriegstrupp-Bibliothek"
-		L["Readable - Library - Name Text - Local - Subtext 1"] = ""
-		L["Readable - Library - Name Text - Local - Subtext 2"] = "s Bibliothek"
-		L["Readable - Library - Showing Status Text - Subtext 1"] = "Zeige "
-		L["Readable - Library - Showing Status Text - Subtext 2"] = " Gegenstände"
+			-- TITLE
+			L["Readable - Library - Name Text - Global"] = "Kriegstrupp-Bibliothek"
+			L["Readable - Library - Name Text - Local - Subtext 1"] = ""
+			L["Readable - Library - Name Text - Local - Subtext 2"] = "s Bibliothek"
+			L["Readable - Library - Showing Status Text - Subtext 1"] = "Zeige "
+			L["Readable - Library - Showing Status Text - Subtext 2"] = " Gegenstände"
 
-		-- CONTENT
-		L["Readable - Library - No Results Text - Subtext 1"] = "Keine Ergebnisse für "
-		L["Readable - Library - No Results Text - Subtext 2"] = "."
-		L["Readable - Library - Empty Library Text"] = "Keine Einträge."
+			-- CONTENT
+			L["Readable - Library - No Results Text - Subtext 1"] = "Keine Ergebnisse für "
+			L["Readable - Library - No Results Text - Subtext 2"] = "."
+			L["Readable - Library - Empty Library Text"] = "Keine Einträge."
+		end
+
+		do -- READABLE
+			-- NOTIFICATIONS
+			L["Readable - Notification - Saved To Library"] = "In Bibliothek gespeichert"
+
+			-- TOOLTIP
+			L["Readable - Tooltip - Change Page"] = "Scrollen zum Seitenwechsel."
+		end
 	end
-
-	do -- READABLE
-		-- NOTIFICATIONS
-		L["Readable - Notification - Saved To Library"] = "In Bibliothek gespeichert"
-
-		-- TOOLTIP
-		L["Readable - Tooltip - Change Page"] = "Scrollen zum Seitenwechsel."
-	end
-end
 
 	--------------------------------
 	-- AUDIOBOOK
 	--------------------------------
 
 	do
-	L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-left.png", 16, 16, 0, 0) .. " zum Ziehen.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-right.png", 16, 16, 0, 0) .. " zum Schließen."
+		L["Audiobook - Action Tooltip"] = addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-left.png", 16, 16, 0, 0) .. " zum Ziehen.\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Icons/mouse-right.png", 16, 16, 0, 0) .. " zum Schließen."
 	end
 
 	--------------------------------
@@ -317,19 +319,19 @@ end
 	--------------------------------
 
 	do
-	L["InteractionFrame.QuestFrame - Objectives"] = "Quest-Ziele"
-	L["InteractionFrame.QuestFrame - Rewards"] = "Belohnungen"
-	L["InteractionFrame.QuestFrame - Required Items"] = "Benötigte Gegenstände"
+		L["InteractionFrame.QuestFrame - Objectives"] = "Quest-Ziele"
+		L["InteractionFrame.QuestFrame - Rewards"] = "Belohnungen"
+		L["InteractionFrame.QuestFrame - Required Items"] = "Benötigte Gegenstände"
 
-	L["InteractionFrame.QuestFrame - Accept - Quest Log Full"] = "Questlog voll"
-	L["InteractionFrame.QuestFrame - Accept - Auto Accept"] = "Automatisch akzeptiert"
-	L["InteractionFrame.QuestFrame - Accept"] = "Annehmen"
-	L["InteractionFrame.QuestFrame - Decline"] = "Ablehnen"
-	L["InteractionFrame.QuestFrame - Goodbye"] = "Tschüss"
-	L["InteractionFrame.QuestFrame - Goodbye - Auto Accept"] = "Verstanden"
-	L["InteractionFrame.QuestFrame - Continue"] = "Fortfahren"
-	L["InteractionFrame.QuestFrame - In Progress"] = "In Bearbeitung"
-	L["InteractionFrame.QuestFrame - Complete"] = "Abschließen"
+		L["InteractionFrame.QuestFrame - Accept - Quest Log Full"] = "Questlog voll"
+		L["InteractionFrame.QuestFrame - Accept - Auto Accept"] = "Automatisch akzeptiert"
+		L["InteractionFrame.QuestFrame - Accept"] = "Annehmen"
+		L["InteractionFrame.QuestFrame - Decline"] = "Ablehnen"
+		L["InteractionFrame.QuestFrame - Goodbye"] = "Tschüss"
+		L["InteractionFrame.QuestFrame - Goodbye - Auto Accept"] = "Verstanden"
+		L["InteractionFrame.QuestFrame - Continue"] = "Fortfahren"
+		L["InteractionFrame.QuestFrame - In Progress"] = "In Bearbeitung"
+		L["InteractionFrame.QuestFrame - Complete"] = "Abschließen"
 	end
 
 	--------------------------------
@@ -337,7 +339,7 @@ end
 	--------------------------------
 
 	do
-	L["InteractionFrame.DialogFrame - Skip"] = "ÜBERSPRINGEN"
+		L["InteractionFrame.DialogFrame - Skip"] = "ÜBERSPRINGEN"
 	end
 
 	--------------------------------
@@ -345,7 +347,7 @@ end
 	--------------------------------
 
 	do
-	L["InteractionFrame.GossipFrame - Close"] = "Tschüss"
+		L["InteractionFrame.GossipFrame - Close"] = "Tschüss"
 	end
 
 	--------------------------------
@@ -353,17 +355,17 @@ end
 	--------------------------------
 
 	do
-	L["ControlGuide - Back"] = "Zurück"
-	L["ControlGuide - Next"] = "Weiter"
-	L["ControlGuide - Skip"] = "Überspringen"
-	L["ControlGuide - Accept"] = "Akzeptieren"
-	L["ControlGuide - Continue"] = "Fortfahren"
-	L["ControlGuide - Complete"] = "Abschließen"
-	L["ControlGuide - Decline"] = "Ablehnen"
-	L["ControlGuide - Goodbye"] = "Tschüss"
-	L["ControlGuide - Got it"] = "Verstanden"
-	L["ControlGuide - Gossip Option Interact"] = "Option wählen"
-	L["ControlGuide - Quest Next Reward"] = "Nächste Belohnung"
+		L["ControlGuide - Back"] = "Zurück"
+		L["ControlGuide - Next"] = "Weiter"
+		L["ControlGuide - Skip"] = "Überspringen"
+		L["ControlGuide - Accept"] = "Akzeptieren"
+		L["ControlGuide - Continue"] = "Fortfahren"
+		L["ControlGuide - Complete"] = "Abschließen"
+		L["ControlGuide - Decline"] = "Ablehnen"
+		L["ControlGuide - Goodbye"] = "Tschüss"
+		L["ControlGuide - Got it"] = "Verstanden"
+		L["ControlGuide - Gossip Option Interact"] = "Option wählen"
+		L["ControlGuide - Quest Next Reward"] = "Nächste Belohnung"
 	end
 
 	--------------------------------
@@ -371,8 +373,8 @@ end
 	--------------------------------
 
 	do
-	L["Alert Notification - Accept"] = "Quest angenommen"
-	L["Alert Notification - Complete"] = "Quest abgeschlossen"
+		L["Alert Notification - Accept"] = "Quest angenommen"
+		L["Alert Notification - Complete"] = "Quest abgeschlossen"
 	end
 
 	--------------------------------
@@ -380,14 +382,14 @@ end
 	--------------------------------
 
 	do
-	L["Waypoint - Ready for Turn-in"] = "Bereit zur Abgabe"
+		L["Waypoint - Ready for Turn-in"] = "Bereit zur Abgabe"
 
-	L["Waypoint - Waypoint"] = "Wegpunkt"
-	L["Waypoint - Quest"] = "Quest"
-	L["Waypoint - Flight Point"] = "Flugpunkt"
-	L["Waypoint - Pin"] = "Markierung"
-	L["Waypoint - Party Member"] = "Gruppenmitglied"
-	L["Waypoint - Content"] = "Inhalt"
+		L["Waypoint - Waypoint"] = "Wegpunkt"
+		L["Waypoint - Quest"] = "Quest"
+		L["Waypoint - Flight Point"] = "Flugpunkt"
+		L["Waypoint - Pin"] = "Markierung"
+		L["Waypoint - Party Member"] = "Gruppenmitglied"
+		L["Waypoint - Content"] = "Inhalt"
 	end
 
 	--------------------------------
@@ -395,9 +397,9 @@ end
 	--------------------------------
 
 	do
-	L["PlayerStatusBar - TooltipLine1"] = "Aktuelle EP: "
-	L["PlayerStatusBar - TooltipLine2"] = "Verbleibende EP: "
-	L["PlayerStatusBar - TooltipLine3"] = "Level "
+		L["PlayerStatusBar - TooltipLine1"] = "Aktuelle EP: "
+		L["PlayerStatusBar - TooltipLine2"] = "Verbleibende EP: "
+		L["PlayerStatusBar - TooltipLine3"] = "Level "
 	end
 
 	--------------------------------
@@ -405,12 +407,12 @@ end
 	--------------------------------
 
 	do
-	L["MinimapIcon - Tooltip - Title"] = "Interaktions-Bibliothek"
-	L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
-	L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Einträge"
-	L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-	L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Eintrag"
-	L["MinimapIcon - Tooltip - Entries - Empty"] = "Keine Einträge."
+		L["MinimapIcon - Tooltip - Title"] = "Interaktions-Bibliothek"
+		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Einträge"
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Eintrag"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "Keine Einträge."
 	end
 
 	--------------------------------
@@ -418,8 +420,8 @@ end
 	--------------------------------
 
 	do
-	L["BlizzardSettings - Title"] = "Einstellungen öffnen"
-	L["BlizzardSettings - Shortcut - Controller"] = "in jeder Interaktions-UI."
+		L["BlizzardSettings - Title"] = "Einstellungen öffnen"
+		L["BlizzardSettings - Shortcut - Controller"] = "in jeder Interaktions-UI."
 	end
 
 	--------------------------------
@@ -427,8 +429,8 @@ end
 	--------------------------------
 
 	do
-	L["Alert - Under Attack"] = "Unter Beschuss"
-	L["Alert - Open Settings"] = "Um Einstellungen zu öffnen."
+		L["Alert - Under Attack"] = "Unter Beschuss"
+		L["Alert - Open Settings"] = "Um Einstellungen zu öffnen."
 	end
 
 	--------------------------------
@@ -436,18 +438,18 @@ end
 	--------------------------------
 
 	do
-	-- Characters used for 'Dynamic Playback' pausing. Only supports single characters.
-	L["DialogData - PauseCharDB"] = {
-		"…",
-		"!",
-		"?",
-		".",
-		",",
-		";",
-	}
+		-- Characters used for 'Dynamic Playback' pausing. Only supports single characters.
+		L["DialogData - PauseCharDB"] = {
+			"…",
+			"!",
+			"?",
+			".",
+			",",
+			";",
+		}
 
-	-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.
-	L["DialogData - PlaybackSpeedModifier"] = 1
+		-- Modifier of dialog playback speed to match the rough speed of base TTS in the language. Higher = faster.
+		L["DialogData - PlaybackSpeedModifier"] = 1
 	end
 
 	--------------------------------
@@ -455,12 +457,12 @@ end
 	--------------------------------
 
 	do
-	-- Need to match Blizzard's special gossip option prefix text.
-	L["GossipData - Trigger - Quest"] = "%(Aufgabe%)"
-	L["GossipData - Trigger - Movie 1"] = "%(Abspielen%)"
-	L["GossipData - Trigger - Movie 2"] = "%(Film abspielen%)"
-	L["GossipData - Trigger - NPC Dialog"] = "%<Bleibt ein Weilchen und hört zu.%>"
-	L["GossipData - Trigger - NPC Dialog - Append"] = "Bleibt ein Weilchen und hört zu."
+		-- Need to match Blizzard's special gossip option prefix text.
+		L["GossipData - Trigger - Quest"] = "%(Aufgabe%)"
+		L["GossipData - Trigger - Movie 1"] = "%(Abspielen%)"
+		L["GossipData - Trigger - Movie 2"] = "%(Film abspielen%)"
+		L["GossipData - Trigger - NPC Dialog"] = "%<Bleibt ein Weilchen und hört zu.%>"
+		L["GossipData - Trigger - NPC Dialog - Append"] = "Bleibt ein Weilchen und hört zu."
 	end
 
 	--------------------------------
@@ -468,9 +470,9 @@ end
 	--------------------------------
 
 	do
-	-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
-	-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
-	L["AudiobookData - EstimatedCharPerSecond"] = 12
+		-- Estimated character per second to roughly match the speed of the base TTS in the language. Higher = faster.
+		-- This is a workaround for Blizzard TTS where it sometimes fails to continue to the next line, so we need to manually start it back up after a period of time.
+		L["AudiobookData - EstimatedCharPerSecond"] = 12
 	end
 
 	--------------------------------
@@ -478,17 +480,16 @@ end
 	--------------------------------
 
 	do
-	do -- BtWQuests
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] = addon.Theme.RGB_GREEN_HEXCODE
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] = "|r"
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] = addon.Theme.RGB_WHITE_HEXCODE
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] = "|r"
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] = addon.Theme.RGB_GRAY_HEXCODE
-		L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] = "|r"
-		L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Klicken, um Questkette in BtWQuests zu öffnen" .. "|r"
+		do -- BtWQuests
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] = addon.Theme.RGB_GREEN_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] = addon.Theme.RGB_WHITE_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] = addon.Theme.RGB_GRAY_HEXCODE
+			L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] = "|r"
+			L["SupportedAddons - BtWQuests - Tooltip - Call to Action"] = addon.Theme.RGB_ORANGE_HEXCODE .. "Klicken, um Questkette in BtWQuests zu öffnen" .. "|r"
+		end
 	end
-end
-
 end
 
 Load()

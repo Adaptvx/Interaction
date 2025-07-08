@@ -4,7 +4,6 @@
 	<Script file="Load.lua"/>
 
 	<!-- Modules -->
-	<Include file="Core/addon.Support.BtWQuests/Load.xml"/>
-	<Include file="Core/addon.Support.ElvUI/Load.xml"/>
-	<Include file="Core/addon.Support.WaypointUI/Load.xml"/>
+	<Script file="Core/WaypointUI_Script.lua"/>
+	<Script file="Core/WaypointUI_Variables.lua"/>
 </Ui>

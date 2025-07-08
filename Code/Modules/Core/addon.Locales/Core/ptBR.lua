@@ -253,6 +253,8 @@ local function Load()
 		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimentos especiais a El1as1989 pelas traduções em Espanhol!"
 		L["Title - Credits / huchang47"] = "huchang47 | Tradução - Chinês (Simplificado)"
 		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimentos especiais a huchang47 pelas traduções em Chinês (Simplificado)!"
+		L["Title - Credits / muiqo"] = "muiqo | Translator - German"
+		L["Title - Credits / muiqo - Tooltip"] = "Special thanks to muiqo for the German translations!"
 	end
 
 	--------------------------------
