@@ -358,17 +358,25 @@ function NS.Script:Load()
 
 		do -- FUNCTIONS
 			function Callback:OpenQuestInBtWQuestsWindow(questID)
-				local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
-
+				--local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
+				--------------------------------
+				--if item then
+				--	BtWQuestsFrame:SelectCharacter(UnitName("player"), GetRealmName())
+				--	BtWQuestsFrame:SelectItem(item.item)
+				--end
 				--------------------------------
 
-				if item then
-					BtWQuestsFrame:SelectCharacter(UnitName("player"), GetRealmName())
-					BtWQuestsFrame:SelectItem(item.item)
-				end
+				local questChain, questChainReferences = Callback:GetQuestChains()
+				local chainID = questChainReferences[questID]
 
-				--------------------------------
+				local Chain = BtWQuestsDatabase:GetChainByID(chainID);
 
+				local link = Chain:GetLink();
+				BtWQuestsFrame:Show();
+				C_Timer.After(0, function()
+					local scrollTo = nil;
+					BtWQuestsFrame:SelectFromLink(link, scrollTo);
+				end)
 				addon.Interaction.Script:Stop(true)
 			end
 		end
