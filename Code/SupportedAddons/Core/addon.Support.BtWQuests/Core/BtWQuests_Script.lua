@@ -24,273 +24,198 @@ function NS.Script:Load()
 
 	do
 		do -- GET
-			-- Table Format:
-			-- 		[storylineID] = {
-			-- 			["chainID"] = chainID
-			--			["quests"] = {...}
-			-- 		}
+			do -- reference
+				-- BtWQuestsDatabase:GetChainByID →
+				-- 		[1] = {
+				-- 			[1] = {
+				-- 			id = 213983,
+				-- 			type = "npc",
+				-- 			connections = {
+				-- 				[1] = 1
+				-- 			},
+				-- 				x = 0
+				-- 		},
+				-- 		[2] = {
+				-- 			variations = {
+				-- 				[1] = {
+				-- 					id = 83551,
+				-- 					type = "quest",
+				-- 					restrictions = {
+				-- 						id = 83551,
+				-- 						type = "quest",
+				-- 						status = {
+				-- 							[1] = "active",
+				-- 							[2] = "completed"
+				-- 						}
+				-- 					}
+				-- 				},
+				-- 				[2] = {
+				-- 					id = 78658,
+				-- 					type = "quest"
+				-- 				}
+				-- 			},
+				-- 			connections = {
+				-- 				[1] = 1
+				-- 			},
+				-- 			x = 0
+				-- 		},
+				-- 		[3] = {
+				-- 			id = 78659,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1,
+				-- 				[2] = 2
+				-- 			},
+				-- 			x = 0
+				-- 		},
+				-- 		[4] = {
+				-- 			id = 78665,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 2,
+				-- 				[2] = 3
+				-- 			},
+				-- 			x = -1
+				-- 		},
+				-- 		[5] = {
+				-- 			id = 79999,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1,
+				-- 				[2] = 2
+				-- 			}
+				-- 		},
+				-- 		[6] = {
+				-- 			id = 78666,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 2
+				-- 			},
+				-- 			x = -1
+				-- 		},
+				-- 		[7] = {
+				-- 			id = 78667,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1
+				-- 			}
+				-- 		},
+				-- 		[8] = {
+				-- 			id = 78668,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1,
+				-- 				[2] = 2
+				-- 			},
+				-- 			x = 0
+				-- 		},
+				-- 		[9] = {
+				-- 			id = 78669,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 2
+				-- 			},
+				-- 			x = -1
+				-- 		},
+				-- 		[10] = {
+				-- 			id = 78670,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1
+				-- 			}
+				-- 		},
+				-- 		[11] = {
+				-- 			id = 82836,
+				-- 			type = "quest",
+				-- 			connections = {
+				-- 				[1] = 1
+				-- 			},
+				-- 			x = 0
+				-- 		},
+				-- 		[12] = {
+				-- 			id = 78671,
+				-- 			type = "quest",
+				-- 			x = 0
+				-- 		}
+			end
 
-			function Callback:GetQuestChains()
-				local questChains = {}
-				local questChainReferences = {}
+			local function ProcessChain(chainID)
+				local result = {}
 
-				------------------------------
+				--------------------------------
 
-				if BtWQuests.Constant.Chain then
-					local infoType
-					local chainID
+				local chain = BtWQuestsDatabase:GetChainByID(chainID)
+				if chain then
+					local chainItems = chain.items
+					for item, item_content in ipairs(chainItems) do
+						if item_content.id and item_content.type and item_content.type == "quest" then
+							table.insert(result, item_content.id)
+						end
 
-					--------------------------------
-
-					for expansionName, expansionInfo in pairs(BtWQuests.Constant.Chain) do
-						for name, chainInfo in pairs(expansionInfo) do
-							infoType = type(chainInfo)
-
-							--------------------------------
-
-							if infoType == "table" then
-								for _, chainID in pairs(chainInfo) do
-									local item = BtWQuestsDatabase:GetChainByID(chainID)
-									local items = item.items
-									local itemName = item.name
-									local quests = Callback:ProcessQuests(items)
-
-									--------------------------------
-
-									do -- QUEST CHAINS
-										local nameType = type(itemName)
-										local nameText = nil
-
-										if nameType == "string" then -- STRING
-											nameText = itemName
-										elseif nameType == "function" then -- ACHIEVEMENT // BtWQuests_GetAchievementNameDelayed(achievementID)
-											nameText = itemName()
-										elseif nameType == "table" then -- TABLE
-											local nameSubtype = itemName.type
-
-											--------------------------------
-
-											if nameSubtype == "quest" then -- NAME FROM QUEST
-												nameText = BtWQuestsDatabase:GetQuestByID(itemName.id).name
-											end
-										end
-
-										--------------------------------
-
-										local entry = {
-											["name"] = nameText,
-											["items"] = items,
-											["quests"] = quests
-										}
-
-										questChains[chainID] = entry
+						if item_content.variations then
+							for variation, variation_content in ipairs(item_content.variations) do
+								if variation_content.id and variation_content.type and variation_content.type == "quest" then
+									if not variation_content.restrictions then
+										table.insert(result, variation_content.id)
 									end
-
-									do -- QUEST CHAIN REFERENCES
-										for i = 1, #quests do
-											local currentQuest = quests[i]
-											local id = currentQuest.id
-											local name = currentQuest.name
-
-											--------------------------------
-
-											questChainReferences[id] = chainID
-										end
-									end
-								end
-							elseif infoType == "number" then
-								chainID = chainInfo
-
-								--------------------------------
-
-								local item = BtWQuestsDatabase:GetChainByID(chainID)
-								local questLineID = item.questline
-								local quests = item.items
-
-								--------------------------------
-
-								local entry = {
-									["chainID"] = chainID,
-									["quests"] = quests
-								}
-
-								if questLineID then
-									questChains[questLineID] = entry
 								end
 							end
 						end
 					end
 				end
 
-				------------------------------
+				--------------------------------
 
-				return questChains, questChainReferences
+				return result
 			end
 
-			-- Quest Table Format:
-			-- 		[1] = {
-			-- 			[1] = {
-			-- 			id = 213983,
-			-- 			type = "npc",
-			-- 			connections = {
-			-- 				[1] = 1
-			-- 			},
-			-- 				x = 0
-			-- 		},
-			-- 		[2] = {
-			-- 			variations = {
-			-- 				[1] = {
-			-- 					id = 83551,
-			-- 					type = "quest",
-			-- 					restrictions = {
-			-- 						id = 83551,
-			-- 						type = "quest",
-			-- 						status = {
-			-- 							[1] = "active",
-			-- 							[2] = "completed"
-			-- 						}
-			-- 					}
-			-- 				},
-			-- 				[2] = {
-			-- 					id = 78658,
-			-- 					type = "quest"
-			-- 				}
-			-- 			},
-			-- 			connections = {
-			-- 				[1] = 1
-			-- 			},
-			-- 			x = 0
-			-- 		},
-			-- 		[3] = {
-			-- 			id = 78659,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1,
-			-- 				[2] = 2
-			-- 			},
-			-- 			x = 0
-			-- 		},
-			-- 		[4] = {
-			-- 			id = 78665,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 2,
-			-- 				[2] = 3
-			-- 			},
-			-- 			x = -1
-			-- 		},
-			-- 		[5] = {
-			-- 			id = 79999,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1,
-			-- 				[2] = 2
-			-- 			}
-			-- 		},
-			-- 		[6] = {
-			-- 			id = 78666,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 2
-			-- 			},
-			-- 			x = -1
-			-- 		},
-			-- 		[7] = {
-			-- 			id = 78667,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1
-			-- 			}
-			-- 		},
-			-- 		[8] = {
-			-- 			id = 78668,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1,
-			-- 				[2] = 2
-			-- 			},
-			-- 			x = 0
-			-- 		},
-			-- 		[9] = {
-			-- 			id = 78669,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 2
-			-- 			},
-			-- 			x = -1
-			-- 		},
-			-- 		[10] = {
-			-- 			id = 78670,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1
-			-- 			}
-			-- 		},
-			-- 		[11] = {
-			-- 			id = 82836,
-			-- 			type = "quest",
-			-- 			connections = {
-			-- 				[1] = 1
-			-- 			},
-			-- 			x = 0
-			-- 		},
-			-- 		[12] = {
-			-- 			id = 78671,
-			-- 			type = "quest",
-			-- 			x = 0
-			-- 		}
+			function Callback:GetChainIDFromQuest(questID)
+				local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer()).item
+				local chainID = item.id
+				local chainType = item.type
+				local chainIndex = item.index
 
-			function Callback:ProcessQuests(quests)
-				local results = {}
+				return chainID
+			end
+
+			function Callback:GetChainInfoFromChainID(chainID)
+				local result = {}
 
 				--------------------------------
 
-				for i = 1, #quests do
-					local currentQuest = quests[i]
-					local isVariation = currentQuest.variations
+				local chain = BtWQuestsDatabase:GetChainByID(chainID)
+				local chainName = BtWQuestsDatabase:GetChainName(chainID)
+				local chainAllQuestID = ProcessChain(chainID)
 
-					--------------------------------
+				result = {
+					name = chainName,
+					allQuestID = chainAllQuestID
+				}
 
-					if not isVariation then
-						local questType = currentQuest.type
+				--------------------------------
 
-						--------------------------------
-
-						if questType == "quest" then
-							local questID = currentQuest.id
-							local questInfo = BtWQuestsDatabase:GetQuestByID(questID)
-
-							--------------------------------
-
-							table.insert(results, questInfo)
-						end
-					end
-				end
-
-				------------------------------
-
-				return results
+				return result
 			end
 
-			function Callback:UpdateQuestChainInfo()
-				NS.Variables.QuestChains, NS.Variables.QuestChainReferences = Callback:GetQuestChains()
+			function Callback:GetChainInfoFromQuestID(questID)
+				local result = {}
+
+				--------------------------------
+
+				local chainID = Callback:GetChainIDFromQuest(questID)
+				local chainInfo = Callback:GetChainInfoFromChainID(chainID)
+
+				result = {
+					chainID = chainID,
+					chainInfo = chainInfo
+				}
+
+				--------------------------------
+
+				return result
 			end
 
-			-- Against the Current
-
-			-- ----------------------
-
-			-- Surface Bound
-			-- The Fleet Arrives
-			-- Embassies and Envoys
-			-- There's Always Another Secret
-			-- What's Hidden Beneath Dornogal
-			-- Preparing for the Unknown
-			-- Urban Odyssey
-
-			-- ----------------------
-
-			-- Click to open quest chain in BtWQuests
+			--------------------------------
 
 			function Callback:GetTooltipText(questID)
 				local success = false
@@ -298,32 +223,32 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				local chain = NS.Variables.QuestChains[NS.Variables.QuestChainReferences[questID]];
+				local chain = Callback:GetChainInfoFromQuestID(questID)
+				local chainInfo = chain.chainInfo
 
-				if chain and chain.name then
-					local quests = chain.quests
+				if chainInfo and chainInfo.name then
+					local quests = chainInfo.allQuestID
 
 					--------------------------------
 
-					text = text .. chain.name .. "\n"
+					text = text .. chainInfo.name .. "\n"
 					text = text .. addon.Theme:TOOLTIP_DIVIDER(250) .. "\n"
 
 					for i = 1, #quests do
-						local currentQuest = quests[i]
-						local currentQuest_questID = currentQuest.id
-						local currentQuest_questName = currentQuest.name
-						local currentQuest_isCompleted = C_QuestLog.IsQuestFlaggedCompleted(currentQuest_questID)
-						local currentQuest_isActive = C_QuestLog.IsOnQuest(currentQuest_questID) or (questID == currentQuest_questID)
+						local id = quests[i]
+						local name = BtWQuestsDatabase:GetQuestName(id)
+						local isCompleted = C_QuestLog.IsQuestFlaggedCompleted(id)
+						local isActive = C_QuestLog.IsOnQuest(id) or (questID == id)
 
 						--------------------------------
 
-						if currentQuest_questName then
-							if currentQuest_isCompleted then
-								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] .. "\n"
-							elseif currentQuest_isActive then
-								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] .. "\n"
+						if name then
+							if isCompleted then
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 1"] .. name .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Completed - Subtext 2"] .. "\n"
+							elseif isActive then
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 1"] .. name .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Active - Subtext 2"] .. "\n"
 							else
-								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] .. currentQuest_questName .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] .. "\n"
+								text = text .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 1"] .. name .. L["SupportedAddons - BtWQuests - Tooltip - Quest - Incomplete - Subtext 2"] .. "\n"
 							end
 						end
 					end
@@ -358,24 +283,14 @@ function NS.Script:Load()
 
 		do -- FUNCTIONS
 			function Callback:OpenQuestInBtWQuestsWindow(questID)
-				--local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
-				--------------------------------
-				--if item then
-				--	BtWQuestsFrame:SelectCharacter(UnitName("player"), GetRealmName())
-				--	BtWQuestsFrame:SelectItem(item.item)
-				--end
-				--------------------------------
+				local chainID = Callback:GetChainIDFromQuest(questID)
+				local chain = BtWQuestsDatabase:GetChainByID(chainID)
 
-				local questChain, questChainReferences = Callback:GetQuestChains()
-				local chainID = questChainReferences[questID]
-
-				local Chain = BtWQuestsDatabase:GetChainByID(chainID);
-
-				local link = Chain:GetLink();
-				BtWQuestsFrame:Show();
+				local link = chain:GetLink()
+				BtWQuestsFrame:Show()
 				C_Timer.After(0, function()
-					local scrollTo = nil;
-					BtWQuestsFrame:SelectFromLink(link, scrollTo);
+					local scrollTo = nil
+					BtWQuestsFrame:SelectFromLink(link, scrollTo)
 				end)
 				addon.Interaction.Script:Stop(true)
 			end
@@ -390,18 +305,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("Quest.Storyline.Update", function(questID)
 			Callback:SetStorylineFrame(questID)
 		end)
-
-		--------------------------------
-
-		local _ = CreateFrame("Frame")
-		_:RegisterEvent("ADDON_LOADED")
-		_:SetScript("OnEvent", function(self, event, ...)
-			local name = ...
-
-			if addon.API.Util:FindString(name, "BtWQuests") then
-				Callback:UpdateQuestChainInfo()
-			end
-		end)
 	end
 
 	--------------------------------
@@ -409,6 +312,6 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Callback:UpdateQuestChainInfo()
+
 	end
 end

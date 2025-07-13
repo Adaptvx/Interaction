@@ -16,6 +16,7 @@ NS.Variables = {}
 do -- MAIN
 	NS.Variables.QuestChains = nil
 	NS.Variables.QuestChainReferences = nil
+	NS.Variables.QuestChainID = {}
 end
 
 do -- CONSTANTS
