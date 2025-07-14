@@ -170,12 +170,13 @@ function NS.Script:Load()
 			end
 
 			function Callback:GetChainIDFromQuest(questID)
-				local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer()).item
-				local chainID = item.id
-				local chainType = item.type
-				local chainIndex = item.index
 
-				return chainID
+				local quest = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
+				if quest then
+					if quest.item and type(quest.item) == "table" and quest.item.type == "chain" then
+						return quest.item.id
+					end
+				end
 			end
 
 			function Callback:GetChainInfoFromChainID(chainID)
