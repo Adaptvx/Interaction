@@ -256,8 +256,8 @@ local function Load()
 		L["Title - Credits / huchang47 - Tooltip"] = "特别感谢 huchang47 提供的简体中文翻译！"
 		L["Title - Credits / muiqo"] = "Muiqo | 翻译者 - 德语"
 		L["Title - Credits / muiqo - Tooltip"] = "特别感谢 muiqo 提供的德语翻译！"
-		L["Title - Credits / joaoc_pires"] = "Joao Pires | Code - Bug Fix"
-		L["Title - Credits / joaoc_pires - Tooltip"] = "Special thanks to Joao Pires for the bug fix!"
+		L["Title - Credits / joaoc_pires"] = "Joao Pires | 编码者 - 修复Bug"
+		L["Title - Credits / joaoc_pires - Tooltip"] = "特别感谢 Joao Pires 修复的Bug！"
 	end
 
 	--------------------------------
