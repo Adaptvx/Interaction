@@ -1,4 +1,5 @@
 -- Localization and translation El1as1989
+
 ---@class addon
 local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry

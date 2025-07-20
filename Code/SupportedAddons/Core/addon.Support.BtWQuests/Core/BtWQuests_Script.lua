@@ -170,7 +170,6 @@ function NS.Script:Load()
 			end
 
 			function Callback:GetChainIDFromQuest(questID)
-
 				local quest = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
 				if quest then
 					if quest.item and type(quest.item) == "table" and quest.item.type == "chain" then
