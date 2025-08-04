@@ -38,7 +38,7 @@ function NS.Fonts:Load()
 				NS.Fonts.TITLE_EXTRABOLD = NS.Fonts.PATH .. "Cinzel-ExtraBold.ttf"
 
 				NS.Fonts.CONTENT_DEFAULT = GameFontNormal:GetFont()
-				NS.Fonts.CONTENT_LIGHT = NS.Fonts.PATH .. "Frizqt__.ttf"
+				NS.Fonts.CONTENT_LIGHT = GameFontNormal:GetFont()
 				NS.Fonts.CONTENT_BOLD = NS.Fonts.PATH .. "Cardo-Bold.ttf"
 				NS.Fonts.CONTENT_ITALIC = NS.Fonts.PATH .. "Cardo-Italic.ttf"
 			else
@@ -60,7 +60,7 @@ function NS.Fonts:Load()
 	--------------------------------
 
 	do
-		NS.Fonts:GetFonts()
+		C_Timer.After(.1, NS.Fonts.GetFonts)
 	end
 end
 

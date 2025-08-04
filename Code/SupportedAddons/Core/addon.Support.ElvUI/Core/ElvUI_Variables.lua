@@ -20,6 +20,7 @@ end
 do -- CONSTANTS
 	do -- MAIN
 		NS.Variables.PATH = addon.Variables.PATH_ART .. "SupportedAddons/ElvUI/"
+		NS.Variables.DIALOG_BACKGROUND = NS.Variables.PATH .. "Art/dialog-background.png"
 	end
 end
 

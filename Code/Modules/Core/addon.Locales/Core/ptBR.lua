@@ -255,6 +255,8 @@ local function Load()
 		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimentos especiais a huchang47 pelas traduções em Chinês (Simplificado)!"
 		L["Title - Credits / muiqo"] = "muiqo | Tradução - Alemão"
 		L["Title - Credits / muiqo - Tooltip"] = "Agradecimentos especiais a muiqo pelas traduções em Alemão!"
+		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Translator - Korean"
+		L["Title - Credits / Crazyyoungs - Tooltip"] = "Special thanks to Crazyyoungs for the Korean translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | Código - Bug Fix"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "Agradecimentos especiais a João Pires pela correção de código!"
 	end

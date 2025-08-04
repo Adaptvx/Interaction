@@ -32,35 +32,37 @@ function NS:Load()
 
 	do
 		function NS:LoadCode()
-			do -- PROTECTED
-				addon.InteractionFrame:Load()
-			end
+			C_Timer.After(.1, function()
+				do -- PROTECTED
+					addon.InteractionFrame:Load()
+				end
 
-			do -- MODULES
-				addon.Modules:Load()
-			end
+				do -- MODULES
+					addon.Modules:Load()
+				end
 
-			do -- SUPPORT
-				addon.Support:Load()
-			end
-
-			--------------------------------
-
-			-- Lag on load sometimes causes 'THEME_UPDATE' to not register on all frames.
-			CallbackRegistry:Trigger("THEME_UPDATE")
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				CallbackRegistry:Trigger("THEME_UPDATE")
-			end, 2.5)
-
-			--------------------------------
-
-			addon.Libraries.AceTimer:ScheduleTimer(function()
-				NS.Ready = true
+				do -- SUPPORT
+					addon.Support:Load()
+				end
 
 				--------------------------------
 
-				CallbackRegistry:Trigger("ADDON_READY")
-			end, 2.5)
+				-- Lag on load sometimes causes 'THEME_UPDATE' to not register on all frames.
+				CallbackRegistry:Trigger("THEME_UPDATE")
+				C_Timer.After(2.5, function()
+					CallbackRegistry:Trigger("THEME_UPDATE")
+				end)
+
+				--------------------------------
+
+				C_Timer.After(2.5, function()
+					NS.Ready = true
+
+					--------------------------------
+
+					CallbackRegistry:Trigger("ADDON_READY")
+				end)
+			end)
 		end
 
 		function NS:Initalize()

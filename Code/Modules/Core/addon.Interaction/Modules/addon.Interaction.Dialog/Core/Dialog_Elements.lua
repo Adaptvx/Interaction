@@ -79,14 +79,23 @@ function NS.Elements:Load()
 						do -- THEME
 							addon.API.Main:RegisterThemeUpdate(function()
 								local TooltipTexture
+								local Color
 
-								if addon.Theme.IsDarkTheme_Dialog then
-									TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP_02
+								if addon.LoadedAddons.ElvUI then
+									TooltipTexture = addon.Support.ElvUI.Variables.DIALOG_BACKGROUND
+									Color = addon.Theme.RGB_CHAT_MSG_SAY
 								else
-									TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP
+									if addon.Theme.IsDarkTheme_Dialog then
+										TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP_02
+									else
+										TooltipTexture = addon.API.Presets.NINESLICE_TOOLTIP
+									end
+
+									Color = addon.Theme.RGB_WHITE
 								end
 
 								Style_Dialog.BackgroundTexture:SetTexture(TooltipTexture)
+								Style_Dialog.BackgroundTexture:SetVertexColor(Color.r, Color.g, Color.b, Color.a or 1)
 							end, 5)
 						end
 					end
@@ -104,10 +113,14 @@ function NS.Elements:Load()
 							addon.API.Main:RegisterThemeUpdate(function()
 								local TEXTURE_Background
 
-								if addon.Theme.IsDarkTheme_Dialog then
-									TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-dark.png"
+								if addon.LoadedAddons.ElvUI then
+									TEXTURE_Background = nil
 								else
-									TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-light.png"
+									if addon.Theme.IsDarkTheme_Dialog then
+										TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-dark.png"
+									else
+										TEXTURE_Background = addon.Variables.PATH_ART .. "Dialog/tooltip-tail-light.png"
+									end
 								end
 
 								Style_Dialog.TailTexture:SetTexture(TEXTURE_Background)
