@@ -246,19 +246,19 @@ local function Load()
 
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
-		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimentos especiais a ZamestoTV pelas traduções para o Russo!"
+		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimento especial a ZamestoTV pela tradução em Russo!"
 		L["Title - Credits / AKArenan"] = "AKArenan | Tradução - Português do Brasil"
-		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimentos especiais a AKArenan pelas traduções para o Português do Brasil!"
+		L["Title - Credits / AKArenan - Tooltip"] = "Agradecimento especial a AKArenan pela tradução em Português do Brasil!"
 		L["Title - Credits / El1as1989"] = "El1as1989 | Tradução - Espanhol"
-		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimentos especiais a El1as1989 pelas traduções em Espanhol!"
+		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimento especial a El1as1989 pela tradução em Espanhol!"
 		L["Title - Credits / huchang47"] = "huchang47 | Tradução - Chinês (Simplificado)"
-		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimentos especiais a huchang47 pelas traduções em Chinês (Simplificado)!"
+		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimento especial a huchang47 pela tradução em Chinês (Simplificado)!"
 		L["Title - Credits / muiqo"] = "muiqo | Tradução - Alemão"
-		L["Title - Credits / muiqo - Tooltip"] = "Agradecimentos especiais a muiqo pelas traduções em Alemão!"
-		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Translator - Korean"
-		L["Title - Credits / Crazyyoungs - Tooltip"] = "Special thanks to Crazyyoungs for the Korean translations!"
+		L["Title - Credits / muiqo - Tooltip"] = "Agradecimento especial a muiqo pela tradução em Alemão!"
+		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Tradução - Coreano"
+		L["Title - Credits / Crazyyoungs - Tooltip"] = "Agradecimento especial a Crazyyoungs pela tradução em Coreano!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | Código - Bug Fix"
-		L["Title - Credits / joaoc_pires - Tooltip"] = "Agradecimentos especiais a João Pires pela correção de código!"
+		L["Title - Credits / joaoc_pires - Tooltip"] = "Agradecimento especial a João Pires pela correção de código!"
 	end
 
 	--------------------------------
@@ -295,7 +295,7 @@ local function Load()
 			L["Readable - Library - Letters"] = "Cartas"
 			L["Readable - Library - Books"] = "Livros"
 			L["Readable - Library - Slates"] = "Anotções"
-			L["Readable - Library - Show only World"] = "Não Colecionáveis"
+			L["Readable - Library - Show only World"] = "Não Colecionável"
 
 			-- TITLE
 			L["Readable - Library - Name Text - Global"] = "Livraria Bando de Guerra"
