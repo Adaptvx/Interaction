@@ -6,7 +6,7 @@
 ## Notes-zhCN: 一种沉浸式任务体验的全新尝试。
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.1.7
+## Version: 0.1.8
 ## SavedVariables: InteractionDB, InteractionLibraryDB_Global
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI

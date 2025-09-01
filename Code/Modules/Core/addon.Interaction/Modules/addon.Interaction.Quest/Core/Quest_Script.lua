@@ -1509,10 +1509,12 @@ function NS.Script:Load()
 		--------------------------------
 
 		Frame:SetScript("OnMouseUp", function(self, button)
-			if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
-				InteractionFrame.DialogFrame:ReturnToPreviousDialog()
-			elseif addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
-				InteractionFrame.DialogFrame:ReturnToPreviousDialog()
+			if not addon.Database.DB_GLOBAL.profile.INT_ALWAYS_SHOW_QUEST then
+				if addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == false and button == "RightButton" then
+					addon.Interaction.Dialog.Script:Restart()
+				elseif addon.Database.DB_GLOBAL.profile.INT_FLIPMOUSE == true and button == "LeftButton" then
+					addon.Interaction.Dialog.Script:Restart()
+				end
 			end
 		end)
 

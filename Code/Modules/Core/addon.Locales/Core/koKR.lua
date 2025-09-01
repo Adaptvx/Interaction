@@ -265,6 +265,8 @@ local function Load()
 		L["Title - Credits / muiqo - Tooltip"] = "독일어 번역에 도움 주신 muiqo님께 특별 감사드립니다!"
 		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Translator - Korean"
 		L["Title - Credits / Crazyyoungs - Tooltip"] = "Special thanks to Crazyyoungs for the Korean translations!"
+		L["Title - Credits / fang2hou"] = "fang2hou | Translator - Chinese (Traditional)"
+		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | 코드 - 버그 수정"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "버그 수정에 도움 주신 Joao Pires님께 특별 감사드립니다!"
 	end

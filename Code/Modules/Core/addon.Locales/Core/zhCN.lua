@@ -258,6 +258,8 @@ local function Load()
 		L["Title - Credits / muiqo - Tooltip"] = "特别感谢 muiqo 提供的德语翻译！"
 		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | 翻译者 - 韩语"
 		L["Title - Credits / Crazyyoungs - Tooltip"] = "特别感谢 Crazyyoungs 提供的韩语翻译！"
+		L["Title - Credits / fang2hou"] = "fang2hou | Translator - Chinese (Traditional)"
+		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | 编码者 - 修复Bug"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "特别感谢 Joao Pires 修复的Bug！"
 	end
