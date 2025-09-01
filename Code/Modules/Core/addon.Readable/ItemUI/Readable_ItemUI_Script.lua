@@ -163,7 +163,7 @@ function NS.ItemUI.Script:Load()
 			--------------------------------
 
 			do -- STATE
-				if type == "Parchment" or type == "ParchmentLarge" or not type then
+				if type == "Parchment" or type == "ParchmentLarge" or type == "Valentine" or not type then
 					if NS.ItemUI.Variables.NumPages > 1 then
 						ReadableUI_ItemUI:Hide()
 						ReadableUI_BookUI:Show()
@@ -185,7 +185,7 @@ function NS.ItemUI.Script:Load()
 					end
 				end
 
-				if type == "Stone" or type == "Bronze" then
+				if type == "Stone" or type == "Bronze" or type == "Silver" or type == "Marble" or type == "Progenitor" then
 					ReadableUI_ItemUI:Show()
 					ReadableUI_BookUI:Hide()
 
@@ -261,7 +261,7 @@ function NS.ItemUI.Script:Load()
 			do -- TEXT COLOR
 				local textColor
 
-				if type == "Parchment" or type == "ParchmentLarge" or not type then
+				if type == "Parchment" or type == "ParchmentLarge" or type == "Valentine" or not type then
 					if addon.Theme.IsDarkTheme then
 						textColor = { r = 1, g = 1, b = 1, a = 1 }
 					else
@@ -269,7 +269,7 @@ function NS.ItemUI.Script:Load()
 					end
 				end
 
-				if type == "Stone" or type == "Bronze" then
+				if type == "Stone" or type == "Bronze" or type == "Silver" or type == "Marble" or type == "Progenitor" then
 					textColor = { r = .75, g = .75, b = .75, a = 1 }
 				end
 
