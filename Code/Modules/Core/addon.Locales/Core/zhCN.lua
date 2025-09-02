@@ -258,8 +258,8 @@ local function Load()
 		L["Title - Credits / muiqo - Tooltip"] = "特别感谢 muiqo 提供的德语翻译！"
 		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | 翻译者 - 韩语"
 		L["Title - Credits / Crazyyoungs - Tooltip"] = "特别感谢 Crazyyoungs 提供的韩语翻译！"
-		L["Title - Credits / fang2hou"] = "fang2hou | Translator - Chinese (Traditional)"
-		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
+		L["Title - Credits / fang2hou"] = "fang2hou | 翻译者 - 繁体中文"
+		L["Title - Credits / fang2hou - Tooltip"] = "特别感谢 fang2hou 提供的繁体中文翻译！"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | 编码者 - 修复Bug"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "特别感谢 Joao Pires 修复的Bug！"
 	end
@@ -475,11 +475,11 @@ local function Load()
 
 	do
 		-- 需要匹配暴雪的特殊闲聊选项前缀文本。
-		L["GossipData - Trigger - Quest"] = "%(Quest%)"
-		L["GossipData - Trigger - Movie 1"] = "%(Play%)"
-		L["GossipData - Trigger - Movie 2"] = "%(Play Movie%)"
-		L["GossipData - Trigger - NPC Dialog"] = "%<Stay awhile and listen.%>"
-		L["GossipData - Trigger - NPC Dialog - Append"] = "勇士请听我说"
+		L["GossipData - Trigger - Quest"] = "%(任务%)"
+		L["GossipData - Trigger - Movie 1"] = "%(播放%)"
+		L["GossipData - Trigger - Movie 2"] = "%(播放视频%)"
+		L["GossipData - Trigger - NPC Dialog"] = "%<请留步，听我说。%>"
+		L["GossipData - Trigger - NPC Dialog - Append"] = "请留步，听我说。"
 	end
 
 	--------------------------------
