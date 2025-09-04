@@ -322,11 +322,11 @@ function NS.ItemUI.Elements:Load()
 				CallbackRegistry:Add("READABLE_ITEMUI_UPDATE", function()
 					local Weight = 1
 
-					if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == "ParchmentLarge" or NS.ItemUI.Variables.Type == nil then
+					if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == "ParchmentLarge" or NS.ItemUI.Variables.Type == "Valentine" or NS.ItemUI.Variables.Type == nil then
 						Weight = .5
 					end
 
-					if NS.ItemUI.Variables.Type == "Stone" or NS.ItemUI.Variables.Type == "Bronze" then
+					if NS.ItemUI.Variables.Type == "Stone" or NS.ItemUI.Variables.Type == "Bronze" or NS.ItemUI.Variables.Type == "Silver" or NS.ItemUI.Variables.Type == "Marble" or NS.ItemUI.Variables.Type == "Progenitor" then
 						Weight = 5
 					end
 
@@ -460,7 +460,7 @@ function NS.ItemUI.Elements:Load()
 					CallbackRegistry:Add("READABLE_ITEMUI_UPDATE", function()
 						local Weight = 5
 
-						if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == nil then
+						if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == "Valentine" or NS.ItemUI.Variables.Type == nil then
 							Weight = 5
 						elseif NS.ItemUI.Variables.Type == "ParchmentLarge" then
 							Weight = 10
@@ -515,7 +515,7 @@ function NS.ItemUI.Elements:Load()
 					CallbackRegistry:Add("READABLE_ITEMUI_UPDATE", function()
 						local Weight = 3.5
 
-						if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == nil then
+						if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == "Valentine" or NS.ItemUI.Variables.Type == nil then
 							Weight = 3.5
 						elseif NS.ItemUI.Variables.Type == "ParchmentLarge" then
 							Weight = 8

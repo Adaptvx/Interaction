@@ -476,7 +476,7 @@ function NS.ItemUI.Script:Load()
 							--------------------------------
 
 							local baseScale
-							if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == nil then
+							if NS.ItemUI.Variables.Type == "Parchment" or NS.ItemUI.Variables.Type == "Valentine" or NS.ItemUI.Variables.Type == nil then
 								baseScale = 1.125
 							elseif NS.ItemUI.Variables.Type == "ParchmentLarge" then
 								baseScale = 1.25
