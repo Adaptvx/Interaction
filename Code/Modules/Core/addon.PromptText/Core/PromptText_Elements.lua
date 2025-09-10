@@ -102,7 +102,7 @@ function NS.Elements:Load()
 							Frame.TitleArea.CloseButton:SetPoint("RIGHT", Frame.TitleArea)
 
 							Frame.TitleArea.CloseButton:SetScript("OnClick", function()
-								addon.PromptText:HideTextFrame()
+								addon.PromptText.Script:HideTextFrame()
 							end)
 
 							---------------------------------

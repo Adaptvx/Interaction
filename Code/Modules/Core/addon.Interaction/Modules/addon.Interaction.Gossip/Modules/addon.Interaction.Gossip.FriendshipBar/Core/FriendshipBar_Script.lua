@@ -91,13 +91,13 @@ function NS.Script:Load()
 		-- 	GameTooltip_AddColoredLine(tooltip, REPUTATION_TOOLTIP_ACCOUNT_WIDE_LABEL, ACCOUNT_WIDE_FONT_COLOR, wrapText);
 		-- end
 
-		function ReputationTooltip_Classic:ShowFriendshipReputationTooltip(factionID, anchor, canClickForOptions)
+		function ReputationTooltip_Classic:ShowFriendshipReputationTooltip(factionID, parent, anchor)
 			local friendshipData = C_GossipInfo.GetFriendshipReputation(factionID);
 			if not friendshipData or friendshipData.friendshipFactionID < 0 then
 				return;
 			end
 
-			InteractionFrame.GameTooltip:SetOwner(self, anchor);
+			InteractionFrame.GameTooltip:SetOwner(parent, anchor);
 			local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(friendshipData.friendshipFactionID);
 			if rankInfo.maxLevel > 0 then
 				GameTooltip_SetTitle(InteractionFrame.GameTooltip, friendshipData.name .. " (" .. rankInfo.currentLevel .. " / " .. rankInfo.maxLevel .. ")", HIGHLIGHT_FONT_COLOR);
@@ -207,7 +207,7 @@ function NS.Script:Load()
 			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				ReputationTooltip_Retail.ShowFriendshipReputationTooltip(InteractionFriendshipBarFrame.TooltipParent, BlizzardFriendshipBar.friendshipFactionID, "ANCHOR_BOTTOM", false)
 			else
-				ReputationTooltip_Classic(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
+				ReputationTooltip_Classic:ShowFriendshipReputationTooltip(BlizzardFriendshipBar.friendshipFactionID, InteractionFriendshipBarFrame.TooltipParent, "ANCHOR_BOTTOM")
 			end
 		end)
 

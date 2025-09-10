@@ -221,6 +221,7 @@ do
 			---@param removeSpace boolean
 			---@return string
 			function addon.API.Util:RemoveAtlasMarkup(str, removeSpace)
+				str = str or ""
 				if removeSpace then
 					str = string.gsub(str, "(|A.-|a )", "")
 					str = string.gsub(str, "(|H.-|h )", "")

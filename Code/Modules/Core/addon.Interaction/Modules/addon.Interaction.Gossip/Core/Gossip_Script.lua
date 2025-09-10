@@ -338,7 +338,7 @@ function NS.Script:Load()
 									index = i,
 									title = title,
 									isComplete = false,
-									questID = questID,
+									questID = questID or 0,
 									isOnQuest = false,
 									isTrivial = isTrivial,
 									frequency = frequency,

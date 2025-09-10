@@ -905,7 +905,14 @@ function NS.Prefabs:Load()
 									InteractionFrame.GameTooltip:SetQuestItem(Frame.callback.type, Frame.callback:GetID())
 									InteractionFrame.GameTooltip:ShowComparison(InteractionFrame.GameTooltip)
 								elseif (rewardType == "currency") then
-									InteractionFrame.GameTooltip:SetQuestCurrency(Frame.callback.type, Frame.callback:GetID())
+									-- the conditional prevents the error but we still do not know how this rewards section ended up
+                  -- with a reference to a "required" or "choice" type child
+                  -- method collecting children frames by type fails upstream under some conditions
+									if Frame.callback.type == "reward" then
+										InteractionFrame.GameTooltip:SetQuestCurrency(Frame.callback.type, Frame.callback:GetID())
+									else
+										-- DEBUG?
+									end
 								end
 
 								if (Frame.callback.rewardContextLine) then

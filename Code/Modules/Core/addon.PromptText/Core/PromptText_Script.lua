@@ -30,7 +30,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			if success then
-				addon.PromptText:HideTextFrame()
+				addon.PromptText.Script:HideTextFrame()
 			end
 		end)
 	end

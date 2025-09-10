@@ -874,9 +874,9 @@ function NS.LibraryUI.Script:Load()
 				--------------------------------
 
 				if isLocal then
-					addon.PromptText:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Local"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+					addon.PromptText.Script:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Local"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 				else
-					addon.PromptText:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Global"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
+					addon.PromptText.Script:ShowTextFrame(L["Readable - Library - TextPrompt - Export - Global"] .. " " .. addon.API.Util:InlineIcon(copyIcon, 17.5, 17.5 * (239 / 64), 0, 0), true, L["Readable - Library - TextPrompt - Export Input Placeholder"], encoded, "Done", function() return true end, true)
 				end
 			end
 
@@ -893,7 +893,7 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				addon.PromptText:ShowTextFrame(isLocal and L["Readable - Library - TextPrompt - Import - Local"] or L["Readable - Library - TextPrompt - Import - Global"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
+				addon.PromptText.Script:ShowTextFrame(isLocal and L["Readable - Library - TextPrompt - Import - Local"] or L["Readable - Library - TextPrompt - Import - Global"], true, L["Readable - Library - TextPrompt - Import Input Placeholder"], "", L["Readable - Library - TextPrompt - Import Button 1"], function(_, val)
 					local success, values = LibraryCallback:Import(val)
 
 					if val ~= "" and success then
