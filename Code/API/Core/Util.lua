@@ -229,7 +229,6 @@ do
 					str = string.gsub(str, "(|A.-|a)", "")
 					str = string.gsub(str, "(|H.-|h)", "")
 				end
-
 				return str
 			end
 		end

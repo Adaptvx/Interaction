@@ -245,6 +245,10 @@ local function Load()
 		L["Checkbox - Settings / Reset Settings"] = "Restablecer todos los ajustes"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Restablece los valores por defecto..\n\nPor defecto: Desactivado."
 
+		L["Title - Special Credits"] = "Special Acknowledgements"
+		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Code - Significant Bug Fixes and Enhancements"
+		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Special thanks and gratitude to MrFIXIT for the extensive bug fixes and enhancements!"
+
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Traducción - Ruso"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "Agradecimientos especiales a ZamestoTV por las traducciones al Ruso!"
@@ -262,6 +266,8 @@ local function Load()
 		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | Code - Bug Fix"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "Special thanks to Joao Pires for the bug fix!"
+		L["Title - Credits / Walshi2"] = "Walshi2 | Code - Bug Fix"
+		L["Title - Credits / Walshi2 - Tooltip"] = "Special thanks to Walshi2 for the bug fix!"
 	end
 
 	--------------------------------

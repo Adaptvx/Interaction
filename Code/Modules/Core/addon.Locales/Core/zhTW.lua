@@ -243,6 +243,10 @@ local function Load()
 		L["Checkbox - Settings / Reset Settings"] = "重置所有設定"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "將設定重置為預設值。\n\n預設：關閉。"
 
+		L["Title - Special Credits"] = "Special Acknowledgements"
+		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Code - Significant Bug Fixes and Enhancements"
+		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Special thanks and gratitude to MrFIXIT for the extensive bug fixes and enhancements!"
+
 		L["Title - Credits"] = "致謝"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | 翻譯者 - 俄語"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "特別感謝 ZamestoTV 提供俄語翻譯！"
@@ -260,6 +264,8 @@ local function Load()
 		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | 程式 - 錯誤修復"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "特別感謝 Joao Pires 的錯誤修復！"
+		L["Title - Credits / Walshi2"] = "Walshi2 | Code - Bug Fix"
+		L["Title - Credits / Walshi2 - Tooltip"] = "Special thanks to Walshi2 for the bug fix!"
 	end
 
 	--------------------------------

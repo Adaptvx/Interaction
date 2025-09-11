@@ -252,6 +252,10 @@ local function Load()
 		L["Checkbox - Settings / Reset Settings"] = "모든 설정 초기화"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "모든 설정을 기본값으로 초기화합니다.\n\n기본값: 끔."
 
+		L["Title - Special Credits"] = "Special Acknowledgements"
+		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Code - Significant Bug Fixes and Enhancements"
+		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Special thanks and gratitude to MrFIXIT for the extensive bug fixes and enhancements!"
+
 		L["Title - Credits"] = "감사의 글"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | 러시아어 번역"
 		L["Title - Credits / ZamestoTV - Tooltip"] = "러시아어 번역에 도움 주신 ZamestoTV님께 특별 감사드립니다!"
@@ -269,6 +273,8 @@ local function Load()
 		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | 코드 - 버그 수정"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "버그 수정에 도움 주신 Joao Pires님께 특별 감사드립니다!"
+		L["Title - Credits / Walshi2"] = "Walshi2 | Code - Bug Fix"
+		L["Title - Credits / Walshi2 - Tooltip"] = "Special thanks to Walshi2 for the bug fix!"
 	end
 
 	--------------------------------

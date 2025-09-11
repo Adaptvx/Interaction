@@ -1,4 +1,4 @@
-## Interface: 110107, 110200
+## Interface: 110200, 110205
 ## Title: Interaction
 ## Title-zhCN: Interaction 超炫交互
 ## Notes: A new take to immersive questing.
@@ -6,37 +6,15 @@
 ## Notes-zhCN: 一种沉浸式任务体验的全新尝试。
 ## Author: Adaptivex
 ## IconTexture: Interface/AddOns/Interaction/Art/Icons/logo.png
-## Version: 0.1.8
+## Version: 0.1.9
 ## SavedVariables: InteractionDB, InteractionLibraryDB_Global
 ## SavedVariablesPerCharacter: InteractionLibraryDB
 ## AddonCompartmentFunc: Interaction_ShowSettingsUI
 
-# --------------------------------
-# Library
-# --------------------------------
-
 Library/Load.xml
 
-# --------------------------------
-# Foundation
-# --------------------------------
-
 Code/Foundation/Load.xml
-
-# --------------------------------
-# API
-# --------------------------------
-
 Code/API/Load.xml
 
-# --------------------------------
-# Modules
-# --------------------------------
-
 Code/Modules/Load.xml
-
-# --------------------------------
-# Supported Addons
-# --------------------------------
-
 Code/SupportedAddons/Load.xml

@@ -1254,7 +1254,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Show)
+			-- addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Show)
 		end
 
 		function Frame:HideWithAnimation_StopEvent()
@@ -1311,7 +1311,7 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Hide)
+			-- addon.SoundEffects:PlaySoundFile(addon.SoundEffects.Quest_Hide)
 		end
 	end
 
