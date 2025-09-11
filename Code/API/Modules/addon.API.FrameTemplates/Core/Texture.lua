@@ -38,10 +38,14 @@ do
 		local Texture = Frame:CreateTexture(tostring(name) .. "Texture" or nil, "BACKGROUND")
 		Texture:SetAllPoints(Frame, true)
 		Texture:SetTexture(texture)
+		-- useless, destroy with fire
+		local Corner = Frame:CreateTexture(tostring(name) .. "CornerTexture" or nil, "BACKGROUND", nil, 2)
+		Corner:SetPoint("TOPLEFT", Texture, "TOPRIGHT", 8, 0)
+		Corner:SetTexture('')
 
 		--------------------------------
 
-		return Frame, Texture
+		return Frame, Texture, Corner
 	end
 
 	-- Creates a NineSlice with any texture.

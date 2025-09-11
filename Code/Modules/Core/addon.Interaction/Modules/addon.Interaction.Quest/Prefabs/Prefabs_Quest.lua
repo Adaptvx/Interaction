@@ -591,12 +591,13 @@ function NS.Prefabs:Load()
 						end
 
 						do -- ICON
-							Frame.Image.Icon, Frame.Image.IconTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, frameStrata, nil, "$parent.Texture")
+							Frame.Image.Icon, Frame.Image.IconTexture, Frame.Image.IconCornerTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image, frameStrata, nil, "$parent.Texture")
 							Frame.Image.Icon:SetPoint("TOPLEFT", Frame.Image, (REWARD_PADDING / 2), -(REWARD_PADDING / 2))
 							Frame.Image.Icon:SetPoint("BOTTOMRIGHT", Frame.Image, -(REWARD_PADDING / 2), (REWARD_PADDING / 2))
 							Frame.Image.Icon:SetFrameStrata(frameStrata)
 							Frame.Image.Icon:SetFrameLevel(frameLevel + 3)
 							Frame.Image.IconTexture:SetTexCoord(.15, .85, .15, .85)
+							Frame.Image.IconCornerTexture:SetTexCoord(.05, .95, .05, .95)
 						end
 
 						do -- TEXT
@@ -792,6 +793,8 @@ function NS.Prefabs:Load()
 								do -- STATE
 									if state == "DEFAULT" then
 										local quality = Frame.Quality
+										local bestValue = Frame.BestValue
+										local TEXTURE_BestValue = 133784 -- Interface/ICONS/inv_misc_coin_01
 										local qualityColors = {
 											[0] = { addon.Theme.Quest.Gradient_Quality_Poor_Start, addon.Theme.Quest.Gradient_Quality_Poor_End, addon.Theme.Quest.Text_Quality_Poor },
 											[1] = { addon.Theme.Quest.Gradient_Quality_Common_Start, addon.Theme.Quest.Gradient_Quality_Common_End, addon.Theme.Quest.Text_Quality_Common },
@@ -813,6 +816,19 @@ function NS.Prefabs:Load()
 										Frame.Label:SetTextColor(COLOR_Text.r, COLOR_Text.g, COLOR_Text.b, 1)
 										Frame.BackgroundTexture:SetVertexColor(COLOR_Background.r, COLOR_Background.g, COLOR_Background.b, COLOR_Background.a)
 										Frame.Image.IconTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
+										-- useless
+										if Frame.Image.IconCornerTexture then
+											local off_x, off_y = Frame.Image.Icon:GetHeight()/4
+											off_y = -off_x
+											off_x = off_x + 8
+											Frame.Image.IconCornerTexture:SetPoint("BOTTOMRIGHT", Frame.Image.Icon, "TOPRIGHT", off_x, off_y)
+											Frame.Image.IconCornerTexture:SetVertexColor(COLOR_Image.r, COLOR_Image.g, COLOR_Image.b, COLOR_Image.a)
+											if bestValue then
+												Frame.Image.IconCornerTexture:SetTexture(TEXTURE_BestValue)
+											else
+												Frame.Image.IconCornerTexture:SetTexture('')
+											end
+										end
 										Frame.Image.BackgroundTexture:SetGradient("VERTICAL", GRADIENT_Start, GRADIENT_End)
 									end
 
