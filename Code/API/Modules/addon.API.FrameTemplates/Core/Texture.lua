@@ -25,7 +25,7 @@ do
 	---@param frameStrata string
 	---@param texture string
 	---@param name? string
-	function NS:CreateTexture(parent, frameStrata, texture, name)
+	function NS:CreateTexture(parent, frameStrata, texture, name, sublevel)
 		if not parent then
 			return
 		end
@@ -35,7 +35,7 @@ do
 		local Frame = CreateFrame("Frame", name or nil, parent)
 		Frame:SetFrameStrata(frameStrata)
 
-		local Texture = Frame:CreateTexture(tostring(name) .. "Texture" or nil, "BACKGROUND")
+		local Texture = Frame:CreateTexture(tostring(name) .. "Texture" or nil, "BACKGROUND", nil, sublevel)
 		Texture:SetAllPoints(Frame, true)
 		Texture:SetTexture(texture)
 

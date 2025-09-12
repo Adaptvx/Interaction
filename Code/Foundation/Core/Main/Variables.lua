@@ -1,5 +1,5 @@
 ---@class addon
-local addon = select(2, ...)
+local addonName, addon = ...
 local CallbackRegistry = addon.CallbackRegistry
 local PrefabRegistry = addon.PrefabRegistry
 local L = addon.Locales
@@ -20,12 +20,15 @@ end
 
 do -- CONSTANTS
 	-- REFERENCE
-	NS.PATH = "Interface/AddOns/Interaction/"
+	NS.PATH = "Interface/AddOns/"..addonName.."/"
 	NS.PATH_ART = NS.PATH .. "Art/"
 
 	-- VERSION
-	NS.VERSION_STRING = "0.1.3"
-	NS.VERSION_NUMBER = 00010300 -- XX.XX.XX.XX
+	NS.VERSION_STRING = C_AddOns.GetAddOnMetadata(addonName, "Version")
+	NS.VERSION_NUMBER = (function(t)
+		local j,n,p = t:match("(%d+)%.(%d+)%.(%d+)") -- major, minor, patch semantic versioning
+		return tonumber(j or 0)*10^4 + tonumber(n or 0)*10^2 + tonumber(p or 0)
+	end)(NS.VERSION_STRING)-- major*10000 + minor*100 + patch (for numeric version comparisons)
 	NS.IS_WOW_VERSION_RETAIL = (select(4, GetBuildInfo()) > 110000)
 	NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (select(4, GetBuildInfo()) < 110000 and select(4, GetBuildInfo()) >= 20000)
 	NS.IS_WOW_VERSION_CLASSIC_ERA = (select(4, GetBuildInfo()) < 20000)

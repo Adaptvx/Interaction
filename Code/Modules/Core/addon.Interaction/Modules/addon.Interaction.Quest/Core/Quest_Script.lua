@@ -1001,7 +1001,11 @@ function NS.Script:Load()
 
 			local function GetQuestItem(type)
 				local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, itemIndex)
-
+				-- useful
+				local link = GetQuestItemLink(type, itemIndex)
+				if link and not itemID then
+					itemID = GetItemInfoFromHyperlink and GetItemInfoFromHyperlink(link)
+				end
 				--------------------------------
 
 				if #name > 1 then
@@ -1067,12 +1071,12 @@ function NS.Script:Load()
 
 			local function ParseType(type, index)
 				local rewardType = Callback:GetQuestRewardType(type, index)
-				local resultQuality
+				local resultQuality, resultValue
 
 				--------------------------------
 
 				if rewardType == "item" then
-					local name, _, _, quality, _, _ = GetQuestItem(type)
+					local name, _, _, quality, _, itemID = GetQuestItem(type)
 					resultQuality = quality
 
 					--------------------------------
@@ -1082,8 +1086,12 @@ function NS.Script:Load()
 					end
 
 					--------------------------------
+					-- useful
+					if itemID and C_Item.GetItemInfoInstant(itemID) then
+						_, _, _, _, _, _, _, _, _, _, resultValue = C_Item.GetItemInfo(itemID)
+					end
 
-					return resultQuality
+					return resultQuality, resultValue
 				end
 
 				if rewardType == "currency" then
@@ -1115,8 +1123,19 @@ function NS.Script:Load()
 
 				do -- CHOICES
 					ResetIndex()
+					-- :SetQuality() makes sense or we'd have to repeat the loop
+					-- Price could be a property NS.Variables.Buttons_Choice[i].Price
+					-- if we ever wanted to show the actual money string somewhere
+					local bestPrice, highPrice, Price
 					for i = 1, numChoices do
-						NS.Variables.Buttons_Choice[i].Quality = ParseType("choice", i)
+						NS.Variables.Buttons_Choice[i].Quality, Price = ParseType("choice", i)
+						if Price and (Price > (highPrice or 0)) then
+							highPrice = Price
+							bestPrice = i
+						end
+					end
+					if bestPrice and numChoices > 1 then
+						NS.Variables.Buttons_Choice[bestPrice].BestPrice = true
 					end
 				end
 
