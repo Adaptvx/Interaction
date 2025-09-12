@@ -1123,7 +1123,9 @@ function NS.Script:Load()
 
 				do -- CHOICES
 					ResetIndex()
-					-- potentially useful, but probably shouldn't be in :SetQuality()
+					-- :SetQuality() makes sense or we'd have to repeat the loop
+					-- Price could be a property NS.Variables.Buttons_Choice[i].Price
+					-- if we ever wanted to show the actual money string somewhere
 					local bestPrice, highPrice, Price
 					for i = 1, numChoices do
 						NS.Variables.Buttons_Choice[i].Quality, Price = ParseType("choice", i)
@@ -1133,7 +1135,7 @@ function NS.Script:Load()
 						end
 					end
 					if bestPrice and numChoices > 1 then
-						NS.Variables.Buttons_Choice[bestPrice].BestValue = true
+						NS.Variables.Buttons_Choice[bestPrice].BestPrice = true
 					end
 				end
 
