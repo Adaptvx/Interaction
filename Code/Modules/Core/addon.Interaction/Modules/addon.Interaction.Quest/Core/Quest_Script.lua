@@ -217,7 +217,7 @@ function NS.Script:Load()
 			local TYPE_ITEM = 0
 			local TYPE_CURRENCY = 1
 
-			function Callback:	GetQuestRewardType(type, index)
+			function Callback:GetQuestRewardType(type, index)
 				if type == "spell" then
 					return "spell"
 				else

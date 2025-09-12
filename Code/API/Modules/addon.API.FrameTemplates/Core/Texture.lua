@@ -41,7 +41,7 @@ do
 
 		--------------------------------
 
-		return Frame, Texture, Corner
+		return Frame, Texture
 	end
 
 	-- Creates a NineSlice with any texture.
