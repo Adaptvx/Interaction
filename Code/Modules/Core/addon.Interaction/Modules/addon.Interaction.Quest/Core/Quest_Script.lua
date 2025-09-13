@@ -1129,6 +1129,7 @@ function NS.Script:Load()
 					local bestPrice, highPrice, Price
 					for i = 1, numChoices do
 						NS.Variables.Buttons_Choice[i].Quality, Price = ParseType("choice", i)
+						NS.Variables.Buttons_Choice[i].BestPrice = nil
 						if Price and (Price > (highPrice or 0)) then
 							highPrice = Price
 							bestPrice = i
