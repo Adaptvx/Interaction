@@ -310,7 +310,7 @@ function NS.Script:Load()
 			end
 
 			function Callback:GetContextIcon()
-				local contextIcon = addon.ContextIcon.Script:GetContextIcon() or ""
+				local contextIcon = addon.ContextIcon:GetContextIcon() or ""
 				return contextIcon
 			end
 
@@ -579,6 +579,25 @@ function NS.Script:Load()
 
 					CallbackRegistry:Trigger("Dialog.IncrementIndex")
 				else
+					do -- Auto close
+						local isAutoClose = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOCLOSE
+						local isGossip = (InteractionFrame.GossipFrame:IsVisible())
+
+						if isAutoClose and isGossip then
+							local numButtons = #InteractionFrame.GossipFrame:GetButtons()
+
+							--------------------------------
+
+							if numButtons == 0 then
+								addon.Interaction.Script:Stop(true)
+
+								--------------------------------
+
+								CallbackRegistry:Trigger("Dialog.AutoIncrement.AutoClose")
+							end
+						end
+					end
+
 					Callback:Stop()
 
 					--------------------------------
@@ -632,7 +651,7 @@ function NS.Script:Load()
 			end
 
 			function Callback:AutoIncrement()
-				local isAutoClose = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE
+				local isAutoClose = addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOCLOSE
 				local isDialog = (Frame:IsVisible())
 				local isGossip = (InteractionFrame.GossipFrame:IsVisible())
 

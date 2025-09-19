@@ -1086,22 +1086,6 @@ function NS.Data:Load()
 					hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 					category = Playback,
 					args = {
-						Checkbox_AutoProgress_AutoCloseDialog = {
-							name = L["Checkbox - Auto Close Dialog"],
-							tooltipImage = "",
-							tooltipText = L["Checkbox - Auto Close Dialog - Tooltip"],
-							tooltipTextDynamic = nil,
-							tooltipImageType = "Small",
-							type = "Checkbox",
-							order = 8,
-							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
-							subcategory = 1,
-							category = Playback,
-							get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE end,
-							set = function(_, val)
-								addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS_AUTOCLOSE = val
-							end,
-						},
 						Range_AutoProgress_Delay = {
 							name = L["Range - Auto Progress / Delay"],
 							tooltipImage = "",
@@ -1112,7 +1096,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 5,
 							step = .5,
-							order = 9,
+							order = 8,
 							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOPROGRESS end,
 							subcategory = 1,
 							category = Playback,
@@ -1125,7 +1109,7 @@ function NS.Data:Load()
 				Title_TextToSpeech = {
 					name = L["Title - Text To Speech"],
 					type = "Title",
-					order = 10,
+					order = 9,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = Playback,
@@ -1137,7 +1121,7 @@ function NS.Data:Load()
 					tooltipTextDynamic = nil,
 					tooltipImageType = "Small",
 					type = "Checkbox",
-					order = 11,
+					order = 10,
 					hidden = function() return false end,
 					locked = function() return false end,
 					subcategory = 0,
@@ -1150,14 +1134,14 @@ function NS.Data:Load()
 				Group_TextToSpeech = {
 					name = L["Title - Text To Speech"],
 					type = "Group",
-					order = 12,
+					order = 11,
 					hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_TTS end,
 					category = Playback,
 					args = {
 						Title_TextToSpeech_Playback = {
 							name = L["Title - Text To Speech / Playback"],
 							type = "Title",
-							order = 13,
+							order = 12,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1170,7 +1154,7 @@ function NS.Data:Load()
 							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 14,
+							order = 13,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1187,7 +1171,7 @@ function NS.Data:Load()
 							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 15,
+							order = 14,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1207,7 +1191,7 @@ function NS.Data:Load()
 							min = -10,
 							max = 10,
 							step = .25,
-							order = 16,
+							order = 15,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1228,7 +1212,7 @@ function NS.Data:Load()
 							min = 0,
 							max = 100,
 							step = 10,
-							order = 17,
+							order = 16,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1242,7 +1226,7 @@ function NS.Data:Load()
 						Title_TextToSpeech_Voice = {
 							name = L["Title - Text To Speech / Voice"],
 							type = "Title",
-							order = 18,
+							order = 17,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1262,7 +1246,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 19,
+							order = 18,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1291,7 +1275,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 20,
+							order = 19,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1320,7 +1304,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 21,
+							order = 20,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1349,7 +1333,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 22,
+							order = 21,
 							hidden = function() return false end,
 							locked = function() return false end,
 							subcategory = 1,
@@ -1371,7 +1355,7 @@ function NS.Data:Load()
 							tooltipTextDynamic = nil,
 							tooltipImageType = "Small",
 							type = "Checkbox",
-							order = 23,
+							order = 22,
 							hidden = function() return false end,
 							subcategory = 1,
 							category = Playback,
@@ -1394,7 +1378,7 @@ function NS.Data:Load()
 								end
 								return table
 							end,
-							order = 24,
+							order = 23,
 							hidden = function() return not addon.Database.DB_GLOBAL.profile.INT_TTS_PLAYER end,
 							locked = function() return false end,
 							subcategory = 2,
@@ -1414,7 +1398,7 @@ function NS.Data:Load()
 				Title_More = {
 					name = L["Title - More"],
 					type = "Title",
-					order = 25,
+					order = 24,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = Playback,
@@ -1422,11 +1406,27 @@ function NS.Data:Load()
 				Group_More = {
 					name = L["Title - More"],
 					type = "Group",
-					order = 26,
+					order = 25,
 					hidden = function() return false end,
 					locked = function() return false end,
 					category = Playback,
 					args = {
+						Checkbox_AutoClose = {
+							name = L["Checkbox - Auto Close Dialog"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Auto Close Dialog - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 26,
+							hidden = function() return false end,
+							subcategory = 0,
+							category = Playback,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOCLOSE end,
+							set = function(_, val)
+								addon.Database.DB_GLOBAL.profile.INT_PLAYBACK_AUTOCLOSE = val
+							end,
+						},
 						Checkbox_MuteDialog = {
 							name = L["Checkbox - Mute Dialog"],
 							tooltipImage = "",

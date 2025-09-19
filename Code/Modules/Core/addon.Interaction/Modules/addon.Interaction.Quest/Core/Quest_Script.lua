@@ -853,7 +853,7 @@ function NS.Script:Load()
 				end
 
 				do -- CONTEXT ICON
-					local ContextIcon = addon.ContextIcon.Script:GetContextIcon()
+					local ContextIcon = addon.ContextIcon:GetContextIcon()
 
 					--------------------------------
 
@@ -1001,11 +1001,13 @@ function NS.Script:Load()
 
 			local function GetQuestItem(type)
 				local name, texture, count, quality, isUsable, itemID = GetQuestItemInfo(type, itemIndex)
+
 				-- useful
 				local link = GetQuestItemLink(type, itemIndex)
 				if link and not itemID then
 					itemID = GetItemInfoFromHyperlink and GetItemInfoFromHyperlink(link)
 				end
+
 				--------------------------------
 
 				if #name > 1 then
@@ -1085,11 +1087,12 @@ function NS.Script:Load()
 						resultQuality = GetQuestCurrency(type)
 					end
 
-					--------------------------------
 					-- useful
 					if itemID and C_Item.GetItemInfoInstant(itemID) then
 						_, _, _, _, _, _, _, _, _, _, resultValue = C_Item.GetItemInfo(itemID)
 					end
+
+					--------------------------------
 
 					return resultQuality, resultValue
 				end

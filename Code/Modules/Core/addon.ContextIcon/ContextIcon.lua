@@ -1,9 +1,62 @@
 ---@class addon
 local addon = select(2, ...)
+addon.ContextIcon = {}
 local NS = addon.ContextIcon
-NS.Script = {}; local CB = NS.Script
 
 
+local PATH = addon.Variables.PATH_ART .. "ContextIcons/"
+local ICON_MAP = {
+	-- GOSSIP
+	["132053"] = "gossip-bubble",
+
+	-- DEFAULT
+	["132048"] = "quest-complete",
+	["132049"] = "quest-available",
+	["-1746"] = "quest-available", -- Cata classic bug?
+
+	-- CLASSIC ERA
+	["136788"] = "quest-available",
+
+	-- IMPORTANT
+	["importantactivequesticon"] = "quest-important-complete",
+	["importantavailablequesticon"] = "quest-important-available",
+	["importantincompletequesticon"] = "quest-important-active",
+
+	-- RECURRING
+	["Recurringactivequesticon"] = "quest-recurring-complete",
+	["Recurringavailablequesticon"] = "quest-recurring-available",
+	["Recurringincompletequesticon"] = "quest-recurring-active",
+
+	-- REPEATABLE
+	["Repeatableactivequesticon"] = "quest-repeatable-complete",
+	["Repeatableavailablequesticon"] = "quest-repeatable-available",
+	["Repeatableicnompletequesticon"] = "quest-repeatable-active",
+
+	-- CAMPAIGN
+	["CampaignActiveQuestIcon"] = "quest-campaign-complete",
+	["CampaignAvailableQuestIcon"] = "quest-campaign-available",
+	["CampaignIncompleteQuestIcon"] = "quest-campaign-active",
+	["CampaignActiveDailyQuestIcon"] = "quest-campaign-recurring-complete",
+	["CampaignAvailableDailyQuestIcon"] = "quest-campaign-recurring-available",
+
+	-- META
+	["Wrapperactivequesticon"] = "quest-meta-complete",
+	["Wrapperavailablequesticon"] = "quest-meta-available",
+	["Wrapperincompletequesticon"] = "quest-meta-active",
+
+	-- LEGENDARY
+	["legendaryactivequesticon"] = "quest-legendary-complete",
+	["legendaryavailablequesticon"] = "quest-legendary-available",
+	["legendaryincompletequesticon"] = "quest-legendary-active",
+
+	-- IN_PROGRESS
+	["CampaignInProgressQuestIcon"] = "quest-campaign-active",
+	["RepeatableInProgressquesticon"] = "quest-recurring-active",
+	["SideInProgressquesticon"] = "quest-active",
+	["importantInProgressquesticon"] = "quest-important-active",
+	["WrapperInProgressquesticon"] = "quest-meta-active",
+	["legendaryInProgressquesticon"] = "quest-legendary-active",
+}
 local IS_RETAIL = addon.Variables.IS_WOW_VERSION_RETAIL
 local IS_CLASSIC_ALL = addon.Variables.IS_WOW_VERSION_CLASSIC_ALL
 local IS_CLASSIC_PROGRESSION = addon.Variables.IS_WOW_VERSION_CLASSIC_PROGRESSION
@@ -36,23 +89,23 @@ local tostring = tostring
 
 
 
-function CB:Load()
+function NS:Load()
 	do -- Util
 		---@param iconName string
 		---@param isTexture? boolean
 		---@return string inlineIconString
-		function CB:ConvertToInlineIcon(iconName, isTexture)
-			local iconPath = isTexture and iconName or (NS.Variables.PATH .. iconName .. ".png")
+		function NS:ConvertToInlineIcon(iconName, isTexture)
+			local iconPath = isTexture and iconName or (PATH .. iconName .. ".png")
 			return addon.API.Util:InlineIcon(iconPath, 16, 16, 0, 0)
 		end
 	end
 
 	do -- Replacement
-		function CB:ReplaceIcon(texture)
+		function NS:ReplaceIcon(texture)
 			local result = texture
-			for k, v in pairs(NS.Variables.ICON_MAP) do
+			for k, v in pairs(ICON_MAP) do
 				if tostring(texture) == tostring(k) then
-					result = addon.Variables.PATH_ART .. "ContextIcons/" .. v .. ".png"
+					result = PATH .. v .. ".png"
 					break
 				end
 			end
@@ -179,11 +232,11 @@ function CB:Load()
 			}
 		end
 
-		function CB:GetQuestInfo(questID, gossipButtonInfo)
+		function NS:GetQuestInfo(questID, gossipButtonInfo)
 			return IS_RETAIL and GetRetailQuestInfo(questID) or GetClassicQuestInfo(questID, gossipButtonInfo)
 		end
 
-		function CB:GetContextIcon(gossipButtonInfo, gossipButtonOptionTexture)
+		function NS:GetContextIcon(gossipButtonInfo, gossipButtonOptionTexture)
 			local isQuest = (QuestFrame:IsVisible() and not QuestFrameGreetingPanel:IsVisible())
 
 			local queryQuest = (gossipButtonInfo ~= nil or isQuest)
@@ -193,15 +246,12 @@ function CB:Load()
 			local result
 			local resultTexture
 
-
 			do -- RETAIL
 				if IS_RETAIL then
 					local resultPath
 
-
 					if queryQuest then
 						local questID
-
 
 						if gossipButtonInfo then
 							questID = gossipButtonInfo.questID or nil
@@ -209,9 +259,8 @@ function CB:Load()
 							questID = GetQuestID()
 						end
 
-
 						if questID then
-							local questInfo = CB:GetQuestInfo(questID)
+							local questInfo = NS:GetQuestInfo(questID)
 							local isAvailable, isCompleted, isOnQuest, isDefault, isImportant,
 							isCampaign, isCalling, isMeta, isRecurring, isRepeatable, isAccount,
 							isCombatAlly, isDelve, isDungeon, isGroup, isHeroic, isLegendary, isArtifact,
@@ -285,7 +334,7 @@ function CB:Load()
 							end
 						else
 							if gossipButtonOptionTexture then
-								local new = CB:ReplaceIcon(gossipButtonOptionTexture)
+								local new = NS:ReplaceIcon(gossipButtonOptionTexture)
 								resultPath = nil
 								resultTexture = new
 							end
@@ -293,7 +342,7 @@ function CB:Load()
 
 
 						if resultPath and not resultTexture then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")
@@ -305,7 +354,7 @@ function CB:Load()
 
 
 						if resultPath then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")
@@ -324,7 +373,7 @@ function CB:Load()
 
 
 						if questID then
-							local questInfo = CB:GetQuestInfo(questID, gossipButtonInfo)
+							local questInfo = NS:GetQuestInfo(questID, gossipButtonInfo)
 							local isAvailable, isCompleted, isOnQuest, isDefault,
 							isRecurring, isRecurringWeekly, isGroup, isPvP, isRaid, isDungeon, isLegendary,
 							isHeroic, isScenario, isAccount, isLeatherworkingWorldQuest =
@@ -366,7 +415,7 @@ function CB:Load()
 							end
 						else
 							if gossipButtonOptionTexture then
-								local new = CB:ReplaceIcon(gossipButtonOptionTexture)
+								local new = NS:ReplaceIcon(gossipButtonOptionTexture)
 								resultPath = nil
 								resultTexture = new
 							end
@@ -374,7 +423,7 @@ function CB:Load()
 
 
 						if resultPath and not resultTexture then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")
@@ -386,7 +435,7 @@ function CB:Load()
 
 
 						if resultPath then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")
@@ -405,7 +454,7 @@ function CB:Load()
 
 
 						if questID then
-							local questInfo = CB:GetQuestInfo(questID, gossipButtonInfo)
+							local questInfo = NS:GetQuestInfo(questID, gossipButtonInfo)
 							local isAvailable, isCompleted, isOnQuest, isDefault,
 							isRecurring, isGroup, isPvP, isRaid, isDungeon, isLegendary,
 							isHeroic, isScenario, isAccount, isLeatherworkingWorldQuest =
@@ -435,7 +484,7 @@ function CB:Load()
 							end
 						else
 							if gossipButtonOptionTexture then
-								local new = CB:ReplaceIcon(gossipButtonOptionTexture)
+								local new = NS:ReplaceIcon(gossipButtonOptionTexture)
 								resultPath = nil
 								resultTexture = new
 							end
@@ -443,7 +492,7 @@ function CB:Load()
 
 
 						if resultPath and not resultTexture then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")
@@ -455,7 +504,7 @@ function CB:Load()
 
 
 						if resultPath then
-							result = CB:ConvertToInlineIcon(resultPath)
+							result = NS:ConvertToInlineIcon(resultPath)
 							resultTexture = addon.Variables.PATH_ART .. "ContextIcons/" .. resultPath .. ".png"
 						else
 							-- print("Invalid Texture")

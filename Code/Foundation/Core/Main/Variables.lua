@@ -29,10 +29,13 @@ do -- CONSTANTS
 		local j,n,p = t:match("(%d+)%.(%d+)%.(%d+)") -- major, minor, patch semantic versioning
 		return tonumber(j or 0)*10^4 + tonumber(n or 0)*10^2 + tonumber(p or 0)
 	end)(NS.VERSION_STRING)-- major*10000 + minor*100 + patch (for numeric version comparisons)
-	NS.IS_WOW_VERSION_RETAIL = (select(4, GetBuildInfo()) > 110000)
-	NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (select(4, GetBuildInfo()) < 110000 and select(4, GetBuildInfo()) >= 20000)
-	NS.IS_WOW_VERSION_CLASSIC_ERA = (select(4, GetBuildInfo()) < 20000)
-	NS.IS_WOW_VERSION_CLASSIC_ALL = (NS.IS_WOW_VERSION_CLASSIC_PROGRESSION or NS.IS_WOW_VERSION_CLASSIC_ERA)
+
+	-- CLIENT VERSION
+	local clientBuild = select(4, GetBuildInfo())
+	NS.IS_WOW_VERSION_RETAIL = (clientBuild >= 110000) -- Retail
+	NS.IS_WOW_VERSION_CLASSIC_ALL = (clientBuild < 110000) -- All classic ver
+	NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (clientBuild < 110000 and clientBuild > 50000) -- MoP Classic
+	NS.IS_WOW_VERSION_CLASSIC_ERA = (clientBuild < 50000) -- Classic era
 
 	-- INITALIZATION
 	NS.INIT_DELAY_1 = .025

@@ -483,7 +483,7 @@ function NS.Script:Load()
 
 								do -- CONTEXT ICON
 									local gossipOptionTexture = entries[i].optionType == "option" and options[entries[i].optionIndex].icon
-									local _, texture = addon.ContextIcon.Script:GetContextIcon(entries[i], gossipOptionTexture)
+									local _, texture = addon.ContextIcon:GetContextIcon(entries[i], gossipOptionTexture)
 
 									--------------------------------
 

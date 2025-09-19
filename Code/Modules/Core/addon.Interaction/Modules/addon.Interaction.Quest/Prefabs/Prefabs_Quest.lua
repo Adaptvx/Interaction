@@ -597,16 +597,16 @@ function NS.Prefabs:Load()
 							Frame.Image.Icon:SetFrameStrata(frameStrata)
 							Frame.Image.Icon:SetFrameLevel(frameLevel + 3)
 							Frame.Image.IconTexture:SetTexCoord(.15, .85, .15, .85)
+						end
 
-							do -- CORNER
-								Frame.Image.Corner, Frame.Image.CornerTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image.Icon, frameStrata, addon.Variables.PATH_ART.."Icons/gold.png", "$parent.Corner", 2)
-								Frame.Image.Corner:SetPoint("TOPRIGHT", Frame.Image.Icon, (REWARD_PADDING / 1.5), (REWARD_PADDING / 1.5))
-								Frame.Image.Corner:SetPoint("BOTTOMLEFT", Frame.Image.Icon, (REWARD_PADDING * 3.5), (REWARD_PADDING * 3.5))
-								Frame.Image.Corner:SetFrameStrata(frameStrata)
-								Frame.Image.Corner:SetFrameLevel(frameLevel + 4)
-								Frame.Image.Corner:Hide()
-								Frame.Image.CornerTexture:SetTexCoord(.05, .95, .05, .95)
-							end
+						do -- CORNER
+							Frame.Image.Corner, Frame.Image.CornerTexture = addon.API.FrameTemplates:CreateTexture(Frame.Image.Icon, frameStrata, addon.Variables.PATH_ART.."Icons/gold.png", "$parent.Corner", 2)
+							Frame.Image.Corner:SetPoint("TOPRIGHT", Frame.Image.Icon, (REWARD_PADDING / 1.5), (REWARD_PADDING / 1.5))
+							Frame.Image.Corner:SetPoint("BOTTOMLEFT", Frame.Image.Icon, (REWARD_PADDING * 3.5), (REWARD_PADDING * 3.5))
+							Frame.Image.Corner:SetFrameStrata(frameStrata)
+							Frame.Image.Corner:SetFrameLevel(frameLevel + 4)
+							Frame.Image.Corner:Hide()
+							Frame.Image.CornerTexture:SetTexCoord(.05, .95, .05, .95)
 						end
 
 						do -- TEXT
