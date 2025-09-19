@@ -244,9 +244,9 @@ local function Load()
 		L["Checkbox - Settings / Reset Settings"] = "Resetar todas as configurações"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
 
-		L["Title - Special Credits"] = "Special Acknowledgements"
-		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Code - Significant Bug Fixes and Enhancements"
-		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Special thanks and gratitude to MrFIXIT for the extensive bug fixes and enhancements!"
+		L["Title - Special Credits"] = "Agradecimento Especial"
+		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Código - Ajustes relevantes e novos recursos"
+		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Agradecimento especiale e sincera gratidão a MrFIXIT pelas extensas correções e melhorias realizadas!"
 
 		L["Title - Credits"] = "Agradecimentos"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Tradução - Russo"
@@ -256,17 +256,17 @@ local function Load()
 		L["Title - Credits / El1as1989"] = "El1as1989 | Tradução - Espanhol"
 		L["Title - Credits / El1as1989 - Tooltip"] = "Agradecimento especial a El1as1989 pela tradução em Espanhol!"
 		L["Title - Credits / huchang47"] = "huchang47 | Tradução - Chinês (Simplificado)"
-		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimento especial a huchang47 pela tradução em Chinês (Simplificado)!"
+		L["Title - Credits / huchang47 - Tooltip"] = "Agradecimento especial a Huchang47 pela tradução em Chinês (Simplificado)!"
 		L["Title - Credits / muiqo"] = "muiqo | Tradução - Alemão"
-		L["Title - Credits / muiqo - Tooltip"] = "Agradecimento especial a muiqo pela tradução em Alemão!"
+		L["Title - Credits / muiqo - Tooltip"] = "Agradecimento especial a Muiqo pela tradução em Alemão!"
 		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Tradução - Coreano"
 		L["Title - Credits / Crazyyoungs - Tooltip"] = "Agradecimento especial a Crazyyoungs pela tradução em Coreano!"
-		L["Title - Credits / fang2hou"] = "fang2hou | Translator - Chinese (Traditional)"
-		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
-		L["Title - Credits / joaoc_pires"] = "Joao Pires | Código - Bug Fix"
+		L["Title - Credits / fang2hou"] = "fang2hou | Tradução - Chinês (Tradicional)"
+		L["Title - Credits / fang2hou - Tooltip"] = "Agradecimento especial a Fang2hou pela tradução em Chinês (Tradicional)!"
+		L["Title - Credits / joaoc_pires"] = "Joao Pires | Código - Correção de Bug"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "Agradecimento especial a João Pires pela correção de código!"
-		L["Title - Credits / Walshi2"] = "Walshi2 | Code - Bug Fix"
-		L["Title - Credits / Walshi2 - Tooltip"] = "Special thanks to Walshi2 for the bug fix!"
+		L["Title - Credits / Walshi2"] = "Walshi2 | Código - Correção de Bug"
+		L["Title - Credits / Walshi2 - Tooltip"] = "Agradecimento especial a Walshi2 pela correção de código!"
 	end
 
 	--------------------------------
