@@ -245,9 +245,9 @@ local function Load()
 		L["Checkbox - Settings / Reset Settings"] = "Сбросить все настройки"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Сбрасывает настройки до значений по умолчанию.\n\nПо умолчанию: Выкл."
 
-		L["Title - Special Credits"] = "Special Acknowledgements"
-		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Code - Significant Bug Fixes and Enhancements"
-		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Special thanks and gratitude to MrFIXIT for the extensive bug fixes and enhancements!"
+		L["Title - Special Credits"] = "Особые благодарности"
+		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Код — значительные исправления ошибок и улучшения"
+		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Особая благодарность MrFIXIT за обширные исправления ошибок и улучшения!"
 
 		L["Title - Credits"] = "Благодарности"
 		L["Title - Credits / ZamestoTV"] = "ZamestoTV | Переводчик на русский язык"
@@ -262,12 +262,12 @@ local function Load()
 		L["Title - Credits / muiqo - Tooltip"] = "Особая благодарность muiqo за перевод на немецкий язык!"
 		L["Title - Credits / Crazyyoungs"] = "Crazyyoungs | Переводчик на корейский язык"
 		L["Title - Credits / Crazyyoungs - Tooltip"] = "Особая благодарность Crazyyoungs за перевод на корейский язык!"
-		L["Title - Credits / fang2hou"] = "fang2hou | Translator - Chinese (Traditional)"
-		L["Title - Credits / fang2hou - Tooltip"] = "Special thanks to fang2hou for the Chinese (Traditional) translations!"
+		L["Title - Credits / fang2hou"] = "fang2hou | Переводчик на китайский (традиционный)"
+		L["Title - Credits / fang2hou - Tooltip"] = "Особая благодарность fang2hou за переводы на китайский (традиционный) язык!"
 		L["Title - Credits / joaoc_pires"] = "Joao Pires | Код — Исправление ошибки"
 		L["Title - Credits / joaoc_pires - Tooltip"] = "Особая благодарность Joao Pires за исправление ошибки!"
-		L["Title - Credits / Walshi2"] = "Walshi2 | Code - Bug Fix"
-		L["Title - Credits / Walshi2 - Tooltip"] = "Special thanks to Walshi2 for the bug fix!"
+		L["Title - Credits / Walshi2"] = "Walshi2 | Код - Исправление ошибки"
+		L["Title - Credits / Walshi2 - Tooltip"] = "Особая благодарность Walshi2 за исправление ошибки!"
 	end
 
 	--------------------------------
