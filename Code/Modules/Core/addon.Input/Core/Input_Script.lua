@@ -413,11 +413,11 @@ function NS.Script:Load()
 
 											--------------------------------
 
-											addon.Libraries.AceTimer:ScheduleTimer(function()
+											C_Timer.After(.125, function()
 												if Buttons[index].isMouseOver == true then
 													Buttons[index]:OnLeave()
 												end
-											end, .125)
+											end)
 										end
 									end
 
@@ -906,7 +906,7 @@ function NS.Script:Load()
 						--------------------------------
 
 						if NS.Variables.CurrentFrame then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(0, function()
 								if NS.Variables.CurrentFrame then
 									Trigger(NS.Variables.CurrentFrame)
 
@@ -914,7 +914,7 @@ function NS.Script:Load()
 										Trigger(NS.Variables.CurrentFrame.Input_Parent, true)
 									end
 								end
-							end, 0)
+							end)
 						end
 					end
 				end

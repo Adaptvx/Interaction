@@ -28,9 +28,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.25, function()
 				addon.Interaction.Script:Stop(true)
-			end, .25)
+			end)
 		end
 	end
 

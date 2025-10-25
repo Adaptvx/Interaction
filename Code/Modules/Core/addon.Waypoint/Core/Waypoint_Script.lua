@@ -47,17 +47,17 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(0, function()
 						if NS.Variables.AudioEnable then
 							if not isInPinRange and WaypointFrame:IsVisible() then
 								addon.SoundEffects:PlaySound(SOUNDKIT.UI_MAP_WAYPOINT_SUPER_TRACK_ON)
 							end
 						end
-					end, 0)
+					end)
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(2, function()
 						WaypointFrame.Line:SetHeight(1000)
-					end, 2)
+					end)
 				else
 					WaypointFrame.Line:SetHeight(1000)
 					WaypointFrame.GlowAnimation:SetAlpha(0)
@@ -352,11 +352,11 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(1, function()
 						if (not stateIsDistance and NS.Variables.State == state) or (stateIsDistance and NS.Variables.StateDistance == state) then
 							Callback.Playback = false
 						end
-					end, 1)
+					end)
 				end
 			end
 
@@ -744,9 +744,9 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.125, function()
 							addon.API.Animation:Fade(PinpointFrame.Shine, .25, 1, 0, addon.API.Animation.EaseSine)
-						end, .125)
+						end)
 					end
 				end
 			end
@@ -777,9 +777,9 @@ function NS.Script:Load()
 
 				function Callback:HideWithAnimation()
 					if SuperTrackedFrame:GetAlpha() == 1 then
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.5, function()
 							SuperTrackedFrame:SetAlpha(0)
-						end, .5)
+						end)
 
 						--------------------------------
 
@@ -826,9 +826,9 @@ function NS.Script:Load()
 				--------------------------------
 
 				NS.Variables.SUPER_TRACKING_CHANGED_COOLDOWN = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					NS.Variables.SUPER_TRACKING_CHANGED_COOLDOWN = false
-				end, .25)
+				end)
 			end
 		end)
 

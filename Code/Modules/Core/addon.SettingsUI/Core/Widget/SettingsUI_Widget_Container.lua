@@ -193,9 +193,9 @@ function NS.Widgets:CreateContainer(parent, subcategory, background, height, too
 				--------------------------------
 
 				InteractionSettingsFrame.Content.ScrollFrame.Update(PreventRepeat)
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					InteractionSettingsFrame.Content.ScrollFrame.Update(PreventRepeat)
-				end, .25)
+				end)
 			end
 
 			if locked then

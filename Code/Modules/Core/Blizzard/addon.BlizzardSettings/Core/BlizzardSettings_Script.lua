@@ -94,24 +94,24 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					addon.API.Animation:Fade(Frame.Background, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.1, function()
 						addon.API.Animation:Fade(Frame.Content.Title, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 						addon.API.Animation:Scale(Frame.Content.Title.Background, 1, 50, Frame.Content.Title:GetWidth(), "x", addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
-					end, .1)
+					end)
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.3, function()
 						Frame.Content.Title.Text:SetAlpha(0)
 						addon.API.Animation:Fade(Frame.Content.Title.Text, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
-					end, .3)
+					end)
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.325, function()
 						Frame.Content.Shortcut.Text:SetAlpha(0)
 						addon.API.Animation:Fade(Frame.Content.Shortcut.Text, .5, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
-					end, .325)
-				end, .125)
+					end)
+				end)
 			end
 		end
 	end

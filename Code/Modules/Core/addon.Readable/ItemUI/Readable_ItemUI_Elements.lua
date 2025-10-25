@@ -389,7 +389,7 @@ function NS.ItemUI.Elements:Load()
 						--------------------------------
 
 						hooksecurefunc(ReadableUIFrame.ItemFrame.ScrollFrame.Text, "SetText", function()
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(.1, function()
 								local StringHeight
 
 								--------------------------------
@@ -408,10 +408,10 @@ function NS.ItemUI.Elements:Load()
 
 								--------------------------------
 
-								addon.Libraries.AceTimer:ScheduleTimer(function()
+								C_Timer.After(.25, function()
 									ReadableUIFrame.ItemFrame.ScrollFrame:UpdateScrollIndicator()
-								end, .25)
-							end, .1)
+								end)
+							end)
 						end)
 					end
 
@@ -619,7 +619,7 @@ function NS.ItemUI.Elements:Load()
 									--------------------------------
 
 									hooksecurefunc(ReadableUIFrame.BookFrame.Content.Left.Text, "SetText", function()
-										addon.Libraries.AceTimer:ScheduleTimer(function()
+										C_Timer.After(.1, function()
 											local StringHeight
 
 											--------------------------------
@@ -642,10 +642,10 @@ function NS.ItemUI.Elements:Load()
 
 											--------------------------------
 
-											addon.Libraries.AceTimer:ScheduleTimer(function()
+											C_Timer.After(.25, function()
 												ReadableUIFrame.BookFrame.Content.Left:UpdateScrollIndicator()
-											end, .25)
-										end, .1)
+											end)
+										end)
 									end)
 								end
 							end
@@ -704,7 +704,7 @@ function NS.ItemUI.Elements:Load()
 									--------------------------------
 
 									hooksecurefunc(ReadableUIFrame.BookFrame.Content.Right.Text, "SetText", function()
-										addon.Libraries.AceTimer:ScheduleTimer(function()
+										C_Timer.After(.1, function()
 											local StringHeight
 
 											--------------------------------
@@ -727,10 +727,10 @@ function NS.ItemUI.Elements:Load()
 
 											--------------------------------
 
-											addon.Libraries.AceTimer:ScheduleTimer(function()
+											C_Timer.After(.25, function()
 												ReadableUIFrame.BookFrame.Content.Right:UpdateScrollIndicator()
-											end, .25)
-										end, .1)
+											end)
+										end)
 									end)
 								end
 							end

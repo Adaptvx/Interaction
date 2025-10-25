@@ -191,9 +191,9 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					Parent:Hide()
-				end, .25)
+				end)
 			end
 		end
 	end

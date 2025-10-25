@@ -31,9 +31,9 @@ function NS.Script:Load()
 
 			Frame.REF_IMAGE_TEXTURE:SetTexture(image)
 			Frame.REF_TITLE_TEXT:SetText(text)
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(0, function()
 				addon.API.Util:SetFontSize(Frame.REF_TITLE_TEXT, textSize)
-			end, 0)
+			end)
 
 			--------------------------------
 
@@ -42,9 +42,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(duration or 3, function()
 				Callback:Hide(endSFX)
-			end, duration or 3)
+			end)
 		end
 
 		function Callback:Hide(sfx)
@@ -81,24 +81,24 @@ function NS.Script:Load()
 			addon.API.Animation:Fade(Frame.REF_IMAGE, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 			addon.API.Animation:Scale(Frame.REF_IMAGE, .375, 5, 1, nil, addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.125, function()
 				if not Frame.hidden then
 					addon.API.Animation:Fade(Frame.REF_IMAGE, 1, 1, .5, nil, Frame.ShowWithAnimation_StopEvent)
 				end
-			end, .125)
+			end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.125, function()
 				if not Frame.hidden then
 					addon.API.Animation:Fade(Frame.REF_BACKGROUND, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 					addon.API.Animation:Scale(Frame.REF_BACKGROUND, 1, 50, Frame:GetWidth(), "x", addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
 				end
-			end, .125)
+			end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.2, function()
 				if not Frame.hidden then
 					addon.API.Animation:Fade(Frame.REF_TITLE, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 				end
-			end, .2)
+			end)
 
 			--------------------------------
 
@@ -114,11 +114,11 @@ function NS.Script:Load()
 				return
 			end
 			Frame.hidden = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(1, function()
 				if Frame.hidden then
 					Frame:Hide()
 				end
-			end, 1)
+			end)
 
 			--------------------------------
 

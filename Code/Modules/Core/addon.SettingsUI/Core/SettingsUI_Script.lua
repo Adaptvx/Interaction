@@ -48,18 +48,18 @@ function NS.Script:Load()
 			if skipAnimation then
 				Frame.Tooltip:Hide()
 			else
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					if Frame.Tooltip.frame == nil then
 						Frame.Tooltip:Hide()
 					end
-				end, .25)
+				end)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.1, function()
 					if not Frame.Tooltip.frame then
 						addon.API.Animation:Fade(Frame.Tooltip, .125, Frame.Tooltip:GetAlpha(), 0)
 						addon.API.Animation:Move(Frame.Tooltip, .25, "RIGHT", endPos, startPos, "x", addon.API.Animation.EaseExpo)
 					end
-				end, .1)
+				end)
 			end
 		end
 	end
@@ -160,7 +160,7 @@ function NS.Script:Load()
 			end
 		end
 
-		function Interaction_ShowSettingsUI()
+		function Interaction_OpenSettingUI()
 			CB:ShowSettingsUI(false, true)
 		end
 
@@ -243,9 +243,9 @@ function NS.Script:Load()
 			end
 			function Frame:ShowWithAnimation()
 				Frame.PreventMouse = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					Frame.PreventMouse = false
-				end, .25)
+				end)
 
 				Frame:Show()
 
@@ -256,9 +256,9 @@ function NS.Script:Load()
 				addon.API.Animation:Fade(Frame, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
 				addon.API.Animation:Scale(Frame.Background, .5, 2, 1, nil, addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.325, function()
 					addon.API.Animation:Fade(Frame.Container, .5, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
-				end, .325)
+				end)
 			end
 		end
 
@@ -268,13 +268,13 @@ function NS.Script:Load()
 			end
 			function Frame:HideWithAnimation()
 				Frame.PreventMouse = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					Frame.PreventMouse = false
 
 					if Frame.hidden then
 						Frame:Hide()
 					end
-				end, .25)
+				end)
 
 				CB:HideTooltip(true)
 				addon.API.Animation:Fade(Frame, .25, 1, 0, nil, Frame.HideWithAnimation_StopEvent)

@@ -80,7 +80,7 @@ local GetQuestType = C_QuestLog.GetQuestType
 local GetQuestTagInfo = C_QuestLog and C_QuestLog.GetQuestTagInfo or GetQuestTagInfo
 local GetQuestLogTitle = GetQuestLogTitle
 local GetQuestLogIndexByID = GetQuestLogIndexByID
-local IsQuestRepeatableType = C_QuestLog.IsQuestRepeatableType
+local IsRepeatableQuest = C_QuestLog.IsRepeatableQuest
 local IsOnQuest = C_QuestLog.IsOnQuest
 local IsReadyForTurnIn = C_QuestLog.ReadyForTurnIn or ReadyForTurnInMakeshiftAPI
 local IsAutoAccept = addon.API.Main.IsAutoAccept
@@ -128,7 +128,7 @@ function NS:Load()
 			local isCalling           = (questClassification == Enum.QuestClassification.Calling)
 			local isMeta              = (questClassification == Enum.QuestClassification.Meta)
 			local isRecurring         = (questClassification == Enum.QuestClassification.Recurring)
-			local isRepeatable        = (IsQuestRepeatableType(questID))
+			local isRepeatable        = (IsRepeatableQuest(questID))
 
 			-- Quest Type
 			local isAccount           = (questType == Enum.QuestTag.Account)

@@ -37,7 +37,7 @@ function NS.Script:Load()
 
 				addon.API.Animation:Fade(UIParent, .25, 1, 0, nil, function() return not NS.Variables.Active end)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.255, function()
 					local isHiddenUI = (UIParent:GetAlpha() <= .1)
 
 					--------------------------------
@@ -45,7 +45,7 @@ function NS.Script:Load()
 					if not InCombatLockdown() and isHiddenUI then
 						UIParent:Hide()
 					end
-				end, .255)
+				end)
 			end
 
 			--------------------------------

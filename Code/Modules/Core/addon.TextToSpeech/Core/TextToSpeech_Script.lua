@@ -27,9 +27,9 @@ function NS.Script:Load()
 			--------------------------------
 
 			C_VoiceChat.StopSpeakingText()
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(0, function()
 				C_VoiceChat.SpeakText(voice, text, destination, rate, volume)
-			end, 0)
+			end)
 		end
 
 		function NS.Script:StopSpeakingText()
@@ -41,11 +41,11 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.1, function()
 				if not NS.Variables.IsPlaybackActive then
 					UnmuteSoundFile(4192839) -- TTS line break
 				end
-			end, .1)
+			end)
 		end
 
 		function NS.Script:PlayConfiguredTTS(voice, text)

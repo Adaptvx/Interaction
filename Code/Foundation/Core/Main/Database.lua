@@ -355,7 +355,7 @@ end
 
 do
 	function NS:OnInitialize()
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(0, function()
 			NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
 			NS.DB_GLOBAL_PERSISTENT = AceDB:New("InteractionLibraryDB_Global", NS.DEFAULTS_GLOBAL_PERSISTENT, true)
 			NS.DB_LOCAL_PERSISTENT = AceDB:New("InteractionLibraryDB", NS.DEFAULTS_LOCAL_PERSISTENT, true)
@@ -366,8 +366,10 @@ do
 
 			--------------------------------
 
-			CallbackRegistry:Trigger("ADDON_DATABASE_READY")
-		end, 0)
+			C_Timer.After(0, function()
+				CallbackRegistry:Trigger("ADDON_DATABASE_READY")
+			end)
+		end)
 	end
 
 	NS = LibStub("AceAddon-3.0"):NewAddon(NS, "Interaction")
@@ -432,6 +434,6 @@ do
 	end
 
 	SlashCmdList_AddSlashCommand("INTERACTION_CONFIG", function(msg)
-		Interaction_ShowSettingsUI()
+		Interaction_OpenSettingUI()
 	end, "interaction", "int")
 end

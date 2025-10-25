@@ -12,7 +12,6 @@ addon.Libraries = {}
 --------------------------------
 
 do
-    addon.Libraries.AceTimer = LibStub("AceTimer-3.0")
 	addon.Libraries.AdaptiveTimer = LibStub("AdaptiveTimer-1.0")
 	addon.Libraries.LibSerialize = LibStub("LibSerialize")
 	addon.Libraries.LibDeflate = LibStub("LibDeflate")

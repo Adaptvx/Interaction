@@ -127,11 +127,11 @@ function NS.LibraryUI.Script:Load()
 				else
 					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
 						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden = true
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.25, function()
 							if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top.hidden then
 								LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Top:Hide()
 							end
-						end, .25)
+						end)
 
 						--------------------------------
 
@@ -153,11 +153,11 @@ function NS.LibraryUI.Script:Load()
 				else
 					if not LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
 						LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden = true
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.25, function()
 							if LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom.hidden then
 								LibraryUI.Content.ContentFrame.ScrollFrame.ScrollIndicator_Bottom:Hide()
 							end
-						end, .25)
+						end)
 
 						--------------------------------
 
@@ -193,9 +193,9 @@ function NS.LibraryUI.Script:Load()
 			end
 
 			function LibraryUI:HideWithAnimation()
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.5, function()
 					LibraryUI:Hide()
-				end, .5)
+				end)
 
 				--------------------------------
 
@@ -792,13 +792,13 @@ function NS.LibraryUI.Script:Load()
 				}
 
 				if not NS.LibraryUI.Variables.LibraryDB[id] then
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.1, function()
 						LibraryCallback:AddCharacterToGlobal()
 
 						--------------------------------
 
 						addon.AlertNotification.Script:ShowWithText(L["Readable - Notification - Saved To Library"])
-					end, .1)
+					end)
 				end
 
 				NS.LibraryUI.Variables.LibraryDB[id] = entry
@@ -847,15 +847,15 @@ function NS.LibraryUI.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.525, function()
 					NS.ItemUI.Script:Update()
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.1, function()
 						NS.ItemUI.Script:Update()
-					end, .1)
-				end, .525)
+					end)
+				end)
 			end
 
 			function LibraryCallback:Export()
@@ -985,13 +985,13 @@ function NS.LibraryUI.Script:Load()
 		end, 0)
 
 		-- SetButtons on ThemeUpdate
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(1, function()
 			addon.API.Main:RegisterThemeUpdate(function()
 				if Frame.LibraryUIFrame:IsVisible() then
 					LibraryCallback:SetPageButtons()
 				end
 			end, 10)
-		end, 1)
+		end)
 	end
 
 	--------------------------------

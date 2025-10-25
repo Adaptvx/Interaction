@@ -787,6 +787,6 @@ function NS:Load()
 
 		--------------------------------
 
-		addon.Libraries.AceTimer:ScheduleRepeatingTimer(NS.UpdateSchedule, 5)
+		C_Timer.NewTicker(5, NS.UpdateSchedule)
 	end
 end

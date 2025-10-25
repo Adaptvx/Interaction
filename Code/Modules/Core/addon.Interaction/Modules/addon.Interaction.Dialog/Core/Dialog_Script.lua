@@ -1038,11 +1038,11 @@ function NS.Script:Load()
 
 					isTransition = true
 					savedDialogText = NS.Variables.info.contentInfo.split[NS.Variables.Playback_Index]
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.25, function()
 						if not Frame.hidden then
 							isTransition = false
 						end
-					end, .25)
+					end)
 
 					--------------------------------
 
@@ -1075,11 +1075,11 @@ function NS.Script:Load()
 					if skipAnimation then
 						Frame:Hide()
 					else
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.25, function()
 							if Frame.hidden then
 								Frame:Hide()
 							end
-						end, .25)
+						end)
 					end
 
 					--------------------------------

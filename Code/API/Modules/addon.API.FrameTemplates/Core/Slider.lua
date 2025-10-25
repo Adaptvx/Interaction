@@ -122,7 +122,7 @@ do
 
 			do -- GRIDS
 				if grid then
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(1, function()
 						local function CreateGrid()
 							local Grid, GridTexture = addon.API.FrameTemplates:CreateNineSlice(frame, frame:GetFrameStrata(), frame._DefaultTexture, 50, .5)
 							Grid:SetSize(2.5, 2.5)
@@ -159,7 +159,7 @@ do
 						end
 
 						frame.Grids = grids
-					end, 1)
+					end)
 				end
 			end
 		end
@@ -223,7 +223,7 @@ do
 			end
 
 			do -- EVENTS
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.1, function()
 					frame:HookScript("OnValueChanged", function(self, new, userInput)
 						frame.Background:SetSize(frame:GetWidth(), 2.5)
 
@@ -276,7 +276,7 @@ do
 							end
 						end
 					end)
-				end, .1)
+				end)
 
 				function frame:OnEnter(skipAnimation)
 					frame.isMouseOver = true

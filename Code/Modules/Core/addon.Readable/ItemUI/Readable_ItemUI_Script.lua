@@ -33,9 +33,9 @@ function NS.ItemUI.Script:Load()
 		function Frame:ButtonCooldown()
 			Frame.button_cooldown = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.5, function()
 				Frame.button_cooldown = false
-			end, .5)
+			end)
 		end
 
 		function Frame:Back()
@@ -377,9 +377,9 @@ function NS.ItemUI.Script:Load()
 				addon.API.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", -100, 0, "y", addon.API.Animation.EaseExpo, ReadableUI.ShowWithAnimation_StopEvent)
 				addon.API.Animation:Move(ReadableUI_BookUI, 1, "CENTER", -100, 0, "y", addon.API.Animation.EaseExpo, ReadableUI.ShowWithAnimation_StopEvent)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.25, function()
 					addon.API.Animation:Fade(ReadableUI_ItemUI.ScrollFrame, .5, 0, 1, nil, ReadableUI.ShowWithAnimation_StopEvent)
-				end, .25)
+				end)
 			end
 		end
 
@@ -389,9 +389,9 @@ function NS.ItemUI.Script:Load()
 			end
 
 			function ReadableUI:HideWithAnimation()
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.5, function()
 					ReadableUI:Hide()
-				end, .5)
+				end)
 
 				--------------------------------
 
@@ -410,11 +410,11 @@ function NS.ItemUI.Script:Load()
 					return
 				end
 				Frame.pageUpdateTransition = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(2, function()
 					if Frame.pageUpdateTransition then
 						Frame.pageUpdateTransition = false
 					end
-				end, 2)
+				end)
 
 				--------------------------------
 
@@ -442,7 +442,7 @@ function NS.ItemUI.Script:Load()
 
 						--------------------------------
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.25, function()
 							NS.ItemUI.Script:Update()
 
 							--------------------------------
@@ -456,11 +456,11 @@ function NS.ItemUI.Script:Load()
 							else
 								addon.API.Animation:Move(ReadableUI_ItemUI, 1, "CENTER", 100, 0, "x", addon.API.Animation.EaseExpo)
 							end
-						end, .25)
+						end)
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(1.25, function()
 							ReadableUI_ItemUI:EnableMouse(true)
-						end, 1.25)
+						end)
 					end
 				end
 
@@ -507,22 +507,22 @@ function NS.ItemUI.Script:Load()
 							addon.API.Animation:Fade(ReadableUI_BookUI.Content.Right, .125, ReadableUI_BookUI.Content.Right:GetAlpha(), 0, nil, StopEvent)
 							addon.API.Animation:Fade(ReadableUI_BookUI, .25, ReadableUI_BookUI:GetAlpha(), 0, nil, StopEvent)
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(.125, function()
 								addon.API.Animation:Scale(ReadableUI_BookUI, 1, ReadableUI_BookUI:GetScale(), baseScale + .15, nil, addon.API.Animation.EaseExpo, StopEvent)
-							end, .125)
+							end)
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(.25, function()
 								NS.ItemUI.Script:Update()
 
 								--------------------------------
 
-								addon.Libraries.AceTimer:ScheduleTimer(function()
+								C_Timer.After(.5, function()
 									addon.API.Animation:Fade(ReadableUI_BookUI.FrontPage.Text, .5, 0, 1, nil, StopEvent)
 									addon.API.Animation:Fade(ReadableUI_BookUI.Content.Left, .5, 0, 1, nil, StopEvent)
 									addon.API.Animation:Fade(ReadableUI_BookUI.Content.Right, .5, 0, 1, nil, StopEvent)
-								end, .5)
+								end)
 
 								--------------------------------
 
@@ -531,10 +531,10 @@ function NS.ItemUI.Script:Load()
 
 								--------------------------------
 
-								addon.Libraries.AceTimer:ScheduleTimer(function()
+								C_Timer.After(.5, function()
 									NS.ItemUI.Script:Update()
-								end, .5)
-							end, .25)
+								end)
+							end)
 						elseif (ReadableUI_BookUI.Content:IsVisible() and ReadableUI_BookUI.Content.Left:GetAlpha() > .99 and ReadableUI_BookUI.Content.Right:GetAlpha() > .99) then
 							do -- TEXT
 								if isReverse then
@@ -547,7 +547,7 @@ function NS.ItemUI.Script:Load()
 
 								--------------------------------
 
-								addon.Libraries.AceTimer:ScheduleTimer(function()
+								C_Timer.After(.25, function()
 									ReadableUI_BookUI.Content.Left:SetAlpha(.01)
 									ReadableUI_BookUI.Content.Right:SetAlpha(.01)
 
@@ -555,7 +555,7 @@ function NS.ItemUI.Script:Load()
 
 									addon.API.Animation:Fade(ReadableUI_BookUI.Content.Left, .25, ReadableUI_BookUI.Content.Left:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Left:GetAlpha() < .01 end)
 									addon.API.Animation:Fade(ReadableUI_BookUI.Content.Right, .25, ReadableUI_BookUI.Content.Right:GetAlpha(), 1, nil, function() return ReadableUI_BookUI.Content.Right:GetAlpha() < .01 end)
-								end, .25)
+								end)
 							end
 
 							do -- FLIP
@@ -573,9 +573,9 @@ function NS.ItemUI.Script:Load()
 
 								--------------------------------
 
-								addon.Libraries.AceTimer:ScheduleTimer(function()
+								C_Timer.After(.125, function()
 									addon.API.Animation:Fade(ReadableUI_BookUI.Content.Background.Spritesheet, .125, ReadableUI_BookUI.Content.Background.Spritesheet:GetAlpha(), 0)
-								end, .125)
+								end)
 							end
 
 							--------------------------------
@@ -612,7 +612,7 @@ function NS.ItemUI.Script:Load()
 				NS.ItemUI.Script:Update()
 			end
 		end
-		addon.Libraries.AceTimer:ScheduleTimer(Settings_ContentSize, 1.25)
+		C_Timer.After(1.25, Settings_ContentSize)
 
 		--------------------------------
 
@@ -625,13 +625,13 @@ function NS.ItemUI.Script:Load()
 
 	do
 		-- UpdateFrame on ThemeUpdate
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(1, function()
 			addon.API.Main:RegisterThemeUpdate(function()
 				if Frame:IsVisible() and NS.ItemUI.Variables.Title then
 					NS.ItemUI.Script:Update()
 				end
 			end, 10)
-		end, 1)
+		end)
 	end
 
 	--------------------------------

@@ -33,9 +33,9 @@ function NS.Script:Load()
 		function Frame:StartCooldown()
 			Frame.cooldown = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(1, function()
 				Frame.cooldown = false
-			end, 1)
+			end)
 		end
 
 		function Frame:ShowWithAnimation(uiType)
@@ -73,7 +73,7 @@ function NS.Script:Load()
 
 			addon.API.Animation:Fade(Frame, .5, 0, 1, nil)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.25, function()
 				local RING_SCALE = (uiType == "LIBRARY" and 1.25) or (uiType == "READABLE" and 1.125)
 
 				----------------------------------
@@ -81,11 +81,11 @@ function NS.Script:Load()
 				addon.API.Animation:Fade(Frame.Disc, .25, 0, .5, nil)
 				addon.API.Animation:Scale(Frame.Disc, 1, RING_SCALE + .125, RING_SCALE, nil, nil, nil)
 				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, nil)
-			end, .25)
+			end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(2.5, function()
 				addon.API.Animation:StartRotate(Frame.DiscTexture, .125)
-			end, 2.5)
+			end)
 
 			--------------------------------
 
@@ -117,9 +117,9 @@ function NS.Script:Load()
 				return
 			end
 			Frame.transition = true
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(1, function()
 				Frame.transition = false
-			end, 1)
+			end)
 
 			--------------------------------
 
@@ -135,7 +135,7 @@ function NS.Script:Load()
 				ReadableUI:HideWithAnimation()
 			end
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(0, function()
 				local RING_SCALE = (uiType == "LIBRARY" and 1.25) or (uiType == "READABLE" and 1.125)
 
 				--------------------------------
@@ -146,9 +146,9 @@ function NS.Script:Load()
 
 				addon.API.Animation:Scale(Frame.Disc, 5, Frame.Disc:GetScale(), RING_SCALE, nil, addon.API.Animation.EaseExpo, StopEvent)
 				addon.API.Animation:Rotate(Frame.DiscTexture, 5, 0, 1, addon.API.Animation.EaseExpo, StopEvent)
-			end, 0)
+			end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.5, function()
 				if uiType == "LIBRARY" then
 					LibraryUI:ShowWithAnimation()
 				end
@@ -156,11 +156,11 @@ function NS.Script:Load()
 				if uiType == "READABLE" then
 					ReadableUI:ShowWithAnimation()
 				end
-			end, .5)
+			end)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(1.5, function()
 				addon.API.Animation:StartRotate(Frame.DiscTexture, .125)
-			end, 1.5)
+			end)
 
 			--------------------------------
 
@@ -174,11 +174,11 @@ function NS.Script:Load()
 			Frame.hidden = true
 			Frame.cooldown = false
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.125, function()
 				if Frame.hidden then
 					Frame:Hide()
 				end
-			end, .125)
+			end)
 
 			--------------------------------
 
@@ -337,7 +337,7 @@ function NS.Script:Load()
 				local arg1, arg2 = ...
 
 				if event == "ITEM_TEXT_READY" then
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.1, function()
 						if ItemTextGetItem() == NS.ItemUI.Variables.Title then
 							return
 						end
@@ -352,7 +352,7 @@ function NS.Script:Load()
 
 						NS.ItemUI.Script:SetData(ItemID, ItemLink, Type, Title, NumPages, Content, CurrentPage, IsItemInInventory, PlayerName)
 						CallbackRegistry:Trigger("READABLE_DATA_READY")
-					end, .1)
+					end)
 				end
 
 				if event == "ITEM_TEXT_CLOSED" then

@@ -20,22 +20,22 @@ end
 
 do -- CONSTANTS
 	-- REFERENCE
-	NS.PATH = "Interface/AddOns/"..addonName.."/"
+	NS.PATH = "Interface/AddOns/" .. addonName .. "/"
 	NS.PATH_ART = NS.PATH .. "Art/"
 
 	-- VERSION
 	NS.VERSION_STRING = C_AddOns.GetAddOnMetadata(addonName, "Version")
 	NS.VERSION_NUMBER = (function(t)
-		local j,n,p = t:match("(%d+)%.(%d+)%.(%d+)") -- major, minor, patch semantic versioning
-		return tonumber(j or 0)*10^4 + tonumber(n or 0)*10^2 + tonumber(p or 0)
-	end)(NS.VERSION_STRING)-- major*10000 + minor*100 + patch (for numeric version comparisons)
+		local j, n, p = t:match("(%d+)%.(%d+)%.(%d+)") -- major, minor, patch semantic versioning
+		return tonumber(j or 0) * 10 ^ 4 + tonumber(n or 0) * 10 ^ 2 + tonumber(p or 0)
+	end)(NS.VERSION_STRING)                      -- major*10000 + minor*100 + patch (for numeric version comparisons)
 
 	-- CLIENT VERSION
 	local clientBuild = select(4, GetBuildInfo())
-	NS.IS_WOW_VERSION_RETAIL = (clientBuild >= 110000) -- Retail
-	NS.IS_WOW_VERSION_CLASSIC_ALL = (clientBuild < 110000) -- All classic ver
+	NS.IS_WOW_VERSION_RETAIL = (clientBuild >= 110000)                                  -- Retail
+	NS.IS_WOW_VERSION_CLASSIC_ALL = (clientBuild < 110000)                              -- All classic ver
 	NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (clientBuild < 110000 and clientBuild > 50000) -- MoP Classic
-	NS.IS_WOW_VERSION_CLASSIC_ERA = (clientBuild < 50000) -- Classic era
+	NS.IS_WOW_VERSION_CLASSIC_ERA = (clientBuild < 50000)                               -- Classic era
 
 	-- INITALIZATION
 	NS.INIT_DELAY_1 = .025

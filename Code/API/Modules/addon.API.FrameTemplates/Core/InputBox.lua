@@ -261,7 +261,7 @@ do
 				Frame:SetScript("OnEscapePressed", Frame.ClearFocus)
 				Frame:SetScript("OnTextChanged", Frame.OnValueChanged)
 				Frame:SetScript("OnShow", function()
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(0, function()
 						if Frame.autoSelect then
 							Frame:SetFocus()
 						else

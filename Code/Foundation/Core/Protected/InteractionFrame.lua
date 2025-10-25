@@ -150,15 +150,13 @@ function NS:Load()
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(UpdateQuestFrameGreetingPanel, .1)
+							C_Timer.After(.1, UpdateQuestFrameGreetingPanel)
 						end
 					end
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
-						UpdateQuestFrameGreetingPanel()
-					end, 0)
+					C_Timer.After(0, UpdateQuestFrameGreetingPanel)
 				end)
 			elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then -- CLASSIC
 				local IsQuestTitleButtons = (QuestTitleButton1)

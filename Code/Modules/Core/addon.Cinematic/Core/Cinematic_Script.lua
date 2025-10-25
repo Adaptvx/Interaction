@@ -30,11 +30,11 @@ function NS.Script:Load()
 					--------------------------------
 
 					NS.Variables.IsTransition = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(2.5, function()
 						if SavedTime == NS.Variables.ActiveID then
 							NS.Variables.IsTransition = false
 						end
-					end, 2.5)
+					end)
 				end
 
 				function NS.Script:CancelTransition()
@@ -73,9 +73,9 @@ function NS.Script:Load()
 			do -- ZOOM
 				function NS.Script:StartZoom()
 					NS.Variables.IsZooming = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(2, function()
 						NS.Variables.IsZooming = false
-					end, 2)
+					end)
 
 					--------------------------------
 
@@ -236,7 +236,7 @@ function NS.Script:Load()
 					end
 
 					-- Start new shoulder offset animation,
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(0, function()
 						NS.Variables.Saved_ShoulderOffset = GetCVar("test_cameraOverShoulder")
 
 						--------------------------------
@@ -246,7 +246,7 @@ function NS.Script:Load()
 						else
 							NS.Util:SetShoulderOffset(strength, 2.5)
 						end
-					end, 0)
+					end)
 				end
 
 				function NS.Script:CancelOffset()
@@ -346,7 +346,7 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(SideViewDuration - .25, function()
 								if NS.Variables.Active then
 									NS.Script:CancelSideView()
 
@@ -356,7 +356,7 @@ function NS.Script:Load()
 										NS.Script:StartPan()
 									end
 								end
-							end, SideViewDuration - .25)
+							end)
 						else
 							if isPan then
 								NS.Script:StartPan()
@@ -604,7 +604,7 @@ function NS.Script:Load()
 			end
 		end)
 
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
 			do -- EVENTS
 				local Events = CreateFrame("Frame")
 				Events:RegisterEvent("STOP_MOVIE")
@@ -615,7 +615,7 @@ function NS.Script:Load()
 					InteractionFrame.CinematicMode.Vignette:SetAlpha(0)
 				end)
 			end
-		end, addon.Variables.INIT_DELAY_LAST)
+		end)
 	end
 
 	--------------------------------
@@ -623,7 +623,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
 			do -- PAN
 				InteractionFrame.CinematicMode.PanHandler = CreateFrame("Frame")
 				local Frame = InteractionFrame.CinematicMode.PanHandler
@@ -702,7 +702,7 @@ function NS.Script:Load()
 					end
 				end)
 			end
-		end, addon.Variables.INIT_DELAY_LAST)
+		end)
 
 		--------------------------------
 

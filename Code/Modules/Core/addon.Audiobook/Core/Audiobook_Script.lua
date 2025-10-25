@@ -158,9 +158,9 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(0, function()
 					addon.TextToSpeech.Script:SpeakText(voice, line, Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, rate, volume)
-				end, 0)
+				end)
 			end
 
 			function Callback:SetTextPreview(line, quotation)
@@ -258,7 +258,7 @@ function NS.Script:Load()
 
 						--------------------------------
 
-						addon.Libraries.AceTimer:ScheduleTimer(Callback.NextLine, .5)
+						C_Timer.After(.5, Callback.NextLine)
 					elseif isLastLine then
 						Callback:StopPlayback()
 					end
@@ -362,21 +362,21 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(1, function()
 						Callback:StartPlayback()
 
 						--------------------------------
 
 						Frame:ShowWithAnimation()
-					end, 1)
+					end)
 				end
 
 				if NS.Variables.IsPlaying then
 					Callback:Stop()
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.25, function()
 						Main()
-					end, .25)
+					end)
 				else
 					Main()
 				end
@@ -503,11 +503,11 @@ function NS.Script:Load()
 
 			function Frame:HideWithAnimation()
 				Frame.hidden = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(1, function()
 					if Frame.hidden then
 						Frame:Hide()
 					end
-				end, 1)
+				end)
 
 				Frame.MouseResponder:Hide()
 
@@ -549,11 +549,11 @@ function NS.Script:Load()
 						return
 					end
 					Frame.TextPreviewFrame.hidden = true
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.25, function()
 						if Frame.TextPreviewFrame.hidden then
 							Frame.TextPreviewFrame:Hide()
 						end
-					end, .25)
+					end)
 
 					--------------------------------
 

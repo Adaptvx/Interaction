@@ -64,9 +64,9 @@ function NS.Script:Load()
 
 			--------------------------------
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.35, function()
 				GetQuestReward(choiceIndex)
-			end, .35)
+			end)
 		end)
 
 		Frame.REF_FOOTER_CONTENT.DeclineButton:SetScript("OnClick", function()
@@ -988,8 +988,8 @@ function NS.Script:Load()
 
 				CallbackRegistry:Trigger("QUEST_DATA_LOADED")
 
-				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateLayout, 0)
-				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateAll, .1)
+				C_Timer.After(0, function() Frame:UpdateLayout() end)
+				C_Timer.After(.1, function() Frame:UpdateAll() end)
 			end
 		end
 
@@ -1175,21 +1175,21 @@ function NS.Script:Load()
 			end
 			Frame.hidden = false
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.025, function()
 				if not Frame.hidden then
 					Frame:Show()
 				end
-			end, .025)
+			end)
 
 			--------------------------------
 
 			Frame.animation = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.175, function()
 				if not Frame.hidden then
 					Frame.animation = false
 				end
-			end, .175)
+			end)
 
 			--------------------------------
 
@@ -1233,46 +1233,46 @@ function NS.Script:Load()
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.05, function()
 						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 							addon.API.Animation:Fade(Frame.REF_MAIN_SCROLLFRAME, .375, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(0, function()
 								Frame.REF_MAIN_SCROLLFRAME:Show()
-							end, 0)
+							end)
 						end
-					end, .05)
+					end)
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.125, function()
 						if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 							addon.API.Animation:Fade(Frame.REF_FOOTER_CONTENT, .5, 0, 1, addon.API.Animation.EaseSine, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(0, function()
 								Frame.REF_FOOTER_CONTENT:Show()
-							end, 0)
+							end)
 						end
-					end, .125)
+					end)
 				end
 			end
 
 			do -- SET
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.1, function()
 					if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 						Frame:SetData()
 					end
-				end, .1)
+				end)
 			end
 
 			do -- UPDATE
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.225, function()
 					if not Frame.hidden and Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 						Frame:UpdateAll()
 					end
-				end, .225)
+				end)
 			end
 
 			--------------------------------
@@ -1290,31 +1290,31 @@ function NS.Script:Load()
 			end
 			Frame.hidden = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.25, function()
 				if Frame.hidden then
 					Frame:Hide()
 				end
-			end, .25)
+			end)
 
 			--------------------------------
 
 			Frame.animation = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(.25, function()
 				if Frame.hidden then
 					Frame.animation = false
 				end
-			end, .25)
+			end)
 
 			--------------------------------
 
 			Frame.validForNotification = true
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(1, function()
 				if Frame.hidden then
 					Frame.validForNotification = false
 				end
-			end, 1)
+			end)
 
 			--------------------------------
 

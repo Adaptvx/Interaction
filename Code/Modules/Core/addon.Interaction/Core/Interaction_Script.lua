@@ -68,15 +68,17 @@ function NS.Script:Load()
 			if skip then
 				CloseInteraction(deselectTarget)
 			else
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.575, function()
 					if not GossipFrame:IsVisible() and not QuestFrame:IsVisible() then
 						CloseInteraction(deselectTarget)
 					end
-				end, .575)
+				end)
 			end
 		end
 
 		function NS.Script:Start(frameType)
+			-- if InCombatLockdown() then return end
+
 			local NPC = UnitName("npc") or UnitName("questnpc")
 			local QuestID = GetQuestID() or 0
 
@@ -141,7 +143,7 @@ function NS.Script:Load()
 			--------------------------------
 
 			do -- NAMEPLATE
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(0, function()
 					local nameplate = C_NamePlate.GetNamePlateForUnit("npc")
 
 					--------------------------------
@@ -151,7 +153,7 @@ function NS.Script:Load()
 							nameplate:Hide()
 						end
 					end
-				end, 0)
+				end)
 			end
 
 			do -- START
@@ -357,7 +359,7 @@ function NS.Script:Load()
 				end)
 			end
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
 				local frames = {
 					MerchantFrame,
 					FlightMapFrame,
@@ -377,7 +379,7 @@ function NS.Script:Load()
 						NS.Script:Stop()
 					end)
 				end
-			end, addon.Variables.INIT_DELAY_LAST)
+			end)
 		end
 
 		do -- ALERT

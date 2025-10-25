@@ -70,14 +70,14 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(1, function()
 					Callback.IsNewLevelTransition = false
 
 					--------------------------------
 
 					Frame.Progress:SetValue(min)
 					addon.API.Animation:SetProgressTo(Frame.Progress, value, 1, addon.API.Animation.EaseExpo)
-				end, 1)
+				end)
 			else
 				addon.API.Animation:SetProgressTo(Frame.Progress, value, 1, addon.API.Animation.EaseExpo)
 			end
@@ -126,11 +126,11 @@ function NS.Script:Load()
 					return
 				end
 				Frame.hidden = true
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(1, function()
 					if Frame.hidden then
 						Frame:Hide()
 					end
-				end, 1)
+				end)
 
 				--------------------------------
 
@@ -166,7 +166,7 @@ function NS.Script:Load()
 		end)
 
 		CallbackRegistry:Add("START_INTERACTION", function()
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(0, function()
 				local UnitIsMaxLevel = (GetMaxPlayerLevel() == UnitLevel(UnitName("player")))
 
 				--------------------------------
@@ -178,7 +178,7 @@ function NS.Script:Load()
 
 					Frame:ShowWithAnimation()
 				end
-			end, 0)
+			end)
 		end, 0)
 
 		CallbackRegistry:Add("STOP_INTERACTION", function()

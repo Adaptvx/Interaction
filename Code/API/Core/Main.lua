@@ -296,11 +296,11 @@ do
 		if not InCombatLockdown() then
 			frame:SetPropagateKeyboardInput(false)
 
-			addon.Libraries.AceTimer:ScheduleTimer(function()
+			C_Timer.After(0, function()
 				if not InCombatLockdown() then
 					frame:SetPropagateKeyboardInput(true)
 				end
-			end, 0)
+			end)
 
 			if not frame.Registered then
 				frame.Registered = true
@@ -323,11 +323,11 @@ do
 		local id = GetTime()
 		frame.id = id
 
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(delay, function()
 			if frame.id == id then
 				func()
 			end
-		end, delay)
+		end)
 	end
 
 	function NS:RegisterThemeUpdate(func, priority)

@@ -48,7 +48,9 @@ function NS.Script:Load()
 			--------------------------------
 
 			Frame:ShowWithAnimation()
-			addon.Libraries.AceTimer:ScheduleTimer(Frame.HideWithAnimation, 2)
+			C_Timer.After(2, function()
+				Frame:HideWithAnimation()
+			end)
 
 			--------------------------------
 
@@ -82,9 +84,9 @@ function NS.Script:Load()
 				--------------------------------
 
 				addon.API.Animation:Fade(Frame, .5, 0, 1, nil, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.2, function()
 					addon.API.Animation:FadeText(Frame.REF_NOTIFICATION_TEXT, 1.5, 15, 1, addon.API.Animation.EaseExpo, function() return Frame:ShowWithAnimation_StopEvent(showWithAnimation_sessionID) end)
-				end, .2)
+				end)
 
 				--------------------------------
 
@@ -102,11 +104,11 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.5, function()
 					if Frame.showWithAnimation_sessionID == showWithAnimation_sessionID then
 						Frame:Hide()
 					end
-				end, .5)
+				end)
 
 				--------------------------------
 
@@ -139,18 +141,18 @@ function NS.Script:Load()
 				addon.API.Animation:Fade(Frame.REF_FLARE, .125, 0, 1, addon.API.Animation.EaseExpo, function() return Frame.REF_FLARE:StartPlayback_StopEvent(animationID) end)
 				addon.API.Animation:Scale(Frame.REF_FLARE, .125, .875, 1, function() return Frame.REF_FLARE:StartPlayback_StopEvent(animationID) end)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.125, function()
 					if Frame.REF_FLARE.animationID == animationID then
 						addon.API.Animation:Fade(Frame.REF_FLARE, 2, 1, 0, addon.API.Animation.EaseExpo, function() return Frame.REF_FLARE:StartPlayback_StopEvent(animationID) end)
 						addon.API.Animation:Scale(Frame.REF_FLARE, 2, 1, .875, nil, addon.API.Animation.EaseExpo, function() return Frame.REF_FLARE:StartPlayback_StopEvent(animationID) end)
 					end
-				end, .125)
+				end)
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(2, function()
 					if Frame.REF_FLARE.animationID == animationID then
 						Frame.REF_FLARE:Hide()
 					end
-				end, 2)
+				end)
 			end
 		end
 	end

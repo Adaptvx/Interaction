@@ -43,9 +43,9 @@ do
 
 	ThemeUpdate()
 
-	addon.Libraries.AceTimer:ScheduleTimer(function()
+	C_Timer.After(.1, function()
 		addon.API.Main:RegisterThemeUpdateWithNativeAPI(ThemeUpdate, -1)
-	end, .1)
+	end)
 end
 
 --------------------------------

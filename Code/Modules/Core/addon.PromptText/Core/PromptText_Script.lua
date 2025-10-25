@@ -53,9 +53,9 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.1, function()
 					Frame.InputArea.InputBox:SetFocus()
-				end, .1)
+				end)
 			end
 
 			--------------------------------
@@ -117,9 +117,9 @@ function NS.Script:Load()
 			end
 
 			function Frame:HideWithAnimation()
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.5, function()
 					Frame:Hide()
-				end, .5)
+				end)
 				Frame.hidden = true
 
 				addon.API.Animation:Fade(Frame, .25, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)

@@ -147,11 +147,11 @@ function NS.Script:Load()
 				end
 				Frame.hidden = true
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(.5, function()
 					if Frame.hidden then
 						Frame:Hide()
 					end
-				end, .5)
+				end)
 
 				--------------------------------
 

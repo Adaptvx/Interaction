@@ -259,9 +259,9 @@ function NS.Data:Load()
 					get = function() return addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME end,
 					set = function(_, val)
 						if val ~= addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(.125, function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
-							end, .125)
+							end)
 						end
 
 						addon.Database.DB_GLOBAL.profile.INT_MAIN_THEME = val
@@ -296,9 +296,9 @@ function NS.Data:Load()
 					get = function() return addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME end,
 					set = function(_, val)
 						if val ~= addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(0, function()
 								CallbackRegistry:Trigger("THEME_UPDATE")
-							end, 0)
+							end)
 						end
 
 						addon.Database.DB_GLOBAL.profile.INT_DIALOG_THEME = val
@@ -2156,9 +2156,9 @@ function NS.Data:Load()
 													local Volume = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 													addon.TextToSpeech.Script:StopSpeakingText()
-													addon.Libraries.AceTimer:ScheduleTimer(function()
+													C_Timer.After(0, function()
 														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, Rate, Volume)
-													end, 0)
+													end)
 												end
 											end,
 											setCriteria = function()
@@ -2201,9 +2201,9 @@ function NS.Data:Load()
 													local Volume = (addon.Database.DB_GLOBAL.profile.INT_READABLE_AUDIOBOOK_VOLUME or 100)
 
 													addon.TextToSpeech.Script:StopSpeakingText()
-													addon.Libraries.AceTimer:ScheduleTimer(function()
+													C_Timer.After(0, function()
 														addon.TextToSpeech.Script:SpeakText(Voice, "Interaction example text.", Enum.VoiceTtsDestination and Enum.VoiceTtsDestination.LocalPlayback or 1, Rate, Volume)
-													end, 0)
+													end)
 												end
 											end,
 											setCriteria = function()
@@ -2592,7 +2592,7 @@ function NS.Data:Load()
 				--------------------------------
 
 				for elementToCreate = 1, #ElementsToCreate[CategoryNames[category]] do
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(elementToCreate / 25, function()
 						local CurrentElement = ElementsToCreate[CategoryNames[category]][elementToCreate]
 
 						if CurrentElement then
@@ -2917,7 +2917,7 @@ function NS.Data:Load()
 								SetWidget(frame)
 							end
 						end
-					end, elementToCreate / 25)
+					end)
 				end
 			end
 		end
@@ -2929,15 +2929,15 @@ function NS.Data:Load()
 
 	do -- DATA
 		NS.Data:InitalizeElements()
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(.5, function()
 			NS.Data:CreateElements()
-		end, .5)
+		end)
 	end
 
 	do -- LAYOUT
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(.5, function()
 			InteractionSettingsFrame.Sidebar.Legend.Update()
 			InteractionSettingsFrame.Content.ScrollFrame.Update()
-		end, .5)
+		end)
 	end
 end

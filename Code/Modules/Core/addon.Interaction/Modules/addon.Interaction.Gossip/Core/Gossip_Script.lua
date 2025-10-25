@@ -108,9 +108,9 @@ function NS.Script:Load()
 						Callback.OptionButtons.IsWaitingForGossipShow = false
 						Callback.OptionButtons.IsTTSPlayback = { ["playback"] = false, ["button"] = nil }
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.25, function()
 							Callback.OptionButtons.IsTTSPlayback = { ["playback"] = true, ["button"] = button }
-						end, .25)
+						end)
 					else
 						button.SelectOption()
 
@@ -522,7 +522,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(function()
+				C_Timer.After(0, function()
 					Frame:UpdateOptions(hideButtons)
 
 					--------------------------------
@@ -534,7 +534,7 @@ function NS.Script:Load()
 					if chain.onFinish.variable then
 						chain.onFinish.variable()
 					end
-				end, 0)
+				end)
 
 				--------------------------------
 
@@ -617,9 +617,9 @@ function NS.Script:Load()
 
 							--------------------------------
 
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(delay, function()
 								currentButton:ShowWithAnimation()
-							end, delay)
+							end)
 						end
 
 						--------------------------------
@@ -632,7 +632,7 @@ function NS.Script:Load()
 
 				--------------------------------
 
-				addon.Libraries.AceTimer:ScheduleTimer(Frame.UpdateLayout, 1)
+				C_Timer.After(1, Frame.UpdateLayout)
 			end
 		end
 
@@ -677,11 +677,11 @@ function NS.Script:Load()
 					end
 					Frame.hidden = true
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.125, function()
 						if Frame.hidden then
 							Frame:Hide()
 						end
-					end, .125)
+					end)
 
 					--------------------------------
 
@@ -729,11 +729,11 @@ function NS.Script:Load()
 						--------------------------------
 
 						if isGossipOrQuestGreetingStillVisible then
-							addon.Libraries.AceTimer:ScheduleTimer(function()
+							C_Timer.After(.125, function()
 								if not Frame:RefreshWithAnimation_End_StopEvent() then
 									addon.API.Animation:Fade(Frame, .125, Frame:GetAlpha(), 1, nil, Frame.RefreshWithAnimation_End_StopEvent)
 								end
-							end, .125)
+							end)
 
 							Frame:RefreshOptions().onFinish(function()
 								Frame:UpdateAll()

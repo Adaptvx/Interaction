@@ -60,6 +60,6 @@ function NS:Load()
 	--------------------------------
 
 	do
-		addon.Libraries.AceTimer:ScheduleTimer(addon.LoadedAddons.GetAddons, addon.Variables.INIT_DELAY_LAST)
+		C_Timer.After(addon.Variables.INIT_DELAY_LAST, addon.LoadedAddons.GetAddons)
 	end
 end

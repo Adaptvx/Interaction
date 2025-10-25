@@ -356,11 +356,7 @@ function NS.Prefabs:Load()
 									elseif Frame.optionType == "active" then
 										C_GossipInfo.SelectActiveQuest(Frame.optionID)
 									elseif Frame.optionType == "option" then
-										if not Frame.optionType then
-											C_GossipInfo.SelectOptionByIndex(Frame.orderIndex)
-										else
-											C_GossipInfo.SelectOption(Frame.optionID)
-										end
+										C_GossipInfo.SelectOptionByIndex(Frame.orderIndex)
 									end
 								elseif Frame.optionFrame == "quest-greeting" then
 									if Frame.optionType == "available" then

@@ -237,16 +237,13 @@ do -- ANIMATIONS
 
 		--------------------------------
 
-		local textParent = text:GetParent():GetParent()
-		local textFrame = text:GetParent()
-
 		text:SetAlpha(startAlpha or 1)
 		text:SetAlphaGradient(0, width)
 		text:SetIgnoreParentAlpha(true)
 
 		--------------------------------
 
-		addon.Libraries.AceTimer:ScheduleTimer(function()
+		C_Timer.After(0, function()
 			local Length = strlenutf8(text:GetText() or "")
 			local Speed = ceil(Length / duration) + 10
 			local Progress = 0
@@ -269,11 +266,6 @@ do -- ANIMATIONS
 					return
 				end
 
-				-- if not text:IsVisible() then
-				-- 	RemoveFromQueue()
-				-- 	return
-				-- end
-
 				--------------------------------
 
 				CurrentTime = CurrentTime + elapsed
@@ -281,14 +273,6 @@ do -- ANIMATIONS
 
 				local EasedProgress = animationFunc(CurrentTime, 0, 1, 1)
 				local NewProgress = Progress * EasedProgress
-
-				-- if CurrentTime >= NextAlphaUpdateTime then
-				-- 	local SavedAlpha = textParent:GetEffectiveAlpha()
-				-- 	text:SetAlpha(SavedAlpha)
-				-- 	text:SetAlphaGradient(NewProgress, width)
-
-				-- 	NextAlphaUpdateTime = CurrentTime + AlphaUpdateInterval
-				-- end
 
 				if not text:SetAlphaGradient(NewProgress, width) then
 					RemoveFromQueue()
@@ -298,7 +282,7 @@ do -- ANIMATIONS
 			--------------------------------
 
 			addon.API.Animation:AddToQueue(frame, "FadeText", UpdateAlpha, 5)
-		end, 0)
+		end)
 	end
 
 	-- Scales the frame from A to B over the duration. Not restricted.

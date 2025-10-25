@@ -884,7 +884,7 @@ function NS.Navigation:Load()
 
 			if (NS.Variables.IsController or NS.Variables.SimulateController) then
 				CallbackRegistry:Add("START_SETTING", function()
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.25, function()
 						if not NS.Variables.IsControllerEnabled and not NS.Variables.SimulateController then
 							return
 						end
@@ -892,7 +892,7 @@ function NS.Navigation:Load()
 						--------------------------------
 
 						InitalizeSettings()
-					end, .25)
+					end)
 				end, 2)
 
 				CallbackRegistry:Add("STOP_SETTING", function()
@@ -919,13 +919,13 @@ function NS.Navigation:Load()
 					--------------------------------
 
 					if Callback.CurrentNavigationSession == "SETTING" then
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(0, function()
 							Callback:RegisterNewFrame()
-						end, 0)
+						end)
 
-						addon.Libraries.AceTimer:ScheduleTimer(function()
+						C_Timer.After(.1, function()
 							Callback:RegisterNewFrame()
-						end, .1)
+						end)
 					end
 				end, 0)
 

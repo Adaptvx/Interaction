@@ -189,9 +189,9 @@ function NS.Script:Load()
 		NS.Variables.Saved_Sound_DialogVolume = GetCVar("Sound_DialogVolume")
 	end
 
-	addon.Libraries.AceTimer:ScheduleTimer(function()
+	C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
 		NS.Script:Initalize()
-	end, addon.Variables.INIT_DELAY_LAST)
+	end)
 
 	--------------------------------
 	-- CALLBACKS

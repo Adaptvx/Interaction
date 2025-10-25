@@ -329,9 +329,9 @@ do
 
 					--------------------------------
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(0, function()
 						frame:UpdateActive()
-					end, 0)
+					end)
 				end
 
 				function frame:UpdateEnabled()

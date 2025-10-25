@@ -94,11 +94,11 @@ function NS.Script:Load()
 					end
 					Frame.REF_GRADIENT.hidden = true
 
-					addon.Libraries.AceTimer:ScheduleTimer(function()
+					C_Timer.After(.25, function()
 						if Frame.REF_GRADIENT.hidden then
 							Frame.REF_GRADIENT:Hide()
 						end
-					end, .25)
+					end)
 
 					--------------------------------
 
