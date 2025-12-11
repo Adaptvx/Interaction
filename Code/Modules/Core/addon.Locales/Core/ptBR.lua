@@ -19,15 +19,15 @@ local function Load()
 
 	do
 		-- WARNINGS
-		L["Warning - Leave NPC Interaction"] = "Deixe de interagir com NPC para ajustar as configurações."
+		L["Warning - Leave NPC Interaction"] = "Deixe de interagir com o NPC para ajustar as configurações."
 		L["Warning - Leave ReadableUI"] = "Saia da interface para ajustar as configurações."
 
 		-- PROMPTS
 		L["Prompt - Reload"] = "É necessário recarregar a interface para aplicar as configurações."
 		L["Prompt - Reload Button 1"] = "Recarregar"
 		L["Prompt - Reload Button 2"] = "Fechar"
-		L["Prompt - Reset Settings"] = "em certeza de que deseja redefinir as configurações?"
-		L["Prompt - Reset Settings Button 1"] = "Resetar"
+		L["Prompt - Reset Settings"] = "Tem certeza de que deseja redefinir as configurações?"
+		L["Prompt - Reset Settings Button 1"] = "Redefinir"
 		L["Prompt - Reset Settings Button 2"] = "Cancelar"
 
 		-- TABS
@@ -41,74 +41,75 @@ local function Load()
 		-- ELEMENTS
 		-- APPEARANCE
 		L["Title - Theme"] = "Tema"
-		L["Range - Main Theme"] = "Tema Principal"
+		L["Range - Main Theme"] = "Tema principal"
 		L["Range - Main Theme - Tooltip"] = "Define o tema geral da interface.\n\nPadrão: DIA.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "Dinâmico" .. addon.Theme.Settings.Tooltip_Text_Note .. " A opção define o tema principal de acordo com o ciclo dia/noite dentro do jogo.|r"
 		L["Range - Main Theme - Day"] = "DIA"
 		L["Range - Main Theme - Night"] = "NOITE"
 		L["Range - Main Theme - Dynamic"] = "DINÂMICO"
-		L["Range - Dialog Theme"] = "Tema do Diálogo"
+		L["Range - Dialog Theme"] = "Tema do diálogo"
 		L["Range - Dialog Theme - Tooltip"] = "Define o tema da interface de diálogo com NPC.\n\nPadrão: Auto.\n\n" .. addon.Theme.Settings.Tooltip_Text_Note_Highlight .. "AUTO" .. addon.Theme.Settings.Tooltip_Text_Note .. " A opção define o tema do diálogo para combinar com o tema principal.|r"
 		L["Range - Dialog Theme - Auto"] = "AUTO"
 		L["Range - Dialog Theme - Day"] = "DIA"
 		L["Range - Dialog Theme - Night"] = "NOITE"
 		L["Range - Dialog Theme - Rustic"] = "RUSTICO"
 		L["Title - Appearance"] = "Aparência"
-		L["Range - UIDirection"] = "Posicionamento da Interface"
+		L["Range - UIDirection"] = "Posicionamento da interface"
 		L["Range - UIDirection - Tooltip"] = "Define o posicionamento da interface."
 		L["Range - UIDirection - Left"] = "ESQUERDA"
 		L["Range - UIDirection - Right"] = "DIREITA"
-		L["Range - UIDirection / Dialog"] = "Posição Fixa da Janela de Diálogo"
+		L["Range - UIDirection / Dialog"] = "Posição fixa da janela de diálogo"
 		L["Range - UIDirection / Dialog - Tooltip"] = "Define a posição fixa da janela de diálogo.\n\nPosição O diálogo é usado quando a placa de nome do NPC está indisponível."
 		L["Range - UIDirection / Dialog - Top"] = "TOPO"
 		L["Range - UIDirection / Dialog - Center"] = "CENTRO"
 		L["Range - UIDirection / Dialog - Bottom"] = "INFERIOR"
 		L["Checkbox - UIDirection / Dialog / Mirror"] = "Inverter"
 		L["Checkbox - UIDirection / Dialog / Mirror - Tooltip"] = "Inverte a direção da interface."
-		L["Range - Quest Frame Size"] = "Tamanho do Quadro de Missão"
+		L["Range - Quest Frame Size"] = "Tamanho do quadro de missão"
 		L["Range - Quest Frame Size - Tooltip"] = "Ajusta o tamanho do quadro de missão.\n\nPadrão: Médio."
 		L["Range - Quest Frame Size - Small"] = "PEQUENO"
 		L["Range - Quest Frame Size - Medium"] = "MÉDIO"
 		L["Range - Quest Frame Size - Large"] = "GRANDE"
 		L["Range - Quest Frame Size - Extra Large"] = "EXTRA GRANDE"
-		L["Range - Text Size"] = "Tamanho da Fonte"
+		L["Range - Text Size"] = "Tamanho da fonte"
 		L["Range - Text Size - Tooltip"] = "Ajusta o tamanho da fonte."
 		L["Title - Dialog"] = "Diálogo"
-		L["Checkbox - Dialog / Title / Progress Bar"] = "Exibir Barra de Progresso"
+		L["Checkbox - Dialog / Title / Progress Bar"] = "Exibir barra de progresso"
 		L["Checkbox - Dialog / Title / Progress Bar - Tooltip"] = "Exibe ou oculta a barra de progresso do diálogo.\n\nA barra indica o quanto você avançou na conversa atual.\n\nPadrão: Ligado."
-		L["Range - Dialog / Title / Text Alpha"] = "Opacidade do Título"
+		L["Range - Dialog / Title / Text Alpha"] = "Opacidade do título"
 		L["Range - Dialog / Title / Text Alpha - Tooltip"] = "Define a opacidade do título do diálogo.\n\nPadrão: 50%."
-		L["Range - Dialog / Content Preview Alpha"] = "Opacidade da Pré-visualização do Texto"
-		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Define a opacidade da pré-visualização do texto do diálogo.\n\nPadrão: 50%."
+		L["Range - Dialog / Content Preview Alpha"] = "Opacidade da pré-visualização de texto"
+		L["Range - Dialog / Content Preview Alpha - Tooltip"] = "Define a opacidade da pré-visualização de texto do diálogo.\n\nPadrão: 50%."
 		L["Title - Quest"] = "Missão"
-		L["Checkbox - Always Show Gossip Frame"] = "Sempre mostrar a janela de diálogos"
-		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Sempre exibir a janela de diálogos quando disponível, em vez de mostrar só depois da conversa começar.\n\nDefault: Ligado."
-		L["Checkbox - Always Show Quest Frame"] = "Sempre Exibir o Quadro de Missão"
+		L["Title - Gossip"] = "Janela de diálogo"
+		L["Checkbox - Always Show Gossip Frame"] = "Sempre mostrar a janela de diálogo"
+		L["Checkbox - Always Show Gossip Frame - Tooltip"] = "Sempre exibir a janela de diálogo quando disponível, em vez de mostrar só depois da conversa começar.\n\nPadrão: Ligado."
+		L["Checkbox - Always Show Quest Frame"] = "Sempre exibir o quadro de missão"
 		L["Checkbox - Always Show Quest Frame - Tooltip"] = "Sempre exibir o quadro de missão quando disponível, em vez de apenas após o diálogo.\n\nPadrão: Ligado."
 
 		-- VIEWPORT
 		L["Title - Effects"] = "Efeitos"
-		L["Checkbox - Hide UI"] = "Ocultar a Interface"
+		L["Checkbox - Hide UI"] = "Ocultar a interface"
 		L["Checkbox - Hide UI - Tooltip"] = "Oculta a interface durante a interação com o NPC.\n\nPadrão: Ligado."
-		L["Range - Cinematic"] = "Efeitos da Câmera"
+		L["Range - Cinematic"] = "Efeitos da câmera"
 		L["Range - Cinematic - Tooltip"] = "Efeitos de câmera durante a interação.\n\nPadrão: COMPLETO."
 		L["Range - Cinematic - None"] = "NENHUM"
 		L["Range - Cinematic - Full"] = "COMPLETO"
 		L["Range - Cinematic - Balanced"] = "EQUILIBRADO"
 		L["Range - Cinematic - Custom"] = "PERSONALIZADO"
 		L["Checkbox - Zoom"] = "Zoom"
-		L["Range - Zoom / Min Distance"] = "Distância Mínima"
+		L["Range - Zoom / Min Distance"] = "Distância mínima"
 		L["Range - Zoom / Min Distance - Tooltip"] = "Se o zoom atual estiver abaixo deste limite, a câmera irá fazer o zoom até este nível."
-		L["Range - Zoom / Max Distance"] = "Distância Máxima"
+		L["Range - Zoom / Max Distance"] = "Distância máxima"
 		L["Range - Zoom / Max Distance - Tooltip"] = "Se o zoom atual estiver acima deste limite, a câmera irá fazer o zoom até este nível."
-		L["Checkbox - Zoom / Pitch"] = "Ajusta o Ângulo Vertical"
+		L["Checkbox - Zoom / Pitch"] = "Ajusta o ângulo vertical"
 		L["Checkbox - Zoom / Pitch - Tooltip"] = "Habilitar ajuste do ângulo vertical da câmera."
-		L["Range - Zoom / Pitch / Level"] = "Ângulo Máximo"
-		L["Range - Zoom / Pitch / Level - Tooltip"] = "Limite do Ângulo Vertical."
-		L["Checkbox - Zoom / Field Of View"] = "Ajusta o FOV"
-		L["Checkbox - Pan"] = "Panorama"
+		L["Range - Zoom / Pitch / Level"] = "Ângulo máximo"
+		L["Range - Zoom / Pitch / Level - Tooltip"] = "Limite do ângulo vertical."
+		L["Checkbox - Zoom / Field Of View"] = "Ajusta o campo de visão"
+		L["Checkbox - Pan"] = "Panorâmica"
 		L["Range - Pan / Speed"] = "Velocidade"
-		L["Range - Pan / Speed - Tooltip"] = "Velocidade máxima de panorama."
-		L["Checkbox - Dynamic Camera"] = "Câmera Dinâmica"
+		L["Range - Pan / Speed - Tooltip"] = "Velocidade máxima da câmera panorâmica."
+		L["Checkbox - Dynamic Camera"] = "Câmera dinâmica"
 		L["Checkbox - Dynamic Camera - Tooltip"] = "Ativa configurações de câmera dinâmica."
 		L["Checkbox - Dynamic Camera / Side View"] = "Visão lateral"
 		L["Checkbox - Dynamic Camera / Side View - Tooltip"] = "Ajustar câmera para visão lateral."
@@ -133,14 +134,14 @@ local function Load()
 
 		-- PLAYBACK
 		L["Title - Pace"] = "Diálogos"
-		L["Range - Playback Speed"] = "Velocidade de Texto"
-		L["Range - Playback Speed - Tooltip"] = "velocidade de reprodução do texto.\n\nPadrão: 100%."
+		L["Range - Playback Speed"] = "Velocidade do texto"
+		L["Range - Playback Speed - Tooltip"] = "Velocidade de reprodução do texto.\n\nPadrão: 100%."
 		L["Checkbox - Dynamic Playback"] = "Reprodução natural"
 		L["Checkbox - Dynamic Playback - Tooltip"] = "Adiciona pausas de pontuação no diálogo.\n\nPadrão: Ligado."
-		L["Title - Auto Progress"] = "Progresso Automático"
+		L["Title - Auto Progress"] = "Progresso automático"
 		L["Checkbox - Auto Progress"] = "Ativar"
 		L["Checkbox - Auto Progress - Tooltip"] = "Progredir automaticamente para o próximo diálogo.\n\nPadrão: Ligado."
-		L["Checkbox - Auto Close Dialog"] = "Fechamento Automático"
+		L["Checkbox - Auto Close Dialog"] = "Fechamento automático"
 		L["Checkbox - Auto Close Dialog - Tooltip"] = "Para a interação com NPC quando não houver opções disponíveis.\n\nPadrão: Ligado."
 		L["Range - Auto Progress / Delay"] = "Atraso"
 		L["Range - Auto Progress / Delay - Tooltip"] = "Atraso antes de fechar a conversa com o NPC.\n\nPadrão: 1."
@@ -148,11 +149,11 @@ local function Load()
 		L["Checkbox - Text To Speech"] = "Ativar"
 		L["Checkbox - Text To Speech - Tooltip"] = "Lê o texto do diálogo em voz alta.\n\nPadrão: Desligado."
 		L["Title - Text To Speech / Playback"] = "Reprodução"
-		L["Checkbox - Text To Speech / Quest"] = "Reproduzir Missão"
+		L["Checkbox - Text To Speech / Quest"] = "Reproduzir missão"
 		L["Checkbox - Text To Speech / Quest - Tooltip"] = "Ativa texto para fala no diálogo da missão.\n\nPadrão: Ligado."
-		L["Checkbox - Text To Speech / Gossip"] = "Reproduzir no Balão de Mensagem"
+		L["Checkbox - Text To Speech / Gossip"] = "Reproduzir no balão de mensagem"
 		L["Checkbox - Text To Speech / Gossip - Tooltip"] = "Ativa texto para fala no diálogo de balão de mensagem.\n\nPadrão: Ligado."
-		L["Range - Text To Speech / Rate"] = "Velocidade da Fala"
+		L["Range - Text To Speech / Rate"] = "Velocidade da fala"
 		L["Range - Text To Speech / Rate - Tooltip"] = "Velocidade da fala.\n\nPadrão: 100%."
 		L["Range - Text To Speech / Volume"] = "Volume"
 		L["Range - Text To Speech / Volume - Tooltip"] = "Volume da fala.\n\nPadrão: 100%."
@@ -209,7 +210,7 @@ local function Load()
 		L["Title - Waypoint"] = "Ponto de Navegação"
 		L["Checkbox - Waypoint"] = "Ativar"
 		L["Checkbox - Waypoint - Tooltip"] = "Substituição do ponto de navegação para a navegação do Addon.\n\nPadrão: Ligado."
-		L["Checkbox - Waypoint / Audio"] = "Audio"
+		L["Checkbox - Waypoint / Audio"] = "Áudio"
 		L["Checkbox - Waypoint / Audio - Tooltip"] = "Efeitos sonoros quando o estado do ponto de navegação muda.\n\nPadrão: Ligado."
 		L["Title - Readable"] = "Itens de Leitura"
 		L["Checkbox - Readable"] = "Ativar"
@@ -221,30 +222,30 @@ local function Load()
 		L["Checkbox - Readable / Viewport"] = "Ativar efeitos na área de visualização"
 		L["Checkbox - Readable / Viewport - Tooltip"] = "Efeitos na área de visualização ao iniciar a interface de leitura.\n\nPadrão: Ligado."
 		L["Title - Readable / Shortcuts"] = "Atalhos"
-		L["Checkbox - Readable / Shortcuts / Minimap Icon"] = "Ícone no Minimapa"
-		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Exibi um ícone no minimapa para acesso rápido à biblioteca de livros.\n\nPadrão: Ligado."
+		L["Checkbox - Readable / Shortcuts / Minimap Icon"] = "Ícone no minimapa"
+		L["Checkbox - Readable / Shortcuts / Minimap Icon - Tooltip"] = "Exibe um ícone no minimapa para acesso rápido à biblioteca de livros.\n\nPadrão: Ligado."
 		L["Title - Readable / Audiobook"] = "Audiolivro"
-		L["Range - Readable / Audiobook - Rate"] = "Velocidade de Texto"
+		L["Range - Readable / Audiobook - Rate"] = "Velocidade de texto"
 		L["Range - Readable / Audiobook - Rate - Tooltip"] = "Velocidade de reprodução.\n\nPadrão: 100%."
 		L["Range - Readable / Audiobook - Volume"] = "Volume"
 		L["Range - Readable / Audiobook - Volume - Tooltip"] = "Volume de reprodução.\n\nPadrão: 100%."
 		L["Dropdown - Readable / Audiobook - Voice"] = "Narrador"
 		L["Dropdown - Readable / Audiobook - Voice - Tooltip"] = "Voz de reprodução."
-		L["Dropdown - Readable / Audiobook - Special Voice"] = "Narrador Secundário"
+		L["Dropdown - Readable / Audiobook - Special Voice"] = "Narrador secundário"
 		L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Voz de reprodução usada em parágrafos especiais, como aqueles envoltos em '<>'."
 		L["Title - Gameplay"] = "Jogabilidade"
-		L["Checkbox - Gameplay / Auto Select Option"] = "Selecionar Opções Automaticamente"
+		L["Checkbox - Gameplay / Auto Select Option"] = "Selecionar opções automaticamente"
 		L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Seleciona a melhor opção para certos NPCs.\n\nPadrão: Desligado."
 
 		-- MORE
-		L["Title - Audio"] = "Audio"
-		L["Checkbox - Audio"] = "Ativar Audio"
+		L["Title - Audio"] = "Áudio"
+		L["Checkbox - Audio"] = "Ativar áudio"
 		L["Checkbox - Audio - Tooltip"] = "Ativa efeitos sonoros e áudio.\n\nPadrão: Ligado."
 		L["Title - Settings"] = "Configurações"
-		L["Checkbox - Settings / Reset Settings"] = "Resetar todas as configurações"
+		L["Checkbox - Settings / Reset Settings"] = "Redefinir todas as configurações"
 		L["Checkbox - Settings / Reset Settings - Tooltip"] = "Redefine as configurações para os valores padrão..\n\nPadrão: Desligado."
 
-		L["Title - Special Credits"] = "Agradecimento Especial"
+		L["Title - Special Credits"] = "Agradecimento especial"
 		L["Title - Special Credits / MrFIXIT"] = "MrFIXIT | Código - Ajustes relevantes e novos recursos"
 		L["Title - Special Credits / MrFIXIT - Tooltip"] = "Agradecimento especiale e sincera gratidão a MrFIXIT pelas extensas correções e melhorias realizadas!"
 
@@ -302,20 +303,21 @@ local function Load()
 			L["Readable - Library - Show"] = "Mostrar"
 			L["Readable - Library - Letters"] = "Cartas"
 			L["Readable - Library - Books"] = "Livros"
-			L["Readable - Library - Slates"] = "Anotções"
-			L["Readable - Library - Show only World"] = "Não Colecionável"
+			L["Readable - Library - Slates"] = "Anotações"
+			L["Readable - Library - Show only World"] = "Do mundo"
+			L["Added from Bags"] = "adicionado das bolsas"
 
 			-- TITLE
-			L["Readable - Library - Name Text - Global"] = "Livraria Bando de Guerra"
-			L["Readable - Library - Name Text - Local - Subtext 1"] = ""
-			L["Readable - Library - Name Text - Local - Subtext 2"] = "'s Biblioteca"
+			L["Readable - Library - Name Text - Global"] = "Biblioteca do Bando de Guerra"
+			L["Readable - Library - Name Text - Local - Subtext 1"] = "Biblioteca de "
+			L["Readable - Library - Name Text - Local - Subtext 2"] = ""
 			L["Readable - Library - Showing Status Text - Subtext 1"] = "Mostrando "
-			L["Readable - Library - Showing Status Text - Subtext 2"] = " Itens"
+			L["Readable - Library - Showing Status Text - Subtext 2"] = " itens"
 
 			-- CONTENT
 			L["Readable - Library - No Results Text - Subtext 1"] = "Sem resultados para "
 			L["Readable - Library - No Results Text - Subtext 2"] = "."
-			L["Readable - Library - Empty Library Text"] = "Biblioteca vazia."
+			L["Readable - Library - Empty Library Text"] = "Biblioteca vazia"
 		end
 
 		do -- READABLE
@@ -340,7 +342,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionFrame.QuestFrame - Objectives"] = "Objetivos da Missão"
+		L["InteractionFrame.QuestFrame - Objectives"] = "Objetivos de Missão"
 		L["InteractionFrame.QuestFrame - Rewards"] = "Recompensas"
 		L["InteractionFrame.QuestFrame - Required Items"] = "Itens Necessários"
 
@@ -368,7 +370,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["InteractionFrame.GossipFrame - Close"] = "Adeus"
+		L["InteractionFrame.GossipFrame - Close"] = "Até logo"
 	end
 
 	--------------------------------
@@ -383,9 +385,9 @@ local function Load()
 		L["ControlGuide - Continue"] = "Continuar"
 		L["ControlGuide - Complete"] = "Completar"
 		L["ControlGuide - Decline"] = "Recusar"
-		L["ControlGuide - Goodbye"] = "Adeus"
+		L["ControlGuide - Goodbye"] = "Até logo"
 		L["ControlGuide - Got it"] = "Entendido"
-		L["ControlGuide - Gossip Option Interact"] = "Selecionar Opção"
+		L["ControlGuide - Gossip Option Interact"] = "Selecionar opção"
 		L["ControlGuide - Quest Next Reward"] = "Próxima recompensa"
 	end
 
@@ -394,7 +396,7 @@ local function Load()
 	--------------------------------
 
 	do
-		L["Alert Notification - Accept"] = "Missão Aceita"
+		L["Alert Notification - Accept"] = "Missão aceita"
 		L["Alert Notification - Complete"] = "Missão completada"
 	end
 
@@ -430,10 +432,10 @@ local function Load()
 	do
 		L["MinimapIcon - Tooltip - Title"] = "Coleção de Livros"
 		L["MinimapIcon - Tooltip - Entries - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " Registros"
+		L["MinimapIcon - Tooltip - Entries - Subtext 2"] = " registros"
 		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 1"] = ""
-		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " Registro"
-		L["MinimapIcon - Tooltip - Entries - Empty"] = "Sem Registros."
+		L["MinimapIcon - Tooltip - Entries - Singular - Subtext 2"] = " registro"
+		L["MinimapIcon - Tooltip - Entries - Empty"] = "Sem registros"
 	end
 
 	--------------------------------
@@ -441,8 +443,8 @@ local function Load()
 	--------------------------------
 
 	do
-		L["BlizzardSettings - Title"] = "Abrir Configurações"
-		L["BlizzardSettings - Shortcut - Controller"] = "Em qualquer interface de interação."
+		L["BlizzardSettings - Title"] = "Abrir configurações"
+		L["BlizzardSettings - Shortcut - Controller"] = "em qualquer interface de interação."
 	end
 
 	--------------------------------
@@ -451,7 +453,7 @@ local function Load()
 
 	do
 		L["Alert - Under Attack"] = "Sob ataque"
-		L["Alert - Open Settings"] = "Para abrir as configurações."
+		L["Alert - Open Settings"] = "para abrir as configurações."
 	end
 
 	--------------------------------
@@ -481,9 +483,9 @@ local function Load()
 		-- Need to match Blizzard's special gossip option prefix text.
 		L["GossipData - Trigger - Quest"] = "%(Missão%)"
 		L["GossipData - Trigger - Movie 1"] = "%(Reproduzir%)"
-		L["GossipData - Trigger - Movie 2"] = "%(Reproduzir Filme%)"
-		L["GossipData - Trigger - NPC Dialog"] = "%<Fique um pouco e ouça.%>"
-		L["GossipData - Trigger - NPC Dialog - Append"] = "Fique um tempo e escute."
+		L["GossipData - Trigger - Movie 2"] = "%(Reproduzir filme%)"
+		L["GossipData - Trigger - NPC Dialog"] = "%<Fique um pouco e escute.%>"
+		L["GossipData - Trigger - NPC Dialog - Append"] = "Fique um pouco e escute."
 	end
 
 	--------------------------------
