@@ -660,7 +660,7 @@ function NS.LibraryUI.Script:Load()
 								DetailText = DetailText .. " " .. "(" .. "X: " .. string.format("%.0f", (Position.x * 100)) .. " " .. "Y: " .. string.format("%.0f", (Position.y * 100)) .. ")"
 							end
 						else
-							DetailText = DetailText .. " " .. "(" .. "Added from Bags" .. ")"
+							DetailText = DetailText .. " (" .. L["Added from Bags"] .. ")"
 						end
 
 						--------------------------------
