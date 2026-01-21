@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Load.lua"/>
+	<Script file="Core\\Gossip_Elements.lua"/>
+	<Script file="Core\\Gossip_Script.lua"/>
+	<Script file="Core\\Gossip_Variables.lua"/>
+	<Script file="Core\\Gossip_Templates.lua"/>
+	<Include file="Modules\\FriendshipBar\\Load.xml"/>
+	<Include file="Modules\\AutoSelect\\Load.xml"/>
+</Ui>

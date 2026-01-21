@@ -31,8 +31,6 @@ The following projects served as inspiration for aspects of this project:
 ]]
 
 
--- Latest version can be found at https://github.com/rossnichols/LibSerialize.
-
 --[[
 # LibSerialize
 
@@ -54,7 +52,6 @@ LibCompress, etc.) to determine which combination works best for you.
 ## Usage:
 
 ```lua
--- Dependencies: AceAddon-3.0, AceComm-3.0, LibSerialize, LibDeflate
 MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceComm-3.0")
 local LibSerialize = LibStub("LibSerialize")
 local LibDeflate = LibStub("LibDeflate")
@@ -63,7 +60,6 @@ function MyAddon:OnEnable()
     self:RegisterComm("MyPrefix")
 end
 
--- With compression (recommended):
 function MyAddon:Transmit(data)
     local serialized = LibSerialize:Serialize(data)
     local compressed = LibDeflate:CompressDeflate(serialized)
@@ -82,13 +78,14 @@ function MyAddon:OnCommReceived(prefix, payload, distribution, sender)
     -- Handle `data`
 end
 
--- Without compression (custom codec):
 MyAddon._codec = LibDeflate:CreateCodec("\000", "\255", "")
+
 function MyAddon:Transmit(data)
     local serialized = LibSerialize:Serialize(data)
     local encoded = self._codec:Encode(serialized)
     self:SendCommMessage("MyPrefix", encoded, "WHISPER", UnitName("player"))
 end
+
 function MyAddon:OnCommReceived(prefix, payload, distribution, sender)
     local decoded = self._codec:Decode(payload)
     if not decoded then return end
@@ -349,8 +346,6 @@ local canSerializeFnOptions = {
     Helper functions.
 --]]---------------------------------------------------------------------------
 
--- Returns the number of bytes required to store the value,
--- up to a maximum of three. Errors if three bytes is insufficient.
 local function GetRequiredBytes(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
@@ -358,9 +353,6 @@ local function GetRequiredBytes(value)
     error("Object limit exceeded")
 end
 
--- Returns the number of bytes required to store the value,
--- though always returning seven if four bytes is insufficient.
--- Doubles have room for 53bit numbers, so seven bits max.
 local function GetRequiredBytesNumber(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
@@ -369,16 +361,11 @@ local function GetRequiredBytesNumber(value)
     return 7
 end
 
--- Returns whether the value (a number) is fractional,
--- as opposed to a whole number.
 local function IsFractional(value)
     local _, fract = math_modf(value)
     return fract ~= 0
 end
 
--- Prints args to the chat window. To enable debug statements,
--- do a find/replace in this file with "-- DebugPrint(" for "DebugPrint(",
--- or the reverse to disable them again.
 local DebugPrint = function(...)
     print(...)
     -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
@@ -389,10 +376,6 @@ end
     Helpers for reading/writing streams of bytes from/to a string
 --]]---------------------------------------------------------------------------
 
--- Creates a writer to lazily construct a string over multiple writes.
--- Return values:
--- 1. WriteString(str)
--- 2. Flush()
 local function CreateWriter()
     local bufferSize = 0
     local buffer = {}
@@ -414,10 +397,6 @@ local function CreateWriter()
     return WriteString, FlushWriter
 end
 
--- Creates a reader to sequentially read bytes from the input string.
--- Return values:
--- 1. ReadBytes(bytelen)
--- 2. ReaderBytesLeft()
 local function CreateReader(input)
     local input = input
     local inputLen = #input
@@ -451,15 +430,15 @@ local function FloatToString(n)
         n = -n
     end
     local mant, expo = frexp(n)
-    if mant ~= mant then -- nan
+    if mant ~= mant then -- Nan
         return string_char(0xFF, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
     elseif mant == math_huge or expo > 0x400 then
-        if sign == 0 then -- inf
+        if sign == 0 then -- Inf
             return string_char(0x7F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
         else -- -inf
             return string_char(0xFF, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
         end
-    elseif (mant == 0.0 and expo == 0) or expo < -0x3FE then -- zero
+    elseif (mant == 0.0 and expo == 0) or expo < -0x3FE then -- Zero
         return string_char(sign, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
     else
         expo = expo + 0x3FE
@@ -807,9 +786,6 @@ LibSerialize._ReaderTable = {
     Write (serialization) support.
 --]]---------------------------------------------------------------------------
 
--- Returns the appropriate function from the writer table for the object's type.
--- If the object's type isn't supported and opts.errorOnUnserializableType is true,
--- then an error will be raised.
 function LibSerialize:_GetWriteFn(obj, opts)
     local typ = type(obj)
     local writeFn = self._WriterTable[typ]
@@ -820,9 +796,6 @@ function LibSerialize:_GetWriteFn(obj, opts)
     return writeFn
 end
 
--- Returns true if all of the variadic arguments are serializable.
--- Note that _GetWriteFn will raise a Lua error if it finds an
--- unserializable type, unless this behavior is suppressed via options.
 function LibSerialize:_CanSerialize(opts, ...)
     for i = 1, select("#", ...) do
         local obj = select(i, ...)
@@ -835,19 +808,12 @@ function LibSerialize:_CanSerialize(opts, ...)
     return true
 end
 
--- Returns true if the table's key/value pair should be serialized.
--- Both filter functions (if present) must return true, and the
--- key/value types must be serializable. Note that _CanSerialize
--- will raise a Lua error if it finds an unserializable type, unless
--- this behavior is suppressed via options.
 function LibSerialize:_ShouldSerialize(t, k, v, opts, filterFn)
     return (not opts.filter or opts.filter(t, k, v)) and
            (not filterFn or filterFn(t, k, v)) and
            self:_CanSerialize(opts, k, v)
 end
 
--- Note that _GetWriteFn will raise a Lua error if it finds an
--- unserializable type, unless this behavior is suppressed via options.
 function LibSerialize:_WriteObject(obj, opts)
     local writeFn = self:_GetWriteFn(obj, opts)
     if not writeFn then
@@ -866,8 +832,6 @@ function LibSerialize:_WriteInt(n, threshold)
     self._writeString(IntToString(n, threshold))
 end
 
--- Lookup tables to map the number of required bytes to the
--- appropriate reader table index.
 local numberIndices = {
     [2] = LibSerialize._ReaderIndex.NUM_16_POS,
     [3] = LibSerialize._ReaderIndex.NUM_24_POS,
@@ -1030,11 +994,11 @@ LibSerialize._WriterTable = {
             end
 
             -- Consider the array portion as a series of zero or more serializable
-            -- entries followed by zero or more entries that may or may not be
+            -- Entries followed by zero or more entries that may or may not be
             -- serializable. For the latter portion, we can either write them in
             -- the array portion, padding the unserializable entries with nils,
             -- or just write them as key/value pairs in the map portion. We'll choose
-            -- the former if there are more serializable entries in this portion than
+            -- The former if there are more serializable entries in this portion than
             -- unserializable, or the latter if more are unserializable.
             if arrayCount - totalArraySerializable > totalArraySerializable - serializableArrayCount then
                 arrayCount = serializableArrayCount
@@ -1202,7 +1166,7 @@ function LibSerialize:DeserializeValue(input)
     assert(version == MINOR)
 
     -- Since the objects we read may be nil, we need to explicitly
-    -- track the number of results and assign by index so that we
+    -- Track the number of results and assign by index so that we
     -- can call unpack() successfully at the end.
     local output = {}
     local outputSize = 0

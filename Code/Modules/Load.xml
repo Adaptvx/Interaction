@@ -1,34 +1,29 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
     <!-- Priority Modules -->
-    <Include file="Core/addon.Locales/Load.xml"/>
+    <Include file="Core\\Locales\\Load.xml"/>
 
     <!-- Blizzard Modules -->
-    <Include file="Core/Blizzard/addon.BlizzardFrames/Load.xml"/>
-    <Include file="Core/Blizzard/addon.BlizzardSettings/Load.xml"/>
-    <Include file="Core/Blizzard/addon.BlizzardSound/Load.xml"/>
-    <Include file="Core/Blizzard/addon.BlizzardMinimapIcon/Load.xml"/>
-
-	<!-- Modules -->
-    <Include file="Core/addon.Alert/Load.xml"/>
-    <Include file="Core/addon.AlertNotification/Load.xml"/>
-    <Include file="Core/addon.Audiobook/Load.xml"/>
-    <Include file="Core/addon.Cinematic/Load.xml"/>
-    <Include file="Core/addon.ConsoleVariables/Load.xml"/>
-    <Include file="Core/addon.ContextIcon/Load.xml"/>
-	<Include file="Core/addon.ControlGuide/Load.xml"/>
-	<Include file="Core/addon.GameTooltip/Load.xml"/>
-    <Include file="Core/addon.HideUI/Load.xml"/>
-    <Include file="Core/addon.PlayerStatusBar/Load.xml"/>
-    <Include file="Core/addon.Input/Load.xml"/>
-    <Include file="Core/addon.Interaction/Load.xml"/>
-    <Include file="Core/addon.Prompt/Load.xml"/>
-    <Include file="Core/addon.PromptText/Load.xml"/>
-    <Include file="Core/addon.Readable/Load.xml"/>
-    <Include file="Core/addon.SettingsUI/Load.xml"/>
-    <Include file="Core/addon.TextToSpeech/Load.xml"/>
-    <Include file="Core/addon.Waypoint/Load.xml"/>
-
-	<!-- Load -->
+    <Include file="Core\\Blizzard\\BlizzardFrames\\Load.xml"/>
+    <Include file="Core\\Blizzard\\BlizzardSettings\\Load.xml"/>
+    <Include file="Core\\Blizzard\\BlizzardSound\\Load.xml"/>
+    <Include file="Core\\Blizzard\\BlizzardMinimapIcon\\Load.xml"/>
+    <Include file="Core\\Alert\\Load.xml"/>
+    <Include file="Core\\AlertNotification\\Load.xml"/>
+    <Include file="Core\\Audiobook\\Load.xml"/>
+    <Include file="Core\\Cinematic\\Load.xml"/>
+    <Include file="Core\\ConsoleVariables\\Load.xml"/>
+    <Include file="Core\\ContextIcon\\Load.xml"/>
+	<Include file="Core\\ControlGuide\\Load.xml"/>
+	<Include file="Core\\GameTooltip\\Load.xml"/>
+    <Include file="Core\\HideUI\\Load.xml"/>
+    <Include file="Core\\PlayerStatusBar\\Load.xml"/>
+    <Include file="Core\\Input\\Load.xml"/>
+    <Include file="Core\\Interaction\\Load.xml"/>
+    <Include file="Core\\Prompt\\Load.xml"/>
+    <Include file="Core\\PromptText\\Load.xml"/>
+    <Include file="Core\\Readable\\Load.xml"/>
+    <Include file="Core\\SettingsUI\\Load.xml"/>
+    <Include file="Core\\TextToSpeech\\Load.xml"/>
 	<Script file="Load.lua"/>
 </Ui>

@@ -1,39 +1,28 @@
----@class addon
 local addon = select(2, ...)
 
---------------------------------
--- VARIABLES
---------------------------------
+-- Variables
+----------------------------------------------------------------------------------------------------
 
 addon.Foundation = {}
 local NS = addon.Foundation; addon.Foundation = NS
 
-do -- MAIN
+do -- Main
 	NS.Initalized = false
 end
 
-do -- CONSTANTS
-
-end
-
---------------------------------
--- FUNCTIONS (MAIN)
---------------------------------
 
 function NS:Load()
-	--------------------------------
-	-- FUNCTIONS (MAIN)
-	--------------------------------
+
+	-- Main
+	----------------------------------------------------------------------------------------------------
 
 	local function Priority()
 		addon.CallbackRegistry:Load()
-		addon.PrefabRegistry:Load()
+		addon.TemplateRegistry:Load()
 		addon.EventListener:Load()
 	end
 
 	local function Modules()
-		addon._DEV:Load()
-
 		addon.Theme:Load()
 		addon.SoundEffects:Load()
 		addon.Get:Load()
@@ -42,14 +31,13 @@ function NS:Load()
 		addon.Initialize:Load()
 	end
 
-	--------------------------------
-	-- EVENTS
-	--------------------------------
+	-- Events
+	----------------------------------------------------------------------------------------------------
 
 	do
-		local Events = CreateFrame("Frame")
-		Events:RegisterEvent("PLAYER_ENTERING_WORLD")
-		Events:SetScript("OnEvent", function(self, event, ...)
+		local f = CreateFrame("Frame")
+		f:RegisterEvent("PLAYER_ENTERING_WORLD")
+		f:SetScript("OnEvent", function(self, event, ...)
 			if event == "PLAYER_ENTERING_WORLD" then
 				if not NS.Initalized then
 					C_Timer.After(addon.Variables.INIT_DELAY_2, function()
@@ -60,9 +48,8 @@ function NS:Load()
 		end)
 	end
 
-	--------------------------------
-	-- SETUP
-	--------------------------------
+	-- Setup
+	----------------------------------------------------------------------------------------------------
 
 	do
 		Priority()

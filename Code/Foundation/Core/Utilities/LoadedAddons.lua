@@ -1,39 +1,30 @@
----@class addon
 local addon = select(2, ...)
 local CallbackRegistry = addon.CallbackRegistry
-local PrefabRegistry = addon.PrefabRegistry
+local TemplateRegistry = addon.TemplateRegistry
 local L = addon.Locales
 
---------------------------------
--- VARIABLES
---------------------------------
+-- Variables
+----------------------------------------------------------------------------------------------------
 
 addon.LoadedAddons = {}
 local NS = addon.LoadedAddons; addon.LoadedAddons = NS
 
-do -- MAIN
+do -- Main
 	NS.DynamicCam = false
 	NS.BtWQuests = false
 	NS.ElvUI = false
-	NS.WaypointUI = false
 end
 
-do -- CONSTANTS
-
-end
-
---------------------------------
--- FUNCTIONS (MAIN)
---------------------------------
 
 function NS:Load()
-	--------------------------------
-	-- FUNCTIONS (MAIN)
-	--------------------------------
+
+	-- Main
+	----------------------------------------------------------------------------------------------------
 
 	do
+
 		function addon.LoadedAddons:IsAddOnLoaded(name)
-			local loaded, finished = C_AddOns.IsAddOnLoaded(name)
+			local loaded, _ = C_AddOns.IsAddOnLoaded(name)
 			return loaded
 		end
 
@@ -41,23 +32,20 @@ function NS:Load()
 			addon.LoadedAddons.DynamicCam = addon.LoadedAddons:IsAddOnLoaded("DynamicCam")
 			addon.LoadedAddons.BtWQuests = addon.LoadedAddons:IsAddOnLoaded("BtWQuests")
 			addon.LoadedAddons.ElvUI = addon.LoadedAddons:IsAddOnLoaded("ElvUI")
-			addon.LoadedAddons.WaypointUI = addon.LoadedAddons:IsAddOnLoaded("WaypointUI")
 
 			CallbackRegistry:Trigger("LOADED_ADDONS_READY")
 		end
 	end
 
-	--------------------------------
-	-- EVENTS
-	--------------------------------
+	-- Events
+	----------------------------------------------------------------------------------------------------
 
 	do
 
 	end
 
-	--------------------------------
-	-- SETUP
-	--------------------------------
+	-- Setup
+	----------------------------------------------------------------------------------------------------
 
 	do
 		C_Timer.After(addon.Variables.INIT_DELAY_LAST, addon.LoadedAddons.GetAddons)

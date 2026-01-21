@@ -1,0 +1,125 @@
+local addon = select(2, ...)
+local CallbackRegistry = addon.CallbackRegistry
+local TemplateRegistry = addon.TemplateRegistry
+local L = addon.Locales
+local NS = addon.Alert; addon.Alert = NS
+
+NS.Script = {}
+
+function NS.Script:Load()
+
+	-- References
+	----------------------------------------------------------------------------------------------------
+
+	local Frame = InteractionFrame.AlertFrame
+	local Callback = NS.Script
+
+	-- Frame
+	----------------------------------------------------------------------------------------------------
+
+	do
+
+		function Callback:Show(image, text, textSize, startSFX, endSFX, duration)
+			if not Frame then
+				return
+			end
+
+			Frame.REF_IMAGE_TEXTURE:SetTexture(image)
+			Frame.REF_TITLE_TEXT:SetText(text)
+			C_Timer.After(0, function()
+				addon.API.Util:SetFontSize(Frame.REF_TITLE_TEXT, textSize)
+			end)
+
+			Frame:ShowWithAnimation()
+			addon.SoundEffects:PlaySoundFile(startSFX)
+
+			C_Timer.After(duration or 3, function()
+				Callback:Hide(endSFX)
+			end)
+		end
+
+		function Callback:Hide(sfx)
+			Frame:HideWithAnimation()
+			addon.SoundEffects:PlaySoundFile(sfx)
+		end
+	end
+
+	-- Animation
+	----------------------------------------------------------------------------------------------------
+
+	do
+
+		function Frame:ShowWithAnimation_StopEvent()
+			return Frame.hidden
+		end
+
+		function Frame:ShowWithAnimation()
+			if not Frame.hidden then
+				return
+			end
+			Frame.hidden = false
+			Frame:Show()
+
+			Frame:SetAlpha(1)
+			Frame.REF_IMAGE:SetAlpha(0)
+			Frame.REF_BACKGROUND:SetAlpha(0)
+			Frame.REF_TITLE:SetAlpha(0)
+
+			addon.API.Animation:Fade(Frame.REF_IMAGE, .125, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+			addon.API.Animation:Scale(Frame.REF_IMAGE, .375, 5, 1, nil, addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
+
+			C_Timer.After(.125, function()
+				if not Frame.hidden then
+					addon.API.Animation:Fade(Frame.REF_IMAGE, 1, 1, .5, nil, Frame.ShowWithAnimation_StopEvent)
+				end
+			end)
+
+			C_Timer.After(.125, function()
+				if not Frame.hidden then
+					addon.API.Animation:Fade(Frame.REF_BACKGROUND, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+					addon.API.Animation:Scale(Frame.REF_BACKGROUND, 1, 50, Frame:GetWidth(), "x", addon.API.Animation.EaseExpo, Frame.ShowWithAnimation_StopEvent)
+				end
+			end)
+
+			C_Timer.After(.2, function()
+				if not Frame.hidden then
+					addon.API.Animation:Fade(Frame.REF_TITLE, .25, 0, 1, nil, Frame.ShowWithAnimation_StopEvent)
+				end
+			end)
+		end
+
+		function Frame:HideWithAnimation_StopEvent()
+			return not Frame.hidden
+		end
+
+		function Frame:HideWithAnimation()
+			if Frame.hidden then
+				return
+			end
+			Frame.hidden = true
+			C_Timer.After(1, function()
+				if Frame.hidden then
+					Frame:Hide()
+				end
+			end)
+
+			addon.API.Animation:Fade(Frame, .5, Frame:GetAlpha(), 0, nil, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Scale(Frame.REF_BACKGROUND_TEXTURE, .5, Frame.REF_BACKGROUND_TEXTURE:GetWidth(), 125, "x", addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
+			addon.API.Animation:Scale(Frame.REF_IMAGE, .5, Frame.REF_IMAGE:GetScale(), .75, nil, addon.API.Animation.EaseSine, Frame.HideWithAnimation_StopEvent)
+		end
+	end
+
+	-- Settings
+	----------------------------------------------------------------------------------------------------
+
+	do
+
+	end
+
+	-- Event
+	----------------------------------------------------------------------------------------------------
+
+	do
+
+	end
+end

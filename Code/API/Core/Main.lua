@@ -1,422 +1,222 @@
----@class addon
 local addon = select(2, ...)
-local CallbackRegistry = addon.CallbackRegistry
-local PrefabRegistry = addon.PrefabRegistry
-local L = addon.Locales
-
---------------------------------
--- VARIABLES
---------------------------------
 
 addon.API.Main = {}
-local NS = addon.API.Main; addon.API.Main = NS
+addon.API.Main.UIScale = .75
 
-do -- MAIN
-	NS.UIScale = .75
-end
-
-do -- CONSTANTS
-
-end
-
---------------------------------
--- AUDIO
---------------------------------
-
-do
-
-end
-
---------------------------------
--- NPC INTERACTION
---------------------------------
-
-do
+do -- NPC
 	local INTERACT_GOSSIP = Enum.PlayerInteractionType and Enum.PlayerInteractionType.Gossip or 3;
 	local INTERACT_QUEST = Enum.PlayerInteractionType and Enum.PlayerInteractionType.QuestGiver or 4;
 
-	function NS:IsNPCGossip()
+	function addon.API.Main:IsNPCGossip()
 		return C_PlayerInteractionManager.IsInteractingWithNpcOfType(INTERACT_GOSSIP)
 	end
 
-	function NS:IsNPCQuest()
+	function addon.API.Main:IsNPCQuest()
 		return C_PlayerInteractionManager.IsInteractingWithNpcOfType(INTERACT_QUEST)
 	end
 
-	function NS:IsNPCQuestOrGossip()
-		return (NS:IsNPCGossip() or NS:IsNPCQuest())
+	function addon.API.Main:IsNPCQuestOrGossip()
+		return addon.API.Main:IsNPCGossip() or addon.API.Main:IsNPCQuest()
 	end
 
-	function NS:IsAutoAccept()
-		if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
-			return QuestGetAutoAccept() and QuestFrameAcceptButton:IsVisible()
-		else
-			return false
-		end
+	function addon.API.Main:IsAutoAccept()
+		if addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then return false end
+		return QuestGetAutoAccept() and QuestFrameAcceptButton:IsVisible()
 	end
 end
 
---------------------------------
--- PLATFORM
---------------------------------
-
-do
-	function NS:SetButtonToPlatform(frame, textFrame, keybindVariable, height, padding, paddingWidth)
+do -- Platform
+	function addon.API.Main:SetButtonToPlatform(frame, textFrame, keybindVariable, height, padding, paddingWidth)
 		local Text = textFrame or _G[frame:GetDebugName() .. "Text"]
 		local Frame = frame.API_ButtonTextFrame
 
 		frame.API_ButtonTextFrame_Variables = frame.API_ButtonTextFrame_Variables or {}
-		frame.API_ButtonTextFrame_Variables.keybindVariable = keybindVariable or ""
-		if addon.API.Util:FindString(frame.API_ButtonTextFrame_Variables.keybindVariable, "-") then frame.API_ButtonTextFrame_Variables.keybindVariable = "" end
-
-		--------------------------------
+		frame.API_ButtonTextFrame_Variables.keybindVariable = addon.API.Util:FindString(keybindVariable or "", "-") and "" or keybindVariable or ""
 
 		if not Frame then
-			local padding = padding or 7.5
-			local paddingWidth = paddingWidth or 10
 			local contentHeight = height or 30
+			local pad = padding or 7.5
+			local padW = paddingWidth or 10
 
 			local frameStrata = frame:GetFrameStrata()
 			local frameLevel = frame:GetFrameLevel()
 
-			--------------------------------
+			Frame = CreateFrame("Frame", "$parent.API_ButtonTextFrame", frame)
+			Frame:SetSize(frame:GetWidth(), contentHeight)
+			frame.API_ButtonTextFrame = Frame
 
-			do -- FRAME
-				Frame = CreateFrame("Frame", "$parent.API_ButtonTextFrame", frame)
-				Frame:SetSize(frame:GetWidth(), contentHeight)
+			Frame.KeybindFrame = CreateFrame("Frame", "$parent.API_ButtonTextFrame.KeybindFrame", Frame)
+			Frame.KeybindFrame:SetSize(contentHeight, contentHeight)
+			Frame.KeybindFrame:SetPoint("LEFT", Frame, 0, 0)
+			Frame.KeybindFrame:SetFrameStrata(frameStrata)
+			Frame.KeybindFrame:SetFrameLevel(frameLevel + 5)
 
-				--------------------------------
+			Frame.KeybindFrame.Background, Frame.KeybindFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.KeybindFrame, frameStrata, addon.Variables.PATH_ART .. "Platform\\Platform-Keybind-Background.png", 128, .125, "$parent.Background")
+			Frame.KeybindFrame.Background:SetAllPoints(Frame.KeybindFrame)
+			Frame.KeybindFrame.Background:SetFrameStrata(frameStrata)
+			Frame.KeybindFrame.Background:SetFrameLevel(frameLevel + 4)
 
-				frame.API_ButtonTextFrame = Frame
+			Frame.KeybindFrame.Text = addon.API.FrameTemplates:CreateText(Frame.KeybindFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", GameFontNormal:GetFont(), "$parent.Text")
+			Frame.KeybindFrame.Text:SetAllPoints(Frame.KeybindFrame, true)
+			Frame.KeybindFrame.Text:SetAlpha(.75)
 
-				--------------------------------
+			Frame.KeybindFrame.Image, Frame.KeybindFrame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.KeybindFrame, frameStrata, nil, "$parent.Image")
+			Frame.KeybindFrame.Image:SetSize(contentHeight - 5, contentHeight - 5)
+			Frame.KeybindFrame.Image:SetPoint("CENTER", Frame.KeybindFrame)
+			Frame.KeybindFrame.Image:SetAlpha(.75)
+			Frame.KeybindFrame.Image:SetFrameStrata(frameStrata)
+			Frame.KeybindFrame.Image:SetFrameLevel(frameLevel + 6)
 
-				do -- ELEMENTS
-					do -- KEYBIND FRAME
-						Frame.KeybindFrame = CreateFrame("Frame", "$parent.API_ButtonTextFrame.KeybindFrame", Frame)
-						Frame.KeybindFrame:SetSize(contentHeight, contentHeight)
-						Frame.KeybindFrame:SetPoint("LEFT", Frame, 0, 0)
-						Frame.KeybindFrame:SetFrameStrata(frameStrata)
-						Frame.KeybindFrame:SetFrameLevel(frameLevel + 5)
+			Text:ClearAllPoints()
+			Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + pad, 0)
 
-						--------------------------------
+			local function UpdateFormatting()
+				if #frame.API_ButtonTextFrame_Variables.keybindVariable >= 1 then
+					Frame:Show()
+					local IsPC = addon.Input.Variables.IsPC
+					local IsPlaystation = addon.Input.Variables.IsPlaystation
+					local IsXbox = addon.Input.Variables.IsXbox
 
-						do -- BACKGROUND
-							Frame.KeybindFrame.Background, Frame.KeybindFrame.BackgroundTexture = addon.API.FrameTemplates:CreateNineSlice(Frame.KeybindFrame, frameStrata, addon.Variables.PATH_ART .. "Platform/Platform-Keybind-Background.png", 128, .125, "$parent.Background")
-							Frame.KeybindFrame.Background:SetAllPoints(Frame.KeybindFrame)
-							Frame.KeybindFrame.Background:SetFrameStrata(frameStrata)
-							Frame.KeybindFrame.Background:SetFrameLevel(frameLevel + 4)
-						end
+					local replaceWithImageList = {
+						SPACE = addon.Variables.PATH_ART .. "Platform\\Text-Platform-PC-Space.png",
+						PAD1 = IsPlaystation and addon.Variables.PATH_ART .. "Platform\\Platform-PS-1.png" or IsXbox and addon.Variables.PATH_ART .. "Platform\\Platform-XBOX-1.png",
+						PAD2 = IsPlaystation and addon.Variables.PATH_ART .. "Platform\\Platform-PS-2.png" or IsXbox and addon.Variables.PATH_ART .. "Platform\\Platform-XBOX-2.png",
+						PAD3 = IsPlaystation and addon.Variables.PATH_ART .. "Platform\\Platform-PS-3.png" or IsXbox and addon.Variables.PATH_ART .. "Platform\\Platform-XBOX-3.png",
+						PAD4 = IsPlaystation and addon.Variables.PATH_ART .. "Platform\\Platform-PS-4.png" or IsXbox and addon.Variables.PATH_ART .. "Platform\\Platform-XBOX-4.png",
+						PADLSHOULDER = addon.Variables.PATH_ART .. "Platform\\Platform-LB.png",
+						PADRSHOULDER = addon.Variables.PATH_ART .. "Platform\\Platform-RB.png",
+						PADLTRIGGER = addon.Variables.PATH_ART .. "Platform\\Platform-LT.png",
+						PADRTRIGGER = addon.Variables.PATH_ART .. "Platform\\Platform-RT.png",
+					}
+					local replaceWithTextList = { ESCAPE = "Esc" }
 
-						do -- TEXT
-							Frame.KeybindFrame.Text = addon.API.FrameTemplates:CreateText(Frame.KeybindFrame, addon.Theme.RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.API.Fonts.CONTENT_LIGHT, "$parent.Text")
-							Frame.KeybindFrame.Text:SetAllPoints(Frame.KeybindFrame, true)
-							Frame.KeybindFrame.Text:SetAlpha(.75)
-						end
+					local key = tostring(Frame.KeybindFrame.Text:GetText())
+					local texture = replaceWithImageList[key]
+					local text = replaceWithTextList[key] or key
+					Frame.KeybindFrame.Text:SetText(text)
 
-						do -- IMAGE
-							Frame.KeybindFrame.Image, Frame.KeybindFrame.ImageTexture = addon.API.FrameTemplates:CreateTexture(Frame.KeybindFrame, frameStrata, nil, "$parent.Image")
-							Frame.KeybindFrame.Image:SetSize(contentHeight - 5, contentHeight - 5)
-							Frame.KeybindFrame.Image:SetPoint("CENTER", Frame.KeybindFrame)
-							Frame.KeybindFrame.Image:SetAlpha(.75)
-							Frame.KeybindFrame.Image:SetFrameStrata(frameStrata)
-							Frame.KeybindFrame.Image:SetFrameLevel(frameLevel + 6)
-						end
+					local keybindTextWidth
+					if texture then
+						Frame.KeybindFrame.Text:Hide()
+						Frame.KeybindFrame.Image:Show()
+						Frame.KeybindFrame.ImageTexture:SetTexture(texture)
+						keybindTextWidth = contentHeight - padW - padW
+					else
+						Frame.KeybindFrame.Text:Show()
+						Frame.KeybindFrame.Image:Hide()
+						Frame.KeybindFrame.ImageTexture:SetTexture(nil)
+						local textWidth = addon.API.Util:GetStringSize(Frame.KeybindFrame.Text)
+						keybindTextWidth = textWidth
 					end
 
-					do -- TEXT
-						Text:ClearAllPoints()
-						Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + padding, 0)
-					end
-				end
+					Frame.KeybindFrame.Background:SetShown(IsPC)
+					Frame.KeybindFrame:SetWidth(padW + keybindTextWidth + padW)
 
-				do -- EVENTS
-					local function UpdateFormatting()
-						if #frame.API_ButtonTextFrame_Variables.keybindVariable >= 1 then
-							Frame:Show()
-
-							--------------------------------
-
-							local IsPC = addon.Input.Variables.IsPC
-							local IsPlaystation = addon.Input.Variables.IsPlaystation
-							local IsXbox = addon.Input.Variables.IsXbox
-
-							local replaceWithImageList = {
-								["SPACE"] = addon.Variables.PATH_ART .. "Platform/Text-Platform-PC-Space.png",
-								["PAD1"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-1.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-1.png",
-								["PAD2"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-2.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-2.png",
-								["PAD3"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-3.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-3.png",
-								["PAD4"] = IsPlaystation and addon.Variables.PATH_ART .. "Platform/Platform-PS-4.png" or IsXbox and addon.Variables.PATH_ART .. "Platform/Platform-XBOX-4.png",
-								["PADLSHOULDER"] = addon.Variables.PATH_ART .. "Platform/Platform-LB.png",
-								["PADRSHOULDER"] = addon.Variables.PATH_ART .. "Platform/Platform-RB.png",
-								["PADLTRIGGER"] = addon.Variables.PATH_ART .. "Platform/Platform-LT.png",
-								["PADRTRIGGER"] = addon.Variables.PATH_ART .. "Platform/Platform-RT.png",
-							}
-							local replaceWithTextList = {
-								["ESCAPE"] = "Esc",
-							}
-
-							--------------------------------
-
-							local keybindTextWidth
-							local valid = false
-							local texture = nil
-							local text = nil
-
-							for k, v in pairs(replaceWithImageList) do
-								if tostring(Frame.KeybindFrame.Text:GetText()) == tostring(k) then
-									valid = true
-									texture = v
-									break
-								else
-									valid = false
-									texture = v
-								end
-							end
-							for k, v in pairs(replaceWithTextList) do
-								if tostring(Frame.KeybindFrame.Text:GetText()) == tostring(k) then
-									text = v
-									break
-								else
-									text = Frame.KeybindFrame.Text:GetText()
-								end
-							end
-
-							--------------------------------
-
-							Frame.KeybindFrame.Text:SetText(text)
-
-							if valid then
-								Frame.KeybindFrame.Text:Hide()
-
-								--------------------------------
-
-								Frame.KeybindFrame.Image:Show()
-								Frame.KeybindFrame.ImageTexture:SetTexture(texture)
-
-								--------------------------------
-
-								keybindTextWidth = contentHeight - paddingWidth - paddingWidth
-							else
-								Frame.KeybindFrame.Text:Show()
-
-								--------------------------------
-
-								Frame.KeybindFrame.Image:Hide()
-								Frame.KeybindFrame.ImageTexture:SetTexture(nil)
-
-								--------------------------------
-
-								local textWidth, _ = addon.API.Util:GetStringSize(Frame.KeybindFrame.Text)
-								keybindTextWidth = textWidth
-							end
-
-							if IsPC then
-								Frame.KeybindFrame.Background:Show()
-							elseif IsPlaystation or IsXbox then
-								Frame.KeybindFrame.Background:Hide()
-							end
-
-							--------------------------------
-
-							Frame.KeybindFrame:SetWidth(paddingWidth + keybindTextWidth + paddingWidth)
-
-							--------------------------------
-
-							local textWidth, _ = addon.API.Util:GetStringSize(Text)
-							Frame:SetWidth(Frame.KeybindFrame:GetWidth() + padding + textWidth)
-
-							--------------------------------
-
-							Text:ClearAllPoints()
-							Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + padding, 0)
-						else
-							Frame:Hide()
-
-							--------------------------------
-
-							Text:ClearAllPoints()
-							Text:SetPoint("CENTER", frame, 0, 0)
-						end
-					end
-
-					local function UpdateJustify()
-						local justifyH = Text:GetJustifyH()
-						local justifyV = Text:GetJustifyV()
-
-						--------------------------------
-
-						Frame:ClearAllPoints()
-						if justifyH == "LEFT" then
-							Frame:SetPoint("LEFT", frame, 0, 0)
-						elseif justifyH == "CENTER" then
-							Frame:SetPoint("CENTER", frame, 0, 0)
-						elseif justifyH == "RIGHT" then
-							Frame:SetPoint("RIGHT", frame, 0, 0)
-						end
-					end
-
-					Frame.KeybindFrame.Update = function()
-						UpdateFormatting()
-					end
-
-					--------------------------------
-
-					UpdateFormatting()
-					UpdateJustify()
-
-					--------------------------------
-
-					if frame.SetText then hooksecurefunc(frame, "SetText", UpdateFormatting) end
-					if Text.SetText then hooksecurefunc(Text, "SetText", UpdateFormatting) end
-					if Text.SetJustifyH then hooksecurefunc(Text, "SetJustifyH", UpdateJustify) end
-					if Text.SetJustifyV then hooksecurefunc(Text, "SetJustifyV", UpdateJustify) end
+					local textWidth = addon.API.Util:GetStringSize(Text)
+					Frame:SetWidth(Frame.KeybindFrame:GetWidth() + pad + textWidth)
+					Text:ClearAllPoints()
+					Text:SetPoint("LEFT", Frame, Frame.KeybindFrame:GetWidth() + pad, 0)
+				else
+					Frame:Hide()
+					Text:ClearAllPoints()
+					Text:SetPoint("CENTER", frame, 0, 0)
 				end
 			end
+
+			local function UpdateJustify()
+				local justifyH = Text:GetJustifyH()
+				Frame:ClearAllPoints()
+				if justifyH == "LEFT" then Frame:SetPoint("LEFT", frame, 0, 0) end
+				if justifyH == "CENTER" then Frame:SetPoint("CENTER", frame, 0, 0) end
+				if justifyH == "RIGHT" then Frame:SetPoint("RIGHT", frame, 0, 0) end
+			end
+
+			function Frame.KeybindFrame.Update() UpdateFormatting() end
+			UpdateFormatting()
+			UpdateJustify()
+			if frame.SetText then hooksecurefunc(frame, "SetText", UpdateFormatting) end
+			if Text.SetText then hooksecurefunc(Text, "SetText", UpdateFormatting) end
+			if Text.SetJustifyH then hooksecurefunc(Text, "SetJustifyH", UpdateJustify) end
+			if Text.SetJustifyV then hooksecurefunc(Text, "SetJustifyV", UpdateJustify) end
 		end
 
-		--------------------------------
-
-		do -- TEXT
-			Frame.KeybindFrame.Text:SetText(frame.API_ButtonTextFrame_Variables.keybindVariable)
-
-			--------------------------------
-
-			Frame.KeybindFrame.Update()
-		end
+		Frame.KeybindFrame.Text:SetText(frame.API_ButtonTextFrame_Variables.keybindVariable)
+		Frame.KeybindFrame.Update()
 	end
 end
 
---------------------------------
--- UTILITIES
---------------------------------
+do -- Utilities
+	function addon.API.Main:PreventInput(frame)
+		if InCombatLockdown() or not frame or not frame.SetPropagateKeyboardInput then return end
 
-do
-	function NS:PreventInput(frame)
-		if not InCombatLockdown() then
-			frame:SetPropagateKeyboardInput(false)
-
-			C_Timer.After(0, function()
-				if not InCombatLockdown() then
-					frame:SetPropagateKeyboardInput(true)
-				end
-			end)
-
-			if not frame.Registered then
-				frame.Registered = true
-
-				frame:RegisterEvent("PLAYER_REGEN_DISABLED")
-				frame:SetScript("OnEvent", function(self, event, ...)
-					if event == "PLAYER_REGEN_DISABLED" then
-						frame:SetPropagateKeyboardInput(true)
-					end
-				end)
-			end
-		end
+		frame:SetPropagateKeyboardInput(false)
+		C_Timer.After(0, function() if not InCombatLockdown() then frame:SetPropagateKeyboardInput(true) end end)
+		if frame.Registered then return end
+		frame.Registered = true
+		frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+		frame:SetScript("OnEvent", function(_, event) if event == "PLAYER_REGEN_DISABLED" then frame:SetPropagateKeyboardInput(true) end end)
 	end
 
-	function NS:GetDarkTheme()
-		return addon.Theme.IsDarkTheme
-	end
+	function addon.API.Main:GetDarkTheme() return addon.Theme.IsDarkTheme end
 
-	function NS:PreventRepeatCall(frame, delay, func)
+	function addon.API.Main:PreventRepeatCall(frame, delay, func)
 		local id = GetTime()
 		frame.id = id
-
-		C_Timer.After(delay, function()
-			if frame.id == id then
-				func()
-			end
-		end)
+		C_Timer.After(delay, function() if frame.id == id then func() end end)
 	end
 
-	function NS:RegisterThemeUpdate(func, priority)
-		CallbackRegistry:Add("THEME_UPDATE", func, priority)
-
+	function addon.API.Main:RegisterThemeUpdate(func, priority)
+		addon.CallbackRegistry:Add("THEME_UPDATE", func, priority)
 		func()
 	end
 
-	function NS:IsElementInScrollFrame(scrollFrame, element)
-		local scrollFrameLeft = scrollFrame:GetLeft()
-		local scrollFrameRight = scrollFrame:GetRight()
-		local scrollFrameTop = scrollFrame:GetTop()
-		local scrollFrameBottom = scrollFrame:GetBottom()
-
-		local elementLeft = element:GetLeft()
-		local elementRight = element:GetRight()
-		local elementTop = element:GetTop()
-		local elementBottom = element:GetBottom()
-
-		return (
-			elementLeft and elementRight and elementTop and elementBottom and
-
-			elementRight > scrollFrameLeft - element:GetWidth() and
-			elementLeft < scrollFrameRight + element:GetWidth() and
-			elementBottom > scrollFrameBottom - element:GetHeight() and
-			elementTop < scrollFrameTop + element:GetHeight()
-		)
+	function addon.API.Main:IsElementInScrollFrame(scrollFrame, element)
+		local scrollFrameLeft, scrollFrameRight = scrollFrame:GetLeft(), scrollFrame:GetRight()
+		local scrollFrameTop, scrollFrameBottom = scrollFrame:GetTop(), scrollFrame:GetBottom()
+		local elementLeft, elementRight = element:GetLeft(), element:GetRight()
+		local elementTop, elementBottom = element:GetTop(), element:GetBottom()
+		return elementLeft and elementRight and elementTop and elementBottom
+			and elementRight > scrollFrameLeft - element:GetWidth()
+			and elementLeft < scrollFrameRight + element:GetWidth()
+			and elementBottom > scrollFrameBottom - element:GetHeight()
+			and elementTop < scrollFrameTop + element:GetHeight()
 	end
 
-	-- Return Screen Width based on Interaction's UI Scale
-	function NS:GetScreenWidth()
-		return WorldFrame:GetWidth() / NS.UIScale
-	end
-
-	-- Return Screen Height based on Interaction's UI Scale
-	function NS:GetScreenHeight()
-		return WorldFrame:GetHeight() / NS.UIScale
-	end
+	function addon.API.Main:GetScreenWidth() return WorldFrame:GetWidth() / addon.API.Main.UIScale end
+	function addon.API.Main:GetScreenHeight() return WorldFrame:GetHeight() / addon.API.Main.UIScale end
 end
 
---------------------------------
--- HANDLE UI
---------------------------------
-
-do
-	function NS:SetupUICheck()
+do -- UI Visibility
+	function addon.API.Main:SetupUICheck()
 		local IsInCutscene = false
 
-		local _ = CreateFrame("Frame", "UpdateFrame/API.lua -- SetupUICheck", nil)
-		_:RegisterEvent("CINEMATIC_START")
-		_:RegisterEvent("PLAY_MOVIE")
-		_:RegisterEvent("STOP_MOVIE")
-		_:RegisterEvent("CINEMATIC_STOP")
-		_:SetScript("OnEvent", function(_, event)
+		local uiFrame = CreateFrame("Frame")
+		uiFrame:RegisterEvent("CINEMATIC_START")
+		uiFrame:RegisterEvent("PLAY_MOVIE")
+		uiFrame:RegisterEvent("STOP_MOVIE")
+		uiFrame:RegisterEvent("CINEMATIC_STOP")
+		uiFrame:SetScript("OnEvent", function(_, event)
 			if event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
 				IsInCutscene = true
-
-				if addon.Database.DB_GLOBAL.profile.INT_HIDEUI then
-					if InteractionPriorityFrame then
-						addon.BlizzardFrames.Script:RemoveElements()
-					end
-				end
+			elseif event == "STOP_MOVIE" or event == "CINEMATIC_STOP" then
+				IsInCutscene = false
 			end
 
-			if event == "STOP_MOVIE" or event == "CINEMATIC_STOP" then
-				IsInCutscene = false
-
-				if addon.Database.DB_GLOBAL.profile.INT_HIDEUI then
-					if InteractionPriorityFrame then
-						addon.BlizzardFrames.Script:SetElements()
-					end
-				end
+			if addon.Database.DB_GLOBAL.profile.INT_HIDEUI and InteractionPriorityFrame then
+				if IsInCutscene then addon.BlizzardFrames.Script:RemoveElements() else addon.BlizzardFrames.Script:SetElements() end
 			end
 		end)
 
-		function NS:CanShowUIAndHideElements()
+		function addon.API.Main:CanShowUIAndHideElements()
 			local result = not C_PlayerInteractionManager.IsInteractingWithNpcOfType(57) and not IsInCutscene
 
 			if InteractionPriorityFrame then
-				if result == true then
-					addon.BlizzardFrames.Script:SetElements()
-				else
-					addon.BlizzardFrames.Script:RemoveElements()
-				end
+				if result then addon.BlizzardFrames.Script:SetElements() else addon.BlizzardFrames.Script:RemoveElements() end
 			end
 
 			return result
 		end
 	end
 
-	NS:SetupUICheck()
+	addon.API.Main:SetupUICheck()
 end
