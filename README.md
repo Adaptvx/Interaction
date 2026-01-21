@@ -1,3 +1,3 @@
 # Interaction
 ### World of Warcraft Add-on
-A new take to immersive questing.
+A new take on immersive questing.
