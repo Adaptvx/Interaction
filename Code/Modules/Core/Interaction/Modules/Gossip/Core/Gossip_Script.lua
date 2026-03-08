@@ -11,14 +11,8 @@ local GetActiveQuestID = GetActiveQuestID or function() return 0 end
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.GossipFrame
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Goodbye button
@@ -149,9 +143,6 @@ function NS.Script:Load()
 			end)
 		end
 	end
-
-	-- Data
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Set
@@ -473,9 +464,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Frame
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:UpdateAll()
@@ -491,9 +479,6 @@ function NS.Script:Load()
 			Frame.Content:UpdatePosition()
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Buttons
@@ -624,9 +609,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Focus
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:OnEnter()
@@ -665,9 +647,6 @@ function NS.Script:Load()
 		addon.API.FrameTemplates:CreateMouseResponder(Frame, { enterCallback = Frame.OnEnter, leaveCallback = Frame.OnLeave })
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_UIDirection()
 			local usableWidth = InteractionFrame.GossipParent:GetWidth()
@@ -693,9 +672,6 @@ function NS.Script:Load()
 
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 0)
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		hooksecurefunc(Frame, "Show", function()

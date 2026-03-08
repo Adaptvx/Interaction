@@ -8,9 +8,6 @@ local TemplateVariables = {}
 
 function NS:Load()
 
-	-- Main
-	----------------------------------------------------------------------------------------------------
-
 	function NS:Add(id, TemplateFunc)
 		if Templates[id] == nil then
 			Templates[id] = TemplateFunc

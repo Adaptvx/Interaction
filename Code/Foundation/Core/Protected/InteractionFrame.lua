@@ -10,9 +10,6 @@ NS.FRAME_LEVEL_MAX = 999
 
 function NS:Load()
 
-    -- Create elements
-    ----------------------------------------------------------------------------------------------------
-
     do
         do -- Elements
             do -- Frame
@@ -44,15 +41,9 @@ function NS:Load()
         end
     end
 
-    -- References
-    ----------------------------------------------------------------------------------------------------
-
     local Frame = InteractionFrame
     local PriorityFrame = InteractionPriorityFrame
     local Callback = NS
-
-    -- Frame
-    ----------------------------------------------------------------------------------------------------
 
     do
 
@@ -73,9 +64,6 @@ function NS:Load()
             InteractionPriorityFrame:SetScale(UIParent:GetScale())
         end
     end
-
-    -- Main
-    ----------------------------------------------------------------------------------------------------
 
     do
         do -- References
@@ -134,9 +122,6 @@ function NS:Load()
         end
     end
 
-    -- Animation
-    ----------------------------------------------------------------------------------------------------
-
     function Frame.ChangeThemeAnimation()
         if Frame.ThemeTransition then
             return
@@ -158,9 +143,6 @@ function NS:Load()
         end)
     end
 
-    -- Events
-    ----------------------------------------------------------------------------------------------------
-
     local f = CreateFrame("Frame")
     f:RegisterEvent("CINEMATIC_START")
     f:RegisterEvent("PLAY_MOVIE")
@@ -181,9 +163,6 @@ function NS:Load()
     CallbackRegistry:Add("BLIZZARD_SETTINGS_RESOLUTION_CHANGED", function()
         Callback:UpdateSize()
     end)
-
-    -- Setup
-    ----------------------------------------------------------------------------------------------------
 
     Callback:UpdateSize()
 end

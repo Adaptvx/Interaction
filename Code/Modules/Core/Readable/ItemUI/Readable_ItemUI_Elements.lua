@@ -8,9 +8,6 @@ NS.ItemUI.Elements = {}
 
 function NS.ItemUI.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionReadableUIFrame.ReadableUIFrame = CreateFrame("Frame", "$parent.ReadableUIFrame", NS.Variables.Frame)
@@ -658,9 +655,6 @@ function NS.ItemUI.Elements:Load()
 			end
 		end
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	InteractionReadableUIFrame:Hide()
 	InteractionReadableUIFrame.ReadableUIFrame.ItemFrame:Hide()

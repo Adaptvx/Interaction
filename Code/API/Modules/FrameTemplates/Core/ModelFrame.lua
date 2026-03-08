@@ -3,9 +3,6 @@ local NS = addon.API.FrameTemplates; addon.API.FrameTemplates = NS
 local CallbackRegistry = addon.CallbackRegistry
 
 
--- Templates
-----------------------------------------------------------------------------------------------------
-
 do
 
 	function NS:CreateModelFrame_Interactable(parent, data, name)

@@ -5,25 +5,14 @@ local L = addon.Locales
 local NS = addon.Interaction; addon.Interaction = NS
 
 NS.Variables = {}
+NS.Variables.Active = false
+NS.Variables.LastActive = nil
+NS.Variables.CurrentSession = {
+    ["type"]       = nil,
+    ["questID"]    = nil,
+    ["dialogText"] = nil,
+    ["npc"]        = nil
+}
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
-do -- Main
-	NS.Variables.Active = false
-	NS.Variables.LastActive = nil
-	NS.Variables.CurrentSession = {
-		["type"] = nil,
-		["questID"] = nil,
-		["dialogText"] = nil,
-		["npc"] = nil
-	}
-
-	NS.Variables.LastQuestNPC = nil
-
-	NS.Variables.CurrentSession.type = nil
-end
-
-
--- Events
-----------------------------------------------------------------------------------------------------
+NS.Variables.LastQuestNPC = nil
+NS.Variables.CurrentSession.type = nil

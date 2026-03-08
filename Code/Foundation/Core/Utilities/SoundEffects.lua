@@ -5,9 +5,6 @@ local NS = addon.SoundEffects; addon.SoundEffects = NS
 
 function NS:Load()
 
-	-- Main
-	----------------------------------------------------------------------------------------------------
-
 	function NS:PlaySoundFile(filePath)
 		if addon.Database.DB_GLOBAL.profile.INT_AUDIO then
 			if filePath then
@@ -23,9 +20,6 @@ function NS:Load()
 			end
 		end
 	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	function NS:SetButton(frame)
 		local function MouseUp()

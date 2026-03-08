@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionAudiobookFrame = CreateFrame("Frame", "$parent.InteractionAudiobookFrame", InteractionFrame)
@@ -384,14 +381,8 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionAudiobookFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.hidden = true

@@ -3,9 +3,6 @@ local NS = addon.API.FrameTemplates; addon.API.FrameTemplates = NS
 local CallbackRegistry = addon.CallbackRegistry
 
 
--- Templates
-----------------------------------------------------------------------------------------------------
-
 do
 
 	function NS:CreateCheckbox(parent, frameStrata, frameLevel, data, name)

@@ -211,6 +211,8 @@ L["Dropdown - Readable / Audiobook - Special Voice - Tooltip"] = "Голос в�
 L["Title - Gameplay"] = "Геймплей"
 L["Checkbox - Gameplay / Auto Select Option"] = "Автоматический выбор параметров"
 L["Checkbox - Gameplay / Auto Select Option - Tooltip"] = "Выбирает лучший вариант для определенных НПС.\n\nПо умолчанию: Выкл."
+L["Checkbox - Gameplay / Disable in Instances"] = "Disable in Instances"
+L["Checkbox - Gameplay / Disable in Instances - Tooltip"] = "Disables the Interaction quest interface while inside an instance.\n\nDefault: Off."
 L["Title - Audio"] = "Аудио"
 L["Checkbox - Audio"] = "Включить аудио"
 L["Checkbox - Audio - Tooltip"] = "Включить звуковые эффекты и аудио.\n\nПо умолчанию: Вкл."
@@ -325,12 +327,12 @@ L["Alert - Under Attack"] = "Под атакой"
 L["Alert - Open Settings"] = "Чтобы открыть настройки."
 
 L["DialogData - PauseCharDB"] = {
-	"…",
-	"!",
-	"?",
-	".",
-	",",
-	";",
+    "…",
+    "!",
+    "?",
+    ".",
+    ",",
+    ";"
 }
 L["DialogData - PlaybackSpeedModifier"] = 1
 L["GossipData - Trigger - Quest"] = "%(Задание%)"

@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local InteractionFrame_GameTooltip = InteractionFrame.GameTooltip
 	local InteractionFrame_ShoppingTooltip1 = InteractionFrame.ShoppingTooltip1
 	local InteractionFrame_ShoppingTooltip2 = InteractionFrame.ShoppingTooltip2
@@ -32,9 +29,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		local TooltipComparisonManager = {}
@@ -437,9 +431,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Game tooltip
 			InteractionFrame_GameTooltip.hidden = true
@@ -541,9 +532,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		hooksecurefunc(InteractionFrame_GameTooltip, "Hide", InteractionFrame_GameTooltip.HideComparison)
 	end
@@ -555,9 +543,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("START_CINEMATIC_MODE", RefreshBlizzardTooltipParent)
 		CallbackRegistry:Add("STOP_CINEMATIC_MODE", RefreshBlizzardTooltipParent)
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	RefreshBlizzardTooltipParent()
 end

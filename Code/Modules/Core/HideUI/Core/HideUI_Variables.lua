@@ -6,14 +6,8 @@ local NS = addon.HideUI; addon.HideUI = NS
 
 NS.Variables = {}
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 do
 	NS.Variables.Active = false
 	NS.Variables.WorldActive = false
 	NS.Variables.Lock = false
 end
-
--- Events
-----------------------------------------------------------------------------------------------------

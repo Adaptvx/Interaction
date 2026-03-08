@@ -7,9 +7,6 @@ local NS = addon.SettingsUI; addon.SettingsUI = NS
 NS.Data = {}
 
 function NS.Data:Load()
-	-- Content
-	----------------------------------------------------------------------------------------------------
-
 	do -- Tabs
 		function InteractionSettingsFrame.Sidebar.Legend.CreateOptions()
 			local Widgets = {}
@@ -2112,6 +2109,23 @@ function NS.Data:Load()
 							get = function() return addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION end,
 							set = function(_, val) addon.Database.DB_GLOBAL.profile.INT_AUTO_SELECT_OPTION = val end,
 						},
+						Checkbox_DisableInInstances = {
+							name = L["Checkbox - Gameplay / Disable in Instances"],
+							tooltipImage = "",
+							tooltipText = L["Checkbox - Gameplay / Disable in Instances - Tooltip"],
+							tooltipTextDynamic = nil,
+							tooltipImageType = "Small",
+							type = "Checkbox",
+							order = 23,
+							hidden = function() return false end,
+							locked = function() return false end,
+							subcategory = 0,
+							category = Gameplay,
+							get = function() return addon.Database.DB_GLOBAL.profile.INT_DISABLE_IN_INSTANCES end,
+							set = function(_, val) 
+								addon.Database.DB_GLOBAL.profile.INT_DISABLE_IN_INSTANCES = val 
+							end,
+						},
 					}
 				}
 			}
@@ -2757,9 +2771,6 @@ function NS.Data:Load()
 			end
 		end
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do -- Data
 		NS.Data:InitalizeElements()

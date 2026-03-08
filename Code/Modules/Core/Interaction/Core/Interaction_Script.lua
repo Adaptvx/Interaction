@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- Functions
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function NS.Script:SetActiveState(value)
@@ -92,6 +89,15 @@ function NS.Script:Load()
 				return
 			end
 
+			if addon.Database.DB_GLOBAL.profile.INT_DISABLE_IN_INSTANCES then
+				local inInstance = IsInInstance()
+				if inInstance then
+					addon.BlizzardFrames.Script:Restore_GossipFrame()
+					addon.BlizzardFrames.Script:Restore_QuestFrame()
+					return
+				end
+			end
+
 			addon.BlizzardFrames.Script:Clear_GossipFrame()
 			addon.BlizzardFrames.Script:Clear_QuestFrame()
 
@@ -105,9 +111,6 @@ function NS.Script:Load()
 			CallbackRegistry:Trigger("START_INTERACTION", frameType)
 		end
 	end
-
-	-- Manager
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -199,9 +202,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("STOP_INTERACTION", NS.Script.Manager_Dialog_Stop, 5)
 		CallbackRegistry:Add("START_INTERACTION", NS.Script.Manager_Quest_Start, 4)
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		CallbackRegistry:Add("GOSSIP_BUTTON_CLICKED", function(button)
@@ -371,9 +371,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		addon.BlizzardFrames.Script:Clear_GossipFrame()

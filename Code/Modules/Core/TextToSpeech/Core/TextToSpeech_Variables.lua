@@ -5,11 +5,4 @@ local L = addon.Locales
 local NS = addon.TextToSpeech; addon.TextToSpeech = NS
 
 NS.Variables = {}
-
--- Variables
-----------------------------------------------------------------------------------------------------
-
-do -- Main
-	NS.Variables.IsPlaybackActive = false
-end
-
+NS.Variables.IsPlaybackActive = false

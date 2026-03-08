@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionFrame.ControlGuideFrame = CreateFrame("Frame", "$parent.ControlGuideFrame", InteractionFrame)
@@ -67,14 +64,8 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.ControlGuideFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame:Hide()

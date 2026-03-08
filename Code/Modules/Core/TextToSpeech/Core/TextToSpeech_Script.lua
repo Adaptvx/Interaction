@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- Main
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function NS.Script:SpeakText(voice, text, rate, volume)
@@ -54,19 +51,5 @@ function NS.Script:Load()
 				NS.Script:SpeakText(voice, text, rate, volume)
 			end
 		end
-	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
-	do
-
-	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
-
-	do
-
 	end
 end

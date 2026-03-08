@@ -7,9 +7,6 @@ local NS = addon.PromptText; addon.PromptText = NS
 NS.Elements = {}
 
 function NS.Elements:Load()
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionTextPromptFrame = CreateFrame("Frame", "InteractionTextPromptFrame", InteractionFrame)
@@ -183,14 +180,8 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionTextPromptFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame:Hide()

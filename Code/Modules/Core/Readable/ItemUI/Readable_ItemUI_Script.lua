@@ -7,9 +7,6 @@ local NS = addon.Readable; addon.Readable = NS
 NS.ItemUI.Script = {}
 
 function NS.ItemUI.Script:Load()
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Callback = NS.Script
 	local LibraryCallback = NS.LibraryUI.Script
 
@@ -18,9 +15,6 @@ function NS.ItemUI.Script:Load()
 	local ReadableUI_ItemUI = ReadableUI.ItemFrame
 	local ReadableUI_BookUI = ReadableUI.BookFrame
 	local LibraryUI = NS.Variables.LibraryUIFrame
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		function Frame:ButtonCooldown()
@@ -97,9 +91,6 @@ function NS.ItemUI.Script:Load()
 			end
 		end)
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		function NS.ItemUI.Script:SetData(itemID, itemLink, type, title, numPages, content, currentPage, isItemInInventory, playerName)
@@ -318,17 +309,11 @@ function NS.ItemUI.Script:Load()
 		end
 	end
 
-	-- Tts
-	----------------------------------------------------------------------------------------------------
-
 	do
 		function NS.ItemUI.Script:StartTTS()
 			addon.Audiobook.Script:Play(NS.ItemUI.Variables.Content[1])
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Show
@@ -519,9 +504,6 @@ function NS.ItemUI.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_ContentSize()
 			local item_textSize = addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE * 1
@@ -543,9 +525,6 @@ function NS.ItemUI.Script:Load()
 		CallbackRegistry:Add("SETTINGS_CONTENT_SIZE_CHANGED", Settings_ContentSize, 0)
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		C_Timer.After(1, function()
 			addon.API.Main:RegisterThemeUpdate(function()
@@ -556,6 +535,4 @@ function NS.ItemUI.Script:Load()
 		end)
 	end
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

@@ -1,9 +1,6 @@
 local addon = select(2, ...)
 local L = addon.Locales
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 addon.CallbackRegistry = {}
 local NS = addon.CallbackRegistry; addon.CallbackRegistry = NS
 
@@ -13,9 +10,6 @@ end
 
 
 function NS:Load()
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 

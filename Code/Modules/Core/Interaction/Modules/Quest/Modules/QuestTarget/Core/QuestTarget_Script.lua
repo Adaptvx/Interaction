@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.QuestFrame.Target
 	local Callback = NS.Script
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Update
@@ -64,9 +58,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		local HideTimer = nil
@@ -140,9 +131,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Event
-	----------------------------------------------------------------------------------------------------
-
 	do
 		if QuestModelScene then -- Fix for classic era
 			hooksecurefunc(QuestModelScene, "Show", function()
@@ -169,6 +157,4 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

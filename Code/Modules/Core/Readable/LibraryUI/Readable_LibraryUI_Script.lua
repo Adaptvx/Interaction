@@ -8,9 +8,6 @@ NS.LibraryUI.Script = {}
 
 function NS.LibraryUI.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	NS.Variables.LIBRARY_LOCAL = addon.Database.DB_LOCAL_PERSISTENT.profile.READABLE
 	NS.Variables.LIBRARY_GLOBAL = addon.Database.DB_GLOBAL_PERSISTENT.profile.READABLE
 
@@ -23,9 +20,6 @@ function NS.LibraryUI.Script:Load()
 	local ReadableUI_BookUI = ReadableUI.BookFrame
 	local LibraryUI = NS.Variables.LibraryUIFrame
 
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
-
 	do
 		LibraryUI.Content.ContentFrame.Index.Content.Button_PreviousPage:SetScript("OnClick", function()
 			LibraryCallback:PreviousPage()
@@ -35,9 +29,6 @@ function NS.LibraryUI.Script:Load()
 			LibraryCallback:NextPage()
 		end)
 	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -146,9 +137,6 @@ function NS.LibraryUI.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Show
 
@@ -178,9 +166,6 @@ function NS.LibraryUI.Script:Load()
 			end
 		end
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Entries
@@ -833,9 +818,6 @@ function NS.LibraryUI.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		CallbackRegistry:Add("START_LIBRARY", function()
 			LibraryUI.Content.Sidebar:ResetToDefaults()
@@ -851,9 +833,6 @@ function NS.LibraryUI.Script:Load()
 			end, 10)
 		end)
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		LibraryCallback:SetToLocal()

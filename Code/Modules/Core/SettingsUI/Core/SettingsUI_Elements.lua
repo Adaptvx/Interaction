@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionSettingsParent = CreateFrame("Frame", "$parent.SettingsParent", InteractionFrame)

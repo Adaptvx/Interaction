@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = NS.Variables.Frame
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.Content.Title:SetScript("OnEnter", function()
@@ -39,9 +33,6 @@ function NS.Script:Load()
 		end)
 	end
 
-	-- Frame
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function addon.BlizzardSettings:Set(text, shortcut)
@@ -51,9 +42,6 @@ function NS.Script:Load()
 			Frame:ShowWithAnimation()
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Show
@@ -94,16 +82,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
-	do
-
-	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		hooksecurefunc(Frame, "Show", function()
 			local Shortcut
@@ -117,9 +95,6 @@ function NS.Script:Load()
 			addon.BlizzardSettings:Set(L["BlizzardSettings - Title"], Shortcut)
 		end)
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	local Category = Settings.RegisterCanvasLayoutCategory(Frame, "Interaction")
 	Settings.RegisterAddOnCategory(Category)

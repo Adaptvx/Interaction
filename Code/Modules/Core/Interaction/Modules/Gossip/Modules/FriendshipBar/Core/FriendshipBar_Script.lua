@@ -8,17 +8,11 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Parent = InteractionFriendshipBarParent
 	local Frame = InteractionFriendshipBarFrame
 	local Callback = NS.Script
 
 	local BlizzardFriendshipBar = GossipFrame.FriendshipStatusBar or NPCFriendshipStatusBar
-
-	-- Tooltip
-	----------------------------------------------------------------------------------------------------
 
 	local ReputationTooltip_Retail = {}
 	local ReputationTooltip_Classic = {}
@@ -107,9 +101,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Frame
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:ShowProgress()
@@ -126,9 +117,6 @@ function NS.Script:Load()
 			Frame.Image.ImageTexture:SetTexture(texture)
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Show
@@ -167,9 +155,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		Parent:SetScript("OnEnter", function()
 			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
@@ -202,6 +187,4 @@ function NS.Script:Load()
 		CallbackRegistry:Add("STOP_INTERACTION", Frame.HideWithAnimation)
 	end
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

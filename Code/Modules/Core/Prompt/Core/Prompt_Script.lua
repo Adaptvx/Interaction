@@ -7,14 +7,8 @@ local NS = addon.Prompt; addon.Prompt = NS
 NS.Script = {}
 
 function NS.Script:Load()
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.PromptFrame
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.REF_BUTTONFRAME_CONTENT.Button1:SetScript("OnClick", function()
@@ -26,18 +20,12 @@ function NS.Script:Load()
 		end)
 	end
 
-	-- Frame
-	----------------------------------------------------------------------------------------------------
-
 	do
 		function Frame:UpdateLayout()
 			CallbackRegistry:Trigger("LayoutGroupSort Prompt.Content")
 			CallbackRegistry:Trigger("LayoutGroupSort Prompt.Content.ButtonFrame")
 		end
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		function Callback:Set(text, button1Text, button2Text, button1Callback, button2Callback, button1Active, button2Active)
@@ -88,9 +76,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Show
 			function Frame:ShowWithAnimation_StopEvent()
@@ -137,9 +122,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Gossip

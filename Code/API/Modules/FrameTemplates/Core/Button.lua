@@ -3,9 +3,6 @@ local NS = addon.API.FrameTemplates; addon.API.FrameTemplates = NS
 local CallbackRegistry = addon.CallbackRegistry
 
 
--- Templates
-----------------------------------------------------------------------------------------------------
-
 do
 
 	function NS:CreateButton(parent, sizeX, sizeY, frameStrata, name)
@@ -23,9 +20,6 @@ do
 		return Button
 	end
 end
-
--- Styles
-----------------------------------------------------------------------------------------------------
 
 do
 	do -- Button

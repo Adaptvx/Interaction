@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionFrame.QuestParent = CreateFrame("Frame", "$parent.QuestParent", InteractionFrame)
@@ -571,14 +568,8 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.QuestFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame:Hide()

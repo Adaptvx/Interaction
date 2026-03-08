@@ -528,15 +528,9 @@ do -- Settings
 end
 
 function NS:Load()
-	-- Tooltip
-	----------------------------------------------------------------------------------------------------
-
 	function NS:TOOLTIP_DIVIDER(width)
 		return "\n" .. addon.API.Util:InlineIcon(addon.Variables.PATH_ART .. "Elements\\Elements\\tooltip-divider-background.png", 1, width, 0, 0) .. "\n"
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	function NS:UpdateAll()
 		NS:UpdateThemeReferences()
@@ -601,9 +595,6 @@ function NS:Load()
 			NS.RGB_RECOMMENDED = { r = .2, g = .2, b = .2 }
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	NS:UpdateAll()
 

@@ -8,9 +8,6 @@ NS.LibraryUI.Elements = {}
 
 function NS.LibraryUI.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionReadableUIFrame.LibraryUIFrame = CreateFrame("Frame", "$parent.LibraryUIFrame", InteractionReadableUIFrame)
@@ -832,9 +829,6 @@ function NS.LibraryUI.Elements:Load()
 			end
 		end
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		InteractionReadableUIFrame.LibraryUIFrame:Hide()

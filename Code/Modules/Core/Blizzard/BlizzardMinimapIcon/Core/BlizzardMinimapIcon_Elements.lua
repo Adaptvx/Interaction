@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			local function OnTooltipShowCallback(tooltip)
@@ -31,12 +28,7 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Icon = NS.Variables.Icon
 	local Callback = NS.Script
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

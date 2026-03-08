@@ -5,7 +5,3 @@ local L = addon.Locales
 local NS = addon.GameTooltip; addon.GameTooltip = NS
 
 NS.Variables = {}
-
-
--- Events
-----------------------------------------------------------------------------------------------------

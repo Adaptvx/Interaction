@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.QuestFrame
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.REF_FOOTER_CONTENT.AcceptButton:SetScript("OnClick", function()
@@ -65,9 +59,6 @@ function NS.Script:Load()
 			Frame.REF_HEADER_DIVIDER:SetAlpha(1)
 		end)
 	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -131,9 +122,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Navigation
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:SetChoiceSelected(frame)
@@ -175,9 +163,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Data
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Utilities
@@ -1035,9 +1020,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:ShowWithAnimation_StopEvent(sessionID)
@@ -1179,9 +1161,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Tooltip
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function Frame:UpdateGameTooltip()
@@ -1203,9 +1182,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Focus
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -1247,9 +1223,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("START_DIALOG", Frame.UpdateFocus, 0)
 		CallbackRegistry:Add("STOP_DIALOG", Frame.UpdateFocus, 0)
 	end
-
-	-- Settings
-	----------------------------------------------------------------------------------------------------
 
 	do
 		local function Settings_ThemeUpdate()
@@ -1331,9 +1304,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		CallbackRegistry:Add("QUEST_DATA_LOADED", function()
 			Frame:UpdateAll()
@@ -1370,6 +1340,4 @@ function NS.Script:Load()
 		table.insert(Frame.REF_MAIN_SCROLLFRAME.onSmoothScrollCallbacks, Frame.UpdateScrollIndicator)
 	end
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

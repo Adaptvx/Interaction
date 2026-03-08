@@ -3,9 +3,6 @@ local NS = addon.API.FrameTemplates; addon.API.FrameTemplates = NS
 local CallbackRegistry = addon.CallbackRegistry
 
 
--- Templates
-----------------------------------------------------------------------------------------------------
-
 do
 
 	function NS:CreateSlider(parent, frameStrata, theme, min, max, getFunc, setFunc, updateFunc, name)
@@ -13,9 +10,6 @@ do
 	end
 end
 
-
--- Styles
-----------------------------------------------------------------------------------------------------
 
 do
 

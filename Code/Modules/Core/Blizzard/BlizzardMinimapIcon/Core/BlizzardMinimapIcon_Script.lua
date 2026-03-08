@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Icon = NS.Variables.Icon
 	local Callback = NS.Script
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -80,9 +74,6 @@ function NS.Script:Load()
 			Icon:Hide("Interaction")
 		end
 	end
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_MinimapIcon()
 			local Settings_Readable = addon.Database.DB_GLOBAL.profile.INT_READABLE
@@ -99,6 +90,4 @@ function NS.Script:Load()
 		CallbackRegistry:Add("SETTINGS_MINIMAP_CHANGED", Settings_MinimapIcon, 2)
 		CallbackRegistry:Add("SETTING_CHANGED", Settings_MinimapIcon, 2)
 	end
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

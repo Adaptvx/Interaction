@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Callback = NS.Script
 	local LibraryCallback = NS.LibraryUI.Script
 
@@ -19,9 +16,6 @@ function NS.Script:Load()
 	local ReadableUI_ItemUI = ReadableUI.ItemFrame
 	local ReadableUI_BookUI = ReadableUI.BookFrame
 	local LibraryUI = NS.Variables.LibraryUIFrame
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -181,9 +175,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
@@ -217,9 +208,6 @@ function NS.Script:Load()
 
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 2)
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		if addon.Database.DB_GLOBAL.profile.INT_READABLE then
@@ -329,9 +317,6 @@ function NS.Script:Load()
 			end)
 		end
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.cooldown = false

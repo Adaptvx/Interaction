@@ -3,9 +3,6 @@ local CallbackRegistry = addon.CallbackRegistry
 local TemplateRegistry = addon.TemplateRegistry
 local L = addon.Locales
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 addon.LoadedAddons = {}
 local NS = addon.LoadedAddons; addon.LoadedAddons = NS
 
@@ -17,9 +14,6 @@ end
 
 
 function NS:Load()
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -36,16 +30,6 @@ function NS:Load()
 			CallbackRegistry:Trigger("LOADED_ADDONS_READY")
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
-	do
-
-	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		C_Timer.After(addon.Variables.INIT_DELAY_LAST, addon.LoadedAddons.GetAddons)

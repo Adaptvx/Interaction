@@ -6,16 +6,5 @@ local NS = addon.BlizzardMinimapIcon; addon.BlizzardMinimapIcon = NS
 
 NS.Variables = {}
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
-do -- Main
-	NS.Variables.Icon = nil
-end
-
-do -- Constants
-	NS.Variables.PATH = addon.Variables.PATH_ART .. "Icons\\"
-end
-
--- Events
-----------------------------------------------------------------------------------------------------
+NS.Variables.Icon = nil
+NS.Variables.PATH = addon.Variables.PATH_ART .. "Icons\\"

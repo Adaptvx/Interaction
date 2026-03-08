@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- Functions
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function NS.Script:MuteDialog()
@@ -121,17 +118,11 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function StartInteraction()
 			NS.Script:MuteSoundFile(NS.Variables.TargetLostSFX)
 			NS.Script:MuteSoundFile(NS.Variables.QuestOpenSFX)
 			NS.Script:MuteSoundFile(NS.Variables.QuestCloseSFX)
-
-			-- Sound
-			----------------------------------------------------------------------------------------------------
 
 			if addon.Database.DB_GLOBAL.profile.INT_MUTE_DIALOG then
 				NS.Script:MuteDialog()
@@ -142,9 +133,6 @@ function NS.Script:Load()
 			NS.Script:UnmuteSoundFile(NS.Variables.TargetLostSFX)
 			NS.Script:UnmuteSoundFile(NS.Variables.QuestOpenSFX)
 			NS.Script:UnmuteSoundFile(NS.Variables.QuestCloseSFX)
-
-			-- Sound
-			----------------------------------------------------------------------------------------------------
 
 			NS.Script:UnmuteDialog()
 		end

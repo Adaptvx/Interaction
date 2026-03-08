@@ -126,15 +126,9 @@ function NS.Script:Load()
 		NS.Script:GetCVars_General()
 		NS.Script:GetCVars_CinematicMode()
 
-		-- Controller
-		----------------------------------------------------------------------------------------------------
-
 		if addon.Input.Variables.IsController then
 			SetCVar("GamePadEnable", 1)
 		end
-
-		-- Sound
-		----------------------------------------------------------------------------------------------------
 
 		NS.Variables.Saved_Sound_DialogVolume = GetCVar("Sound_DialogVolume")
 	end
@@ -168,31 +162,19 @@ function NS.Script:Load()
 	CallbackRegistry:Add("START_INTERACTION", function() NS.Script:StartInteraction() end, 0)
 	CallbackRegistry:Add("STOP_INTERACTION", function() NS.Script:StopInteraction() end, 0)
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	local f = CreateFrame("Frame")
 	f:RegisterEvent("CVAR_UPDATE")
 	f:SetScript("OnEvent", function(self, event, ...)
 
-		-- Cvar
-		----------------------------------------------------------------------------------------------------
-
 		if event == "CVAR_UPDATE" then
 			local name, value = ...
             
-			-- Set cvar
-			----------------------------------------------------------------------------------------------------
-
 			local IsSettingsPanelVisible = (SettingsPanel:IsVisible())
 			local IsPlaterOptionsPanelVisible = (PlaterOptionsPanelFrame and PlaterOptionsPanelFrame:IsVisible())
 
 			if IsSettingsPanelVisible or IsPlaterOptionsPanelVisible then
 				NS.Script:GetCVars_General()
 				NS.Script:GetCVars_CinematicMode()
-
-				-- Sound
-				----------------------------------------------------------------------------------------------------
 
 				NS.Variables.Saved_Sound_DialogVolume = GetCVar("Sound_DialogVolume")
 			end

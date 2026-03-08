@@ -8,21 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.AlertNotification
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
-
-	do
-
-	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -30,9 +17,6 @@ function NS.Script:Load()
 			CallbackRegistry:Trigger("LayoutGroupSort AlertNotification.Notification")
 		end
 	end
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -47,9 +31,6 @@ function NS.Script:Load()
 			Frame:UpdateLayout()
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Show
@@ -127,9 +108,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
@@ -143,9 +121,6 @@ function NS.Script:Load()
 
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 2)
 	end
-
-	-- Event
-	----------------------------------------------------------------------------------------------------
 
 	do
 		local f = CreateFrame("Frame")
@@ -169,6 +144,4 @@ function NS.Script:Load()
 		end)
 	end
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

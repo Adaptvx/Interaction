@@ -6,9 +6,6 @@ local NS = addon.Cinematic; addon.Cinematic = NS
 
 NS.Variables = {}
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 do
 	NS.Variables.Active = false
 	NS.Variables.ActiveID = nil
@@ -24,6 +21,3 @@ do
 	NS.Variables.Saved_FocusInteractStrengthPitch = GetCVar("test_cameraTargetFocusInteractStrengthPitch")
 	NS.Variables.Saved_FocusInteractionStrengthYaw = GetCVar("test_cameraTargetFocusEnemyStrengthYaw")
 end
-
--- Events
-----------------------------------------------------------------------------------------------------

@@ -7,9 +7,6 @@ local NS = addon.Interaction.Gossip.FriendshipBar; addon.Interaction.Gossip.Frie
 NS.Elements = {}
 
 function NS.Elements:Load()
-	--------------------------------
-    --------------------------------
-
 	do -- Elements
         InteractionFriendshipBarParent = CreateFrame("Frame", "$parent.InteractionFriendshipBarParent", InteractionFrame)
         InteractionFriendshipBarParent:SetSize(350, 50)
@@ -105,14 +102,8 @@ function NS.Elements:Load()
         end
     end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Parent = InteractionFriendshipBarParent
 	local Frame = InteractionFriendshipBarFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 end

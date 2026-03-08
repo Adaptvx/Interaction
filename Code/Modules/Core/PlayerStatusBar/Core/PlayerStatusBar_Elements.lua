@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionPlayerStatusBarFrame = CreateFrame("Frame", "$parent.InteractionPlayerStatusBarFrame", InteractionFrame)
@@ -57,14 +54,8 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionPlayerStatusBarFrame
 	local Callback = addon.PlayerStatusBar.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.hidden = true

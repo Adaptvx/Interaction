@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Callback = NS.Script
 	local Frame = InteractionAudiobookFrame
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.MouseResponder:HookScript("OnMouseUp", function(_, button)
@@ -49,9 +43,6 @@ function NS.Script:Load()
 
 		addon.API.Util:AddTooltip(Frame.MouseResponder, L["Audiobook - Action Tooltip"], "ANCHOR_BOTTOM", 0, -20, true)
 	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Data
@@ -401,9 +392,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Show
 
@@ -495,9 +483,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		CallbackRegistry:Add("START_INTERACTION", function()

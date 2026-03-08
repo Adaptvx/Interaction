@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.AlertFrame
 	local Callback = NS.Script
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -43,9 +37,6 @@ function NS.Script:Load()
 			addon.SoundEffects:PlaySoundFile(sfx)
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -107,19 +98,5 @@ function NS.Script:Load()
 			addon.API.Animation:Scale(Frame.REF_BACKGROUND_TEXTURE, .5, Frame.REF_BACKGROUND_TEXTURE:GetWidth(), 125, "x", addon.API.Animation.EaseExpo, Frame.HideWithAnimation_StopEvent)
 			addon.API.Animation:Scale(Frame.REF_IMAGE, .5, Frame.REF_IMAGE:GetScale(), .75, nil, addon.API.Animation.EaseSine, Frame.HideWithAnimation_StopEvent)
 		end
-	end
-
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
-	do
-
-	end
-
-	-- Event
-	----------------------------------------------------------------------------------------------------
-
-	do
-
 	end
 end

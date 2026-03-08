@@ -8,13 +8,7 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Callback = NS.Script
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Get
@@ -157,19 +151,9 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		CallbackRegistry:Add("Quest.Storyline.Update", function(questID)
 			Callback:SetStorylineFrame(questID)
 		end)
-	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
-
-	do
-
 	end
 end

@@ -1,8 +1,5 @@
 local addon = select(2, ...)
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 addon.Foundation = {}
 local NS = addon.Foundation; addon.Foundation = NS
 
@@ -12,9 +9,6 @@ end
 
 
 function NS:Load()
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	local function Priority()
 		addon.CallbackRegistry:Load()
@@ -31,9 +25,6 @@ function NS:Load()
 		addon.Initialize:Load()
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local f = CreateFrame("Frame")
 		f:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -47,9 +38,6 @@ function NS:Load()
 			end
 		end)
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Priority()

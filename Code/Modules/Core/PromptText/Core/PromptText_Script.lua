@@ -7,14 +7,8 @@ local NS = addon.PromptText; addon.PromptText = NS
 NS.Script = {}
 
 function NS.Script:Load()
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionTextPromptFrame
 	local Callback = NS.Script
-
-	-- Buttons
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.ButtonArea.Button1:SetScript("OnClick", function(self)
@@ -25,9 +19,6 @@ function NS.Script:Load()
 			end
 		end)
 	end
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 		function Callback:ShowTextFrame(title, multiline, hint, text, buttonText, buttonCallback, autoSelect)
@@ -65,9 +56,6 @@ function NS.Script:Load()
 			Frame:HideWithAnimation()
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Show
@@ -109,9 +97,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_UIDirection()
 			Frame:ClearAllPoints()
@@ -126,6 +111,4 @@ function NS.Script:Load()
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection)
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
 end

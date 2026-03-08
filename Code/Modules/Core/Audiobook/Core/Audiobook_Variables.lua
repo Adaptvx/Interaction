@@ -6,47 +6,23 @@ local NS = addon.Audiobook; addon.Audiobook = NS
 
 NS.Variables = {}
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
-do -- Main
-	NS.Variables.IsPlaying = nil
-	NS.Variables.LastPlayTime = nil
-	NS.Variables.PlaybackLineIndex = nil
-	NS.Variables.PlaybackTimer = nil
-
-	NS.Variables.Title = nil
-	NS.Variables.NumPages = nil
-	NS.Variables.Content = nil
-	NS.Variables.Lines = nil
+NS.Variables.IsPlaying = nil
+NS.Variables.LastPlayTime = nil
+NS.Variables.PlaybackLineIndex = nil
+NS.Variables.PlaybackTimer = nil
+NS.Variables.Title = nil
+NS.Variables.NumPages = nil
+NS.Variables.Content = nil
+NS.Variables.Lines = nil
+NS.Variables.FRAME_WIDTH = 350
+NS.Variables.FRAME_HEIGHT = 50
+NS.Variables.RATIO_REFERENCE = 50
+function NS.Variables:RATIO(level)
+    return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
 end
-
-do -- Constants
-	do -- Scale
-		NS.Variables.FRAME_WIDTH = 350
-		NS.Variables.FRAME_HEIGHT = 50
-
-		NS.Variables.RATIO_REFERENCE = 50
-
-		do -- Functions
-
-			function NS.Variables:RATIO(level)
-				return NS.Variables.RATIO_REFERENCE / addon.Variables:RAW_RATIO(level)
-			end
-		end
-	end
-
-	do -- Main
-		NS.Variables.AUDIOBOOKUI_PATH = addon.Variables.PATH_ART .. "Audiobook\\"
-		NS.Variables.READABLEUI_PATH = addon.Variables.PATH_ART .. "Readable\\"
-
-		NS.Variables.NINESLICE_DEFAULT = NS.Variables.READABLEUI_PATH .. "Elements\\button-nineslice.png"
-		NS.Variables.NINESLICE_HEAVY = NS.Variables.READABLEUI_PATH .. "Elements\\button-heavy-nineslice.png"
-		NS.Variables.NINESLICE_HIGHLIGHT = NS.Variables.READABLEUI_PATH .. "Elements\\button-highlighted-nineslice.png"
-
-		NS.Variables.PADDING = 10
-	end
-end
-
--- Events
-----------------------------------------------------------------------------------------------------
+NS.Variables.AUDIOBOOKUI_PATH = addon.Variables.PATH_ART .. "Audiobook\\"
+NS.Variables.READABLEUI_PATH = addon.Variables.PATH_ART .. "Readable\\"
+NS.Variables.NINESLICE_DEFAULT = NS.Variables.READABLEUI_PATH .. "Elements\\button-nineslice.png"
+NS.Variables.NINESLICE_HEAVY = NS.Variables.READABLEUI_PATH .. "Elements\\button-heavy-nineslice.png"
+NS.Variables.NINESLICE_HIGHLIGHT = NS.Variables.READABLEUI_PATH .. "Elements\\button-highlighted-nineslice.png"
+NS.Variables.PADDING = 10

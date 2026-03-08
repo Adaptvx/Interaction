@@ -94,7 +94,8 @@ NS.DEFAULTS_GLOBAL = {
         INT_READABLE_AUDIOBOOK_VOICE_SPECIAL    = 1,
         INT_PLATFORM                            = 1,
         INT_AUDIO                               = true,
-        INT_BLIZZARD_TOOLTIP                    = false
+        INT_BLIZZARD_TOOLTIP                    = false,
+        INT_DISABLE_IN_INSTANCES                = false
     }
 }
 
@@ -109,9 +110,6 @@ NS.DEFAULTS_LOCAL_PERSISTENT = {
         READABLE = {}
     }
 }
-
--- Cinematic
-----------------------------------------------------------------------------------------------------
 
 NS.VAR_CINEMATIC_ZOOM = nil
 NS.VAR_CINEMATIC_ZOOM_DISTANCE_MIN = nil
@@ -294,9 +292,6 @@ function NS:PreventSetVariableDuringCinematicMode(name, value)
     NS.DB_GLOBAL.profile[name] = value
 end
 
--- Main
-----------------------------------------------------------------------------------------------------
-
 function NS:OnInitialize()
     C_Timer.After(0, function()
         NS.DB_GLOBAL = AceDB:New("InteractionDB", NS.DEFAULTS_GLOBAL, true)
@@ -310,12 +305,7 @@ function NS:OnInitialize()
         end)
     end)
 end
-
 NS = LibStub("AceAddon-3.0"):NewAddon(NS, "Interaction")
-
-
--- Main
-----------------------------------------------------------------------------------------------------
 
 function NS:CopyTable(original)
     if type(original) ~= "table" then
@@ -336,18 +326,12 @@ function NS:ResetSettings()
 end
 
 
--- Events
-----------------------------------------------------------------------------------------------------
-
 C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()
     CallbackRegistry:Add("SETTING_CHANGED", function()
         NS:SetDynamicCinematicVariables()
     end)
 end)
 
-
--- Slash commands
-----------------------------------------------------------------------------------------------------
 
 SLASH_Interaction1, SLASH_Interaction2 = "/int", "/interaction"
 

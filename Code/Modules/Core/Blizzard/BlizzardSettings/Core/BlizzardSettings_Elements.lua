@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			local Frame = CreateFrame("Frame", "$parent.BlizzardSettings")
@@ -82,12 +79,7 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = NS.Variables.Frame
 	local Callback = NS.Script
 
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 end

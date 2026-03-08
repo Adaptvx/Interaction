@@ -8,9 +8,6 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- Functions
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function NS.Script:HideUI(bypass)
@@ -108,9 +105,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Callbacks
-	----------------------------------------------------------------------------------------------------
-
 	do
 
 		function NS.Script:StartInteraction()
@@ -154,9 +148,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("START_INTERACTION", function() NS.Script:StartInteraction() end, 0)
 		CallbackRegistry:Add("STOP_INTERACTION", function() NS.Script:StopInteraction() end, 0)
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Cinematic

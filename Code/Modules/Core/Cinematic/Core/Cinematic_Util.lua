@@ -10,9 +10,6 @@ local GetGlidingInfo = addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_PlayerIn
 
 function NS.Util:Load()
 
-	-- Functions
-	----------------------------------------------------------------------------------------------------
-
 	do -- Zoom
 
 		function NS.Util:SetCameraZoom(level, allowZoomOut)
@@ -265,9 +262,6 @@ function NS.Util:Load()
 			end
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	local f = CreateFrame("Frame")
 	f:SetScript("OnUpdate", function()

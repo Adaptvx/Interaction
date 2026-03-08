@@ -10,14 +10,8 @@ local GetTitleForQuestID = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestI
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.DialogFrame
 	local Callback = NS.Script
-
-	-- Frame
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Update
@@ -191,9 +185,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Logic
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Get
@@ -637,9 +628,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Animation
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Text
 			local session = {}
@@ -995,9 +983,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Settings
-	----------------------------------------------------------------------------------------------------
-
 	do
 		local function Settings_ContentSize()
 			addon.API.Util:SetFontSize(Frame.REF_CONTENT_TEXT, addon.Database.DB_GLOBAL.profile.INT_CONTENT_SIZE)
@@ -1039,9 +1024,6 @@ function NS.Script:Load()
 		CallbackRegistry:Add("SETTINGS_TITLE_ALPHA_CHANGED", Settings_TitleAlpha, 0)
 		CallbackRegistry:Add("THEME_UPDATE", Settings_ThemeUpdate, 0)
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame.isMouseOver = false

@@ -8,14 +8,8 @@ NS.Script = {}
 
 function NS.Script:Load()
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionFrame.EffectsFrame
 	local Callback = NS.Script
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Main
@@ -45,9 +39,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Animation
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Gradient
@@ -92,14 +83,8 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Focus
-	----------------------------------------------------------------------------------------------------
-
 	do
 	end
-
-	-- Settings
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Gradient
@@ -115,9 +100,6 @@ function NS.Script:Load()
 			CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", Settings_UIDirection, 0)
 		end
 	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Gradient

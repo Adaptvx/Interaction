@@ -3,17 +3,11 @@ local CallbackRegistry = addon.CallbackRegistry
 local TemplateRegistry = addon.TemplateRegistry
 local L = addon.Locales
 
--- Variables
-----------------------------------------------------------------------------------------------------
-
 addon.Get = {}
 local NS = addon.Get; addon.Get = NS
 
 
 function NS:Load()
-
-	-- Main
-	----------------------------------------------------------------------------------------------------
 
 	do
 
@@ -36,9 +30,6 @@ function NS:Load()
 		function NS.Blizzard_QuestButtons()
 			local Result = {}
 
-			-- Retail
-			----------------------------------------------------------------------------------------------------
-
 			if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				local NumButtons = 0
 				local Frame = QuestFrameGreetingPanel
@@ -51,9 +42,6 @@ function NS:Load()
 					addon.InteractionFrame.SetReferences(button)
 				end
 			end
-
-			-- Classic
-			----------------------------------------------------------------------------------------------------
 
 			if addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then
 				local IsQuestTitleButtons = (QuestTitleButton1)
@@ -78,12 +66,5 @@ function NS:Load()
 
 			return Result
 		end
-	end
-
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
-	do
-
 	end
 end

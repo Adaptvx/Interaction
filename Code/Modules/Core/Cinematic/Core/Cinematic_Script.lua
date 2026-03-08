@@ -10,9 +10,6 @@ local GetGlidingInfo = not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and C_Play
 
 function NS.Script:Load()
 
-	-- Functions
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Effects
 			do -- Init
@@ -263,18 +260,9 @@ function NS.Script:Load()
 					local isActionCamFocusY = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS_Y)
 					local isVignette = (addon.Database.VAR_CINEMATIC_VIGNETTE)
 
-					-- Save state
-					----------------------------------------------------------------------------------------------------
-
 					NS.Script:SaveView()
 
-					-- Transition state
-					----------------------------------------------------------------------------------------------------
-
 					NS.Script:StartTransition()
-
-					-- Zoom
-					----------------------------------------------------------------------------------------------------
 
 					if isCinematicMode then
 						if isZoom then
@@ -289,9 +277,6 @@ function NS.Script:Load()
 							end
 						end
 					end
-
-					-- Pan
-					----------------------------------------------------------------------------------------------------
 
 					if isCinematicMode then
 						if isActionCam and isActionCamSide then
@@ -315,9 +300,6 @@ function NS.Script:Load()
 						end
 					end
 
-					-- Actioncam
-					----------------------------------------------------------------------------------------------------
-
 					if isHorizontalMode or isActionCam then
 						if isHorizontalMode then
 							NS.Script:StartOffset(false, 15)
@@ -337,9 +319,6 @@ function NS.Script:Load()
 							end
 						end
 					end
-
-					-- Vignette
-					----------------------------------------------------------------------------------------------------
 
 					if isCinematicMode then
 						if isVignette then
@@ -372,9 +351,6 @@ function NS.Script:Load()
 					local isActionCamFocus = (addon.Database.VAR_CINEMATIC_ACTIONCAM_FOCUS)
 					local isVignette = (addon.Database.VAR_CINEMATIC_VIGNETTE)
 
-					-- Reset state
-					----------------------------------------------------------------------------------------------------
-
 					if isCinematicMode then
 						local InCombat = (InCombatLockdown())
 
@@ -383,13 +359,7 @@ function NS.Script:Load()
 						end
 					end
 
-					-- Transition state
-					----------------------------------------------------------------------------------------------------
-
 					NS.Script:CancelTransition()
-
-					-- Zoom
-					----------------------------------------------------------------------------------------------------
 
 					if isCinematicMode then
 						if isZoom then
@@ -405,15 +375,9 @@ function NS.Script:Load()
 						end
 					end
 
-					-- Pan
-					----------------------------------------------------------------------------------------------------
-
 					if isCinematicMode then
 						NS.Script:CancelPan()
 					end
-
-					-- Actioncam
-					----------------------------------------------------------------------------------------------------
 
 					if isHorizontalMode or isActionCam then
 						if isCinematicMode then
@@ -432,9 +396,6 @@ function NS.Script:Load()
 							NS.Script:CancelOffset()
 						end
 					end
-
-					-- Vignette
-					----------------------------------------------------------------------------------------------------
 
 					if isCinematicMode then
 						if isVignette then
@@ -471,9 +432,6 @@ function NS.Script:Load()
 			end
 		end
 	end
-
-	-- Callbacks
-	----------------------------------------------------------------------------------------------------
 
 	do
 		do -- Interaction
@@ -518,9 +476,6 @@ function NS.Script:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		CallbackRegistry:Add("SETTINGS_UIDIRECTION_CHANGED", function()
 			if InteractionFrame.INT_ShoulderOffset and InteractionFrame.INT_ShoulderOffset:GetScript("OnUpdate") and not NS.Variables.Active then
@@ -541,9 +496,6 @@ function NS.Script:Load()
 			end
 		end)
 	end
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		C_Timer.After(addon.Variables.INIT_DELAY_LAST, function()

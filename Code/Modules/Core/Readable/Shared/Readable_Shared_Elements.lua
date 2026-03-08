@@ -8,9 +8,6 @@ NS.Elements = {}
 
 function NS.Elements:Load()
 
-	-- Create elements
-	----------------------------------------------------------------------------------------------------
-
 	do
 		do -- Elements
 			InteractionReadableUIFrame = CreateFrame("Frame", "$parent.InteractionReadableUIFrame", InteractionFrame)
@@ -94,9 +91,6 @@ function NS.Elements:Load()
 		end
 	end
 
-	-- Events
-	----------------------------------------------------------------------------------------------------
-
 	do
 		CallbackRegistry:Add("START_READABLE", function()
 			InteractionReadableUIFrame.TTSButton:Show()
@@ -111,14 +105,8 @@ function NS.Elements:Load()
 		end, 0)
 	end
 
-	-- References
-	----------------------------------------------------------------------------------------------------
-
 	local Frame = InteractionReadableUIFrame
 	local Callback = NS.Script
-
-	-- Setup
-	----------------------------------------------------------------------------------------------------
 
 	do
 		Frame:Hide()
