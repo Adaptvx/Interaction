@@ -93,7 +93,7 @@ function NS.Script:Load()
 
 			function Frame:Style_MatchScrollCriteria()
 				local targetIsGameObject = (UnitIsGameObject("npc") or UnitIsGameObject("questnpc"))
-				local targetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+				local targetIsSelf = (UnitIsUnit("npc", "player") or UnitIsUnit("questnpc", "player"))
 				local targetIsItem = (addon.API.Util:FindItemInInventory(UnitName("npc") or "Empty Result") or addon.API.Util:FindItemInInventory(UnitName("questnpc") or "Empty Result"))
 
 				if targetIsGameObject or targetIsSelf or targetIsItem then
@@ -106,7 +106,7 @@ function NS.Script:Load()
 			function Frame:UpdateStyle()
 				local info = NS.Variables.info
 				local interactTargetNameplate = ((C_NamePlate.GetNamePlateForUnit("npc") or C_NamePlate.GetNamePlateForUnit("questnpc")))
-				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+				local interactTargetIsSelf = (UnitIsUnit("npc", "player") or UnitIsUnit("questnpc", "player"))
 
 				if info.contentInfo.full then
 					if info.contentInfo.emoteIndexes[NS.Variables.Playback_Index] then NS.Variables.Style_IsEmote = true else NS.Variables.Style_IsEmote = false end
@@ -1148,10 +1148,7 @@ function NS.Script:Load()
 				if addon.Interaction.Variables.Active then
 					local button = ...
 
-					local targetName = UnitName("npc") or UnitName("questnpc")
-					local mouseOverName = UnitName("mouseover")
-
-					if tostring(targetName) == tostring(mouseOverName) then
+					if UnitIsUnit("mouseover", "npc") or UnitIsUnit("mouseover", "questnpc") then
 						Frame:OnMouseUp(button, false)
 					end
 				end

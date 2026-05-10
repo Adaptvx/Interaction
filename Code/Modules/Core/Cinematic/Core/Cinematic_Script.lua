@@ -441,7 +441,7 @@ function NS.Script:Load()
 					return
 				end
 
-				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+				local interactTargetIsSelf = (UnitIsUnit("npc", "player") or UnitIsUnit("questnpc", "player"))
 				local isStaticNPC = ((UnitName("npc") and not UnitExists("npc")) or (UnitName("questnpc") and not UnitExists("questnpc")))
 				local inInstance = (IsInInstance())
 				local isSkyriding = GetGlidingInfo and select(1, GetGlidingInfo()) or false
@@ -458,7 +458,7 @@ function NS.Script:Load()
 					return
 				end
 
-				local interactTargetIsSelf = ((UnitName("npc") == UnitName("player")) or UnitName("questnpc") == UnitName("player"))
+				local interactTargetIsSelf = (UnitIsUnit("npc", "player") or UnitIsUnit("questnpc", "player"))
 				local isStaticNPC = ((UnitName("npc") and not UnitExists("npc")) or (UnitName("questnpc") and not UnitExists("questnpc")))
 				local inInstance = (IsInInstance())
 
