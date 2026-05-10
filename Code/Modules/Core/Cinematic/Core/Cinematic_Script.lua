@@ -492,6 +492,10 @@ function NS.Script:Load()
 
 				f:SetScript("OnEvent", function()
 					InteractionFrame.CinematicMode.Vignette:SetAlpha(0)
+
+					if NS.Variables.Active then
+						NS.Script:CancelCinematicMode(true)
+					end
 				end)
 			end
 		end)
@@ -508,7 +512,7 @@ function NS.Script:Load()
 				Frame.EasingDuration = 2
 
 				Frame:SetScript("OnUpdate", function(self, elapsed)
-					if NS.Variables.IsPanning then
+					if NS.Variables.IsPanning and not IsInCinematicScene() and not (MovieFrame and MovieFrame:IsShown()) then
 						do -- Easing
 							Frame.ElapsedTime = Frame.ElapsedTime + elapsed
 
@@ -562,7 +566,7 @@ function NS.Script:Load()
 
 		local f = CreateFrame("Frame")
 		f:SetScript("OnUpdate", function()
-			if NS.Variables.Active then
+			if NS.Variables.Active and not IsInCinematicScene() and not (MovieFrame and MovieFrame:IsShown()) then
 				do -- Offset
 					local speed = .025
 					local target
