@@ -77,7 +77,7 @@ function NS.Widgets:CreateDropdown(parent, optionsTable, openListFunc, closeList
 			if not addon.API.Main:IsElementInScrollFrame(InteractionSettingsFrame.Content.ScrollFrame, Frame) then
 				if Frame.Dropdown.List:IsVisible() then
 					Frame.Dropdown.List:HideList()
-					Frame.Dropdown.Leave()
+					Frame.Dropdown:OnLeave()
 				end
 			end
 		end)

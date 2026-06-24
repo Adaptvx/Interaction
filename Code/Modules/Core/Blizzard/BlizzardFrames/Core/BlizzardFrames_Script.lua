@@ -9,30 +9,35 @@ function NS.Script:Load()
 
     local CachedQuestFramePosition = {}
     local CachedGossipFramePosition = {}
+    local HIDDEN_BLIZZARD_FRAME_OFFSET = -10000
 
     function Callback:Clear_QuestFrame()
-        local point, relativeTo, relativePoint, xOfs, yOfs = QuestFrame:GetPoint()
-        CachedQuestFramePosition = {
-            point = point,
-            relativeTo = relativeTo,
-            relativePoint = relativePoint,
-            xOfs = xOfs,
-            yOfs = yOfs,
-        }
+        if not QuestFrame._InteractionCleared then
+            local point, relativeTo, relativePoint, xOfs, yOfs = QuestFrame:GetPoint()
+            CachedQuestFramePosition = {
+                point         = point,
+                relativeTo    = relativeTo,
+                relativePoint = relativePoint,
+                xOfs          = xOfs,
+                yOfs          = yOfs
+            }
+        end
 
         QuestFrame:ClearAllPoints()
         QuestFrame:SetParent(InteractionFrame)
+        QuestFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", HIDDEN_BLIZZARD_FRAME_OFFSET, HIDDEN_BLIZZARD_FRAME_OFFSET)
         QuestFrame:SetAlpha(0)
+        QuestFrame._InteractionCleared = true
     end
 
     function Callback:Clear_GossipFrame()
         local point, relativeTo, relativePoint, xOfs, yOfs = GossipFrame:GetPoint()
         CachedGossipFramePosition = {
-            point = point,
-            relativeTo = relativeTo,
+            point         = point,
+            relativeTo    = relativeTo,
             relativePoint = relativePoint,
-            xOfs = xOfs,
-            yOfs = yOfs,
+            xOfs          = xOfs,
+            yOfs          = yOfs
         }
 
         GossipFrame:ClearAllPoints()
@@ -43,9 +48,11 @@ function NS.Script:Load()
     function Callback:Restore_QuestFrame()
         QuestFrame:SetParent(UIParent)
         QuestFrame:SetAlpha(1)
+        QuestFrame:ClearAllPoints()
         if CachedQuestFramePosition.point then
             QuestFrame:SetPoint(CachedQuestFramePosition.point, CachedQuestFramePosition.relativeTo, CachedQuestFramePosition.relativePoint, CachedQuestFramePosition.xOfs, CachedQuestFramePosition.yOfs)
         end
+        QuestFrame._InteractionCleared = false
     end
 
     function Callback:Restore_GossipFrame()
