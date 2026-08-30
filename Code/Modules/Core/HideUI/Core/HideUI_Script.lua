@@ -6,6 +6,46 @@ local NS = addon.HideUI; addon.HideUI = NS
 
 NS.Script = {}
 
+local UI_MODE_ROLESET_BLOCKLIST = {
+    "unitFrames",
+    "actionBars",
+    "statusBars",
+    "buffs",
+    "cooldownViewers",
+    "extraAbilities",
+    "minimap",
+    "objectives",
+    "widgets",
+    "chat",
+    "bags",
+    "microMenu",
+    "arenaFrames",
+    "encounterUI",
+    "pvp"
+}
+local USE_UI_MODE = UIModeUtil and UIModeUtil.RegisterMode and UIModeUtil.SetModeActive
+if USE_UI_MODE then UIModeUtil.RegisterMode("Interaction.HideUI", { rolesetBlocklist = UI_MODE_ROLESET_BLOCKLIST }) end
+
+local function HideUIParent()
+    if USE_UI_MODE then
+        UIModeUtil.SetModeActive("Interaction.HideUI", true)
+        UIParent:SetAlpha(0)
+    else
+        UIParent:SetAlpha(1)
+        UIParent:Hide()
+    end
+end
+
+local function ShowUIParent(applyAlpha)
+    if applyAlpha or applyAlpha == nil then UIParent:SetAlpha(1) end
+
+    if USE_UI_MODE then
+        UIModeUtil.SetModeActive("Interaction.HideUI", false)
+    else
+        UIParent:Show()
+    end
+end
+
 function NS.Script:Load()
 
 	do
@@ -30,7 +70,7 @@ function NS.Script:Load()
 					local isHiddenUI = (UIParent:GetAlpha() <= .1)
 
 					if not InCombatLockdown() and isHiddenUI then
-						UIParent:Hide()
+						HideUIParent()
 					end
 				end)
 			end
@@ -43,7 +83,7 @@ function NS.Script:Load()
 		function NS.Script:ShowUI(bypass)
 			NS.Script:ShowWorldUI(bypass)
 
-			local isVisibleUI = (UIParent:GetAlpha() >= .99)
+			local isVisibleUI = (UIParent:IsShown() and UIParent:GetAlpha() >= .99)
 			local isLock = (NS.Variables.Lock)
 
 			if isVisibleUI or isLock then
@@ -62,7 +102,7 @@ function NS.Script:Load()
 				UIParent:SetAlpha(1)
 
 				if not InCombatLockdown() and canShowUIAndHideElements then
-					UIParent:Show()
+					ShowUIParent(false)
 				end
 			end
 
@@ -215,7 +255,7 @@ function NS.Script:Load()
 				if isInInstance then
 					if isHideUIActive and not isVisibleUI then
 						if not inCombatLockdown and canShowUIAndHideElements then
-							UIParent:Show()
+							ShowUIParent()
 						end
 
 						if not Minimap:IsVisible() then
