@@ -4,6 +4,11 @@ local NS = addon.SettingsUI; addon.SettingsUI = NS
 
 NS.Script = {}; local CB = NS.Script
 
+function InteractionAPI_OpenSettingUI()
+	if not addon.Initialize.Ready then return end
+	CB:ShowSettingsUI(false, true)
+end
+
 function NS.Script:Load()
 	local Frame = InteractionSettingsFrame
 
@@ -162,9 +167,6 @@ function NS.Script:Load()
 			end
 		end
 
-		function InteractionAPI_OpenSettingUI()
-			CB:ShowSettingsUI(false, true)
-		end
 
 
 

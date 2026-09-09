@@ -15,7 +15,7 @@ function NS.Elements:Load()
 			end
 
 			local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("Interaction", {
-				type = "data source",
+				type = "launcher",
 				icon = NS.Variables.PATH .. "Library.png",
 				OnClick = function()
 					InteractionReadableUIFrame:ShowLibrary()

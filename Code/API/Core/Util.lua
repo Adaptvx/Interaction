@@ -57,7 +57,7 @@ do -- String measurement & parsing
 
     function addon.API.Util:FindString(text, stringToSearch)
         if addon.API.Util:IsSecretValue(text) or addon.API.Util:IsSecretValue(stringToSearch) then return false end
-        local found = text and stringToSearch and string.match(text, stringToSearch)
+        local found = text and stringToSearch and string.find(text, stringToSearch, 1, true)
         return found and true or false
     end
 

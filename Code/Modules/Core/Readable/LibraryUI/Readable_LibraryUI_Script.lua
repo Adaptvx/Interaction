@@ -641,7 +641,7 @@ function NS.LibraryUI.Script:Load()
 
 				local zone = GetZoneText()
 				local mapID = C_Map.GetBestMapForUnit("player")
-				local position = C_Map.GetPlayerMapPosition(mapID, "player")
+				local position = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
 				local time = time()
 
 				local entry = {

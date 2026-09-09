@@ -494,14 +494,9 @@ function NS.Script:Load()
 				end
 
 				do -- Tts
+					local isEnabled = addon.Database.DB_GLOBAL.profile.INT_TTS
 					local playQuest = addon.Database.DB_GLOBAL.profile.INT_TTS_QUEST
 					local playGossip = addon.Database.DB_GLOBAL.profile.INT_TTS_GOSSIP
-					local gender = UnitSex("npc")
-					local voice =
-						NS.Variables.Style_IsEmote and addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE or
-						gender == 3 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 or
-						gender == 2 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 or
-						gender == 1 and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
 
 					if not playQuest and (info.type == "quest-detail" or info.type == "quest-reward" or info.type == "quest-progress") then
 						addon.TextToSpeech.Script:StopSpeakingText()
@@ -513,8 +508,17 @@ function NS.Script:Load()
 						return
 					end
 
-					if not addon.API.Util:IsSecretValue(info.contentInfo.formatted[index].text) then
-						addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.formatted[index].text)
+					if isEnabled then
+						local gender = UnitSex("npc")
+						local voice =
+							NS.Variables.Style_IsEmote and addon.Database.DB_GLOBAL.profile.INT_TTS_EMOTE_VOICE or
+							addon.API.Util:AreValuesEqual(gender, 3) and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_02 or
+							addon.API.Util:AreValuesEqual(gender, 2) and addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE_01 or
+							addon.Database.DB_GLOBAL.profile.INT_TTS_VOICE
+
+						if not addon.API.Util:IsSecretValue(info.contentInfo.formatted[index].text) then
+							addon.TextToSpeech.Script:PlayConfiguredTTS(voice, info.contentInfo.formatted[index].text)
+						end
 					end
 				end
 
