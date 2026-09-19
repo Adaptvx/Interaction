@@ -100,18 +100,18 @@ function NS.Script:Load()
             CallbackRegistry:Trigger("QUEUE_POP", queueType)
         end
 
-        hooksecurefunc(LFGDungeonReadyPopup, "Show", function() Callback("Dungeon") end)
-        hooksecurefunc(PVPReadyDialog, "Show", function() Callback("PVP") end)
-        hooksecurefunc(PVPReadyPopup, "Show", function() Callback("PVP") end)
+        if LFGDungeonReadyPopup then hooksecurefunc(LFGDungeonReadyPopup, "Show", function() Callback("Dungeon") end) end
+        if PVPReadyDialog then hooksecurefunc(PVPReadyDialog, "Show", function() Callback("PVP") end) end
+        if PVPReadyPopup then hooksecurefunc(PVPReadyPopup, "Show", function() Callback("PVP") end) end
         if PlunderstormFramePopup then hooksecurefunc(PlunderstormFramePopup, "Show", function() Callback("Plunderstorm") end) end
     end
 
     CallbackRegistry:Add("START_INTERACTION", function() Callback:Clear() end, 0)
 
     StaticPopup1:SetIgnoreParentAlpha(true)
-    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ERA then LFGDungeonReadyPopup:SetIgnoreParentAlpha(true) end
-    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then PVPReadyDialog:SetIgnoreParentAlpha(true) end
-    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then PVPReadyPopup:SetIgnoreParentAlpha(true) end
+    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ERA and LFGDungeonReadyPopup then LFGDungeonReadyPopup:SetIgnoreParentAlpha(true) end
+    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and PVPReadyDialog then PVPReadyDialog:SetIgnoreParentAlpha(true) end
+    if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and PVPReadyPopup then PVPReadyPopup:SetIgnoreParentAlpha(true) end
     if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL and PlunderstormFramePopup then PlunderstormFramePopup:SetIgnoreParentAlpha(true) end
 
     local function Update()

@@ -305,9 +305,11 @@ function NS.Script:Load()
 					NS.Script:Stop()
 				end)
 
-				hooksecurefunc(QuestLogPopupDetailFrame, "Show", function()
-					NS.Script:Stop()
-				end)
+				if QuestLogPopupDetailFrame then
+					hooksecurefunc(QuestLogPopupDetailFrame, "Show", function()
+						NS.Script:Stop()
+					end)
+				end
 			else
 				hooksecurefunc(QuestLogFrame, "Show", function()
 					NS.Script:Stop()
