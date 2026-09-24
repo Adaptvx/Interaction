@@ -88,7 +88,7 @@ function NS:Load()
             end)
 
             if not addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then -- Retail
-                hooksecurefunc(QuestFrameGreetingPanel, "Show", function(frame)
+                if QuestFrameGreetingPanel then hooksecurefunc(QuestFrameGreetingPanel, "Show", function(frame)
                     local function UpdateQuestFrameGreetingPanel()
                         local numButtons = 0
 
@@ -106,7 +106,7 @@ function NS:Load()
                     end
 
                     C_Timer.After(0, UpdateQuestFrameGreetingPanel)
-                end)
+                end) end
             elseif addon.Variables.IS_WOW_VERSION_CLASSIC_ALL then -- Classic
                 local IsQuestTitleButtons = (QuestTitleButton1)
 
