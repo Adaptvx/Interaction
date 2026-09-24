@@ -11,20 +11,24 @@ function NS.Elements:Load()
 	do
 		do -- Elements
 			local function OnTooltipShowCallback(tooltip)
-				NS.Script:OnTooltipShow(tooltip)
+				if NS.Script.OnTooltipShow then
+					NS.Script:OnTooltipShow(tooltip)
+				end
 			end
 
 			local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("Interaction", {
 				type = "launcher",
 				icon = NS.Variables.PATH .. "Library.png",
 				OnClick = function()
-					InteractionReadableUIFrame:ShowLibrary()
+					if InteractionReadableUIFrame then
+						InteractionReadableUIFrame:ShowLibrary()
+					end
 				end,
 				OnTooltipShow = OnTooltipShowCallback,
 			})
 
 			NS.Variables.Icon = LibStub("LibDBIcon-1.0")
-			NS.Variables.Icon:Register("Interaction", LDB, addon.Database.DB_GLOBAL.profile.LibDBIcon)
+			NS.Variables.Icon:Register("Interaction", LDB)
 		end
 	end
 
@@ -32,3 +36,5 @@ function NS.Elements:Load()
 	local Callback = NS.Script
 
 end
+
+NS.Elements:Load()

@@ -8,9 +8,12 @@ local NS = addon.BlizzardMinimapIcon; addon.BlizzardMinimapIcon = NS
 
 function NS:Load()
 	local function Modules()
-		NS.Elements:Load()
 		NS.Script:Load()
 	end
 
 	Modules()
 end
+
+CallbackRegistry:Add("ADDON_DATABASE_READY", function()
+	NS.Variables.Icon:Refresh("Interaction", addon.Database.DB_GLOBAL.profile.LibDBIcon)
+end, 0)

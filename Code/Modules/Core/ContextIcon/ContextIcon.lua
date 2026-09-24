@@ -67,8 +67,8 @@ end
 local GetQuestClassification = C_QuestInfoSystem.GetQuestClassification
 local GetQuestType = C_QuestLog.GetQuestType
 local GetQuestTagInfo = C_QuestLog and C_QuestLog.GetQuestTagInfo or GetQuestTagInfo
-local GetQuestLogTitle = GetQuestLogTitle
-local GetQuestLogIndexByID = GetQuestLogIndexByID
+local GetQuestLogInfo = C_QuestLog.GetInfo
+local GetQuestLogIndexByID = C_QuestLog.GetLogIndexForQuestID
 local IsRepeatableQuest = C_QuestLog.IsRepeatableQuest
 local IsOnQuest = C_QuestLog.IsOnQuest
 local IsReadyForTurnIn = C_QuestLog.ReadyForTurnIn or ReadyForTurnInMakeshiftAPI
@@ -163,17 +163,14 @@ function NS:Load()
 		local FREQUENCY_WEEKLY = 2
 
 		local function GetClassicQuestInfo(questID, gossipButtonInfo)
-			local questInfo = {}
+			local questLogIndex = GetQuestLogIndexByID(questID)
+			local questInfo = (questLogIndex and GetQuestLogInfo(questLogIndex)) or {}
 
 			if gossipButtonInfo then
-				questInfo = { GetQuestLogTitle(GetQuestLogIndexByID(questID)) }
-
 				questInfo.isComplete = (gossipButtonInfo.isComplete or questInfo.isComplete)
 				questInfo.isOnQuest = (gossipButtonInfo.isOnQuest or false)
 				questInfo.frequency = gossipButtonInfo.frequency
 			else
-				questInfo = { GetQuestLogTitle(GetQuestLogIndexByID(questID)) }
-
 				if questInfo.isOnQuest == nil then questInfo.isOnQuest = (IsOnQuest and IsOnQuest(questID)) or false end
 				if questInfo.frequency == nil then questInfo.frequency = 0 end
 				if not questInfo.isComplete then questInfo.isComplete = (IsReadyForTurnIn and IsReadyForTurnIn(questID)) or false end
