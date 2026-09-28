@@ -83,10 +83,9 @@ function NS.Script:Load()
 		function NS.Script:ShowUI(bypass)
 			NS.Script:ShowWorldUI(bypass)
 
-			local isVisibleUI = (UIParent:IsShown() and UIParent:GetAlpha() >= .99)
 			local isLock = (NS.Variables.Lock)
 
-			if isVisibleUI or isLock then
+			if isLock then
 				return
 			end
 
@@ -124,10 +123,9 @@ function NS.Script:Load()
 		end
 
 		function NS.Script:ShowWorldUI(bypass)
-			local isVisibleUI = (WorldFrame:GetAlpha() >= .99)
 			local isLock = (NS.Variables.Lock)
 
-			if isVisibleUI or isLock then
+			if isLock then
 				return
 			end
 
@@ -163,23 +161,10 @@ function NS.Script:Load()
 		end
 
 		function NS.Script:StopInteraction()
-			if addon.Database.DB_GLOBAL.profile.INT_HIDEUI then
-				local isStaticNPC = addon.API.Util:IsStaticInteractionTarget()
-				local inInstance = (IsInInstance())
-
-				if not inInstance and NS.Variables.Active then
-					if UIParent:GetAlpha() < 1 and NS.Variables.Active then
-						NS.Script:ShowUI()
-					elseif WorldFrame:GetAlpha() < 1 and NS.Variables.WorldActive then
-						NS.Script:ShowWorldUI()
-					end
-				elseif NS.Variables.WorldActive then
-					NS.Script:ShowWorldUI()
-				end
-			else
-				if WorldFrame:GetAlpha() < 1 and NS.Variables.WorldActive then
-					NS.Script:ShowWorldUI()
-				end
+			if NS.Variables.Active then
+				NS.Script:ShowUI()
+			elseif NS.Variables.WorldActive then
+				NS.Script:ShowWorldUI()
 			end
 		end
 
