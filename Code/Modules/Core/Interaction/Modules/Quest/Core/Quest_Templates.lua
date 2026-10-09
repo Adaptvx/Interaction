@@ -899,6 +899,8 @@ function NS.Templates:Load()
                         end
 
                         local function Logic_OnMouseUp()
+                            if not Frame.callback or not Frame.callback.Click then return end
+
                             Frame.callback:Click()
 
                             if Frame.type == "choice" then

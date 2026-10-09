@@ -525,29 +525,21 @@ function NS.Script:Load()
 					local CALLBACK_COUNT_LABEL = _G[callbacks[i]:GetDebugName() .. "Count"]
 					local numCallbackCount = callbacks[i].count
 
-					local garrFollowerID, spellID, spellTexture
+					local garrFollowerID = callbacks[i].garrFollowerID or callbacks[i].followerID
+					local spellID = callbacks[i].rewardSpellID
+					local spellTexture
 					local questID = GetQuestID()
 
-					if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestRewardSpells then
-						local spellIDs = C_QuestInfoSystem.GetQuestRewardSpells(questID)
-						if spellIDs and spellIDs[i] then
-							local rewardSpellID = spellIDs[i]
-							if C_QuestInfoSystem.GetQuestRewardSpellInfo then
-								local info = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, rewardSpellID)
-								if info then
-									garrFollowerID = info.garrFollowerID
-									spellID = info.spellID
-									spellTexture = info.texture
-								end
-							end
-						end
+					if not garrFollowerID and callbacks[i].PortraitFrame then
+						garrFollowerID = callbacks[i].ID
 					end
 
-					if not garrFollowerID then
-						garrFollowerID = callbacks[i].garrFollowerID or callbacks[i].followerID
-					end
-					if not spellID then
-						spellID = callbacks[i].rewardSpellID
+					if spellID and C_QuestInfoSystem and C_QuestInfoSystem.GetQuestRewardSpellInfo then
+						local info = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, spellID)
+						if info then
+							garrFollowerID = info.garrFollowerID or garrFollowerID
+							spellTexture = info.texture
+						end
 					end
 
 					if garrFollowerID and not spellTexture then
@@ -698,24 +690,44 @@ function NS.Script:Load()
 			end
 
 			local function QuestFrame_GetSpells()
-				local title
+				local title = QuestInfoSpellLearnText and QuestInfoSpellLearnText:IsVisible() and QuestInfoSpellLearnText or nil
 				local results = {}
 
 				local frame = QuestInfoRewardsFrame
-				for f1 = 1, frame:GetNumChildren() do
-					local _frameIndex1 = select(f1, frame:GetChildren())
+				local function AddRewardPool(pool)
+					if not pool then return end
 
-					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
-						table.insert(results, _frameIndex1)
+					for reward in pool:EnumerateActive() do
+						if reward:IsVisible() then
+							table.insert(results, reward)
+						end
 					end
 				end
-				for f1 = 1, frame:GetNumRegions() do
-					local _frameIndex1 = select(f1, frame:GetRegions())
 
-					if addon.API.Util:FindString(_frameIndex1:GetDebugName(), "0") and _frameIndex1:IsVisible() then
-						title = _frameIndex1
+				if frame.spellRewardPool then
+					AddRewardPool(frame.spellRewardPool)
+				elseif QuestInfoRewardSpell and QuestInfoRewardSpell:IsVisible() then
+					table.insert(results, QuestInfoRewardSpell)
+				end
+
+				AddRewardPool(frame.followerRewardPool)
+				AddRewardPool(frame.reputationRewardPool)
+
+				if frame.spellHeaderPool then
+					for header in frame.spellHeaderPool:EnumerateActive() do
+						if header:IsVisible() and (not title or (header:GetTop() or 0) > (title:GetTop() or 0)) then
+							title = header
+						end
 					end
 				end
+
+				table.sort(results, function(a, b)
+					local topA, topB = a:GetTop() or 0, b:GetTop() or 0
+					if topA == topB then
+						return (a:GetLeft() or 0) < (b:GetLeft() or 0)
+					end
+					return topA > topB
+				end)
 
 				return title, results
 			end

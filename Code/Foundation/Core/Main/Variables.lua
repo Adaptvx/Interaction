@@ -19,7 +19,7 @@ NS.VERSION_NUMBER = (function(t)
 end)(NS.VERSION_STRING) -- major*10000 + minor*100 + patch (for numeric version comparisons)
 
 local clientBuild = select(4, GetBuildInfo())
-local isMainline = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
+local isMainline = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_CAMELOT ~= nil and WOW_PROJECT_ID == WOW_PROJECT_CAMELOT)
 NS.IS_WOW_VERSION_RETAIL = isMainline -- Retail (incl. Forever/Camelot: retail API on a classic-range build number)
 NS.IS_WOW_VERSION_CLASSIC_ALL = not isMainline -- All classic ver
 NS.IS_WOW_VERSION_CLASSIC_PROGRESSION = (not isMainline and clientBuild > 50000) -- Mop classic
